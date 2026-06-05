@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MTBS Digital · Formulir Pencatatan & Bagan Otomatis Balita Sakit</title>
+<style>
+:root{--bg:#0b1120;--s1:#111827;--s2:#1e293b;--s3:#334155;--tl:#0d9488;--tl2:#2dd4bf;--tld:rgba(13,148,136,.15);--am:#f59e0b;--gr:#22c55e;--bl:#3b82f6;--pu:#a855f7;--re:#ef4444;--tx:#f1f5f9;--tx2:#94a3b8;--tx3:#475569;--bdr:#1e2d3d;--bdr2:#2d3f55;--rad:14px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--tx);line-height:1.55;min-height:100vh;padding-bottom:90px}
+a{color:var(--tl2)}
+.hero{background:radial-gradient(120% 130% at 50% 0%,rgba(13,148,136,.22),transparent 60%);border-bottom:1px solid var(--bdr);padding:26px 18px 22px;text-align:center}
+.badge{display:inline-block;font-size:.66rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--tl2);background:var(--tld);border:1px solid var(--bdr2);padding:4px 12px;border-radius:99px;margin-bottom:11px}
+h1{font-size:1.5rem;font-weight:800;letter-spacing:-.5px}
+h1 span{color:var(--tl2)}
+.sub{color:var(--tx2);font-size:.85rem;margin-top:6px;max-width:600px;margin-left:auto;margin-right:auto}
+.wrap{max-width:860px;margin:0 auto;padding:20px 16px}
+.steps{display:flex;gap:6px;margin:6px 0 22px;flex-wrap:wrap;justify-content:center}
+.step{font-size:.72rem;font-weight:600;color:var(--tx2);background:var(--s1);border:1px solid var(--bdr);padding:6px 11px;border-radius:99px;display:flex;align-items:center;gap:6px;cursor:pointer;transition:.15s}
+.step b{display:inline-flex;width:18px;height:18px;border-radius:50%;background:var(--s3);color:#fff;font-size:.66rem;align-items:center;justify-content:center}
+.step.active{border-color:var(--tl);color:var(--tx)}
+.step.active b{background:var(--tl)}
+.step.done b{background:var(--gr)}
+.panel{display:none}
+.panel.active{display:block;animation:fade .25s}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.card{background:linear-gradient(150deg,var(--s1),var(--s2));border:1px solid var(--bdr);border-radius:var(--rad);padding:18px;margin-bottom:16px}
+.card h2{font-size:1.02rem;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.card .desc{font-size:.78rem;color:var(--tx2);margin-bottom:14px}
+.field{margin-bottom:13px}
+label.lab{display:block;font-size:.76rem;font-weight:600;color:var(--tx2);margin-bottom:5px}
+input[type=text],input[type=number],input[type=tel],input[type=date],select,textarea{width:100%;background:var(--bg);border:1px solid var(--bdr2);border-radius:9px;padding:10px 12px;color:var(--tx);font-size:.9rem;font-family:inherit}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--tl)}
+.row{display:grid;gap:12px;grid-template-columns:1fr 1fr}
+.row3{display:grid;gap:12px;grid-template-columns:1fr 1fr 1fr}
+@media(max-width:560px){.row,.row3{grid-template-columns:1fr}}
+.hint{font-size:.7rem;color:var(--tx3);margin-top:4px}
+.seg{display:flex;gap:8px;flex-wrap:wrap}
+.seg label{flex:1;min-width:120px;background:var(--bg);border:1px solid var(--bdr2);border-radius:10px;padding:11px;font-size:.82rem;cursor:pointer;text-align:center;transition:.15s}
+.seg input{display:none}
+.seg label.on{border-color:var(--tl);background:var(--tld);color:var(--tl2);font-weight:600}
+.chk{display:flex;align-items:flex-start;gap:10px;background:var(--bg);border:1px solid var(--bdr2);border-radius:10px;padding:11px 12px;margin-bottom:8px;cursor:pointer;font-size:.85rem;transition:.15s}
+.chk:hover{border-color:var(--bdr2)}
+.chk.on{border-color:var(--am);background:rgba(245,158,11,.08)}
+.chk input{margin-top:3px;width:17px;height:17px;accent-color:var(--am);flex-shrink:0}
+.chk .t small{display:block;color:var(--tx3);font-size:.72rem;margin-top:2px}
+.modblock{border:1px solid var(--bdr);border-radius:12px;margin-bottom:14px;overflow:hidden}
+.modhead{padding:13px 15px;background:var(--s1);display:flex;align-items:center;justify-content:space-between;cursor:pointer;gap:10px}
+.modhead .mt{font-size:.92rem;font-weight:700;display:flex;align-items:center;gap:9px}
+.modhead .toggle{font-size:.74rem;color:var(--tx2);display:flex;align-items:center;gap:7px}
+.switch{width:38px;height:21px;border-radius:99px;background:var(--s3);position:relative;transition:.18s;flex-shrink:0}
+.switch i{position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;background:#fff;transition:.18s}
+.switch.on{background:var(--tl)}
+.switch.on i{left:19px}
+.modbody{padding:14px 15px;display:none;border-top:1px solid var(--bdr)}
+.modbody.open{display:block}
+.cls{margin-top:10px;border-radius:10px;padding:12px 14px;font-size:.85rem;font-weight:600;display:none}
+.cls.show{display:block;animation:fade .2s}
+.cls.red{background:rgba(239,68,68,.13);border:1px solid rgba(239,68,68,.5);color:#fca5a5}
+.cls.yellow{background:rgba(245,158,11,.13);border:1px solid rgba(245,158,11,.5);color:#fcd34d}
+.cls.green{background:rgba(34,197,94,.13);border:1px solid rgba(34,197,94,.5);color:#86efac}
+.cls .cn{font-size:.95rem;font-weight:800;letter-spacing:.3px}
+.cls ul{margin:8px 0 0 18px;font-weight:400;font-size:.8rem;color:var(--tx)}
+.cls ul li{margin-bottom:3px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:10px;padding:12px 20px;font-size:.9rem;font-weight:700;cursor:pointer;font-family:inherit;transition:.15s}
+.btn.primary{background:var(--tl);color:#fff}.btn.primary:hover{background:var(--tl2);color:#04201c}
+.btn.ghost{background:var(--s2);color:var(--tx);border:1px solid var(--bdr2)}.btn.ghost:hover{border-color:var(--tl)}
+.btn.wa{background:#25D366;color:#04261a}.btn.wa:hover{filter:brightness(1.08)}
+.btn.full{width:100%}
+.navbar{position:fixed;bottom:0;left:0;right:0;background:rgba(11,17,32,.94);backdrop-filter:blur(8px);border-top:1px solid var(--bdr);padding:11px 16px;display:flex;gap:10px;justify-content:space-between;max-width:860px;margin:0 auto}
+.navbar .btn{flex:1}
+.summary-sec{margin-bottom:18px}
+.sm-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:.84rem}
+@media(max-width:560px){.sm-grid{grid-template-columns:1fr}}
+.sm-grid div b{color:var(--tx2);font-weight:600;font-size:.72rem;display:block;text-transform:uppercase;letter-spacing:.3px}
+.pill{display:inline-block;font-size:.7rem;font-weight:700;padding:3px 10px;border-radius:99px;margin:0 4px 4px 0}
+.pill.red{background:rgba(239,68,68,.18);color:#fca5a5}
+.pill.yellow{background:rgba(245,158,11,.18);color:#fcd34d}
+.pill.green{background:rgba(34,197,94,.18);color:#86efac}
+.alert{border-radius:10px;padding:13px 15px;font-size:.86rem;margin-bottom:14px;font-weight:600}
+.alert.danger{background:rgba(239,68,68,.13);border:1px solid rgba(239,68,68,.5);color:#fca5a5}
+.alert.ok{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.4);color:#86efac}
+.tx-list{list-style:none;margin-top:6px}
+.tx-list li{padding:8px 0 8px 24px;border-bottom:1px solid var(--bdr);font-size:.85rem;position:relative}
+.tx-list li:before{content:"›";position:absolute;left:6px;color:var(--tl2);font-weight:800}
+.tx-list li:last-child{border-bottom:none}
+.wa-box{background:var(--bg);border:1px dashed var(--bdr2);border-radius:10px;padding:13px;font-size:.82rem;color:var(--tx2);white-space:pre-wrap;margin:10px 0;line-height:1.5}
+.foot{text-align:center;color:var(--tx3);font-size:.72rem;margin:30px 0 10px;border-top:1px solid var(--bdr);padding-top:18px}
+.ref{font-size:.7rem;color:var(--tx3);margin-top:6px;font-style:italic}
+.tag-recommend{font-size:.66rem;font-weight:700;padding:2px 7px;border-radius:99px;background:var(--tld);color:var(--tl2)}
+.empty{text-align:center;color:var(--tx3);font-size:.85rem;padding:30px 10px}
+@media print{.navbar,.steps,.hero .badge,.btn,.no-print{display:none!important}body{background:#fff;color:#000;padding:0}.card{background:#fff;border:1px solid #ccc;break-inside:avoid}.panel{display:block!important}.cls.red{color:#b91c1c}.cls.yellow{color:#a16207}.cls.green{color:#15803d}}
+.saved-list{margin-top:6px}
+.saved-item{display:flex;justify-content:space-between;align-items:center;background:var(--bg);border:1px solid var(--bdr2);border-radius:9px;padding:10px 12px;margin-bottom:7px;font-size:.82rem;cursor:pointer}
+.saved-item:hover{border-color:var(--tl)}
+.saved-item small{color:var(--tx3);display:block}
+.del{color:var(--re);font-size:.74rem;cursor:pointer;padding:3px 7px}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="badge">Si Paling Inovasi · MTBS 2022</div>
+  <h1>MTBS <span>Digital</span> · Formulir & Bagan Otomatis</h1>
+  <p class="sub">Isi data anak → aplikasi otomatis mengarahkan ke bagan yang relevan, menghitung klasifikasi, menampilkan tindakan, dan menyiapkan pengingat kunjungan ulang via WhatsApp ke ibu pasien.</p>
+</div>
+
+<div class="wrap">
+  <div class="steps">
+    <div class="step active" data-step="0" onclick="goStep(0)"><b>1</b> Data Anak</div>
+    <div class="step" data-step="1" onclick="goStep(1)"><b>2</b> Penilaian</div>
+    <div class="step" data-step="2" onclick="goStep(2)"><b>3</b> Klasifikasi & Tindakan</div>
+    <div class="step" data-step="3" onclick="goStep(3)"><b>4</b> Formulir & WA</div>
+  </div>
+
+  <!-- ============ STEP 1: DATA ANAK ============ -->
+  <div class="panel active" id="p0">
+    <div class="card">
+      <h2>🧒 Identitas & Data Dasar</h2>
+      <div class="desc">Umur menentukan algoritma otomatis: <b>Bayi Muda (&lt;2 bulan)</b> atau <b>Balita Sakit (2 bln–5 thn)</b>.</div>
+      <div class="row">
+        <div class="field"><label class="lab">Nama anak</label><input type="text" id="f_nama" placeholder="Nama balita"></div>
+        <div class="field"><label class="lab">Nama ibu / pengasuh</label><input type="text" id="f_ibu" placeholder="Nama ibu"></div>
+      </div>
+      <div class="row">
+        <div class="field"><label class="lab">No. WhatsApp ibu</label><input type="tel" id="f_wa" placeholder="0812xxxxxxx" oninput="liveWA()"><div class="hint">Untuk pengingat kunjungan ulang. Format 08.. otomatis diubah ke 62..</div></div>
+        <div class="field"><label class="lab">Tanggal kunjungan</label><input type="date" id="f_tgl"></div>
+      </div>
+      <div class="row3">
+        <div class="field"><label class="lab">Umur (bulan)</label><input type="number" id="f_umur" placeholder="mis. 14" min="0" max="60" oninput="onAge()"><div class="hint" id="ageHint"></div></div>
+        <div class="field"><label class="lab">Berat badan (kg)</label><input type="number" id="f_bb" placeholder="mis. 9.5" step="0.1" oninput="recalc()"><div class="hint">Dasar perhitungan dosis</div></div>
+        <div class="field"><label class="lab">Suhu aksila (°C)</label><input type="number" id="f_suhu" placeholder="mis. 38.5" step="0.1" oninput="recalc()"></div>
+      </div>
+      <div class="row">
+        <div class="field"><label class="lab">Panjang/Tinggi badan (cm)</label><input type="number" id="f_tb" placeholder="opsional" step="0.1"></div>
+        <div class="field"><label class="lab">Jenis kelamin</label>
+          <div class="seg" id="seg_jk">
+            <label data-v="L"><input type="radio" name="jk">Laki-laki</label>
+            <label data-v="P"><input type="radio" name="jk">Perempuan</label>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <label class="lab">Algoritma MTBS yang dipakai</label>
+        <div class="seg" id="seg_algo">
+          <label data-v="bayi"><input type="radio" name="algo" onchange="setAlgo('bayi')">Bayi Muda &lt;2 bln</label>
+          <label data-v="balita"><input type="radio" name="algo" onchange="setAlgo('balita')">Balita 2 bln–5 thn</label>
+        </div>
+        <div class="hint">Terisi otomatis dari umur, dapat diubah manual.</div>
+      </div>
+    </div>
+
+    <div class="card no-print">
+      <h2>📁 Kasus Tersimpan <span class="tag-recommend">offline</span></h2>
+      <div class="desc">Tersimpan lokal di perangkat ini (localStorage). Klik untuk memuat kembali.</div>
+      <div class="saved-list" id="savedList"><div class="empty">Belum ada kasus tersimpan.</div></div>
+    </div>
+  </div>
+
+  <!-- ============ STEP 2: PENILAIAN ============ -->
+  <div class="panel" id="p1">
+    <div id="assessArea"></div>
+  </div>
+
+  <!-- ============ STEP 3: KLASIFIKASI ============ -->
+  <div class="panel" id="p2">
+    <div id="resultArea"></div>
+  </div>
+
+  <!-- ============ STEP 4: FORMULIR & WA ============ -->
+  <div class="panel" id="p3">
+    <div id="formArea"></div>
+  </div>
+
+  <div class="foot">
+    MTBS Digital · MalarAI-ID © 2026 · dr. dwiki<br>
+    Sumber: Buku Bagan <b>Manajemen Terpadu Balita Sakit (MTBS) 2022</b>, Kemenkes RI — sesuai rekomendasi WHO 2019, lintas program & protokol UKK IDAI 2021.<br>
+    Alat bantu keputusan — tidak menggantikan penilaian klinis tenaga kesehatan.
+  </div>
+</div>
+
+<div class="navbar no-print">
+  <button class="btn ghost" id="btnBack" onclick="prevStep()">‹ Kembali</button>
+  <button class="btn ghost" onclick="resetAll()" style="flex:0 0 auto">↺ Baru</button>
+  <button class="btn primary" id="btnNext" onclick="nextStep()">Lanjut ›</button>
+</div>
+
+<script>
+/* ============================================================
+   MTBS DIGITAL — engine klasifikasi
+   Data klasifikasi diturunkan dari Buku Bagan MTBS 2022 (Kemenkes RI)
+   ============================================================ */
+
+const state = { step:0, algo:null, active:{} };
+
+/* ---------- definisi modul & gejala per algoritma ---------- */
+/* setiap modul: id, title, icon, items[], classify(sel,ctx) -> {level,name,actions[],followup(days)} */
+
+const MOD = {
+  /* ===================== BALITA 2 BLN - 5 THN ===================== */
+  balita: [
+    {
+      id:'saga', title:'Tanda Bahaya Umum (SAGA)', icon:'🚨', always:true,
+      items:[
+        ['tdk_minum','Tidak bisa minum atau menyusu'],
+        ['muntah','Memuntahkan semua makanan & minuman'],
+        ['kejang','Pernah/sedang kejang selama sakit ini'],
+        ['letargi','Letargi, tidak sadar, atau pandangan kosong'],
+        ['gelisah','Gelisah/rewel tidak dapat ditenangkan'],
+        ['tddk','Tarikan dinding dada ke dalam'],
+        ['stridor','Terdengar stridor'],
+        ['sianosis','Tampak biru (sianosis) / sangat pucat / kutis marmorata'],
+      ],
+      classify(s){
+        const any = Object.values(s).some(Boolean);
+        if(any) return {level:'red',name:'PENYAKIT SANGAT BERAT (ADA TANDA BAHAYA UMUM)',actions:[
+          'Selesaikan seluruh penilaian dengan CEPAT',
+          'Beri tindakan pra-rujukan sesuai temuan (oksigen 3–5 L/mnt jika perlu, diazepam jika kejang)',
+          'Cegah gula darah turun & jaga anak tetap hangat',
+          'RUJUK SEGERA'],followup:null};
+        return {level:'green',name:'Tidak ada tanda bahaya umum',actions:['Lanjutkan penilaian gejala utama'],followup:null};
+      }
+    },
+    {
+      id:'batuk', title:'Batuk / Sukar Bernapas', icon:'🫁',
+      ask:[['napas','Hitung napas / menit',true],['sat','Saturasi O₂ (%) — jika ada',true]],
+      items:[
+        ['tddk','Tarikan dinding dada ke dalam'],
+        ['wheez','Terdengar wheezing'],
+        ['lama2mg','Batuk ≥ 2 minggu'],
+      ],
+      classify(s,c){
+        const umur=c.umur, np=parseFloat(c.napas)||0, sat=parseFloat(c.sat)||100;
+        const cepat = umur<12 ? np>=50 : np>=40;
+        if(s.tddk || (c.sat!=='' && sat<=92)) return {level:'red',name:'PNEUMONIA BERAT',actions:[
+          'Beri oksigen 1–4 L/mnt via nasal prongs',
+          'Beri dosis pertama antibiotik yang sesuai',
+          'Obati wheezing bila ada','RUJUK SEGERA'],followup:null};
+        if(cepat) return {level:'yellow',name:'PNEUMONIA',actions:[
+          'Amoksisilin 2× sehari selama 3 hari (5 hari bila HIV)',
+          'Beri pelega tenggorokan & pereda batuk aman',
+          'Obati wheezing bila ada',
+          'Jika batuk ≥2 minggu → RUJUK untuk periksa TB',
+          'Kunjungan ulang 2 hari','Nasihati kapan kembali segera'],followup:2};
+        return {level:'green',name:'BATUK BUKAN PNEUMONIA',actions:[
+          'Pelega tenggorokan & pereda batuk aman',
+          'Obati wheezing bila ada',
+          'Jika batuk ≥2 minggu → lacak kemungkinan TB',
+          'Kunjungan ulang 5 hari jika tidak membaik','Nasihati kapan kembali segera'],followup:5};
+      }
+    },
+    {
+      id:'diare', title:'Diare', icon:'💧',
+      ask:[['lama','Sudah berapa hari?',true]],
+      items:[
+        ['letargi','Letargi atau tidak sadar'],
+        ['rewel','Rewel / mudah marah'],
+        ['cekung','Mata cekung'],
+        ['malas','Tidak bisa / malas minum'],
+        ['haus','Haus, minum dengan lahap'],
+        ['turgor_lambat','Cubitan kulit kembali lambat'],
+        ['turgor_sgt','Cubitan kulit kembali sangat lambat (>2 dtk)'],
+        ['darah','Ada darah dalam tinja'],
+      ],
+      classify(s,c){
+        const lama=parseFloat(c.lama)||0;
+        const berat=[s.letargi,s.cekung,s.malas,s.turgor_sgt].filter(Boolean).length>=2;
+        const rs=[s.rewel,s.cekung,s.haus,s.turgor_lambat].filter(Boolean).length>=2;
+        const out=[];let lvl='green',nm='DIARE TANPA DEHIDRASI',fu=2;
+        if(berat){lvl='red';nm='DIARE DEHIDRASI BERAT';out.push('Beri cairan dehidrasi berat + zinc — Rencana Terapi C','Jika ada klasifikasi berat lain → RUJUK SEGERA (beri ASI/oralit selama perjalanan)');fu=null;}
+        else if(rs){lvl='yellow';nm='DIARE DEHIDRASI RINGAN/SEDANG';out.push('Cairan + zinc + makanan — Rencana Terapi B','Kunjungan ulang 2 hari jika tidak membaik');fu=2;}
+        else{out.push('Cairan + zinc + makanan — Rencana Terapi A','Kunjungan ulang 2 hari jika tidak membaik');}
+        // tambahan persisten & disentri
+        const add=[];let lvl2=lvl;
+        if(lama>=14){ if(berat){add.push('+ DIARE PERSISTEN BERAT → atasi dehidrasi lalu RUJUK');lvl2='red';} else {add.push('+ DIARE PERSISTEN → oralit + zinc 10 hari, kunjungan ulang 2 hari');if(lvl2==='green')lvl2='yellow';fu=Math.min(fu??99,2);} }
+        if(s.darah){add.push('+ DISENTRI → antibiotik sesuai, zinc 10 hari, kunjungan ulang 2 hari');if(lvl2==='green')lvl2='yellow';fu=Math.min(fu??99,2);}
+        out.push(...add,'Beri tablet zinc 10 hari berturut-turut','Nasihati kapan kembali segera');
+        return {level:lvl2,name:nm+(add.length?' (+ '+(lama>=14?'PERSISTEN':'')+(s.darah?(lama>=14?' & DISENTRI':'DISENTRI'):'')+')':''),actions:out,followup:fu};
+      }
+    },
+    {
+      id:'demam', title:'Demam (Malaria / Campak / Dengue)', icon:'🌡️',
+      ask:[['lama','Lama demam (hari)',true]],
+      seg:[['endemis','Daerah endemis malaria',['Tinggi','Rendah','Non-endemis']]],
+      items:[
+        ['kaku','Kaku kuduk'],
+        ['rdt','Tes malaria POSITIF (RDT/mikroskopis)'],
+        ['campak','Tanda campak: ruam menyeluruh + (batuk/pilek/mata merah)'],
+        ['campak_kornea','Kekeruhan kornea / luka mulut dalam-luas'],
+        ['campak_nanah','Nanah mata / luka mulut'],
+        ['dengue_syok','Tanda syok: akral dingin-pucat, CRT>2dtk, nadi lemah/cepat'],
+        ['dengue_warn','Warning signs: nyeri perut, muntah terus, perdarahan mukosa, letargi, hepar>2cm'],
+        ['dengue_ts','Uji Tourniquet positif / ruam / leukopenia-trombositopenia'],
+      ],
+      classify(s,c){
+        const out=[];let lvl='green',nm='DEMAM MUNGKIN BUKAN MALARIA',fu=3;
+        const endemis=c.endemis;
+        // dengue prioritas berat
+        if(s.dengue_syok){return{level:'red',name:'DENGUE BERAT (SEVERE DENGUE)',actions:['Beri oksigen 1–2 L/mnt bila syok/distres','Cairan kristaloid isotonis (RL/NaCl 0,9%) lalu RUJUK SEGERA','Parasetamol bila demam ≥38°C (hindari NSAID/aspirin)'],followup:null};}
+        // malaria / penyakit berat dgn demam
+        if(c.saga_red || s.kaku){ out.push('Beri artesunat injeksi (IM/IV) dosis pertama (malaria berat)','Antibiotik dosis pertama','Cegah gula darah turun, parasetamol bila ≥38°C','RUJUK SEGERA'); lvl='red'; nm='PENYAKIT BERAT DENGAN DEMAM'; fu=null;}
+        else if(s.rdt || (endemis==='Tinggi') ){ out.push('Beri antimalaria oral pilihan pertama (sesuai hasil/area)','Parasetamol bila demam ≥38°C','Kunjungan ulang 3 hari jika tetap demam','Jika demam >7 hari → RUJUK'); lvl='yellow'; nm='MALARIA'; fu=3;}
+        else { out.push('Parasetamol bila demam ≥38°C','Obati penyebab lain demam','Kunjungan ulang '+(endemis==='Non-endemis'?'2':'3')+' hari jika tetap demam'); lvl='green'; nm='DEMAM '+(endemis==='Non-endemis'?'BUKAN':'MUNGKIN BUKAN')+' MALARIA'; fu=endemis==='Non-endemis'?2:3;}
+        // campak overlay
+        if(s.campak_kornea){out.push('— CAMPAK DENGAN KOMPLIKASI BERAT: vitamin A dosis pengobatan, antibiotik, tetes mata, RUJUK SEGERA');lvl='red';fu=null;}
+        else if(s.campak_nanah){out.push('— CAMPAK KOMPLIKASI MATA/MULUT: vitamin A, tetes mata/antiseptik mulut, kunjungan ulang 3 hari');if(lvl==='green')lvl='yellow';fu=Math.min(fu??99,3);}
+        else if(s.campak){out.push('— CAMPAK: beri vitamin A dosis pengobatan, nasihati kembali segera');if(lvl==='green')lvl='yellow';}
+        // dengue warning overlay
+        if(s.dengue_warn){out.push('— DENGUE DENGAN WARNING SIGNS: cairan kristaloid pra-rujukan, RUJUK SEGERA rawat inap');lvl='red';fu=null;}
+        else if(s.dengue_ts){out.push('— DENGUE TANPA WARNING SIGNS: kunjungan ulang 1 hari, observasi; <1 th → RUJUK');if(lvl==='green')lvl='yellow';fu=Math.min(fu??99,1);}
+        out.push('Nasihati kapan kembali segera');
+        return{level:lvl,name:nm,actions:out,followup:fu};
+      }
+    },
+    {
+      id:'telinga', title:'Masalah Telinga', icon:'👂',
+      ask:[['lamacairan','Lama cairan keluar (hari) — jika ada',true]],
+      items:[
+        ['bengkak','Pembengkakan nyeri di belakang telinga'],
+        ['nyeri','Nyeri telinga / rasa penuh (bukan serumen)'],
+        ['cairan','Tampak cairan/nanah keluar dari telinga'],
+      ],
+      classify(s,c){
+        const lama=parseFloat(c.lamacairan)||0;
+        if(s.bengkak) return{level:'red',name:'MASTOIDITIS',actions:['Antibiotik dosis pertama','Parasetamol untuk nyeri','RUJUK SEGERA'],followup:null};
+        if(s.cairan && lama>=14) return{level:'yellow',name:'INFEKSI TELINGA KRONIS',actions:['Keringkan telinga (NaCl 0,9%/H₂O₂ 3%)','Tetes telinga antibiotik','Kunjungan ulang 5 hari','Nasihati kembali segera'],followup:5};
+        if(s.nyeri || s.cairan) return{level:'yellow',name:'INFEKSI TELINGA AKUT',actions:['Antibiotik 10 hari','Parasetamol untuk nyeri','Keringkan telinga + tetes antibiotik bila ada cairan','Kunjungan ulang 5 hari','Nasihati kembali segera'],followup:5};
+        return{level:'green',name:'TIDAK ADA INFEKSI TELINGA',actions:['Tangani masalah telinga yang ditemukan','Nasihati kembali segera'],followup:null};
+      }
+    },
+    {
+      id:'gizi', title:'Status Gizi', icon:'⚖️',
+      seg:[['zscore','Skor Z BB/PB atau BB/TB',['< -3 SD','-3 s/d <-2 SD','-2 s/d +1 SD','+1 s/d +2 SD','+2 s/d +3 SD','> +3 SD']]],
+      ask:[['lila','LiLA (cm) — umur 6–59 bln',true]],
+      items:[
+        ['edema','Edema bilateral pitting'],
+        ['komplikasi','Komplikasi medis (anoreksia, dehidrasi berat, letargi, demam tinggi, pneumonia berat, anemia berat)'],
+      ],
+      classify(s,c){
+        const z=c.zscore, lila=parseFloat(c.lila)||99;
+        const buruk = z==='< -3 SD' || lila<11.5 || s.edema;
+        if(buruk && s.komplikasi) return{level:'red',name:'GIZI BURUK DENGAN KOMPLIKASI',actions:['Antibiotik (ampisilin+gentamisin) IM/IV','Vitamin A dosis pertama','Cegah gula darah turun, jaga hangat','RUJUK SEGERA'],followup:null};
+        if(buruk) return{level:'yellow',name:'GIZI BURUK TANPA KOMPLIKASI',actions:['Amoksisilin 15 mg/kgBB tiap 8 jam, 5 hari','Vitamin A dosis pertama','RUJUK ke dokter untuk penanganan gizi buruk','Skrining SDIDTK','Kunjungan ulang 7 hari'],followup:7};
+        if(z==='-3 s/d <-2 SD' || (lila>=11.5 && lila<12.5)) return{level:'yellow',name:'GIZI KURANG',actions:['RUJUK ke dokter (lacak TB/HIV/penyerta)','Nilai pemberian makan','Kunjungan ulang 14 hari'],followup:14};
+        if(z==='> +3 SD') return{level:'red',name:'OBESITAS',actions:['Plot IMT/U','RUJUK ke RS untuk penanganan lanjut'],followup:null};
+        if(z==='+2 s/d +3 SD') return{level:'yellow',name:'GIZI LEBIH',actions:['Konseling gizi & aktivitas','Kunjungan ulang 14 hari'],followup:14};
+        if(z==='+1 s/d +2 SD') return{level:'yellow',name:'BERISIKO GIZI LEBIH',actions:['Plot IMT/U','Konseling gizi','Kunjungan ulang 14 hari'],followup:14};
+        return{level:'green',name:'GIZI BAIK',actions:['Timbang BB tiap bulan','Jika <2 th & ada masalah makan → kunjungan ulang 7 hari'],followup:null};
+      }
+    },
+    {
+      id:'anemia', title:'Anemia', icon:'🩸',
+      ask:[['hb','Hemoglobin (g/dL) — jika ada',true]],
+      items:[
+        ['sgt_pucat','Telapak tangan SANGAT pucat'],
+        ['pucat','Telapak tangan agak pucat'],
+      ],
+      classify(s,c){
+        const hb=c.hb===''?null:parseFloat(c.hb);
+        if(s.sgt_pucat || (hb!==null && hb<7)) return{level:'red',name:'ANEMIA BERAT',actions:['Teruskan ASI bila masih menyusu','RUJUK SEGERA'],followup:null};
+        if(s.pucat || (hb!==null && hb<10)) return{level:'yellow',name:'ANEMIA',actions:['Beri zat besi','Beri obat cacing bila ≥1 th & belum dapat 6 bln terakhir','Antimalaria bila daerah endemis','Kunjungan ulang 14 hari'],followup:14};
+        return{level:'green',name:'TIDAK ANEMIA',actions:['Nasihati pemberian makan'],followup:null};
+      }
+    },
+  ],
+
+  /* ===================== BAYI MUDA < 2 BLN ===================== */
+  bayi: [
+    {
+      id:'psbi', title:'Penyakit Sangat Berat / Infeksi Bakteri', icon:'🚨', always:true,
+      ask:[['napas','Hitung napas / menit',true]],
+      items:[
+        ['biru','Biru sekitar mulut saat menangis/mengisap'],
+        ['sat','Saturasi O₂ <95% atau beda >3% tangan kanan-kaki kiri'],
+        ['merintih','Merintih / napas cuping hidung'],
+        ['tddk','Tarikan dinding dada sangat kuat'],
+        ['lemah','Lemah, tidak kuat bergerak/mengisap'],
+        ['kejang','Kejang / gerakan spontan tak terkendali'],
+        ['suhu_t','Suhu >37,5°C'],
+        ['suhu_r','Suhu <36,5°C'],
+        ['bab48','Tidak BAB 48 jam setelah lahir'],
+        ['muntah_hijau','Muntah susu/cairan hijau / perut kembung sulit napas'],
+        ['mata_byk','Mata bernanah banyak'],
+        ['pusar_luas','Pusar bernanah / kemerahan meluas >1 cm'],
+        ['mata_dkt','Mata bernanah sedikit'],
+        ['pusar_merah','Pusar kemerahan (tidak meluas)'],
+        ['pustul','Pustul di kulit'],
+      ],
+      classify(s,c){
+        const np=parseFloat(c.napas)||0; const napasAbn = np>=60 || (np>0 && np<40);
+        const berat=[s.biru,s.sat,s.merintih,s.tddk,s.lemah,s.kejang,s.suhu_t,s.suhu_r,s.bab48,s.muntah_hijau,s.mata_byk,s.pusar_luas,napasAbn].some(Boolean);
+        if(berat) return{level:'red',name:'PENYAKIT SANGAT BERAT / INFEKSI BAKTERI BERAT',actions:['Pastikan jalan napas bebas, beri O₂ 1 L/mnt bila perlu','Hentikan kejang dengan obat anti kejang','Pasang infus Dekstrosa 10% 60 ml/kgBB/24 jam','Jaga tubuh tetap hangat','Antibiotik intramuskular dosis pertama','RUJUK SEGERA'],followup:null};
+        if(s.mata_dkt||s.pusar_merah||s.pustul) return{level:'yellow',name:'INFEKSI BAKTERI LOKAL',actions:['Mata: salep mata antibiotik','Pusar/pustul: olesi antiseptik','Ajari ibu mengobati infeksi lokal di rumah','Asuhan dasar bayi muda','Kunjungan ulang 2 hari','Nasihati kembali segera'],followup:2};
+        return{level:'green',name:'MUNGKIN BUKAN INFEKSI',actions:['Lakukan asuhan dasar bayi muda','Nasihati kapan kembali segera'],followup:null};
+      }
+    },
+    {
+      id:'ikterus', title:'Ikterus', icon:'🟡',
+      ask:[['umurkuning','Umur saat kuning timbul (hari)',true]],
+      items:[
+        ['dini','Kuning timbul hari pertama (<24 jam)'],
+        ['lama14','Kuning ditemukan pada umur >14 hari'],
+        ['telapak','Kuning sampai telapak tangan / kaki'],
+        ['ada','Kuning (umur >24 jam s/d 14 hari, tidak sampai telapak)'],
+      ],
+      classify(s,c){
+        if(s.dini||s.lama14||s.telapak) return{level:'red',name:'IKTERUS BERAT',actions:['Pertahankan asupan ASI agar tidak kurang cairan','Jaga tubuh tetap hangat','RUJUK SEGERA'],followup:null};
+        if(s.ada) return{level:'yellow',name:'IKTERUS',actions:['Asuhan dasar bayi muda, menyusu lebih sering','Bila mungkin RUJUK untuk kadar bilirubin','Kunjungan ulang 1 hari','Nasihati kembali segera'],followup:1};
+        return{level:'green',name:'TIDAK ADA IKTERUS',actions:['Asuhan dasar bayi muda','Nasihati kapan kembali segera'],followup:null};
+      }
+    },
+    {
+      id:'diare_bayi', title:'Diare Bayi Muda', icon:'💧',
+      items:[
+        ['letargi','Bergerak hanya jika dirangsang / tidak bergerak (letargi)'],
+        ['cekung','Mata cekung'],
+        ['turgor_sgt','Cubitan kulit kembali sangat lambat'],
+        ['rewel','Gelisah / rewel'],
+        ['turgor_lambat','Cubitan kulit kembali lambat'],
+      ],
+      classify(s){
+        const berat=[s.letargi,s.cekung,s.turgor_sgt].filter(Boolean).length>=2;
+        const rs=[s.rewel,s.cekung,s.turgor_lambat].filter(Boolean).length>=2;
+        if(berat) return{level:'red',name:'DIARE DEHIDRASI BERAT',actions:['Rencana Terapi C / RUJUK SEGERA setelah syarat rujukan','Beri oralit sedikit-sedikit selama perjalanan','ASI tetap diberikan bila mungkin'],followup:null};
+        if(rs) return{level:'yellow',name:'DIARE DEHIDRASI RINGAN/SEDANG',actions:['Rencana Terapi B','Asuhan dasar bayi muda','Kunjungan ulang 1 hari','Nasihati kembali segera'],followup:1};
+        return{level:'green',name:'DIARE TANPA DEHIDRASI',actions:['Rencana Terapi A','Asuhan dasar bayi muda','Kunjungan ulang 1 hari'],followup:1};
+      }
+    },
+    {
+      id:'bbasi', title:'Berat Badan Rendah & Masalah ASI', icon:'🍼',
+      seg:[['zbbpb','Skor Z BB/PB',['< -3 SD','-3 s/d <-2 SD','≥ -2 SD']]],
+      items:[
+        ['lemahisap','Terlalu lemah untuk menyusu'],
+        ['bbturun','Berat badan tidak naik / turun'],
+        ['masalahasi','Ada masalah/posisi menyusui kurang baik'],
+      ],
+      classify(s,c){
+        if(c.zbbpb==='< -3 SD' || s.lemahisap || s.bbturun) return{level:'yellow',name:'BERAT BADAN RENDAH / MASALAH PEMBERIAN ASI',actions:['Ajari ibu cara menyusui dengan baik','Tingkatkan frekuensi & produksi ASI','Tangani penyebab BB rendah','Kunjungan ulang 2 hari (atau 7 hari bila hanya BB rendah)','Nilai ulang pertumbuhan'],followup:2};
+        if(s.masalahasi) return{level:'yellow',name:'MASALAH PEMBERIAN ASI',actions:['Perbaiki posisi & perlekatan menyusu','Konseling menyusui','Kunjungan ulang 2 hari'],followup:2};
+        return{level:'green',name:'BERAT BADAN TIDAK RENDAH & TIDAK ADA MASALAH ASI',actions:['Pujilah ibu, lanjutkan ASI eksklusif','Asuhan dasar bayi muda'],followup:null};
+      }
+    },
+  ]
+};
+
+/* ---------- step navigation ---------- */
+function goStep(n){
+  if(n>0 && !state.algo){ alert('Lengkapi data anak & pilih algoritma dulu.'); return; }
+  state.step=n;
+  document.querySelectorAll('.panel').forEach((p,i)=>p.classList.toggle('active',i===n));
+  document.querySelectorAll('.step').forEach((s,i)=>{s.classList.toggle('active',i===n);s.classList.toggle('done',i<n);});
+  document.getElementById('btnBack').style.visibility = n===0?'hidden':'visible';
+  document.getElementById('btnNext').textContent = n>=3?'Selesai ✓':'Lanjut ›';
+  if(n===1) renderAssess();
+  if(n===2) renderResult();
+  if(n===3) renderForm();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function nextStep(){ if(state.step<3) goStep(state.step+1); else { saveCase(); alert('Kasus disimpan. Gunakan tombol cetak/WA di formulir.'); } }
+function prevStep(){ if(state.step>0) goStep(state.step-1); }
+
+/* ---------- data anak ---------- */
+document.getElementById('f_tgl').value=new Date().toISOString().slice(0,10);
+document.querySelectorAll('#seg_jk label').forEach(l=>l.onclick=()=>{document.querySelectorAll('#seg_jk label').forEach(x=>x.classList.remove('on'));l.classList.add('on');state.jk=l.dataset.v;});
+function onAge(){
+  const u=parseFloat(document.getElementById('f_umur').value);
+  const h=document.getElementById('ageHint');
+  if(isNaN(u)){h.textContent='';return;}
+  if(u<2){ h.textContent='→ Bayi Muda <2 bln'; autoAlgo('bayi'); }
+  else if(u<=60){ h.textContent='→ Balita 2 bln–5 thn'; autoAlgo('balita'); }
+  else { h.textContent='⚠ >5 tahun, di luar cakupan MTBS'; }
+}
+function autoAlgo(a){ setAlgo(a); document.querySelectorAll('#seg_algo label').forEach(l=>l.classList.toggle('on',l.dataset.v===a)); document.querySelector('#seg_algo input[onchange*="'+a+'"]').checked=true; }
+function setAlgo(a){ state.algo=a; document.querySelectorAll('#seg_algo label').forEach(l=>l.classList.toggle('on',l.dataset.v===a)); }
+
+/* ---------- render penilaian ---------- */
+function renderAssess(){
+  const area=document.getElementById('assessArea');
+  const mods=MOD[state.algo];
+  let html=`<div class="card"><h2>🔎 Penilaian — ${state.algo==='bayi'?'Bayi Muda <2 bln':'Balita 2 bln–5 thn'}</h2><div class="desc">Aktifkan modul sesuai keluhan. Modul bertanda 🚨 wajib dinilai pada semua anak. Klasifikasi muncul otomatis.</div></div>`;
+  mods.forEach(m=>{
+    const on = m.always || (state.active[m.id]?.on);
+    html+=`<div class="modblock" data-mod="${m.id}">
+      <div class="modhead" onclick="toggleMod('${m.id}',event)">
+        <div class="mt">${m.icon} ${m.title}${m.always?' <span class="tag-recommend">wajib</span>':''}</div>
+        ${m.always?'<div class="toggle">selalu dinilai</div>':`<div class="toggle">Ada keluhan? <div class="switch ${on?'on':''}" id="sw_${m.id}"><i></i></div></div>`}
+      </div>
+      <div class="modbody ${on?'open':''}" id="body_${m.id}">${renderModInputs(m)}<div class="cls" id="cls_${m.id}"></div></div>
+    </div>`;
+  });
+  area.innerHTML=html;
+  mods.forEach(m=>{ if(m.always||state.active[m.id]?.on) evalMod(m.id); });
+}
+function renderModInputs(m){
+  let h='';
+  if(m.ask){ h+='<div class="row3">'; m.ask.forEach(a=>{ h+=`<div class="field"><label class="lab">${a[1]}</label><input type="number" id="in_${m.id}_${a[0]}" oninput="evalMod('${m.id}')" step="0.1"></div>`; }); h+='</div>'; }
+  if(m.seg){ m.seg.forEach(sg=>{ h+=`<div class="field"><label class="lab">${sg[1]}</label><select id="sg_${m.id}_${sg[0]}" onchange="evalMod('${m.id}')"><option value="">— pilih —</option>${sg[2].map(o=>`<option>${o}</option>`).join('')}</select></div>`; }); }
+  m.items.forEach(it=>{ h+=`<label class="chk" id="chk_${m.id}_${it[0]}"><input type="checkbox" onchange="this.closest('.chk').classList.toggle('on',this.checked);evalMod('${m.id}')"><span class="t">${it[1]}</span></label>`; });
+  return h;
+}
+function toggleMod(id,e){
+  const m=MOD[state.algo].find(x=>x.id===id); if(m.always)return;
+  state.active[id]=state.active[id]||{}; state.active[id].on=!state.active[id].on;
+  document.getElementById('sw_'+id).classList.toggle('on',state.active[id].on);
+  document.getElementById('body_'+id).classList.toggle('open',state.active[id].on);
+  if(!state.active[id].on){ const c=document.getElementById('cls_'+id); c.className='cls'; c.innerHTML=''; }
+  else evalMod(id);
+}
+function collectMod(m){
+  const s={};
+  m.items.forEach(it=>{ const el=document.querySelector('#chk_'+m.id+'_'+it[0]+' input'); s[it[0]]=el?el.checked:false; });
+  const c={ umur:parseFloat(document.getElementById('f_umur').value)||0 };
+  if(m.ask) m.ask.forEach(a=>{ c[a[0]]=document.getElementById('in_'+m.id+'_'+a[0]).value; });
+  if(m.seg) m.seg.forEach(sg=>{ c[sg[0]]=document.getElementById('sg_'+m.id+'_'+sg[0]).value; });
+  // konteks SAGA untuk demam
+  const saga=state.results&&state.results.saga; c.saga_red = saga&&saga.level==='red';
+  return {s,c};
+}
+function evalMod(id){
+  const m=MOD[state.algo].find(x=>x.id===id);
+  const {s,c}=collectMod(m);
+  const r=m.classify(s,c);
+  state.results=state.results||{}; state.results[id]=r;
+  const box=document.getElementById('cls_'+id);
+  box.className='cls show '+r.level;
+  box.innerHTML=`<div class="cn">${r.level==='red'?'🔴':r.level==='yellow'?'🟡':'🟢'} ${r.name}</div><ul>${r.actions.map(a=>`<li>${a}</li>`).join('')}</ul>${r.followup?`<div style="margin-top:7px;font-size:.76rem;color:var(--tx2)">⏰ Kunjungan ulang: ${r.followup} hari</div>`:''}`;
+}
+function recalc(){ if(state.step===1){ MOD[state.algo].forEach(m=>{ if(m.always||state.active[m.id]?.on) evalMod(m.id); }); } }
+
+/* ---------- hasil / klasifikasi ---------- */
+function gatherActive(){
+  const mods=MOD[state.algo].filter(m=>m.always||state.active[m.id]?.on);
+  state.results=state.results||{};
+  mods.forEach(m=>{ if(!state.results[m.id]){ const {s,c}=collectMod(m); state.results[m.id]=m.classify(s,c);} });
+  return mods.map(m=>({mod:m,r:state.results[m.id]}));
+}
+function renderResult(){
+  const list=gatherActive();
+  const area=document.getElementById('resultArea');
+  const anyRed=list.some(x=>x.r.level==='red');
+  const fus=list.map(x=>x.r.followup).filter(x=>x);
+  const minFu=fus.length?Math.min(...fus):null;
+  state.minFu=anyRed?null:minFu;
+  let html=`<div class="card"><h2>🧾 Ringkasan Klasifikasi & Tatalaksana</h2>`;
+  html+= anyRed
+    ? `<div class="alert danger">⛔ Terdapat klasifikasi BERAT (merah) → anak perlu <b>RUJUK SEGERA</b> setelah tindakan pra-rujukan.</div>`
+    : `<div class="alert ok">✓ Tidak ada klasifikasi berat. Tatalaksana rawat jalan + kunjungan ulang.</div>`;
+  html+=`<div style="margin-bottom:10px">`;
+  list.forEach(x=> html+=`<span class="pill ${x.r.level}">${x.r.name}</span>`);
+  html+=`</div></div>`;
+  // tindakan gabungan
+  list.forEach(x=>{
+    html+=`<div class="card summary-sec"><h2>${x.mod.icon} ${x.mod.title}</h2>
+      <div class="cls show ${x.r.level}" style="margin-top:0"><div class="cn">${x.r.level==='red'?'🔴':x.r.level==='yellow'?'🟡':'🟢'} ${x.r.name}</div></div>
+      <ul class="tx-list">${x.r.actions.map(a=>`<li>${a}</li>`).join('')}</ul></div>`;
+  });
+  // dosis
+  html+=renderDosing();
+  area.innerHTML=html;
+}
+function renderDosing(){
+  const bb=parseFloat(document.getElementById('f_bb').value);
+  const umur=parseFloat(document.getElementById('f_umur').value)||0;
+  if(!bb) return `<div class="card"><h2>💊 Kalkulator Dosis</h2><div class="empty">Isi berat badan di Step 1 untuk menghitung dosis.</div></div>`;
+  const pcmin=(10*bb).toFixed(0), pcmax=(15*bb).toFixed(0);
+  const zinc = umur<6?'½ tablet (10 mg)':'1 tablet (20 mg)';
+  const amox=(25*bb).toFixed(0);
+  return `<div class="card"><h2>💊 Kalkulator Dosis (BB ${bb} kg)</h2>
+    <ul class="tx-list">
+      <li><b>Parasetamol</b> (bila demam ≥38°C / nyeri): ${pcmin}–${pcmax} mg/dosis, tiap 4–6 jam</li>
+      <li><b>Tablet Zinc</b> (diare): ${zinc}/hari selama 10 hari berturut-turut</li>
+      <li><b>Amoksisilin</b> (acuan ~25 mg/kgBB): ±${amox} mg per dosis, 2× sehari</li>
+      <li><b>Oralit</b>: Rencana Terapi A/B/C sesuai derajat dehidrasi (lihat klasifikasi diare)</li>
+    </ul>
+    <div class="ref">Dosis acuan; sesuaikan dengan sediaan & pedoman setempat. Verifikasi sebelum pemberian.</div></div>`;
+}
+
+/* ---------- formulir & WA ---------- */
+function getData(){
+  return {
+    nama:document.getElementById('f_nama').value||'-',
+    ibu:document.getElementById('f_ibu').value||'-',
+    wa:document.getElementById('f_wa').value||'',
+    tgl:document.getElementById('f_tgl').value||'',
+    umur:document.getElementById('f_umur').value||'-',
+    bb:document.getElementById('f_bb').value||'-',
+    suhu:document.getElementById('f_suhu').value||'-',
+    tb:document.getElementById('f_tb').value||'-',
+    jk:state.jk||'-',
+    algo:state.algo
+  };
+}
+function fmtWA(no){ no=(no||'').replace(/[^0-9]/g,''); if(no.startsWith('0')) no='62'+no.slice(1); if(no.startsWith('8')) no='62'+no; return no; }
+function liveWA(){}
+function addDays(d,n){ const x=new Date(d); x.setDate(x.getDate()+n); return x; }
+function tglID(d){ return d.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'}); }
+
+function renderForm(){
+  const d=getData(); const list=gatherActive();
+  const area=document.getElementById('formArea');
+  const cls=list.map(x=>x.r.name).join(', ');
+  const anyRed=list.some(x=>x.r.level==='red');
+  let waMsg='', fuDate=null;
+  if(state.minFu && d.tgl){ fuDate=addDays(d.tgl,state.minFu); }
+
+  if(anyRed){
+    waMsg=`Halo Ibu ${d.ibu},\n\nAnanda *${d.nama}* setelah diperiksa di Puskesmas memerlukan *RUJUKAN SEGERA* ke fasilitas yang lebih lengkap.\n\nKlasifikasi: ${cls}\n\nMohon segera membawa ananda sesuai arahan petugas. Bawa surat rujukan & buku KIA. Jika kondisi memburuk, langsung ke IGD terdekat.\n\nSalam, Petugas MTBS`;
+  } else if(fuDate){
+    waMsg=`Halo Ibu ${d.ibu},\n\nTerima kasih telah membawa ananda *${d.nama}* ke Puskesmas hari ini.\n\nHasil pemeriksaan (MTBS): ${cls}\n\n*Pengingat KUNJUNGAN ULANG:*\n📅 ${tglID(fuDate)}\n(${state.minFu} hari dari kunjungan hari ini)\n\nMohon obat diberikan sesuai anjuran. Segera kembali bila ananda: tidak bisa minum/menyusu, kondisi memburuk, demam tinggi, atau ada darah dalam tinja.\n\nSalam sehat, Petugas MTBS`;
+  } else {
+    waMsg=`Halo Ibu ${d.ibu},\n\nTerima kasih telah membawa ananda *${d.nama}*.\n\nHasil pemeriksaan (MTBS): ${cls}\n\nLanjutkan perawatan di rumah sesuai anjuran. Segera kembali bila ananda tidak bisa minum/menyusu, kondisinya memburuk, atau demam tinggi.\n\nSalam sehat, Petugas MTBS`;
+  }
+  const waNo=fmtWA(d.wa);
+  const waLink='https://wa.me/'+waNo+'?text='+encodeURIComponent(waMsg);
+
+  let html=`<div class="card"><h2>📋 Formulir Pencatatan MTBS</h2>
+    <div class="sm-grid">
+      <div><b>Nama anak</b>${d.nama}</div><div><b>Ibu/pengasuh</b>${d.ibu}</div>
+      <div><b>Umur</b>${d.umur} bulan</div><div><b>Jenis kelamin</b>${d.jk==='L'?'Laki-laki':d.jk==='P'?'Perempuan':'-'}</div>
+      <div><b>Berat badan</b>${d.bb} kg</div><div><b>Suhu</b>${d.suhu} °C</div>
+      <div><b>PB/TB</b>${d.tb} cm</div><div><b>Tgl kunjungan</b>${d.tgl}</div>
+      <div><b>Algoritma</b>${d.algo==='bayi'?'Bayi Muda <2 bln':'Balita 2 bln–5 thn'}</div>
+      <div><b>Kunjungan ulang</b>${anyRed?'— (RUJUK)':fuDate?tglID(fuDate):'tidak dijadwalkan'}</div>
+    </div>
+  </div>`;
+
+  html+=`<div class="card"><h2>🏷️ Klasifikasi</h2><div>`;
+  list.forEach(x=>html+=`<span class="pill ${x.r.level}">${x.r.name}</span>`);
+  html+=`</div></div>`;
+
+  html+=`<div class="card"><h2>💬 Pengingat WhatsApp ke Ibu</h2>
+    <div class="desc">Pesan otomatis siap kirim. ${waNo?'Tujuan: +'+waNo:'<b style="color:var(--am)">⚠ Nomor WA ibu belum diisi (Step 1)</b>'}</div>
+    <div class="wa-box">${waMsg}</div>
+    ${waNo?`<a class="btn wa full" href="${waLink}" target="_blank">📲 Kirim via WhatsApp</a>`:`<button class="btn ghost full" onclick="goStep(0)">Isi nomor WA dulu</button>`}
+  </div>`;
+
+  html+=`<div class="card no-print"><h2>📦 Simpan & Cetak</h2>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn primary" style="flex:1" onclick="saveCase()">💾 Simpan kasus</button>
+      <button class="btn ghost" style="flex:1" onclick="window.print()">🖨️ Cetak / PDF</button>
+    </div></div>`;
+
+  area.innerHTML=html;
+}
+
+/* ---------- penyimpanan lokal ---------- */
+const LSKEY='mtbs_cases_v1';
+function loadCases(){ try{return JSON.parse(localStorage.getItem(LSKEY))||[];}catch(e){return[];} }
+function saveCase(){
+  const d=getData(); const list=gatherActive();
+  if(d.nama==='-'){ alert('Isi nama anak dulu.'); return; }
+  const cases=loadCases();
+  cases.unshift({ id:Date.now(), ...d, results:list.map(x=>({mod:x.mod.id,title:x.mod.title,icon:x.mod.icon,r:x.r})), active:state.active, minFu:state.minFu });
+  localStorage.setItem(LSKEY,JSON.stringify(cases.slice(0,50)));
+  renderSaved();
+  alert('Kasus "'+d.nama+'" tersimpan di perangkat ini.');
+}
+function renderSaved(){
+  const el=document.getElementById('savedList'); const cases=loadCases();
+  if(!cases.length){ el.innerHTML='<div class="empty">Belum ada kasus tersimpan.</div>'; return; }
+  el.innerHTML=cases.map(c=>`<div class="saved-item" onclick="loadCase(${c.id})"><div><b>${c.nama}</b><small>${c.umur} bln · ${c.tgl} · ${c.algo==='bayi'?'Bayi Muda':'Balita'}</small></div><span class="del" onclick="event.stopPropagation();delCase(${c.id})">Hapus ✕</span></div>`).join('');
+}
+function loadCase(id){
+  const c=loadCases().find(x=>x.id===id); if(!c)return;
+  document.getElementById('f_nama').value=c.nama==='-'?'':c.nama;
+  document.getElementById('f_ibu').value=c.ibu==='-'?'':c.ibu;
+  document.getElementById('f_wa').value=c.wa||'';
+  document.getElementById('f_tgl').value=c.tgl||'';
+  document.getElementById('f_umur').value=c.umur==='-'?'':c.umur;
+  document.getElementById('f_bb').value=c.bb==='-'?'':c.bb;
+  document.getElementById('f_suhu').value=c.suhu==='-'?'':c.suhu;
+  document.getElementById('f_tb').value=c.tb==='-'?'':c.tb;
+  state.jk=c.jk; document.querySelectorAll('#seg_jk label').forEach(l=>l.classList.toggle('on',l.dataset.v===c.jk));
+  setAlgo(c.algo); document.querySelectorAll('#seg_algo label').forEach(l=>l.classList.toggle('on',l.dataset.v===c.algo));
+  onAge();
+  alert('Kasus "'+c.nama+'" dimuat. Klasifikasi perlu dinilai ulang di Step 2 (data gejala tidak disimpan permanen untuk akurasi).');
+  goStep(0);
+}
+function delCase(id){ if(!confirm('Hapus kasus ini?'))return; localStorage.setItem(LSKEY,JSON.stringify(loadCases().filter(x=>x.id!==id))); renderSaved(); }
+
+function resetAll(){
+  if(!confirm('Mulai kasus baru? Data yang belum disimpan akan hilang.'))return;
+  ['f_nama','f_ibu','f_wa','f_umur','f_bb','f_suhu','f_tb'].forEach(i=>document.getElementById(i).value='');
+  document.getElementById('f_tgl').value=new Date().toISOString().slice(0,10);
+  state.algo=null;state.jk=null;state.active={};state.results={};state.minFu=null;
+  document.querySelectorAll('.seg label').forEach(l=>l.classList.remove('on'));
+  document.getElementById('ageHint').textContent='';
+  goStep(0);
+}
+
+renderSaved();
+goStep(0);
+</script>
+</body>
+</html>
