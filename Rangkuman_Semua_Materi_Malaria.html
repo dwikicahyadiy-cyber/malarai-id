@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rangkuman Lengkap Pelatihan Malaria 2026 — dr. Dwiki</title>
+<style>
+:root {
+  --primary:#0f172a; --accent:#06b6d4; --accent2:#f59e0b; --accent3:#10b981;
+  --accent4:#f43f5e; --bg:#0f172a; --card:#1e293b; --card2:#253047;
+  --text:#e2e8f0; --muted:#94a3b8; --border:#334155;
+  --pf:#ef4444; --pv:#22c55e; --pm:#6366f1; --po:#a78bfa; --pk:#f97316;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--text); line-height:1.6; }
+
+/* ── NAV ── */
+.topnav { position:sticky; top:0; z-index:100; background:#0a1220cc; backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border); display:flex; align-items:center; gap:6px;
+  padding:10px 16px; flex-wrap:wrap; }
+.topnav .logo { font-weight:900; font-size:1rem; color:var(--accent); margin-right:8px; white-space:nowrap; }
+.nav-btn { background:transparent; border:1px solid var(--border); color:var(--muted);
+  padding:5px 12px; border-radius:20px; cursor:pointer; font-size:0.78rem; transition:all .2s; white-space:nowrap; }
+.nav-btn:hover,.nav-btn.active { background:var(--accent); color:#000; border-color:var(--accent); font-weight:700; }
+
+/* ── MODULE SECTIONS ── */
+.module { display:none; padding:20px 16px 60px; max-width:900px; margin:0 auto; }
+.module.active { display:block; }
+
+/* ── HERO ── */
+.hero { background:linear-gradient(135deg,#1e3a5f 0%,#0f172a 60%,#1a1040 100%);
+  border:1px solid var(--border); border-radius:16px; padding:28px 24px; margin-bottom:24px; }
+.hero h1 { font-size:clamp(1.4rem,3vw,2rem); font-weight:900; line-height:1.25; margin-bottom:8px; }
+.hero h1 span { color:var(--accent); }
+.hero p { color:var(--muted); font-size:.9rem; }
+.hero .tags { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
+.tag { background:var(--card2); border:1px solid var(--border); color:var(--accent);
+  padding:3px 10px; border-radius:12px; font-size:.75rem; font-weight:600; }
+
+/* ── SECTION HEADER ── */
+.sec-hdr { display:flex; align-items:center; gap:10px; margin:28px 0 14px;
+  padding-bottom:8px; border-bottom:2px solid var(--accent); }
+.sec-hdr h2 { font-size:1.05rem; font-weight:800; color:var(--accent); }
+.sec-hdr .ico { font-size:1.3rem; }
+
+/* ── CARDS ── */
+.card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:16px; margin-bottom:14px; }
+.card h3 { font-size:.95rem; font-weight:700; margin-bottom:8px; color:var(--accent2); display:flex; align-items:center; gap:6px; }
+.card p, .card li { font-size:.88rem; color:var(--text); line-height:1.65; }
+.card ul, .card ol { padding-left:18px; }
+.card li { margin-bottom:4px; }
+
+/* ── GRID ── */
+.grid2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.grid3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; }
+@media(max-width:600px){ .grid2,.grid3 { grid-template-columns:1fr; } }
+
+/* ── SPECIES CARDS ── */
+.sp-card { border-radius:10px; padding:12px; border:1px solid; }
+.sp-pf { background:#7f1d1d22; border-color:#ef4444; }
+.sp-pv { background:#14532d22; border-color:#22c55e; }
+.sp-pm { background:#1e1b4b22; border-color:#6366f1; }
+.sp-po { background:#2e1065 22; border-color:#a78bfa; }
+.sp-pk { background:#431407 22; border-color:#f97316; }
+.sp-card h3 { font-size:.9rem; font-weight:800; margin-bottom:6px; }
+.sp-pf h3 { color:var(--pf); }
+.sp-pv h3 { color:var(--pv); }
+.sp-pm h3 { color:var(--pm); }
+.sp-po h3 { color:var(--po); }
+.sp-pk h3 { color:var(--pk); }
+.sp-card p, .sp-card li { font-size:.82rem; line-height:1.6; }
+
+/* ── TABLE ── */
+.tbl-wrap { overflow-x:auto; margin:10px 0; }
+table { width:100%; border-collapse:collapse; font-size:.82rem; }
+th { background:var(--card2); color:var(--accent); padding:8px 10px; text-align:left; border:1px solid var(--border); }
+td { padding:7px 10px; border:1px solid var(--border); vertical-align:top; }
+tr:nth-child(even) td { background:#ffffff08; }
+
+/* ── MNEMONIC / HIGHLIGHT ── */
+.mnemonic { background:linear-gradient(135deg,#1e3a5f,#1a1040); border:1px solid var(--accent);
+  border-radius:12px; padding:16px; margin-bottom:14px; }
+.mnemonic h3 { color:var(--accent); font-size:.95rem; margin-bottom:10px; }
+.mnemonic .items { display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
+.mnemonic .item { background:#ffffff15; border-radius:8px; padding:6px 12px; font-size:.82rem; }
+.mnemonic .item strong { color:var(--accent2); }
+
+.warn { background:#7f1d1d33; border:1px solid var(--pf); border-radius:10px; padding:12px; margin:10px 0; font-size:.85rem; }
+.warn strong { color:var(--pf); }
+.ok { background:#14532d33; border:1px solid var(--pv); border-radius:10px; padding:12px; margin:10px 0; font-size:.85rem; }
+.ok strong { color:var(--pv); }
+.info { background:#1e3a5f44; border:1px solid var(--accent); border-radius:10px; padding:12px; margin:10px 0; font-size:.85rem; }
+.info strong { color:var(--accent); }
+
+/* ── FLOWCHART ── */
+.flow { display:flex; flex-direction:column; align-items:center; gap:4px; margin:12px 0; }
+.flow-box { background:var(--card2); border:1px solid var(--border); border-radius:8px;
+  padding:8px 16px; font-size:.82rem; text-align:center; max-width:360px; width:100%; }
+.flow-box.start { background:var(--accent); color:#000; font-weight:700; }
+.flow-box.end-ok { background:#14532d; border-color:var(--pv); }
+.flow-box.end-warn { background:#7f1d1d; border-color:var(--pf); }
+.flow-arr { color:var(--muted); font-size:1.2rem; }
+
+/* ── QUIZ ── */
+.quiz-item { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:14px; margin-bottom:12px; }
+.quiz-q { font-size:.9rem; font-weight:700; margin-bottom:10px; color:var(--accent2); }
+.quiz-opts label { display:flex; align-items:flex-start; gap:8px; padding:6px 10px;
+  border-radius:6px; cursor:pointer; font-size:.85rem; margin-bottom:4px; transition:background .15s; }
+.quiz-opts label:hover { background:var(--card2); }
+.quiz-opts input { margin-top:3px; flex-shrink:0; }
+.quiz-explain { display:none; margin-top:10px; background:#1e293b; border-left:3px solid var(--accent3);
+  padding:10px 14px; border-radius:0 8px 8px 0; font-size:.83rem; color:var(--text); }
+.quiz-explain.show { display:block; }
+.btn-check { background:var(--accent); color:#000; border:none; border-radius:8px;
+  padding:7px 18px; cursor:pointer; font-weight:700; font-size:.82rem; margin-top:8px; }
+.correct-lbl { color:var(--pv); font-weight:700; }
+.wrong-lbl { color:var(--pf); font-weight:700; }
+
+/* ── FOOTER ── */
+.ref-box { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:14px; margin-top:20px; font-size:.8rem; color:var(--muted); }
+.ref-box h4 { color:var(--accent); margin-bottom:8px; font-size:.88rem; }
+.ref-box li { margin-bottom:4px; }
+
+/* ── PROGRESS BAR ── */
+.prog-bar { height:3px; background:var(--accent); position:fixed; top:0; left:0; z-index:200; transition:width .3s; }
+</style>
+</head>
+<body>
+<div class="prog-bar" id="prog"></div>
+
+<!-- TOP NAV -->
+<nav class="topnav">
+  <div class="logo">🧬 MalarAI</div>
+  <button class="nav-btn active" onclick="showMod('dasar',this)">① Dasar-Dasar</button>
+  <button class="nav-btn" onclick="showMod('lab',this)">② Laboratorium</button>
+  <button class="nav-btn" onclick="showMod('nonkomp',this)">③ Non-Komplikasi &amp; Berat</button>
+  <button class="nav-btn" onclick="showMod('khusus',this)">④ Kelompok Khusus</button>
+  <button class="nav-btn" onclick="showMod('soal',this)">📝 Latihan Soal</button>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════
+     MODULE 1 — DASAR-DASAR MALARIA
+═══════════════════════════════════════════════════ -->
+<section class="module active" id="mod-dasar">
+<div class="hero">
+  <h1>Dasar-Dasar <span>Malaria</span></h1>
+  <p>Definisi · Etiologi · Siklus Hidup · Transmisi · Faktor Risiko · Morfologi</p>
+  <div class="tags">
+    <span class="tag">📚 Si Paling Belajar</span>
+    <span class="tag">📋 Si Paling Merangkum</span>
+    <span class="tag">💡 Si Paling Inovasi</span>
+    <span class="tag">Kemenkes RI 2022</span><span class="tag">WHO 2024</span>
+  </div>
+</div>
+
+<!-- DEFINISI & ETIOLOGI -->
+<div class="sec-hdr"><span class="ico">🔬</span><h2>1. Definisi &amp; Etiologi</h2></div>
+<div class="card">
+  <h3>📖 Definisi</h3>
+  <p>Penyakit infeksi yang disebabkan oleh parasit <em>Plasmodium</em> spp yang hidup dan berkembang biak di sel darah merah manusia sebagai <strong>inang antara (host intermediate)</strong>, ditularkan melalui gigitan nyamuk <em>Anopheles</em> spp betina sebagai <strong>host definitif</strong>.</p>
+  <div class="info" style="margin-top:10px">
+    <strong>📌 Update WHO Guidelines 2024:</strong> Versi paling komprehensif — mencakup rekomendasi vaksin R21/Matrix-M, penggunaan tafenoquine, dan uji G6PD bedside. Indonesia: KMK No. HK.01.07/MENKES/1988/2024 — Peta Jalan Eliminasi Malaria 2025–2045. Target eliminasi nasional 2030.
+  </div>
+</div>
+
+<!-- 5 SPESIES -->
+<div class="sec-hdr"><span class="ico">🦠</span><h2>2. Lima Spesies Plasmodium pada Manusia</h2></div>
+<div class="grid2">
+  <div class="sp-card sp-pf">
+    <h3>🔴 P. falciparum — Malaria Tropika</h3>
+    <ul>
+      <li>Infeksi semua eritrosit (10–40%)</li>
+      <li>Siklus 48 jam (tertiana ireguler)</li>
+      <li>⚠️ Risiko komplikasi berat</li>
+      <li>Gametosit: hari ke-8 (bentuk pisang)</li>
+      <li><strong>Tidak ada hipnozoit</strong></li>
+    </ul>
+  </div>
+  <div class="sp-card sp-pv">
+    <h3>🟢 P. vivax — Malaria Tertiana</h3>
+    <ul>
+      <li>Infeksi retikulosit (&lt;2%)</li>
+      <li>Siklus 48 jam</li>
+      <li>Ada hipnozoit → relaps 3–4 tahun</li>
+      <li>Gametosit: hari ke-2–3</li>
+      <li>Terbanyak di Indonesia (kecuali Papua)</li>
+    </ul>
+  </div>
+  <div class="sp-card sp-pm">
+    <h3>🟣 P. malariae — Malaria Quartana</h3>
+    <ul>
+      <li>Infeksi eritrosit tua (~1%)</li>
+      <li>Siklus 72 jam</li>
+      <li>Gametosit: beberapa bulan</li>
+      <li>Relatif jinak, rekrudensi bertahun-tahun</li>
+      <li><strong>Tidak butuh primakuin</strong></li>
+    </ul>
+  </div>
+  <div class="sp-card sp-po">
+    <h3>🟣 P. ovale — Malaria Ovale</h3>
+    <ul>
+      <li>Infeksi retikulosit (&lt;2%)</li>
+      <li>Ada hipnozoit → relaps bertahun-tahun</li>
+      <li>Eritrosit oval bergerigi (fimbriated)</li>
+      <li>Inkubasi ekstrinsik: 15 hari</li>
+      <li>Jarang di Indonesia</li>
+    </ul>
+  </div>
+</div>
+<div class="sp-card sp-pk" style="margin-bottom:14px">
+  <h3>🟠 P. knowlesi — Malaria Zoonosis</h3>
+  <p>Dari primata (<em>Macaca</em> spp) · Siklus 24 jam → parasitemia naik cepat · Endemik Kalimantan &amp; Malaysia · Bisa berat seperti falciparum · <strong>Wajib konfirmasi PCR</strong></p>
+</div>
+
+<!-- SIKLUS HIDUP -->
+<div class="sec-hdr"><span class="ico">🔄</span><h2>3. Siklus Hidup Plasmodium</h2></div>
+<div class="grid2">
+  <div class="card">
+    <h3>👤 Pada Manusia (Aseksual)</h3>
+    <ol>
+      <li><strong>Sporozoit</strong> masuk dari gigitan nyamuk → darah → hati (½ jam)</li>
+      <li><strong>Ekso-eritrositik</strong>: hepatosit → skizon hati → 10.000–30.000 merozoit (5–16 hari)</li>
+      <li><strong>Eritrositik</strong>: merozoit → ring → trofozoit → skizon → pecah → <em>DEMAM</em></li>
+      <li><strong>Gametosit</strong>: sebagian merozoit → mikro (♂) + makrogametosit (♀)</li>
+    </ol>
+    <div class="warn" style="margin-top:8px">
+      <strong>Hipnozoit</strong> (P. vivax &amp; ovale): takisporozoit aktif langsung; bradisporozoit laten di hati → penyebab relaps
+    </div>
+  </div>
+  <div class="card">
+    <h3>🦟 Pada Nyamuk (Seksual — Sporogoni)</h3>
+    <ol>
+      <li>Gametosit terhisap → usus nyamuk</li>
+      <li>Fertilisasi → zigot → ookinet</li>
+      <li>Ookinet menembus dinding lambung → ookista</li>
+      <li>Ookista pecah → sporozoit baru</li>
+      <li>Sporozoit migrasi ke kelenjar saliva → siap infeksi</li>
+    </ol>
+    <div class="info" style="margin-top:8px">Suhu optimal sporogoni: 25–27°C. Suhu ≥32°C → parasit mati dalam nyamuk.</div>
+  </div>
+</div>
+
+<!-- MASA INKUBASI -->
+<div class="sec-hdr"><span class="ico">⏱️</span><h2>4. Masa Inkubasi &amp; Pola Demam</h2></div>
+<div class="tbl-wrap">
+<table>
+  <tr><th>Spesies</th><th>Jenis Malaria</th><th>Inkubasi Intrinsik</th><th>Siklus Demam</th><th>Keterangan</th></tr>
+  <tr><td>🔴 P. falciparum</td><td>Tropika</td><td>7–14 hari</td><td>48 jam (ireguler)</td><td>Bisa berat</td></tr>
+  <tr><td>🟢 P. vivax</td><td>Tertiana</td><td>12–17 hari (bisa 6–12 bln)</td><td>48 jam</td><td>Hipnozoit</td></tr>
+  <tr><td>🟣 P. malariae</td><td>Quartana</td><td>18–40 hari</td><td>72 jam</td><td>Jinak, lama</td></tr>
+  <tr><td>🟣 P. ovale</td><td>Ovale</td><td>16–18 hari (bisa lebih)</td><td>48 jam</td><td>Hipnozoit</td></tr>
+  <tr><td>🟠 P. knowlesi</td><td>Simian</td><td>9–12 hari</td><td>24 jam (quotidiana)</td><td>Cepat berat</td></tr>
+</table>
+</div>
+
+<!-- TRANSMISI -->
+<div class="sec-hdr"><span class="ico">🔁</span><h2>5. Cara Transmisi</h2></div>
+<div class="grid2">
+  <div class="card">
+    <h3>✅ Penularan Natural (Utama)</h3>
+    <p>Gigitan nyamuk <em>Anopheles</em> betina → sporozoit masuk peredaran darah.</p>
+  </div>
+  <div class="card">
+    <h3>⚠️ Penularan Non-Natural</h3>
+    <ul>
+      <li>Transplasenta: ibu → janin</li>
+      <li>Transfusi darah terinfeksi</li>
+      <li>Penggunaan jarum suntik bersama</li>
+    </ul>
+  </div>
+</div>
+
+<!-- FAKTOR RISIKO -->
+<div class="sec-hdr"><span class="ico">⚠️</span><h2>6. Faktor Risiko</h2></div>
+<div class="grid3">
+  <div class="card">
+    <h3>👤 Hospes (Manusia)</h3>
+    <ul>
+      <li>Bayi &amp; balita (imunitas rendah)</li>
+      <li>Wanita hamil (T1 &amp; T2)</li>
+      <li>Defisiensi G6PD, Sickle cell</li>
+      <li>Pekerja hutan/tambang</li>
+      <li>Wisatawan non-imun</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>🦟 Hospes (Nyamuk)</h3>
+    <ul>
+      <li>Kepadatan populasi Anopheles</li>
+      <li>Umur nyamuk (longevity)</li>
+      <li>Endofagik vs eksofagik</li>
+      <li>Antropofilik vs zoofilik</li>
+      <li>&gt;70 spesies Anopheles di Indonesia</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>🌍 Lingkungan &amp; Sosial</h3>
+    <ul>
+      <li>Suhu optimal nyamuk: 25–27°C</li>
+      <li>Kelembaban &lt;60% → usia nyamuk ↓</li>
+      <li>Migrasi dari/ke daerah endemis</li>
+      <li>Wisatawan, transmigrasi, TNI/POLRI</li>
+      <li>Pembukaan lahan baru</li>
+    </ul>
+  </div>
+</div>
+
+<!-- GEJALA & DIAGNOSIS -->
+<div class="sec-hdr"><span class="ico">🌡️</span><h2>7. Gejala Klinis &amp; Diagnosis</h2></div>
+<div class="card">
+  <h3>⚡ Trias Malaria (Gejala Klasik)</h3>
+  <div class="grid3" style="margin-top:8px">
+    <div style="text-align:center;background:var(--card2);border-radius:8px;padding:12px">
+      <div style="font-size:1.8rem">🥶</div>
+      <div style="font-weight:700;font-size:.9rem;color:var(--accent)">MENGGIGIL</div>
+      <div style="font-size:.8rem;color:var(--muted)">Cold stage<br>15–60 menit</div>
+    </div>
+    <div style="text-align:center;background:var(--card2);border-radius:8px;padding:12px">
+      <div style="font-size:1.8rem">🔥</div>
+      <div style="font-weight:700;font-size:.9rem;color:var(--accent2)">DEMAM</div>
+      <div style="font-size:.8rem;color:var(--muted)">Hot stage<br>2–6 jam, ≥40°C</div>
+    </div>
+    <div style="text-align:center;background:var(--card2);border-radius:8px;padding:12px">
+      <div style="font-size:1.8rem">💧</div>
+      <div style="font-weight:700;font-size:.9rem;color:var(--accent3)">BERKERINGAT</div>
+      <div style="font-size:.8rem;color:var(--muted)">Sweating stage<br>Suhu turun, lemas</div>
+    </div>
+  </div>
+  <p style="margin-top:10px;font-size:.85rem;color:var(--muted)">+ Sakit kepala · mual · muntah · nyeri otot &amp; sendi · splenomegali · anemia · trombositopenia</p>
+</div>
+<div class="card">
+  <h3>🔍 Alur Diagnosis (Kemenkes RI 2022)</h3>
+  <div class="flow">
+    <div class="flow-box start">Pasien Demam / Riwayat Demam</div>
+    <div class="flow-arr">▼</div>
+    <div class="flow-box">Daerah Endemis: demam/riwayat 48 jam<br>Non-Endemis: demam/riwayat 7 hari + faktor risiko</div>
+    <div class="flow-arr">▼</div>
+    <div class="flow-box">⚠️ WAJIB DIDUGA MALARIA → Periksa Darah Malaria (&lt;1 hari)</div>
+    <div class="flow-arr">▼</div>
+    <div style="display:flex;gap:12px;width:100%;max-width:400px">
+      <div class="flow-box end-warn" style="flex:1">❌ Negatif<br>Cari penyebab lain</div>
+      <div class="flow-box end-ok" style="flex:1">✅ Positif<br>Identifikasi spesies → Terapi</div>
+    </div>
+  </div>
+</div>
+
+<!-- MORFOLOGI -->
+<div class="sec-hdr"><span class="ico">🔬</span><h2>8. Morfologi Mikroskopik — Ciri Khas per Spesies</h2></div>
+<div class="tbl-wrap">
+<table>
+  <tr><th>Spesies</th><th>Eritrosit</th><th>Stippling</th><th>Trofozoit Khas</th><th>Skizon Khas</th><th>Gametosit Khas</th></tr>
+  <tr>
+    <td><strong style="color:var(--pf)">🔴 P. falciparum</strong></td>
+    <td>Normal, tidak membesar</td>
+    <td>Maurer's clefts (kasar)</td>
+    <td>Cincin tipis, double chromatin, appliqué, multiple per sel</td>
+    <td>8–24 merozoit, jarang di darah tepi (sekuestrasi)</td>
+    <td><strong>🍌 PISANG/SABIT — patognomonik!</strong></td>
+  </tr>
+  <tr>
+    <td><strong style="color:var(--pv)">🟢 P. vivax</strong></td>
+    <td>Membesar 1.5–2×, pucat</td>
+    <td>Schüffner's dots (halus, ++)</td>
+    <td>Ameboid, tidak beraturan, vakuola besar</td>
+    <td>12–24 merozoit (terbanyak), mengisi eritrosit</td>
+    <td>Bulat besar, memenuhi eritrosit</td>
+  </tr>
+  <tr>
+    <td><strong style="color:var(--pm)">🟣 P. malariae</strong></td>
+    <td>Normal/mengecil</td>
+    <td>Tidak ada</td>
+    <td><strong>Band form ⬛ — pita melintang, patognomonik!</strong></td>
+    <td><strong>Rosette 🌸 6–12 merozoit — patognomonik!</strong></td>
+    <td>Bulat kompak, timbul lambat (bulan)</td>
+  </tr>
+  <tr>
+    <td><strong style="color:var(--po)">🟣 P. ovale</strong></td>
+    <td>Oval bergerigi (fimbriated), membesar 1.25×</td>
+    <td>James' dots (kasar)</td>
+    <td>Kompak, ameboid ringan, eritrosit oval</td>
+    <td>6–12 merozoit, eritrosit oval</td>
+    <td>Bulat oval, eritrosit oval bergerigi</td>
+  </tr>
+  <tr>
+    <td><strong style="color:var(--pk)">🟠 P. knowlesi</strong></td>
+    <td>Normal, tidak membesar</td>
+    <td>Tidak ada</td>
+    <td>Mirip Pf (muda) / Pv (dewasa)</td>
+    <td>10–16 merozoit, mirip Pm (rosette kecil)</td>
+    <td>Bulat, mirip Pm — wajib PCR!</td>
+  </tr>
+</table>
+</div>
+
+<!-- MNEMONIC -->
+<div class="mnemonic">
+  <h3>🧠 Mnemonic — Ciri PATOGNOMONIK per Spesies</h3>
+  <div class="items">
+    <div class="item"><strong>🔴 Pf</strong> — "TIPIS PISANG BANYAK" (ring tipis + gametosit pisang + multiple rings)</div>
+    <div class="item"><strong>🟢 Pv</strong> — "BESAR AMUBA SCHÜFFNER" (eritrosit besar + ameboid + Schüffner dots)</div>
+    <div class="item"><strong>🟣 Pm</strong> — "BAND + ROSETTE" (band form + skizon rosette, eritrosit normal)</div>
+    <div class="item"><strong>🟣 Po</strong> — "OVAL BERGERIGI JAMES" (eritrosit oval fimbriated + James dots)</div>
+    <div class="item"><strong>🟠 Pk</strong> — "KAMUFLASE + PCR" (mirip 3 spesies, eritrosit normal, siklus 24 jam)</div>
+  </div>
+</div>
+
+<!-- KLASIFIKASI MALARIA -->
+<div class="sec-hdr"><span class="ico">📊</span><h2>9. Klasifikasi Malaria Berdasarkan Endemisitas</h2></div>
+<div class="grid2">
+  <div class="card"><h3>🏡 Indogenous</h3><p>Penularan lokal, tidak ada riwayat ke daerah endemis dalam 4 minggu</p></div>
+  <div class="card"><h3>✈️ Import</h3><p>Ada riwayat ke daerah endemis dalam 4 minggu terakhir</p></div>
+  <div class="card"><h3>🔗 Introduced</h3><p>Kasus indogenous tertular dari kasus import (radius 100m, 2–4 minggu)</p></div>
+  <div class="card"><h3>🔄 Relaps</h3><p>Rekrudensi (&lt;8 minggu) atau rekurensi (&gt;24 minggu, hipnozoit)</p></div>
+</div>
+
+<div class="ref-box">
+  <h4>📚 Referensi Modul 1</h4>
+  <ul>
+    <li>WHO Guidelines for Malaria. Geneva: WHO; 2024 (updated 30 Nov 2024)</li>
+    <li>Kemenkes RI. Pedoman Nasional Penanganan Malaria. KMK No. HK.01.07/MENKES/549/2022</li>
+    <li>KMK No. HK.01.07/MENKES/1988/2024 — Peta Jalan Eliminasi Malaria 2025–2045</li>
+    <li>CDC DPDx — Malaria Identification. Division of Parasitic Diseases and Malaria, 2024</li>
+  </ul>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     MODULE 2 — LABORATORIUM
+═══════════════════════════════════════════════════ -->
+<section class="module" id="mod-lab">
+<div class="hero">
+  <h1>Diagnosis <span>Laboratorium</span> Malaria</h1>
+  <p>Mikroskopi · Morfologi Parasit · Hitung Parasit · RDT · PCR · Situasi Indonesia 2025</p>
+  <div class="tags">
+    <span class="tag">Sediaan Darah Tebal</span><span class="tag">Sediaan Darah Tipis</span>
+    <span class="tag">Pewarnaan Giemsa</span><span class="tag">WHO 2024</span>
+  </div>
+</div>
+
+<!-- SITUASI INDONESIA -->
+<div class="sec-hdr"><span class="ico">🌍</span><h2>1. Situasi Malaria Indonesia 2025</h2></div>
+<div class="grid3">
+  <div class="card" style="border-color:var(--accent)">
+    <h3>📊 Capaian Nasional</h3>
+    <ul>
+      <li>Target: <strong>8,3 juta</strong> pemeriksaan</li>
+      <li>~947 ribu kasus ditemukan</li>
+      <li>&gt;93% kasus dari Papua</li>
+      <li>Deteksi kasus baru ~54%</li>
+      <li>&gt;20% kasus dari populasi MMP</li>
+    </ul>
+  </div>
+  <div class="card" style="border-color:var(--pk)">
+    <h3>📍 Situasi Kalimantan 2025</h3>
+    <ul>
+      <li>Total kasus: 1.746</li>
+      <li>Pv 60% · Pf 24% · Mix 12%</li>
+      <li>Pm 3% · Po 0% · Pk 1%</li>
+      <li>Pk endemik: Hutan Kalimantan</li>
+      <li>Reservoir: <em>Macaca fascicularis</em></li>
+    </ul>
+  </div>
+  <div class="card" style="border-color:var(--accent3)">
+    <h3>🦟 Vektor di Indonesia</h3>
+    <ul>
+      <li>&gt;70 spesies Anopheles</li>
+      <li>12 spesies vektor penting</li>
+      <li><em>An. sundaicus, subpictus, maculatus</em></li>
+      <li><em>An. barbirostris, farauti</em></li>
+      <li><em>An. leucosphyrus</em> (vektor Pk)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- PERBANDINGAN METODE -->
+<div class="sec-hdr"><span class="ico">⚡</span><h2>2. Perbandingan Metode Diagnosis</h2></div>
+<div class="tbl-wrap">
+<table>
+  <tr><th>Parameter</th><th>🔬 Mikroskopi</th><th>🩺 RDT</th><th>🧬 PCR</th></tr>
+  <tr><td>Sensitivitas</td><td>50–200/µl (expert: 5–20)</td><td>~100/µl</td><td><strong>1–10/µl</strong></td></tr>
+  <tr><td>Identifikasi Spesies</td><td>✅ 5 spesies + stadium</td><td>⚠️ Terbatas</td><td>✅ Sangat akurat</td></tr>
+  <tr><td>Hitung Parasit</td><td>✅</td><td>❌</td><td>❌ (semi-kuantitatif)</td></tr>
+  <tr><td>Evaluasi Pengobatan</td><td>✅</td><td>❌ (HRP-2 persisten)</td><td>✅</td></tr>
+  <tr><td>Waktu</td><td>60–90 menit</td><td>10–20 menit</td><td>3–5 hari</td></tr>
+  <tr><td>Biaya</td><td>Murah</td><td>Sedang</td><td>Mahal</td></tr>
+  <tr><td>Daerah Terpencil</td><td>Butuh listrik/mikros</td><td>✅ Ideal</td><td>❌</td></tr>
+  <tr><td>Gold Standard</td><td>✅</td><td>—</td><td>Konfirmasi Pk</td></tr>
+</table>
+</div>
+<div class="warn"><strong>Kebijakan Kemenkes RI:</strong> Semua kasus malaria HARUS dikonfirmasi mikroskopi ATAU RDT sebelum diobati. Tidak boleh terapi empiris tanpa konfirmasi lab.</div>
+
+<!-- MIKROSKOPI TEKNIS -->
+<div class="sec-hdr"><span class="ico">🔭</span><h2>3. Teknik Pemeriksaan Mikroskopi</h2></div>
+<div class="grid2">
+  <div class="card">
+    <h3>🩸 Sediaan Darah Tebal (SDT)</h3>
+    <ul>
+      <li>Volume: 6 µl (3 tetes), diameter ±1 cm</li>
+      <li>Eritrosit lisis → parasit terkonsentrasi</li>
+      <li>20–40× lebih sensitif dari darah tipis</li>
+      <li>Tujuan: <strong>SKRINING</strong></li>
+      <li>Negatif = tidak ada parasit dalam 100 LP</li>
+      <li>Ketebalan baik: leukosit 15–20/LPB</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>🩸 Sediaan Darah Tipis (SDTipis)</h3>
+    <ul>
+      <li>Volume: 2 µl (1 tetes)</li>
+      <li>Eritrosit utuh → morfologi jelas</li>
+      <li>Tujuan: <strong>IDENTIFIKASI SPESIES</strong></li>
+      <li>Fiksasi dengan methanol sebelum Giemsa</li>
+      <li>Hitung parasit per 1.000 eritrosit</li>
+    </ul>
+  </div>
+</div>
+<div class="card">
+  <h3>🎨 Pewarnaan Giemsa — Panduan Teknis</h3>
+  <div class="grid2" style="margin-top:8px">
+    <div>
+      <p style="font-size:.85rem"><strong>Konsentrasi:</strong> 3% (0,3 ml stok + 9,7 ml buffer pH 7,2)</p>
+      <p style="font-size:.85rem"><strong>Durasi:</strong> 45–60 menit</p>
+      <p style="font-size:.85rem"><strong>Buffer pH 7,2 WAJIB</strong> — kritis untuk hasil optimal</p>
+    </div>
+    <div>
+      <p style="font-size:.85rem">✅ Warna baik: Inti parasit 🔴 merah · Sitoplasma 🔵 biru · Inti leukosit 🟣 ungu</p>
+      <p style="font-size:.85rem">⚠️ Buffer asam (pH&lt;7,2): semua jadi merah</p>
+      <p style="font-size:.85rem">⚠️ Buffer basa (pH&gt;7,2): semua jadi biru</p>
+    </div>
+  </div>
+</div>
+
+<!-- HITUNG PARASIT -->
+<div class="sec-hdr"><span class="ico">📐</span><h2>4. Rumus Hitung Parasit (Parasitemia)</h2></div>
+<div class="grid2">
+  <div class="card" style="border-color:var(--accent)">
+    <h3>🩸 Metode Darah Tebal</h3>
+    <div style="text-align:center;background:var(--card2);border-radius:8px;padding:12px;margin:8px 0;font-size:1.1rem;font-family:monospace">
+      Parasit/µl = (Jml Parasit × 8.000) / Jml Leukosit
+    </div>
+    <p style="font-size:.83rem">Hitung bersamaan hingga 200 leukosit. Jika parasit ≥100 saat 200 leukosit → lanjut hingga 500 leukosit.</p>
+    <p style="font-size:.83rem;margin-top:6px"><em>Contoh: 241 parasit / 205 leukosit × 8.000 = <strong>9.405/µl</strong></em></p>
+  </div>
+  <div class="card" style="border-color:var(--accent2)">
+    <h3>🩸 Metode Darah Tipis (% Parasitemia)</h3>
+    <div style="text-align:center;background:var(--card2);border-radius:8px;padding:12px;margin:8px 0;font-size:1.1rem;font-family:monospace">
+      Parasit/µl = (Parasit / 1.000) × 5.000.000
+    </div>
+    <p style="font-size:.83rem">Hitung eritrosit terinfeksi dari 1.000–2.000 eritrosit pada area satu lapis rata.</p>
+    <div class="tbl-wrap" style="margin-top:8px">
+      <table>
+        <tr><th>Kepadatan</th><th>Interpretasi</th></tr>
+        <tr><td>100–10.000/µl</td><td>Malaria tanpa komplikasi</td></tr>
+        <tr><td>&gt;100.000/µl</td><td>Malaria berat/komplikasi</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- RDT -->
+<div class="sec-hdr"><span class="ico">🩺</span><h2>5. Rapid Diagnostic Test (RDT)</h2></div>
+<div class="card">
+  <h3>🔬 Antigen yang Dideteksi</h3>
+  <div class="grid3" style="margin-top:8px">
+    <div style="background:var(--card2);border-radius:8px;padding:10px;text-align:center;font-size:.82rem">
+      <strong style="color:var(--pf)">HRP-2</strong><br>Histidine-rich protein 2<br><em>Spesifik P. falciparum</em>
+    </div>
+    <div style="background:var(--card2);border-radius:8px;padding:10px;text-align:center;font-size:.82rem">
+      <strong style="color:var(--accent3)">pLDH pan</strong><br>Lactate dehydrogenase<br><em>Semua spesies</em>
+    </div>
+    <div style="background:var(--card2);border-radius:8px;padding:10px;text-align:center;font-size:.82rem">
+      <strong style="color:var(--accent2)">Pan Aldolase</strong><br>Enzim glikolisis<br><em>Semua spesies</em>
+    </div>
+  </div>
+  <div class="warn" style="margin-top:10px">
+    <strong>Keterbatasan RDT:</strong> ❌ Tidak bisa hitung parasit · ❌ Tidak bisa evaluasi pengobatan (HRP-2 bertahan berminggu-minggu) · ❌ False negative jika ada HRP-2 gene deletion · ❌ Tidak ada RDT spesifik Pk · ❌ Tidak menggantikan mikroskopi
+  </div>
+</div>
+
+<!-- MORFOLOGI PER SPESIES (ringkasan lab) -->
+<div class="sec-hdr"><span class="ico">🦠</span><h2>6. Morfologi Mikroskopik — Ringkasan Poin Kritis</h2></div>
+<div class="mnemonic">
+  <h3>🚨 Poin Kritis yang Sering Diuji</h3>
+  <div class="items">
+    <div class="item"><strong>Schüffner</strong> = Pv (halus) | <strong>James</strong> = Po (kasar) | <strong>Maurer</strong> = Pf (kasar)</div>
+    <div class="item">🍌 <strong>Gametosit pisang = HANYA Pf</strong></div>
+    <div class="item">⬛ <strong>Band form = HANYA Pm</strong></div>
+    <div class="item">📏 <strong>Eritrosit paling besar = Pv</strong> (1,5–2×)</div>
+    <div class="item">⚠️ <strong>HRP-2 positif ≠ masih ada parasit</strong> (bisa sisa antigen)</div>
+    <div class="item">🔬 <strong>Pk wajib PCR</strong> (mirip Pf+Pv+Pm sekaligus)</div>
+  </div>
+</div>
+<div class="tbl-wrap">
+<table>
+  <tr><th>Spesies</th><th>Eritrosit</th><th>Trofozoit KHAS</th><th>Skizon KHAS</th><th>Gametosit</th><th>Ciri Beda</th></tr>
+  <tr><td style="color:var(--pf)"><strong>Pf</strong></td><td>Normal</td><td>Cincin kecil, appliqué, double chromatin</td><td>8–24 merozoit (jarang di tepi)</td><td>🍌 Pisang/sabit</td><td>Maurer's clefts, sekuestrasi</td></tr>
+  <tr><td style="color:var(--pv)"><strong>Pv</strong></td><td>Besar 1,5–2×, pucat</td><td>Amuboid, tidak beraturan</td><td>12–24 merozoit (terbanyak)</td><td>Bulat besar</td><td>Schüffner dots, hipnozoit</td></tr>
+  <tr><td style="color:var(--pm)"><strong>Pm</strong></td><td>Normal/kecil</td><td>⬛ Band form (pita melintang)</td><td>🌸 Rosette 6–12 merozoit</td><td>Bulat kompak</td><td>No stippling, siklus 72 jam</td></tr>
+  <tr><td style="color:var(--po)"><strong>Po</strong></td><td>Oval bergerigi, 1,25×</td><td>Kompak, sedikit ameboid</td><td>6–12 merozoit</td><td>Bulat oval</td><td>James dots, fimbriated</td></tr>
+  <tr><td style="color:var(--pk)"><strong>Pk</strong></td><td>Normal</td><td>Mirip Pf (muda)/Pv (dewasa)</td><td>Mirip Pm (rosette kecil)</td><td>Bulat, mirip Pm</td><td>PCR wajib! Siklus 24 jam</td></tr>
+</table>
+</div>
+
+<!-- CARA PELAPORAN -->
+<div class="sec-hdr"><span class="ico">📋</span><h2>7. Cara Pelaporan Hasil Mikroskopi</h2></div>
+<div class="card">
+  <div class="grid2">
+    <div>
+      <p style="font-size:.85rem"><strong>Neg / (-)</strong> = Negatif (tidak ada parasit dalam 100 LP)</p>
+      <p style="font-size:.85rem"><strong>Pf</strong> = P. falciparum trofozoit</p>
+      <p style="font-size:.85rem"><strong>Pf+g</strong> = Pf + gametosit</p>
+      <p style="font-size:.85rem"><strong>Pfg</strong> = gametosit saja</p>
+    </div>
+    <div>
+      <p style="font-size:.85rem"><strong>Pv</strong> = P. vivax | <strong>Pm</strong> = P. malariae | <strong>Po</strong> = P. ovale</p>
+      <p style="font-size:.85rem"><strong>Mix (Pf+Pv)</strong> = Infeksi campuran</p>
+      <p style="font-size:.85rem"><strong>Pk</strong> = P. knowlesi (konfirmasi PCR)</p>
+    </div>
+  </div>
+</div>
+
+<div class="ref-box">
+  <h4>📚 Referensi Modul 2</h4>
+  <ul>
+    <li>CDC DPDx — Malaria Parasite Identification. cdc.gov/dpdx/malaria (2024)</li>
+    <li>WHO. Malaria Microscopy Quality Assurance Manual. Version 2. Geneva: WHO; 2016</li>
+    <li>Kemenkes RI. Pedoman Nasional Penanganan Malaria 2022</li>
+    <li>Buku Saku Tatalaksana Malaria. Bapelkes/Kemenkes RI; 2026</li>
+    <li>Situasi Malaria Indonesia 2025 — Laporan Subdit Malaria, Kemenkes RI</li>
+  </ul>
+</div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════
+     MODULE 3 — NON-KOMPLIKASI & BERAT
+═══════════════════════════════════════════════════ -->
+<section class="module" id="mod-nonkomp">
+<div class="hero">
+  <h1>Tatalaksana Malaria <span>Non-Komplikasi &amp; Berat</span></h1>
+  <p>DHP · Primakuin · Artesunate IV · 7 Standar Pengobatan · Malaria Berat 13 Kriteria</p>
+  <div class="tags">
+    <span class="tag">DHP Lini Pertama</span><span class="tag">Artesunate IV</span>
+    <span class="tag">Kemenkes 2022</span><span class="tag">WHO 2022</span>
+  </div>
+</div>
+
+<!-- 5 STANDAR DIAGNOSIS -->
+<div class="sec-hdr"><span class="ico">🔬</span><h2>1. Lima Standar Diagnosis Malaria (Kemenkes 2022)</h2></div>
+<div class="card">
+  <ol style="font-size:.88rem;padding-left:18px">
+    <li style="margin-bottom:8px"><strong style="color:var(--pf)">Daerah Endemis:</strong> Setiap individu dengan demam atau riwayat demam 48 jam atau tampak anemi → wajib diduga malaria</li>
+    <li style="margin-bottom:8px"><strong style="color:var(--accent)">Daerah Non-Endemis:</strong> Demam atau riwayat demam 7 hari + faktor risiko (riwayat perjalanan ke endemis, transfusi, dll)</li>
+    <li style="margin-bottom:8px"><strong style="color:var(--accent2)">Riwayat Malaria:</strong> Setiap individu dengan gejala demam yang pernah menderita malaria → wajib diduga malaria</li>
+    <li style="margin-bottom:8px"><strong style="color:var(--accent3)">Konfirmasi Parasitologi Wajib:</strong> Tidak boleh terapi empiris — harus mikroskopi atau RDT</li>
+    <li style="margin-bottom:8px"><strong style="color:var(--muted)">Target Waktu:</strong> Hasil diagnosis &lt;1 hari sejak pasien memeriksakan diri</li>
+  </ol>
+</div>
+
+<!-- PENGOBATAN NON-KOMPLIKASI -->
+<div class="sec-hdr"><span class="ico">💊</span><h2>2. Pengobatan Malaria Non-Komplikasi</h2></div>
+<div class="ok">
+  <strong>✅ Lini Pertama:</strong> Dihidroartemisinin-Piperakuin (DHP) + Primakuin — berlaku untuk semua spesies (dosis dan durasi primakuin berbeda per spesies)
+</div>
+
+<div class="tbl-wrap">
+<table>
+  <tr><th>Spesies</th><th>DHP</th><th>Primakuin</th><th>Catatan Penting</th></tr>
+  <tr>
+    <td style="color:var(--pf)"><strong>🔴 P. falciparum</strong></td>
+    <td>3 hari sesuai BB</td>
+    <td>0,25 mg/kgBB dosis tunggal hari ke-1</td>
+    <td>Primakuin: anti-gametosit, satu hari saja</td>
+  </tr>
+  <tr>
+    <td style="color:var(--pv)"><strong>🟢 P. vivax</strong></td>
+    <td>3 hari sesuai BB</td>
+    <td>0,25 mg/kgBB/hari × 14 hari (atau dosis optimum G6PD)</td>
+    <td>Wajib cek G6PD sebelum primakuin. Radical cure untuk eradikasi hipnozoit</td>
+  </tr>
+  <tr>
+    <td style="color:var(--pm)"><strong>🟣 P. malariae</strong></td>
+    <td>3 hari sesuai BB</td>
+    <td><strong>Tidak diperlukan</strong></td>
+    <td>Tidak ada hipnozoit → tidak perlu primakuin</td>
+  </tr>
+  <tr>
+    <td style="color:var(--po)"><strong>🟣 P. ovale</strong></td>
+    <td>3 hari sesuai BB</td>
+    <td>0,25 mg/kgBB/hari × 14 hari</td>
+    <td>Ada hipnozoit → radical cure seperti vivax</td>
+  </tr>
+  <tr>
+    <td><strong>Mix (Pf+Pv)</strong></td>
+    <td>3 hari sesuai BB</td>
+    <td>Hari 1: dosis tunggal (Pf) + Hari 2–14: 0,25 mg/kgBB/hari (Pv radical cure)</td>
+    <td>Tangani kedua spesies sekaligus</td>
+  </tr>
+</table>
+</div>
+
+<!-- DOSIS DHP -->
+<div class="card">
+  <h3>📊 Tabel Dosis DHP (40/320 mg) + Primakuin (15 mg) berdasarkan Berat Badan</h3>
+  <div class="tbl-wrap">
+  <table>
+    <tr><th>Hari</th><th>Obat</th><th>&lt;8 kg</th><th>8–11 kg</th><th>11–17 kg</th><th>17–25 kg</th><th>25–36 kg</th><th>36–60 kg</th><th>60–80 kg</th><th>≥80 kg</th></tr>
+    <tr><td>0–2 (3 hari)</td><td>DHP tablet</td><td>½</td><td>¾</td><td>1</td><td>1½</td><td>2</td><td>3</td><td>4</td><td>5</td></tr>
+    <tr><td>Hari ke-1 saja</td><td>Primakuin 15mg*</td><td>—</td><td>¼</td><td>¼</td><td>½</td><td>¾</td><td>1</td><td>1</td><td>1</td></tr>
+  </table>
+  </div>
+  <p style="font-size:.78rem;margin-top:6px;color:var(--muted)">*Primakuin hanya untuk anak ≥6 bulan · KI: ibu hamil, menyusui bayi &lt;1 bulan, defisiensi G6PD berat</p>
+</div>
+
+<!-- PRIMAKUIN G6PD OPTIMUM -->
+<div class="sec-hdr"><span class="ico">🧬</span><h2>3. Primakuin Dosis Optimum — Berbasis G6PD (Vivax)</h2></div>
+<div class="tbl-wrap">
+<table>
+  <tr><th>Aktivitas G6PD</th><th>Dosis Primakuin</th><th>Frekuensi</th><th>Durasi</th></tr>
+  <tr><td style="color:var(--pv)"><strong>Normal ≥6,1 U/g Hb</strong></td><td>1 mg/kgBB/hari</td><td>1× sehari</td><td>7 hari</td></tr>
+  <tr><td style="color:var(--accent2)"><strong>Intermediet 4,1–6,0 U/g Hb</strong></td><td>0,5 mg/kgBB/hari</td><td>1× sehari</td><td>14 hari</td></tr>
+  <tr><td style="color:var(--pf)"><strong>Defisiensi ≤4,0 U/g Hb</strong></td><td>0,75 mg/kgBB/minggu</td><td>1× per minggu</td><td>8 minggu</td></tr>
+</table>
+</div>
+<div class="warn"><strong>Kontraindikasi Primakuin (Mutlak):</strong> Ibu hamil (semua trimester) · Bayi &lt;6 bulan · Defisiensi G6PD berat (Kelas I–II) · Ibu menyusui bayi &lt;1 bulan</div>
+
+<!-- 7 STANDAR PENGOBATAN -->
+<div class="sec-hdr"><span class="ico">📋</span><h2>4. Tujuh Standar Pengobatan Malaria (Kemenkes 2022)</h2></div>
+<div class="card">
+  <ol style="font-size:.87rem;padding-left:18px">
+    <li style="margin-bottom:8px">Mengikuti kebijakan nasional pengendalian malaria</li>
+    <li style="margin-bottom:8px"><strong>ACT hanya untuk parasitologi POSITIF</strong> — diberikan segera setelah ada hasil</li>
+    <li style="margin-bottom:8px">ACT (DHP) + Primakuin sesuai jenis Plasmodium (KI: bayi &lt;6 bln, hamil, menyusui &lt;6 bln, G6PD)</li>
+    <li style="margin-bottom:8px">DHP diberikan 3 hari sesuai BB: H0 → H1 → H2</li>
+    <li style="margin-bottom:8px">Malaria berat → <strong>Artesunate IV/IM</strong> (jam ke-0, 12, 24 → step-down ke DHP oral)</li>
+    <li style="margin-bottom:8px">Kepatuhan pasien (DOT) — dosis pertama minum di depan petugas</li>
+    <li style="margin-bottom:8px"><strong>Pra-rujukan malaria berat</strong> — WAJIB beri dosis awal Artesunate IV/IM sebelum merujuk</li>
+  </ol>
+</div>
+
+<!-- PEMANTAUAN -->
+<div class="card">
+  <h3>📅 Jadwal Pemantauan Pengobatan</h3>
+  <div class="grid2" style="margin-top:8px">
+    <div>
+      <p style="font-size:.85rem"><strong>Rawat Jalan:</strong> Evaluasi klinis + sediaan darah mikroskopis</p>
+      <p style="font-size:.85rem">→ Hari ke-<strong>3, 7, 14, 28</strong></p>
+    </div>
+    <div>
+      <p style="font-size:.85rem"><strong>Rawat Inap:</strong> Evaluasi klinis + darah malaria setiap hari</p>
+      <p style="font-size:.85rem">→ Hingga klinis membaik + mikroskopi negatif</p>
+    </div>
+  </div>
+</div>
+
+<!-- MALARIA BERAT -->
+<div class="sec-hdr"><span class="ico">🚨</span><h2>5. Malaria Berat — Kriteria &amp; Tatalaksana</h2></div>
+<div class="warn">
+  <strong>⚠️ DEFINISI:</strong> Ditemukannya Plasmodium falciparum (atau P. knowlesi) stadium aseksual dengan satu atau lebih manifestasi klinis berikut (WHO 2022):
+</div>
+<div class="card">
+  <h3>📋 13 Kriteria Malaria Berat (WHO 2022)</h3>
+  <div class="grid2" style="margin-top:8px">
+    <ol style="font-size:.84rem;padding-left:18px">
+      <li>Gangguan kesadaran / malaria serebral (GCS &lt;11)</li>
+      <li>Kelemahan umum berat (tidak bisa duduk/berdiri)</li>
+      <li>Kejang berulang (&gt;2 kali/24 jam)</li>
+      <li>Distress pernapasan / edema paru</li>
+      <li>Gagal sirkulasi / syok (TD sistolik &lt;70 mmHg)</li>
+      <li>Perdarahan abnormal</li>
+      <li>Ikterik (bilirubin &gt;3 mg/dL + parasitemia)</li>
+    </ol>
+    <ol start="8" style="font-size:.84rem;padding-left:18px">
+      <li>Hemoglobinuria (urine seperti teh/kola)</li>
+      <li>Anemia berat (Hb &lt;7 g/dL + parasitemia)</li>
+      <li>Hipoglikemia (GDS &lt;40 mg/dL)</li>
+      <li>Hiperparasitemia (&gt;5% eritrosit terinfeksi)</li>
+      <li>Gangguan fungsi ginjal akut (kreatinin &gt;3 mg/dL)</li>
+      <li>Asidosis metabolik (BE &lt;-8 atau bikarbonat &lt;15 mmol/L)</li>
+    </ol>
+  </div>
+</div>
+
+<div class="card">
+  <h3>💉 Tatalaksana Artesunate IV (Lini Pertama Malaria Berat)</h3>
+  <div class="tbl-wrap">
+  <table>
+    <tr><th>Pasien</th><th>Dosis</th><th>Jadwal</th></tr>
+    <tr><td>Dewasa &amp; anak ≥20 kg</td><td><strong>2,4 mg/kgBB</strong></td><td>Jam ke-0, 12, 24 → selanjutnya tiap 24 jam</td></tr>
+    <tr><td>Anak &lt;20 kg</td><td><strong>3,0 mg/kgBB</strong></td><td>Jam ke-0, 12, 24 → selanjutnya tiap 24 jam</td></tr>
+    <tr><td>Ibu hamil (semua trimester)</td><td>2,4 mg/kgBB</td><td>Sama seperti dewasa</td></tr>
+  </table>
+  </div>
+  <div class="ok" style="margin-top:8px">
+    <strong>Step-down:</strong> Setelah perbaikan klinis + lab + intake oral memungkinkan (minimal 24 jam IV) → lanjut DHP oral + primakuin sesuai protokol tanpa komplikasi
+  </div>
+</div>
+
+<!-- TATALAKSANA PRE-REFERRAL -->
+<div class="card" style="border-color:var(--pf)">
+  <h3>🚑 Tatalaksana Pra-Rujukan Malaria Berat di PKM</h3>
+  <ol style="font-size:.87rem;padding-left:18px">
+    <li>Beri dosis awal <strong>Artesunate IV/IM</strong> sebelum merujuk (WAJIB)</li>
+    <li>Atasi hipoglikemia: D40% 1 ml/kgBB IV bolus → D5–10% rumatan</li>
+    <li>Turunkan suhu: parasetamol, kompres</li>
+    <li>Atasi kejang: diazepam IV/rektal</li>
+    <li>Posisi miring (recovery position) jika tidak sadar</li>
+    <li>Pasang IV line + cairan rumatan</li>
+    <li>Rujuk dengan pendampingan tenaga kesehatan</li>
+  </ol>
+</div>
+
+<!-- MNEMONIC -->
+<div class="mnemonic">
+  <h3>🧠 Mnemonic "DALAP" — Prinsip Pengobatan Malaria</h3>
+  <div class="items">
+    <div class="item"><strong>D</strong>iagnosis parasitologi WAJIB sebelum terapi</div>
+    <div class="item"><strong>A</strong>CT (DHP) sebagai lini pertama semua spesies</div>
+    <div class="item"><strong>L</strong>ama primakuin: 1 hari (falciparum) vs 14 hari (vivax)</div>
+    <div class="item"><strong>A</strong>nti-gametosit: primakuin untuk putus rantai penularan</div>
+    <div class="item"><strong>P</strong>antau hari ke-3, 7, 14, 28 setelah pengobatan</div>
+  </div>
+</div>
+
+<div class="ref-box">
+  <h4>📚 Referensi Modul 3</h4>
+  <ul>
+    <li>Kemenkes RI. Pedoman Nasional Penanganan Malaria. KMK No. HK.01.07/MENKES/549/2022</li>
+    <li>WHO. Guidelines for the Treatment of Malaria. 3rd ed. Geneva: WHO; 2022</li>
+    <li>Buku Saku Tatalaksana Malaria. Bapelkes/Kemenkes RI; 2026</li>
+    <li>Prof. dr. Erni Nelwan. Tatalaksana Malaria Non-Komplikasi. Bapelkes 2026</li>
+    <li>dr. Imartha. Tatalaksana Malaria Berat. Pelatihan Bapelkes 2026</li>
+  </ul>
+</div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════
+     MODULE 4 — KELOMPOK KHUSUS
+═══════════════════════════════════════════════════ -->
+<section class="module" id="mod-khusus">
+<div class="hero">
+  <h1>Malaria pada <span>Kelompok Khusus</span></h1>
+  <p>Ibu Hamil · Bayi &amp; Anak (MTBS) · Defisiensi G6PD · Wisatawan &amp; Non-Imun</p>
+  <div class="tags">
+    <span class="tag">Prof. Ayodhia Pasaribu</span><span class="tag">dr. Detty Nurdiati</span>
+    <span class="tag">Kemenkes 2026</span><span class="tag">WHO 2022</span>
+  </div>
+</div>
+
+<!-- PRINSIP UTAMA -->
+<div class="warn">
+  <strong>⚡ Prinsip Utama:</strong> Kelompok khusus memerlukan pendekatan diagnosis dan terapi yang BERBEDA. Jangan samakan dosis, pilihan obat, dan strategi pencegahan dengan pasien dewasa umum.
+</div>
+
+<!-- IBU HAMIL -->
+<div class="sec-hdr"><span class="ico">🤰</span><h2>1. Malaria pada Ibu Hamil</h2></div>
+<div class="card">
+  <h3>❓ Mengapa Berbahaya?</h3>
+  <p style="font-size:.87rem">Kehamilan menyebabkan imunosupresi fisiologis. <em>P. falciparum</em> memiliki kemampuan <strong>sekuestrasi di plasenta</strong> melalui VAR2CSA → reseptor CSA di plasenta → akumulasi parasit di <em>intervillous space</em>.</p>
+  <div class="grid2" style="margin-top:10px">
+    <div>
+      <p style="font-size:.83rem;font-weight:700;color:var(--pf);margin-bottom:4px">💗 Dampak pada Ibu:</p>
+      <ul style="font-size:.83rem">
+        <li>Anemia berat (hemolisis + eritropoiesis terhambat)</li>
+        <li>Hipoglikemia berat (lebih sering dan parah)</li>
+        <li>Edema paru (risiko tinggi T3 &amp; post-partum)</li>
+        <li>Malaria serebral (mortalitas lebih tinggi)</li>
+      </ul>
+    </div>
+    <div>
+      <p style="font-size:.83rem;font-weight:700;color:var(--accent2);margin-bottom:4px">👶 Dampak pada Bayi/Janin:</p>
+      <ul style="font-size:.83rem">
+        <li>Abortus spontan (terutama T1)</li>
+        <li>Lahir prematur (demam → kontraksi)</li>
+        <li>BBLR &lt;2500g (plasental malaria)</li>
+        <li>Malaria kongenital (transmisi saat persalinan)</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h3>💊 Pengobatan Malaria Ibu Hamil — berdasarkan Trimester</h3>
+  <div class="tbl-wrap">
+  <table>
+    <tr><th>Trimester</th><th>Falciparum / Knowlesi</th><th>Vivax / Ovale</th><th>Malariae</th><th>Malaria Berat</th></tr>
+    <tr>
+      <td><strong>Trimester 1</strong></td>
+      <td>Kina 3×10 mg/kgBB/hari × 7 hari + Klindamisin 2×10 mg/kgBB/hari × 7 hari</td>
+      <td>Kina 3×10 mg/kgBB/hari × 7 hari (tanpa Primakuin)</td>
+      <td>Kina 3×10 mg/kgBB/hari × 7 hari</td>
+      <td>Artesunate IV 2,4 mg/kgBB (jam 0, 12, 24 → /24 jam)</td>
+    </tr>
+    <tr>
+      <td><strong>Trimester 2–3</strong></td>
+      <td><strong>DHP 3 hari</strong> sesuai BB (lebih aman, lebih efektif)</td>
+      <td>DHP 3 hari sesuai BB (tanpa Primakuin — radical cure ditunda post-partum)</td>
+      <td>DHP 3 hari sesuai BB</td>
+      <td>Artesunate IV 2,4 mg/kgBB (sama seperti dewasa)</td>
+    </tr>
+  </table>
+  </div>
+  <div class="warn" style="margin-top:10px">
+    <strong>❌ PRIMAKUIN KONTRAINDIKASI MUTLAK — SEMUA TRIMESTER:</strong> Menyebabkan hemolisis pada janin (status G6PD janin tidak diketahui). Radical cure untuk P. vivax/ovale ditunda hingga selesai menyusui.
+  </div>
+</div>
+
+<div class="card">
+  <h3>🛡️ Pencegahan Malaria pada Ibu Hamil</h3>
+  <ul style="font-size:.87rem">
+    <li><strong>LLIN (Kelambu berinsektisida)</strong> — intervensi terkuat, menurunkan BBLR dan anemia ibu</li>
+    <li>Repellent DEET 30–50% — aman pada konsentrasi ini selama kehamilan</li>
+    <li>Hindari aktivitas luar ruangan pukul 18.00–06.00 (peak biting Anopheles)</li>
+    <li><strong>IPTp</strong> dengan SP (Sulfadoksin-Pirimetamin) — WHO rekomendasikan di Afrika. Di Indonesia: pertimbangkan Papua/NTT risiko tinggi setelah konsultasi spesialis</li>
+    <li>Lanjutkan tablet besi selama kehamilan</li>
+  </ul>
+</div>
+
+<!-- BAYI & ANAK -->
+<div class="sec-hdr"><span class="ico">👶</span><h2>2. Malaria pada Bayi &amp; Anak — Pendekatan MTBS</h2></div>
+<div class="card">
+  <h3>🚨 Mengapa Anak Lebih Rentan?</h3>
+  <div class="grid2">
+    <ul style="font-size:.85rem">
+      <li>Belum ada imunitas adaptif terhadap malaria</li>
+      <li>Volume darah kecil → hiperparasitemia lebih cepat</li>
+      <li>Hipoglikemia lebih mudah (cadangan glikogen terbatas)</li>
+      <li>Gejala sering atipikal: irritabilitas, kejang tanpa demam jelas</li>
+    </ul>
+    <div>
+      <p style="font-size:.83rem;font-weight:700;color:var(--accent2);margin-bottom:4px">⚠️ Gejala Atipikal:</p>
+      <ul style="font-size:.83rem">
+        <li>Bayi: tidak mau menyusu, menangis terus</li>
+        <li>Balita: kejang tanpa demam jelas, perut kembung</li>
+        <li>Pucat mendadak (anemia akut), hepatosplenomegali</li>
+        <li>Di endemis: semua balita sakit <strong>WAJIB tes malaria</strong> meski tidak demam</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h3>📋 Klasifikasi MTBS — Malaria</h3>
+  <div class="tbl-wrap">
+  <table>
+    <tr><th>Klasifikasi</th><th>Tanda/Gejala</th><th>Tindakan</th></tr>
+    <tr style="background:#7f1d1d22">
+      <td style="color:var(--pf)"><strong>Malaria Berat (🔴)</strong></td>
+      <td>Malaria + tanda bahaya umum (tidak bisa minum, kejang, letargis) ATAU komplikasi organ</td>
+      <td>Artesunate IM prarujukan → RUJUK RS segera</td>
+    </tr>
+    <tr style="background:#78350f22">
+      <td style="color:var(--accent2)"><strong>Malaria (🟡)</strong></td>
+      <td>Tes malaria positif + demam + tidak ada tanda bahaya</td>
+      <td>DHP oral + Primakuin (sesuai spesies) → Rawat jalan → Kunjungan ulang hari ke-3, 7, 14, 28</td>
+    </tr>
+    <tr style="background:#14532d22">
+      <td style="color:var(--accent3)"><strong>Bukan Malaria (🟢)</strong></td>
+      <td>Tes malaria negatif</td>
+      <td>Cari penyebab lain (DBD, ISPA, campak) → Parasetamol jika suhu ≥38,5°C</td>
+    </tr>
+  </table>
+  </div>
+</div>
+
+<div class="card">
+  <h3>💊 Pengobatan Malaria Anak</h3>
+  <div class="tbl-wrap">
+  <table>
+    <tr><th>Kelompok</th><th>Obat</th><th>Dosis</th><th>Catatan</th></tr>
+    <tr><td>Semua anak (≥6 bln)</td><td>DHP</td><td>Sesuai BB × 3 hari</td><td>Sesudah makan</td></tr>
+    <tr><td>Vivax/Ovale (≥6 bln)</td><td>+ Primakuin</td><td>0,25 mg/kgBB/hari × 14 hari</td><td>Cek G6PD dulu</td></tr>
+    <tr><td>Falciparum (≥6 bln)</td><td>+ Primakuin</td><td>0,25 mg/kgBB dosis tunggal (hari ke-1)</td><td>Anti-gametosit</td></tr>
+    <tr><td>Bayi &lt;6 bulan</td><td>Kina syrup</td><td>3×10 mg/kgBB/hari × 7 hari</td><td>Konsultasi SpA</td></tr>
+    <tr><td>Berat &lt;20 kg</td><td>Artesunate IV/IM</td><td><strong>3,0 mg/kgBB</strong>/dosis (jam 0, 12, 24)</td><td>+ Antibiotik broad spectrum</td></tr>
+    <tr><td>Berat ≥20 kg</td><td>Artesunate IV/IM</td><td>2,4 mg/kgBB/dosis</td><td>Sama seperti dewasa</td></tr>
+  </table>
+  </div>
+</div>
+
+<div class="card">
+  <h3>🛡️ Pencegahan ABCD pada Anak</h3>
+  <div class="grid2" style="margin-top:8px">
+    <div class="mnemonic" style="margin:0">
+      <div class="items">
+        <div class="item"><strong>A</strong>wareness — Kewaspadaan risiko malaria</div>
+        <div class="item"><strong>B</strong>ite prevention — Cegah gigitan (LLIN, repellent)</div>
+        <div class="item"><strong>C</strong>hemoprophylaxis — Obat pencegahan bila diperlukan</div>
+        <div class="item"><strong>D</strong>iagnosis &amp; treatment — Cepat &amp; tepat</div>
+      </div>
+    </div>
+    <div style="font-size:.84rem">
+      <p><strong>Pemantauan Primakuin:</strong> Monitor setiap minggu selama 4 minggu (rawat jalan)</p>
+      <p style="margin-top:6px">Tanyakan: warna urine (gelap?), pucat, lemas</p>
+      <p style="margin-top:6px" style="color:var(--pf)"><strong>Hentikan jika ada tanda hemolisis</strong></p>
+    </div>
+  </div>
+</div>
+
+<!-- G6PD -->
+<div class="sec-hdr"><span class="ico">🧬</span><h2>3. Defisiensi G6PD &amp; Malaria</h2></div>
+<div class="card">
+  <h3>❓ Mengapa Kritis?</h3>
+  <p style="font-size:.87rem">G6PD (Glucose-6-Phosphate Dehydrogenase) defisiensi adalah kelainan enzim eritrosit paling umum di dunia, mempengaruhi ~400 juta orang. Prevalensi tinggi di daerah endemis malaria (memberikan perlindungan parsial terhadap Pf).</p>
+  <div class="grid3" style="margin-top:10px">
+    <div class="warn" style="margin:0">
+      <strong style="color:var(--pf)">Primakuin</strong><br>
+      <span style="font-size:.82rem">Hemolisis oksidatif masif pada G6PD def. → anemia berat, hemoglobinuria (blackwater fever)</span>
+    </div>
+    <div class="warn" style="margin:0;border-color:var(--accent2)">
+      <strong style="color:var(--accent2)">Kina</strong><br>
+      <span style="font-size:.82rem">Dapat memicu hemolisis pada G6PD def. berat (lebih jarang)</span>
+    </div>
+    <div class="ok" style="margin:0">
+      <strong style="color:var(--pv)">DHP &amp; Artesunate</strong><br>
+      <span style="font-size:.82rem">AMAN pada defisiensi G6PD — tidak memicu hemolisis bermakna</span>
+    </div>
+  </div>
+</div>
+
+<div class="tbl-wrap">
+<table>
+  <tr><th>Kelas WHO</th><th>Aktivitas G6PD</th><th>Implikasi Klinis</th><th>Primakuin?</th></tr>
+  <tr><td style="color:var(--pf)"><strong>Kelas I</strong></td><td>&lt;1% (CNSHA)</td><td>Hemolisis kronik</td><td><strong>KONTRAINDIKASI MUTLAK</strong></td></tr>
+  <tr><td style="color:var(--pf)"><strong>Kelas II</strong></td><td>1–10% (Berat)</td><td>Hemolisis berat saat teroksidasi</td><td>KONTRAINDIKASI</td></tr>
+  <tr><td style="color:var(--accent2)"><strong>Kelas III</strong></td><td>10–60% (Sedang)</td><td>Hemolisis sedang saat stres oksidatif</td><td>0,75 mg/kgBB/mgg × 8 mgg, supervisi ketat</td></tr>
+  <tr><td style="color:var(--pv)"><strong>Kelas IV–V</strong></td><td>&gt;60% (Normal)</td><td>Aman</td><td>Dosis standar aman</td></tr>
+</table>
+</div>
+
+<div class="card">
+  <h3>⚫ Blackwater Fever — Tatalaksana Darurat</h3>
+  <ol style="font-size:.87rem;padding-left:18px">
+    <li>Hentikan kina/primakuin segera</li>
+    <li>Ganti dengan DHP (aman pada G6PD def.)</li>
+    <li>Hidrasi IV agresif</li>
+    <li>Monitor fungsi ginjal (risiko AKI)</li>
+    <li>Konfirmasi tes G6PD</li>
+    <li>Jika Hb &lt;7 g/dL → pertimbangkan transfusi PRC</li>
+  </ol>
+</div>
+
+<!-- WISATAWAN -->
+<div class="sec-hdr"><span class="ico">✈️</span><h2>4. Malaria pada Wisatawan &amp; Non-Imun</h2></div>
+<div class="card">
+  <h3>⚠️ Mengapa Non-Imun Lebih Berisiko?</h3>
+  <p style="font-size:.87rem">Tidak memiliki imunitas adaptif → parasitemia tinggi berkembang cepat → risiko malaria berat jauh lebih tinggi. Kriteria hiperparasitemia lebih rendah: <strong>&gt;10%</strong> untuk non-imun (vs &gt;5% pada endemis).</p>
+</div>
+
+<div class="card">
+  <h3>💊 Kemoprofilaksis Malaria untuk Wisatawan</h3>
+  <div class="tbl-wrap">
+  <table>
+    <tr><th>Obat</th><th>Dosis Dewasa</th><th>Mulai Sebelum</th><th>Lanjut Setelah</th><th>Kontraindikasi</th></tr>
+    <tr><td><strong>Doksisiklin</strong></td><td>100 mg/hari</td><td>1–2 hari</td><td>4 minggu</td><td>Hamil, anak &lt;8 tahun</td></tr>
+    <tr><td><strong>Meflokuin</strong></td><td>250 mg/minggu</td><td>2–3 minggu</td><td>4 minggu</td><td>Riwayat gangguan psikiatri, epilepsi</td></tr>
+    <tr><td><strong>Atovaquon-proguanil</strong></td><td>1 tab/hari (250/100 mg)</td><td>1–2 hari</td><td>7 hari saja</td><td>GFR &lt;30 mL/mnt, hamil</td></tr>
+    <tr><td><strong>Klorokuin</strong></td><td>500 mg (base 300 mg)/minggu</td><td>1–2 minggu</td><td>4 minggu</td><td><strong>TIDAK efektif Pf di Indonesia</strong></td></tr>
+  </table>
+  </div>
+  <div class="warn" style="margin-top:8px"><strong>Penting:</strong> Tidak ada profilaksis yang 100% efektif. Tetap gunakan LLIN dan DEET. Jika demam &gt;1 minggu setelah meninggalkan daerah endemis → segera periksa malaria. Inkubasi Pv bisa 6–12 bulan!</div>
+</div>
+
+<!-- TABEL PERBANDINGAN BESAR -->
+<div class="sec-hdr"><span class="ico">📊</span><h2>5. Tabel Perbandingan Pengobatan Kelompok Khusus</h2></div>
+<div class="tbl-wrap">
+<table>
+  <tr><th>Kelompok</th><th>Falciparum</th><th>Vivax / Ovale</th><th>Malaria Berat</th><th>Primakuin?</th></tr>
+  <tr><td>🤰 Hamil T1</td><td>Kina+Klindamisin 7 hr</td><td>Kina 7 hr</td><td>Artesunate IV 2,4 mg/kg</td><td style="color:var(--pf)"><strong>TIDAK</strong></td></tr>
+  <tr><td>🤰 Hamil T2–T3</td><td>DHP 3 hr</td><td>DHP 3 hr</td><td>Artesunate IV 2,4 mg/kg</td><td style="color:var(--pf)"><strong>TIDAK</strong></td></tr>
+  <tr><td>👶 Anak ≥6 bln</td><td>DHP 3 hr + PQ 1 hr</td><td>DHP 3 hr + PQ 14 hr</td><td>Artesunate 3,0 mg/kg (&lt;20kg)</td><td style="color:var(--accent2)">YA (cek G6PD)</td></tr>
+  <tr><td>👶 Bayi &lt;6 bln</td><td>Kina syrup 7 hr</td><td>Kina syrup 7 hr</td><td>Artesunate IV/IM (konsul SpA)</td><td style="color:var(--pf)"><strong>TIDAK</strong></td></tr>
+  <tr><td>🧬 G6PD Berat (Kls I-II)</td><td>DHP 3 hr</td><td>DHP 3 hr (no radical cure)</td><td>Artesunate IV (aman)</td><td style="color:var(--pf)"><strong>TIDAK</strong></td></tr>
+  <tr><td>🧬 G6PD Sedang (Kls III)</td><td>DHP 3 hr</td><td>DHP + PQ 0,75 mg/kg/mgg × 8</td><td>Artesunate IV (aman)</td><td style="color:var(--accent2)">HATI-HATI</td></tr>
+  <tr><td>✈️ Wisatawan</td><td>DHP 3 hr (+ profilaksis)</td><td>DHP + PQ 14 hr</td><td>Artesunate IV 2,4 mg/kg</td><td style="color:var(--accent2)">YA (cek G6PD)</td></tr>
+</table>
+</div>
+
+<!-- MNEMONIC KONTRAINDIKASI -->
+<div class="mnemonic">
+  <h3>🧠 Mnemonic "HAMIL-G" — Kapan Primakuin TIDAK Boleh?</h3>
+  <div class="items">
+    <div class="item"><strong>H</strong>amil (semua trimester — hemolisis janin)</div>
+    <div class="item"><strong>A</strong>nak &lt;6 bulan (enzim belum matang)</div>
+    <div class="item"><strong>M</strong>enyusui bayi muda (jika bayi G6PD defisiensi)</div>
+    <div class="item"><strong>I</strong>dentifikasi G6PD belum dilakukan (risiko tinggi → tunda)</div>
+    <div class="item"><strong>L</strong>evel G6PD Berat (Kelas I–II: kontraindikasi mutlak)</div>
+    <div class="item"><strong>G</strong>angguan ginjal berat (eliminasi terganggu)</div>
+  </div>
+</div>
+
+<div class="ref-box">
+  <h4>📚 Referensi Modul 4</h4>
+  <ul>
+    <li>Prof. dr. Ayodhia Pasaribu. Malaria pada Kelompok Khusus. Bapelkes 2026</li>
+    <li>dr. Detty Siti Nurdiati. Malaria pada Ibu Hamil. Bapelkes 2026</li>
+    <li>Richard W. Lawalata. Malaria pada Wisatawan. Bapelkes 2026</li>
+    <li>Kemenkes RI. Buku Saku Tatalaksana Malaria; 2026</li>
+    <li>WHO. Guidelines for the Treatment of Malaria. 3rd ed; 2022</li>
+    <li>WHO. Management of Severe Malaria: A Practical Handbook. 3rd ed; 2012</li>
+  </ul>
+</div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════
+     MODULE 5 — LATIHAN SOAL TERPADU
+═══════════════════════════════════════════════════ -->
+<section class="module" id="mod-soal">
+<div class="hero">
+  <h1>Latihan Soal <span>Terpadu</span></h1>
+  <p>15 Soal MCQ dari 4 Modul · Klik "Lihat Jawaban" setelah memilih</p>
+  <div class="tags">
+    <span class="tag">Dasar-Dasar</span><span class="tag">Laboratorium</span>
+    <span class="tag">Non-Komplikasi &amp; Berat</span><span class="tag">Kelompok Khusus</span>
+  </div>
+</div>
+<div id="score-box" style="display:none;background:var(--card);border:1px solid var(--accent);border-radius:12px;padding:16px;text-align:center;margin-bottom:16px">
+  <div style="font-size:1.3rem;font-weight:800;color:var(--accent)" id="score-text"></div>
+  <div style="font-size:.85rem;color:var(--muted);margin-top:4px" id="score-sub"></div>
+</div>
+
+<div id="quiz-container"></div>
+<div style="text-align:center;margin-top:16px">
+  <button class="btn-check" onclick="submitAll()" style="padding:10px 32px;font-size:.95rem">✅ Submit Semua Jawaban</button>
+  <button class="btn-check" onclick="resetAll()" style="padding:10px 32px;font-size:.95rem;background:var(--card2);color:var(--text);margin-left:10px">🔄 Reset</button>
+</div>
+<div class="ref-box" style="margin-top:24px">
+  <h4>📚 Referensi Latihan Soal</h4>
+  <ul>
+    <li>WHO Guidelines for Malaria. Geneva: WHO; 2024</li>
+    <li>Kemenkes RI. Pedoman Nasional Penanganan Malaria. KMK 549/2022</li>
+    <li>Buku Saku Tatalaksana Malaria. Bapelkes/Kemenkes; 2026</li>
+    <li>CDC DPDx — Malaria. Division of Parasitic Diseases and Malaria; 2024</li>
+  </ul>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════════════ -->
+<script>
+// ── MODULE NAVIGATION ──
+function showMod(id, btn) {
+  document.querySelectorAll('.module').forEach(m => m.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('mod-' + id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// ── PROGRESS BAR ──
+window.addEventListener('scroll', () => {
+  const el = document.getElementById('prog');
+  const scrolled = document.documentElement.scrollTop;
+  const total = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  el.style.width = (scrolled / total * 100) + '%';
+});
+
+// ── QUIZ DATA ──
+const questions = [
+  {
+    mod: "Dasar-Dasar",
+    q: "1. Nyamuk Anopheles betina dapat menularkan malaria melalui mekanisme utama:",
+    opts: ["A. Melalui feses nyamuk yang terkontaminasi","B. Inokulasi sporozoit melalui air liur saat menghisap darah","C. Kontaminasi makanan dengan larva nyamuk","D. Inhalasi droplet dari nyamuk yang terinfeksi"],
+    ans: 1,
+    explain: "Saat nyamuk Anopheles betina menghisap darah, sporozoit yang berada di kelenjar saliva akan masuk ke peredaran darah manusia. Ini adalah satu-satunya mekanisme penularan natural. (Kemenkes RI 2022; WHO 2024)"
+  },
+  {
+    mod: "Dasar-Dasar",
+    q: "2. Ciri morfologi PATOGNOMONIK Plasmodium falciparum pada sediaan darah tepi adalah:",
+    opts: ["A. Eritrosit membesar dengan Schüffner's dots","B. Trofozoit band form melintang eritrosit","C. Gametosit berbentuk pisang/sabit (falciform)","D. Skizon rosette 6–12 merozoit"],
+    ans: 2,
+    explain: "Gametosit berbentuk pisang/bulan sabit (falciform/crescent) adalah ciri patognomonik eksklusif P. falciparum — tidak ditemukan pada spesies lain. (CDC DPDx; WHO Guidelines 2024)"
+  },
+  {
+    mod: "Dasar-Dasar",
+    q: "3. P. vivax membentuk hipnozoit yang dapat menyebabkan relaps. Berapa lama hipnozoit dapat bertahan aktif?",
+    opts: ["A. 1–2 minggu","B. 3–4 bulan","C. 3–4 tahun","D. Seumur hidup tanpa bisa diobati"],
+    ans: 2,
+    explain: "Hipnozoit P. vivax dapat bertahan di hepatosit dan reaktivasi menyebabkan relaps hingga 3–4 tahun setelah infeksi awal jika tidak mendapat radical cure dengan primakuin. P. ovale bahkan bisa lebih lama. (WHO 2022; Kemenkes 2022)"
+  },
+  {
+    mod: "Laboratorium",
+    q: "4. Seorang petugas lab memeriksa sediaan darah tebal dan menemukan 48 parasit dalam 200 leukosit. Berapa kepadatan parasit per µL?",
+    opts: ["A. 240/µL","B. 1.920/µL","C. 4.800/µL","D. 9.600/µL"],
+    ans: 1,
+    explain: "Rumus: (Jml Parasit × 8.000) / Jml Leukosit = (48 × 8.000) / 200 = 1.920/µL. Angka 8.000 adalah estimasi rata-rata leukosit per µL darah. (Kemenkes 2022; WHO Microscopy Manual)"
+  },
+  {
+    mod: "Laboratorium",
+    q: "5. RDT menggunakan antigen HRP-2 (Histidine-Rich Protein 2). Mengapa RDT TIDAK dapat digunakan untuk evaluasi respons pengobatan?",
+    opts: ["A. HRP-2 tidak cukup sensitif untuk mendeteksi parasit","B. HRP-2 dapat bertahan di sirkulasi berminggu-minggu setelah parasit bersih","C. HRP-2 hanya mendeteksi P. vivax","D. RDT tidak tersedia di daerah endemis"],
+    ans: 1,
+    explain: "HRP-2 adalah protein yang dilepaskan oleh P. falciparum dan dapat persisten di sirkulasi hingga 4–6 minggu setelah parasit sudah bersih. Sehingga RDT tetap positif padahal pasien sudah sembuh. Mikroskopi adalah pilihan untuk evaluasi pengobatan. (WHO 2022)"
+  },
+  {
+    mod: "Laboratorium",
+    q: "6. Pada pewarnaan Giemsa, buffer pH 7,2 sangat penting. Apa yang terjadi jika buffer terlalu asam (pH <7,2)?",
+    opts: ["A. Semua komponen sediaan akan berwarna biru","B. Semua komponen sediaan akan berwarna merah","C. Parasit tidak akan terwarnai","D. Eritrosit akan pecah"],
+    ans: 1,
+    explain: "Buffer asam (pH <7,2) menyebabkan semua komponen sediaan tampak merah/kemerahan, menyulitkan identifikasi parasit. Sebaliknya buffer basa (pH >7,2) menyebabkan semua berwarna biru. pH 7,2 diperlukan untuk pewarnaan optimal: inti parasit merah, sitoplasma biru. (WHO Microscopy Manual 2016)"
+  },
+  {
+    mod: "Non-Komplikasi",
+    q: "7. Pasien laki-laki 25 tahun, baru pulang dari Papua, demam 3 hari, mikroskopi: P. vivax positif. Status G6PD tidak tersedia. Terapi yang TEPAT?",
+    opts: ["A. DHP 3 hari saja","B. DHP 3 hari + Primakuin 0,25 mg/kgBB/hari × 14 hari","C. Kina 3×10 mg/kgBB/hari × 7 hari","D. DHP 3 hari + Primakuin dosis tunggal hari ke-1"],
+    ans: 1,
+    explain: "P. vivax memerlukan radical cure dengan primakuin 14 hari untuk eradikasi hipnozoit dan mencegah relaps. Jika G6PD tidak tersedia, gunakan dosis standar 0,25 mg/kgBB/hari × 14 hari dengan edukasi tanda hemolisis. DHP saja tidak cukup karena tidak membasmi hipnozoit. (Kemenkes 2022)"
+  },
+  {
+    mod: "Non-Komplikasi",
+    q: "8. Berapa jumlah tablet DHP (40/320 mg) yang diberikan pada pasien dewasa dengan berat badan 55 kg?",
+    opts: ["A. 2 tablet/hari × 3 hari","B. 3 tablet/hari × 3 hari","C. 4 tablet/hari × 3 hari","D. 5 tablet/hari × 3 hari"],
+    ans: 1,
+    explain: "Berdasarkan tabel dosis Kemenkes 2022: BB 36–60 kg = 3 tablet DHP/hari × 3 hari. BB 55 kg masuk dalam kategori ini. Selalu gunakan tabel BB untuk menentukan dosis yang tepat. (Kemenkes RI 2022)"
+  },
+  {
+    mod: "Non-Komplikasi",
+    q: "9. Manakah dari kriteria berikut yang BUKAN termasuk 13 kriteria malaria berat WHO 2022?",
+    opts: ["A. Gangguan kesadaran (malaria serebral)","B. Hiperparasitemia >5% eritrosit terinfeksi","C. Demam >40°C selama >3 hari tanpa komplikasi lain","D. Hipoglikemia (GDS <40 mg/dL)"],
+    ans: 2,
+    explain: "Demam tinggi saja bukan kriteria malaria berat. 13 kriteria WHO 2022 mencakup: gangguan kesadaran, kelemahan umum berat, kejang berulang, distress napas, syok, perdarahan abnormal, ikterik, hemoglobinuria, anemia berat (Hb <7), hipoglikemia, hiperparasitemia >5%, AKI, dan asidosis metabolik. (WHO 2022)"
+  },
+  {
+    mod: "Non-Komplikasi",
+    q: "10. Puskesmas di daerah terpencil menerima pasien malaria berat yang perlu dirujuk. Tindakan PERTAMA yang wajib dilakukan sebelum merujuk adalah:",
+    opts: ["A. Tunggu hasil darah lengkap dulu","B. Berikan Artesunate IV/IM dosis awal sebelum merujuk","C. Berikan DHP oral terlebih dahulu","D. Pasang infus D5% dan langsung rujuk"],
+    ans: 1,
+    explain: "Standar ke-7 Kemenkes 2022: Sebelum merujuk penderita malaria berat, WAJIB berikan dosis awal Artesunate IV/IM untuk mencegah perburukan selama perjalanan. Ini adalah intervensi pra-rujukan yang kritis. (Kemenkes 2022; Buku Saku Malaria 2026)"
+  },
+  {
+    mod: "Kelompok Khusus",
+    q: "11. Ibu hamil G2P1 usia kehamilan 10 minggu, terdiagnosis malaria falciparum. Terapi yang PALING TEPAT?",
+    opts: ["A. DHP 3 hari sesuai BB","B. Kina 3×10 mg/kgBB/hari × 7 hari + Klindamisin 2×10 mg/kgBB × 7 hari","C. Artesunate IV 2,4 mg/kgBB","D. DHP 3 hari + Primakuin dosis tunggal"],
+    ans: 1,
+    explain: "Trimester 1: Artemisin (DHP) dihindari karena data keamanan terbatas pada T1. Pilihan: Kina + Klindamisin × 7 hari. Primakuin KONTRAINDIKASI pada semua trimester. DHP menjadi pilihan hanya pada T2–T3. Artesunate IV hanya untuk malaria berat. (Kemenkes 2022; WHO 2022)"
+  },
+  {
+    mod: "Kelompok Khusus",
+    q: "12. Anak 2 tahun, BB 12 kg, terdiagnosis malaria berat P. falciparum di RSUD. Dosis artesunate yang tepat?",
+    opts: ["A. 2,4 mg/kgBB/dosis","B. 3,0 mg/kgBB/dosis","C. 5,0 mg/kgBB/dosis","D. 1,2 mg/kgBB/dosis"],
+    ans: 1,
+    explain: "Untuk anak <20 kg yang menderita malaria berat, dosis artesunate IV/IM adalah 3,0 mg/kgBB/dosis (bukan 2,4 seperti dewasa/anak ≥20kg). Ini karena farmakokinetik berbeda pada anak kecil. Jadi: 12 kg × 3,0 mg = 36 mg/dosis. (Kemenkes 2022; WHO 2022)"
+  },
+  {
+    mod: "Kelompok Khusus",
+    q: "13. Pasien laki-laki 30 tahun akan mendapat primakuin untuk malaria vivax. Pemeriksaan G6PD menunjukkan aktivitas 3,5 U/g Hb. Tatalaksana yang TEPAT?",
+    opts: ["A. Primakuin 0,25 mg/kgBB/hari × 14 hari","B. Primakuin 0,75 mg/kgBB/minggu × 8 minggu dengan supervisi ketat","C. Tidak boleh diberikan primakuin sama sekali","D. Primakuin 1 mg/kgBB/hari × 7 hari"],
+    ans: 1,
+    explain: "G6PD 3,5 U/g Hb = Kelas II-III (Defisiensi/Sedang ≤4,0). Untuk G6PD defisiensi sedang-berat: primakuin dosis mingguan 0,75 mg/kgBB × 8 minggu dengan supervisi ketat (monitor Hb, warna urine). Tidak mutlak kontraindikasi seperti Kelas I. (Kemenkes 2022; WHO 2022)"
+  },
+  {
+    mod: "Kelompok Khusus",
+    q: "14. Dokter di PKM menyarankan kemoprofilaksis doksisiklin kepada seorang wanita hamil 8 bulan yang akan mengunjungi daerah endemis malaria. Apakah rekomendasi ini tepat?",
+    opts: ["A. Tepat, doksisiklin aman untuk semua trimester","B. Tidak tepat, doksisiklin kontraindikasi pada kehamilan","C. Tepat, doksisiklin adalah profilaksis terpilih untuk ibu hamil","D. Tidak tepat, sebaiknya gunakan klorokuin"],
+    ans: 1,
+    explain: "Doksisiklin KONTRAINDIKASI pada kehamilan (teratogenik, menghambat perkembangan tulang dan gigi janin). Tidak ada kemoprofilaksis yang direkomendasikan secara rutin di Indonesia. Alternatif: penggunaan LLIN, DEET 30–50%, hindari aktivitas malam. IPTp dengan SP dipertimbangkan di area sangat endemis setelah konsultasi spesialis. (WHO 2022; Kemenkes 2022)"
+  },
+  {
+    mod: "Semua Modul",
+    q: "15. Pasien dari Kalimantan, demam setiap hari (quotidiana), mikroskopi menunjukkan gambaran mirip P. malariae dan sebagian mirip P. falciparum. Diagnosis yang paling tepat dan tindakan konfirmasi?",
+    opts: ["A. Malaria campuran Pf+Pm, terapi DHP + primakuin","B. P. knowlesi — wajib konfirmasi PCR segera","C. P. malariae — terapi DHP tanpa primakuin","D. P. falciparum — terapi DHP + primakuin dosis tunggal"],
+    ans: 1,
+    explain: "P. knowlesi memiliki morfologi yang menyerupai Pf (trofozoit muda/cincin) DAN Pm (band form, skizon rosette), siklus 24 jam menyebabkan demam quotidiana. Kalimantan adalah daerah endemis Pk. Morfologi saja tidak cukup — wajib PCR untuk konfirmasi definitif. Tanpa PCR, Pk sering salah diagnosis sebagai Pf atau Pm. (CDC DPDx; WHO 2022)"
+  }
+];
+
+// ── RENDER QUIZ ──
+function renderQuiz() {
+  const container = document.getElementById('quiz-container');
+  container.innerHTML = questions.map((q, i) => `
+    <div class="quiz-item" id="qitem-${i}">
+      <div class="quiz-q">[${q.mod}] ${q.q}</div>
+      <div class="quiz-opts">
+        ${q.opts.map((o, j) => `
+          <label id="qlbl-${i}-${j}">
+            <input type="radio" name="q${i}" value="${j}"> ${o}
+          </label>
+        `).join('')}
+      </div>
+      <div class="quiz-explain" id="qexp-${i}">
+        <div id="qresult-${i}"></div>
+        <strong>📖 Penjelasan:</strong> ${q.explain}
+      </div>
+    </div>
+  `).join('');
+}
+
+function submitAll() {
+  let correct = 0;
+  questions.forEach((q, i) => {
+    const sel = document.querySelector(`input[name="q${i}"]:checked`);
+    const expDiv = document.getElementById('qexp-' + i);
+    const resDiv = document.getElementById('qresult-' + i);
+    expDiv.classList.add('show');
+    if (sel) {
+      const chosen = parseInt(sel.value);
+      if (chosen === q.ans) {
+        correct++;
+        resDiv.innerHTML = '<span class="correct-lbl">✅ BENAR! </span>';
+        document.getElementById(`qlbl-${i}-${chosen}`).style.background = '#14532d55';
+      } else {
+        resDiv.innerHTML = `<span class="wrong-lbl">❌ Salah. </span>Jawaban benar: <strong>${q.opts[q.ans]}</strong><br>`;
+        document.getElementById(`qlbl-${i}-${chosen}`).style.background = '#7f1d1d55';
+        document.getElementById(`qlbl-${i}-${q.ans}`).style.background = '#14532d55';
+      }
+    } else {
+      resDiv.innerHTML = '<span class="wrong-lbl">⚠️ Tidak dijawab. </span>';
+    }
+  });
+  const scoreBox = document.getElementById('score-box');
+  scoreBox.style.display = 'block';
+  const pct = Math.round(correct / questions.length * 100);
+  document.getElementById('score-text').textContent = `Skor: ${correct} / ${questions.length} (${pct}%)`;
+  let msg = pct >= 80 ? '🏆 Excellent! Siap menghadapi ujian.' : pct >= 60 ? '👍 Bagus! Pelajari kembali poin yang salah.' : '📚 Perlu review materi lebih mendalam.';
+  document.getElementById('score-sub').textContent = msg;
+  scoreBox.scrollIntoView({behavior:'smooth'});
+}
+
+function resetAll() {
+  document.getElementById('score-box').style.display = 'none';
+  renderQuiz();
+  window.scrollTo({top:0});
+}
+
+renderQuiz();
+</script>
+</body>
+</html>
