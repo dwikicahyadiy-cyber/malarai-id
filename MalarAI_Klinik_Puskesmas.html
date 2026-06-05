@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0d7a5f">
+<title>MalarAI Klinik — Alat Bantu Tatalaksana Malaria Puskesmas</title>
+<style>
+:root{
+  --green:#0d7a5f; --green-d:#0a5f4a; --green-l:#e6f5f0;
+  --red:#c0392b; --red-l:#fdecea; --amber:#d68910; --amber-l:#fef6e7;
+  --blue:#1f6feb; --blue-l:#eaf2ff; --ink:#16241f; --muted:#5d6b66;
+  --line:#e2e8e5; --bg:#f4f7f6; --card:#ffffff; --shadow:0 2px 12px rgba(13,122,95,.08);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif;
+  background:var(--bg);color:var(--ink);line-height:1.5;font-size:15px;
+  max-width:520px;margin:0 auto;min-height:100vh;position:relative;padding-bottom:78px}
+h1,h2,h3,h4{margin:0;line-height:1.25}
+button{font-family:inherit;cursor:pointer;border:none}
+input,select{font-family:inherit;font-size:16px}
+
+/* Header */
+.appbar{position:sticky;top:0;z-index:40;background:linear-gradient(135deg,var(--green),var(--green-d));
+  color:#fff;padding:14px 16px;display:flex;align-items:center;gap:10px;box-shadow:0 2px 10px rgba(0,0,0,.12)}
+.appbar .logo{width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,.18);
+  display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.appbar h1{font-size:16px;font-weight:700;letter-spacing:.2px}
+.appbar .sub{font-size:11px;opacity:.85;font-weight:500}
+.appbar .net{margin-left:auto;font-size:10px;background:rgba(255,255,255,.2);padding:4px 8px;border-radius:20px;display:flex;align-items:center;gap:5px}
+.dot{width:7px;height:7px;border-radius:50%;background:#4ade80}
+.dot.off{background:#fbbf24}
+
+/* Pages */
+.page{display:none;padding:14px 14px 20px;animation:fade .25s ease}
+.page.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:var(--shadow)}
+.card h2{font-size:16px;display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.card h3{font-size:14px;color:var(--green-d);margin:14px 0 6px}
+.lead{color:var(--muted);font-size:13px;margin:2px 0 0}
+
+/* Home tiles */
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 14px;text-align:left;
+  box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px;transition:transform .1s}
+.tile:active{transform:scale(.97)}
+.tile .ic{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px}
+.tile .t{font-weight:700;font-size:14px}
+.tile .d{font-size:11.5px;color:var(--muted);line-height:1.35}
+.ic.g{background:var(--green-l)} .ic.r{background:var(--red-l)} .ic.b{background:var(--blue-l)} .ic.a{background:var(--amber-l)}
+
+/* Form */
+label{display:block;font-size:12.5px;font-weight:600;color:var(--ink);margin:12px 0 5px}
+.field{position:relative}
+input[type=number],input[type=text],input[type=date],select,textarea{width:100%;padding:12px 13px;border:1.5px solid var(--line);
+  border-radius:12px;background:#fbfdfc;color:var(--ink);outline:none;transition:border .15s}
+input:focus,select:focus,textarea:focus{border-color:var(--green)}
+.unit{position:absolute;right:13px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:13px;font-weight:600;pointer-events:none}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.chip{padding:9px 13px;border:1.5px solid var(--line);border-radius:999px;background:#fff;font-size:13px;font-weight:600;color:var(--muted)}
+.chip.on{background:var(--green);color:#fff;border-color:var(--green)}
+.chip.on.red{background:var(--red);border-color:var(--red)}
+.toggle{display:flex;gap:8px;flex-wrap:wrap}
+.btn{display:block;width:100%;padding:14px;background:var(--green);color:#fff;font-weight:700;font-size:15px;
+  border-radius:13px;margin-top:18px;box-shadow:0 4px 14px rgba(13,122,95,.28)}
+.btn:active{transform:translateY(1px)}
+.btn.sec{background:#fff;color:var(--green-d);border:1.5px solid var(--green);box-shadow:none}
+.btn.blue{background:var(--blue);box-shadow:0 4px 14px rgba(31,111,235,.28)}
+.btn.small{padding:10px;font-size:13px;margin-top:8px}
+
+/* Result */
+.result{margin-top:16px;display:none}
+.result.show{display:block;animation:fade .3s}
+.rx{background:var(--green-l);border:1px solid #bfe5d8;border-radius:14px;padding:14px;margin-bottom:10px}
+.rx .name{font-weight:800;font-size:15px;color:var(--green-d);display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.rx .dose{font-size:22px;font-weight:800;margin:6px 0 2px;color:var(--ink)}
+.rx .meta{font-size:12.5px;color:var(--muted)}
+.rx.red{background:var(--red-l);border-color:#f3c4bd}.rx.red .name{color:var(--red)}
+.rx.blue{background:var(--blue-l);border-color:#c5dbff}.rx.blue .name{color:var(--blue)}
+.rx.amber{background:var(--amber-l);border-color:#f4dca0}.rx.amber .name{color:#9a6206}
+.tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;background:#fff;color:var(--green-d);border:1px solid #bfe5d8}
+.alert{display:flex;gap:9px;padding:11px 12px;border-radius:11px;font-size:12.5px;margin:9px 0;line-height:1.4}
+.alert.warn{background:var(--amber-l);color:#8a5a08;border:1px solid #f4dca0}
+.alert.danger{background:var(--red-l);color:#a3271b;border:1px solid #f3c4bd}
+.alert.info{background:var(--blue-l);color:#1a4fa3;border:1px solid #c5dbff}
+.alert .i{flex-shrink:0;font-size:15px}
+
+table{width:100%;border-collapse:collapse;font-size:12px;margin-top:6px}
+th,td{text-align:left;padding:7px 6px;border-bottom:1px solid var(--line)}
+th{color:var(--green-d);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.3px}
+td.c,th.c{text-align:center}
+
+/* Checklist */
+.check{display:flex;align-items:flex-start;gap:11px;padding:11px;border:1.5px solid var(--line);border-radius:12px;margin-bottom:8px;background:#fff}
+.check.on{background:var(--red-l);border-color:#f3c4bd}
+.check .box{width:24px;height:24px;border:2px solid var(--line);border-radius:7px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:15px;color:#fff;transition:.15s}
+.check.on .box{background:var(--red);border-color:var(--red)}
+.check .txt{font-size:13px;font-weight:600}
+.check .sub2{font-size:11px;color:var(--muted);font-weight:500}
+.verdict{padding:14px;border-radius:13px;text-align:center;font-weight:800;font-size:15px;margin-top:6px}
+.verdict.safe{background:var(--green-l);color:var(--green-d)}
+.verdict.severe{background:var(--red);color:#fff;box-shadow:0 4px 14px rgba(192,57,43,.3)}
+
+/* RDT */
+.rdtsim{background:#fff;border:1px solid var(--line);border-radius:14px;padding:8px;margin:10px 0}
+.cassette{background:linear-gradient(#f0f4f2,#e4ece9);border-radius:10px;padding:14px 12px;display:flex;gap:6px;align-items:stretch}
+.cwin{flex:1;background:#fff;border:1px solid #d3ddd8;border-radius:8px;padding:8px 4px;text-align:center;min-height:96px;position:relative;display:flex;flex-direction:column;justify-content:flex-start;gap:8px}
+.cwin .lab{font-size:13px;font-weight:800;color:var(--muted)}
+.cband{height:9px;border-radius:3px;background:transparent;margin:0 6px;transition:.2s}
+.cband.show{background:#c0392b}
+.cband.ctrl.show{background:#7d3cc0}
+.cwin .role{font-size:9px;color:var(--muted);margin-top:auto}
+
+/* Report */
+.summary{background:#0f1a16;color:#d8e8e2;border-radius:13px;padding:14px;font-size:12px;line-height:1.6;white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;margin-top:8px;max-height:320px;overflow:auto}
+.queue-item{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px;border:1px solid var(--line);border-radius:11px;margin-bottom:7px;font-size:12.5px}
+.queue-item b{font-size:13px}
+.mini{font-size:11px;color:var(--muted)}
+.del{background:var(--red-l);color:var(--red);border-radius:8px;padding:6px 9px;font-size:11px;font-weight:700}
+
+/* Bottom nav */
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:520px;
+  background:#fff;border-top:1px solid var(--line);display:flex;z-index:50;
+  padding:7px 4px calc(7px + env(safe-area-inset-bottom));box-shadow:0 -2px 14px rgba(0,0,0,.06)}
+.nav button{flex:1;background:none;display:flex;flex-direction:column;align-items:center;gap:3px;
+  color:var(--muted);font-size:10px;font-weight:700;padding:4px 2px;border-radius:10px}
+.nav button .ni{font-size:20px;line-height:1}
+.nav button.on{color:var(--green)}
+.nav button.on .ni{transform:translateY(-1px)}
+
+.foot{font-size:10.5px;color:var(--muted);text-align:center;padding:8px 16px 4px;line-height:1.5}
+.ref{font-size:11px;color:var(--muted);border-top:1px dashed var(--line);margin-top:12px;padding-top:10px}
+.ref b{color:var(--green-d)}
+.divider{height:1px;background:var(--line);margin:14px 0}
+.kicker{font-size:11px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--green)}
+.hidden{display:none!important}
+a{color:var(--blue)}
+
+/* ===== Tablet & Desktop ===== */
+@media(min-width:600px){
+  body{max-width:760px;padding-bottom:0;background:#eef3f1;display:flex;flex-direction:column;
+    min-height:100vh;box-shadow:0 0 0 1px var(--line)}
+  .appbar{position:static;order:-2}
+  .nav{position:static;order:-1;max-width:none;width:auto;transform:none;left:auto;
+    border-top:none;border-bottom:1px solid var(--line);padding:8px 12px;gap:6px;background:#fff}
+  .nav button{flex-direction:row;gap:7px;font-size:13px;padding:9px 12px;border-radius:11px}
+  .nav button .ni{font-size:17px}
+  .nav button.on{background:var(--green-l)}
+  .page{order:1;padding:22px 24px 44px}
+  .tiles{grid-template-columns:repeat(2,1fr);gap:16px}
+}
+@media(min-width:980px){
+  body{max-width:920px}
+  .nav{max-width:920px}
+  .tiles{grid-template-columns:repeat(4,1fr)}
+}
+</style>
+</head>
+<body>
+
+<div class="appbar">
+  <div class="logo">🦟</div>
+  <div>
+    <h1>MalarAI Klinik</h1>
+    <div class="sub">Tatalaksana Malaria · Puskesmas Terpencil</div>
+  </div>
+  <div class="net" id="netbadge"><span class="dot" id="netdot"></span><span id="nettxt">Online</span></div>
+</div>
+
+<!-- ============ BERANDA ============ -->
+<section class="page active" id="p-home">
+  <div class="card" style="background:linear-gradient(135deg,#0d7a5f,#0a5f4a);color:#fff;border:none">
+    <div class="kicker" style="color:#aef0dc">Si Paling Inovasi · Tim 3</div>
+    <h2 style="color:#fff;font-size:19px;margin-top:4px">Alat Bantu Klinis Lapangan</h2>
+    <p class="lead" style="color:#d6f3e9">Hitung dosis otomatis berdasarkan berat badan, nilai kriteria malaria berat, baca RDT, dan laporkan kasus ke SISMAL — bisa dipakai offline.</p>
+  </div>
+
+  <div class="tiles">
+    <button class="tile" onclick="go('dosis')">
+      <div class="ic g">💊</div><div class="t">Kalkulator Dosis</div>
+      <div class="d">DHP + Primakuin otomatis per kg BB. Vivaks 14 hari ± G6PD. Lini 2.</div>
+    </button>
+    <button class="tile" onclick="go('berat')">
+      <div class="ic r">🚨</div><div class="t">Malaria Berat</div>
+      <div class="d">Checklist kriteria WHO + dosis Artesunat IV/IM.</div>
+    </button>
+    <button class="tile" onclick="go('rdt')">
+      <div class="ic b">🩸</div><div class="t">Interpretasi RDT</div>
+      <div class="d">Baca garis kontrol & antigen, tentukan spesies.</div>
+    </button>
+    <button class="tile" onclick="go('lapor')">
+      <div class="ic a">📤</div><div class="t">Lapor SISMAL</div>
+      <div class="d">Isi data kasus, salin, kirim ke SISMAL nasional.</div>
+    </button>
+  </div>
+
+  <div class="alert danger" style="margin-top:14px">
+    <span class="i">⚠️</span>
+    <div><b>Alat bantu, bukan pengganti penilaian klinis.</b> Selalu verifikasi dosis dengan kemasan obat & pedoman terbaru. Konfirmasi diagnosis wajib (mikroskopis/RDT) sebelum terapi.</div>
+  </div>
+
+  <div class="card">
+    <h2>📚 Acuan</h2>
+    <p class="lead">Seluruh perhitungan mengikuti <b>Buku Saku Tatalaksana Kasus Malaria — Kemenkes RI</b> & pembaruan <b>WHO Guidelines for Malaria 2022/2023</b>, selaras dengan materi pelatihan di proyek ini.</p>
+  </div>
+  <div class="foot">MalarAI Klinik · dibuat untuk tenaga kesehatan Puskesmas · v1.1</div>
+</section>
+
+<!-- ============ KALKULATOR DOSIS ============ -->
+<section class="page" id="p-dosis">
+  <div class="card">
+    <h2>💊 Kalkulator Dosis (Lini 1)</h2>
+    <p class="lead">Masukkan berat badan & jenis malaria. Dosis dihitung otomatis (tablet & mg).</p>
+
+    <label>Berat badan</label>
+    <div class="field"><input type="number" id="bb" inputmode="decimal" placeholder="cth: 24" oninput="calcDose()"><span class="unit">kg</span></div>
+
+    <label>Umur (opsional, untuk verifikasi)</label>
+    <div class="toggle" id="umurChips">
+      <button class="chip" data-u="bayi" onclick="pickUmur(this)">&lt; 6 bln</button>
+      <button class="chip" data-u="anak" onclick="pickUmur(this)">6 bln–14 th</button>
+      <button class="chip on" data-u="dewasa" onclick="pickUmur(this)">≥ 15 th</button>
+    </div>
+
+    <label>Jenis malaria (hasil konfirmasi)</label>
+    <select id="spesies" onchange="calcDose()">
+      <option value="fal">Falciparum / Knowlesi</option>
+      <option value="viv">Vivaks</option>
+      <option value="ova">Ovale</option>
+      <option value="mix">Campuran (Pf + Pv/Po)</option>
+      <option value="mal">Malariae</option>
+    </select>
+
+    <label>Kondisi khusus</label>
+    <div class="toggle">
+      <button class="chip" id="hamilChip" onclick="toggleFlag('hamil',this)">🤰 Hamil</button>
+      <button class="chip" id="relapsChip" onclick="toggleFlag('relaps',this)">🔄 Relaps vivaks</button>
+    </div>
+
+    <label>Status G6PD (untuk primakuin)</label>
+    <div class="toggle" id="g6pdChips">
+      <button class="chip on" data-g="unknown" onclick="pickG6PD(this)">Tidak diperiksa</button>
+      <button class="chip" data-g="normal" onclick="pickG6PD(this)">Normal</button>
+      <button class="chip" data-g="def" onclick="pickG6PD(this)">Defisiensi</button>
+    </div>
+
+    <div class="result" id="doseResult"></div>
+  </div>
+
+  <div class="card">
+    <h2>🔁 Terapi Lini 2</h2>
+    <p class="lead">Untuk <b>kegagalan terapi</b> lini 1 (gejala menetap/memburuk + parasit aseksual tidak berkurang). Memakai berat badan, umur & kondisi di atas.</p>
+    <button class="btn sec" id="l2btn" onclick="toggleLini2()">Tampilkan dosis lini 2 ▼</button>
+    <div class="result" id="lini2Result"></div>
+  </div>
+</section>
+
+<!-- ============ MALARIA BERAT ============ -->
+<section class="page" id="p-berat">
+  <div class="card">
+    <h2>🚨 Kriteria Malaria Berat</h2>
+    <p class="lead">Centang tanda yang ditemukan. <b>≥1 kriteria + parasit aseksual (Pf/Pv) = malaria berat.</b></p>
+    <div id="severeList"></div>
+    <div class="verdict safe" id="severeVerdict">Belum ada kriteria berat tercentang</div>
+  </div>
+
+  <div class="card">
+    <h2>💉 Dosis Artesunat (Malaria Berat)</h2>
+    <p class="lead">Pilihan utama. Anak &lt;20 kg memakai dosis lebih tinggi (3,0 mg/kg).</p>
+    <label>Berat badan</label>
+    <div class="field"><input type="number" id="bbBerat" inputmode="decimal" placeholder="cth: 50" oninput="calcArte()"><span class="unit">kg</span></div>
+    <div class="result" id="arteResult"></div>
+  </div>
+</section>
+
+<!-- ============ RDT ============ -->
+<section class="page" id="p-rdt">
+  <div class="card">
+    <h2>🩸 Interpretasi RDT</h2>
+    <p class="lead">Ketuk garis yang <b>muncul</b> pada kaset RDT kombo 3-band (C / Pf / Pan). Hasil dibaca 10–20 menit.</p>
+
+    <div class="rdtsim">
+      <div class="cassette">
+        <div class="cwin" onclick="tBand('c')">
+          <div class="lab">C</div>
+          <div class="cband ctrl" id="b-c"></div>
+          <div class="role">Kontrol</div>
+        </div>
+        <div class="cwin" onclick="tBand('pf')">
+          <div class="lab">T1</div>
+          <div class="cband" id="b-pf"></div>
+          <div class="role">Pf · HRP-2</div>
+        </div>
+        <div class="cwin" onclick="tBand('pan')">
+          <div class="lab">T2</div>
+          <div class="cband" id="b-pan"></div>
+          <div class="role">Pan · pLDH</div>
+        </div>
+      </div>
+    </div>
+    <div class="result show" id="rdtResult"></div>
+    <div class="ref">
+      <b>Antigen:</b> HRP-2 = spesifik <i>P. falciparum</i>. pLDH/aldolase pan = semua spesies. ·
+      <b>Penting:</b> RDT <u>tidak boleh</u> untuk evaluasi pengobatan — HRP-2 tetap positif 2–6 minggu setelah parasit bersih. Konfigurasi garis dapat berbeda antar merek; baca petunjuk kit.
+    </div>
+  </div>
+</section>
+
+<!-- ============ LAPOR SISMAL ============ -->
+<section class="page" id="p-lapor">
+  <div class="card">
+    <h2>📤 Pelaporan Kasus → SISMAL</h2>
+    <p class="lead">Isi variabel inti SISMAL. Ringkasan dapat disalin & dibawa ke portal SISMAL. Tersimpan di perangkat bila offline.</p>
+
+    <label>Tanggal penemuan</label>
+    <input type="date" id="r_tgl">
+    <label>Nama Faskes / Puskesmas</label>
+    <input type="text" id="r_faskes" placeholder="Puskesmas ...">
+    <label>Inisial / No. registrasi pasien</label>
+    <input type="text" id="r_pasien" placeholder="cth: A.S. / 0241">
+
+    <div style="display:flex;gap:10px">
+      <div style="flex:1"><label>Umur (th)</label><input type="number" id="r_umur" inputmode="numeric"></div>
+      <div style="flex:1"><label>Jenis kelamin</label>
+        <select id="r_jk"><option>L</option><option>P</option></select></div>
+    </div>
+    <label>Alamat / Desa</label>
+    <input type="text" id="r_alamat" placeholder="Desa, Kecamatan">
+
+    <label>Metode diagnosis</label>
+    <select id="r_metode"><option>RDT</option><option>Mikroskopis</option><option>PCR</option></select>
+    <label>Spesies</label>
+    <select id="r_spesies">
+      <option>P. falciparum</option><option>P. vivax</option><option>P. ovale</option>
+      <option>P. malariae</option><option>P. knowlesi</option><option>Campuran (mixed)</option>
+    </select>
+    <div style="display:flex;gap:10px">
+      <div style="flex:1"><label>Klasifikasi asal</label>
+        <select id="r_asal"><option>Indigenous</option><option>Impor</option><option>Induced</option><option>Relaps</option></select></div>
+      <div style="flex:1"><label>Derajat</label>
+        <select id="r_derajat"><option>Tanpa komplikasi</option><option>Berat</option></select></div>
+    </div>
+    <label>Pengobatan diberikan</label>
+    <input type="text" id="r_obat" placeholder="cth: DHP 1½ tab x3 hr + Primakuin">
+    <label>Status (opsional)</label>
+    <select id="r_status"><option>Pengobatan jalan</option><option>Sembuh</option><option>Dirujuk</option><option>Meninggal</option></select>
+
+    <button class="btn" onclick="genReport()">📝 Buat Ringkasan</button>
+    <div class="result" id="repResult"></div>
+  </div>
+
+  <div class="card" id="queueCard">
+    <h2>🗂️ Antrian Lokal <span id="qcount" class="tag"></span></h2>
+    <p class="lead">Kasus tersimpan di perangkat ini untuk disalin ke SISMAL saat ada sinyal.</p>
+    <div id="queueList"></div>
+  </div>
+</section>
+
+<!-- ============ NAV ============ -->
+<nav class="nav">
+  <button class="on" data-p="home" onclick="go('home')"><span class="ni">🏠</span>Beranda</button>
+  <button data-p="dosis" onclick="go('dosis')"><span class="ni">💊</span>Dosis</button>
+  <button data-p="berat" onclick="go('berat')"><span class="ni">🚨</span>Berat</button>
+  <button data-p="rdt" onclick="go('rdt')"><span class="ni">🩸</span>RDT</button>
+  <button data-p="lapor" onclick="go('lapor')"><span class="ni">📤</span>Lapor</button>
+</nav>
+
+<script>
+/* ================= NAV ================= */
+function go(p){
+  document.querySelectorAll('.page').forEach(e=>e.classList.remove('active'));
+  document.getElementById('p-'+p).classList.add('active');
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('on',b.dataset.p===p));
+  window.scrollTo(0,0);
+}
+
+/* ================= NETWORK BADGE ================= */
+function net(){
+  const on=navigator.onLine;
+  document.getElementById('netdot').classList.toggle('off',!on);
+  document.getElementById('nettxt').textContent=on?'Online':'Offline';
+}
+window.addEventListener('online',net);window.addEventListener('offline',net);net();
+
+/* ================= DOSE CALCULATOR ================= */
+let umur='dewasa', g6pd='unknown', flags={hamil:false,relaps:false};
+function pickUmur(el){umur=el.dataset.u;document.querySelectorAll('#umurChips .chip').forEach(c=>c.classList.toggle('on',c===el));calcDose()}
+function pickG6PD(el){g6pd=el.dataset.g;document.querySelectorAll('#g6pdChips .chip').forEach(c=>c.classList.toggle('on',c===el));calcDose()}
+function toggleFlag(f,el){flags[f]=!flags[f];el.classList.toggle('on',flags[f]);if(f==='hamil')el.classList.toggle('red',flags[f]);calcDose()}
+
+function dhpTab(bb){
+  if(bb<5)return'⅓';if(bb<=6)return'½';if(bb<=10)return'½';if(bb<=17)return'1';
+  if(bb<=30)return'1½';if(bb<=40)return'2';if(bb<=59)return'3';if(bb<=80)return'4';return'5';
+}
+function pqTab(bb){
+  if(bb<=6)return'0';if(bb<=10)return'¼';if(bb<=17)return'¼';if(bb<=30)return'½';
+  if(bb<=40)return'¾';return'1';
+}
+function nf(x){ // numeric -> nearest quarter tablet string
+  const q=Math.round(x*4)/4, w=Math.floor(q), f=q-w;
+  const fr={0:'',0.25:'¼',0.5:'½',0.75:'¾'}[f];
+  if(q===0)return'0'; if(w===0)return fr; return w+(fr?fr:'');
+}
+
+function calcDose(){
+  const bb=parseFloat(document.getElementById('bb').value);
+  const sp=document.getElementById('spesies').value;
+  const box=document.getElementById('doseResult');
+  if(!bb||bb<=0||bb>150){box.classList.remove('show');box.innerHTML='';if(lini2open)calcLini2();return}
+  let h='';
+
+  /* --- DHP --- */
+  const dhp=dhpTab(bb);
+  let dhpNote='1× sehari selama 3 hari (H0–H1–H2), sesudah makan.';
+  h+=`<div class="rx"><div class="name">💊 DHP (Dihidroartemisinin-Piperakuin) <span class="tag">1 tab = 40/320 mg</span></div>
+    <div class="dose">${dhp} tablet/hari</div><div class="meta">${dhpNote}</div></div>`;
+
+  /* --- PRIMAKUIN --- */
+  let needPQ=true, days='', mgkg=0.25, single=false, malariae=false;
+  if(sp==='fal'){single=true;mgkg=0.25;days='dosis tunggal hari ke-1';}
+  else if(sp==='viv'||sp==='ova'){days='1× sehari, 14 hari';mgkg=flags.relaps?0.5:0.25;}
+  else if(sp==='mix'){days='1× sehari, 14 hari';mgkg=0.25;}
+  else if(sp==='mal'){needPQ=false;malariae=true;}
+
+  if(malariae){
+    h+=`<div class="alert info"><span class="i">ℹ️</span><div><b>Malariae:</b> cukup DHP 3 hari, <b>tanpa primakuin</b> (tidak ada stadium hipnozoit).</div></div>`;
+  } else {
+    let blocked=null;
+    if(flags.hamil) blocked='Ibu hamil — primakuin KONTRAINDIKASI di semua trimester (risiko hemolisis janin). Radical cure ditunda hingga selesai menyusui.';
+    else if(umur==='bayi'||bb<=6) blocked='Bayi < 6 bulan — primakuin KONTRAINDIKASI (enzim belum matang).';
+    else if(g6pd==='def') blocked='G6PD-DEF';
+
+    if(blocked==='G6PD-DEF'){
+      const wkMg=(0.75*bb).toFixed(1), wkTab=nf(0.75*bb/15);
+      h+=`<div class="rx amber"><div class="name">💊 Primakuin — Regimen MINGGUAN (G6PD Defisiensi)</div>
+        <div class="dose">${wkTab} tablet / minggu</div>
+        <div class="meta">0,75 mg/kgBB ≈ <b>${wkMg} mg</b>/minggu, selama 8–12 minggu (1 tab = 15 mg).</div></div>
+        <div class="alert danger"><span class="i">🚑</span><div><b>RUJUK ke rumah sakit.</b> Pada defisiensi G6PD primakuin harian kontraindikasi (risiko hemolisis berat/blackwater fever). DHP & Artesunat tetap aman.</div></div>`;
+    } else if(blocked){
+      h+=`<div class="rx red"><div class="name">⛔ Primakuin tidak diberikan</div>
+        <div class="meta">${blocked}</div></div>
+        <div class="alert info"><span class="i">ℹ️</span><div>Cukup berikan DHP 3 hari. Untuk vivaks/ovale, edukasi pasien kembali bila gejala muncul lagi (kemungkinan relaps).</div></div>`;
+    } else {
+      const tab=pqTab(bb), mg=(mgkg*bb).toFixed(1);
+      const lbl= single? 'dosis tunggal' : (flags.relaps?'/hari × 14 hari (relaps)':'/hari × 14 hari');
+      h+=`<div class="rx"><div class="name">💊 Primakuin <span class="tag">1 tab = 15 mg</span></div>
+        <div class="dose">${flags.relaps&&!single? nf(mgkg*bb/15) : tab} tablet ${single?'(hari ke-1)':lbl.split('×')[0]}</div>
+        <div class="meta">Target ${mgkg} mg/kgBB ≈ <b>${mg} mg</b> · ${days}.</div></div>`;
+      if(g6pd==='unknown'){
+        h+=`<div class="alert warn"><span class="i">⚠️</span><div>Status G6PD belum diperiksa. Edukasi pasien: <b>hentikan & segera kembali</b> bila urin coklat-kehitaman, pucat mendadak, atau lemas.</div></div>`;
+      }
+      if(g6pd==='normal'){
+        h+=`<div class="alert info"><span class="i">✅</span><div>G6PD normal → primakuin dosis standar aman. (Bila program optimasi tersedia, vivaks dapat 1 mg/kg/hari × 7 hari.)</div></div>`;
+      }
+    }
+  }
+
+  if(flags.hamil && (sp==='fal')){
+    h+=`<div class="alert warn"><span class="i">🤰</span><div><b>Hamil Trimester I:</b> falciparum → Kina + Klindamisin 7 hari. Trimester II–III → DHP 3 hari (lebih aman & efektif). Tanpa primakuin.</div></div>`;
+  }
+
+  if((umur==='dewasa'&&bb<18)||(umur==='bayi'&&bb>10)){
+    h+=`<div class="alert warn"><span class="i">⚖️</span><div>Umur & berat badan tampak tidak sesuai. <b>Dosis mengikuti berat badan</b> (utamakan penimbangan).</div></div>`;
+  }
+
+  h+=`<div class="ref"><b>Acuan:</b> Buku Saku Tatalaksana Kasus Malaria, Kemenkes RI · WHO Guidelines for Malaria 2022/2023.</div>`;
+  box.innerHTML=h;box.classList.add('show');
+  if(lini2open)calcLini2();
+}
+
+/* ================= LINI 2 ================= */
+let lini2open=false;
+function toggleLini2(){lini2open=!lini2open;document.getElementById('l2btn').textContent=lini2open?'Sembunyikan lini 2 ▲':'Tampilkan dosis lini 2 ▼';calcLini2();}
+function calcLini2(){
+  if(!lini2open){const b=document.getElementById('lini2Result');b.classList.remove('show');b.innerHTML='';return;}
+  const bb=parseFloat(document.getElementById('bb').value);
+  const sp=document.getElementById('spesies').value;
+  const box=document.getElementById('lini2Result');
+  if(!bb||bb<=0||bb>150){box.innerHTML='<div class="alert warn"><span class="i">⚖️</span><div>Isi berat badan di kalkulator lini 1 dulu untuk menghitung lini 2.</div></div>';box.classList.add('show');return;}
+  const isFal=(sp==='fal'||sp==='mix');
+  let h='';
+  const kinaDose=Math.round(10*bb);
+  h+=`<div class="rx"><div class="name">💊 Kina <span class="tag">tablet 200 mg</span></div>
+    <div class="dose">${kinaDose} mg × 3/hari</div>
+    <div class="meta">10 mg/kgBB/kali, 3× sehari, selama 7 hari (sesudah makan). Maks dewasa 2.000 mg/hari.</div></div>`;
+  if(isFal){
+    if(flags.hamil || umur==='bayi' || umur==='anak' || bb<25){
+      const clinda=Math.round(10*bb);
+      h+=`<div class="rx amber"><div class="name">💊 Klindamisin <span class="tag">anak &lt;8 th / hamil</span></div>
+        <div class="dose">${clinda} mg × 2/hari</div>
+        <div class="meta">10 mg/kgBB/kali, 2× sehari, 7 hari. Pengganti doksisiklin/tetrasiklin yang kontraindikasi pada anak &lt;8 th & ibu hamil.</div></div>`;
+    } else {
+      const doxiDose=Math.round(3.5*bb/2);
+      h+=`<div class="rx blue"><div class="name">💊 Doksisiklin <span class="tag">≥15 th</span></div>
+        <div class="dose">${doxiDose} mg × 2/hari</div>
+        <div class="meta">3,5 mg/kgBB/hari dibagi 2 dosis, 7 hari. (Usia 8–14 th: 2,2 mg/kgBB/hari → ${Math.round(2.2*bb/2)} mg × 2/hari.) Alternatif: Tetrasiklin ${Math.round(4*bb)} mg × 4/hari.</div></div>`;
+    }
+  }
+  let pqBlocked = flags.hamil || umur==='bayi' || bb<=6 || g6pd==='def' || sp==='mal';
+  if(sp==='mal'){
+    h+=`<div class="alert info"><span class="i">ℹ️</span><div>Malariae: Kina 7 hari saja, tanpa primakuin.</div></div>`;
+  } else if(pqBlocked){
+    h+=`<div class="alert warn"><span class="i">⛔</span><div>Primakuin mengikuti aturan kontraindikasi yang sama (hamil / bayi &lt;6 bln / G6PD defisiensi → tidak diberikan, atau regimen mingguan bila G6PD defisiensi + rujuk).</div></div>`;
+  } else {
+    const single=(sp==='fal'); const mg=(0.25*bb).toFixed(1);
+    h+=`<div class="rx"><div class="name">💊 Primakuin <span class="tag">1 tab = 15 mg</span></div>
+      <div class="dose">${pqTab(bb)} tablet ${single?'(hari ke-1)':'/hari'}</div>
+      <div class="meta">0,25 mg/kgBB ≈ ${mg} mg · ${single?'dosis tunggal (falciparum)':'14 hari (vivaks/ovale)'} sesuai jenis infeksi.</div></div>`;
+  }
+  h+=`<div class="alert info"><span class="i">📋</span><div><b>Regimen:</b> Falciparum → Kina + Doksisiklin/Tetrasiklin (atau Klindamisin) + Primakuin. Vivaks → Kina + Primakuin.</div></div>`;
+  h+=`<div class="ref"><b>Acuan:</b> Buku Saku Tatalaksana Kasus Malaria, Kemenkes RI (pengobatan lini ke-2).</div>`;
+  box.innerHTML=h;box.classList.add('show');
+}
+
+/* ================= SEVERE MALARIA ================= */
+const severeCriteria=[
+  ['Perubahan kesadaran','GCS <11 / Blantyre <3'],
+  ['Kelemahan otot','tak bisa duduk/berjalan tanpa bantuan'],
+  ['Kejang berulang','>2 episode dalam 24 jam'],
+  ['Distres pernapasan / edema paru','RR >30, SpO₂ <92%'],
+  ['Gagal sirkulasi / syok','TD sistolik <80 (anak <70), CRT >3 dtk'],
+  ['Jaundice','bilirubin >3 mg/dL + parasitemia tinggi'],
+  ['Perdarahan spontan abnormal','—'],
+  ['Hemoglobinuria','urin seperti teh/kola (blackwater)'],
+  ['Hipoglikemia','GDS <40 mg/dL'],
+  ['Anemia berat','Hb <5 (anak) / <7 g/dL (dewasa)'],
+  ['Asidosis metabolik','bikarbonat <15 mmol/L / laktat >5'],
+  ['Gangguan ginjal','kreatinin >3 mg/dL / ureum >20 mmol/L'],
+  ['Hiperparasitemia','>2% (endemis rendah) / >5% (endemis tinggi)']
+];
+let severeState=[];
+function buildSevere(){
+  const c=document.getElementById('severeList');
+  c.innerHTML=severeCriteria.map((x,i)=>`
+    <div class="check" id="sc-${i}" onclick="toggleSevere(${i})">
+      <div class="box"></div>
+      <div><div class="txt">${x[0]}</div>${x[1]!=='—'?`<div class="sub2">${x[1]}</div>`:''}</div>
+    </div>`).join('');
+  severeState=severeCriteria.map(()=>false);
+}
+function toggleSevere(i){
+  severeState[i]=!severeState[i];
+  const el=document.getElementById('sc-'+i);
+  el.classList.toggle('on',severeState[i]);
+  el.querySelector('.box').textContent=severeState[i]?'✓':'';
+  const n=severeState.filter(Boolean).length;
+  const v=document.getElementById('severeVerdict');
+  if(n>0){v.className='verdict severe';v.innerHTML=`🚨 MALARIA BERAT — ${n} kriteria · Artesunat + RUJUK`;}
+  else{v.className='verdict safe';v.textContent='Belum ada kriteria berat tercentang';}
+}
+
+/* ================= ARTESUNATE ================= */
+function calcArte(){
+  const bb=parseFloat(document.getElementById('bbBerat').value);
+  const box=document.getElementById('arteResult');
+  if(!bb||bb<=0||bb>150){box.classList.remove('show');box.innerHTML='';return}
+  const perKg = bb<20?3.0:2.4;
+  const mg=Math.round(perKg*bb);
+  const vials=Math.ceil(mg/60);
+  let h=`<div class="rx blue"><div class="name">💉 Artesunat IV/IM <span class="tag">${bb<20?'anak <20 kg':'≥20 kg'}</span></div>
+    <div class="dose">${mg} mg / dosis</div>
+    <div class="meta">${perKg} mg/kgBB × ${bb} kg · butuh <b>${vials} vial</b> (1 vial = 60 mg)</div></div>
+    <div class="alert info"><span class="i">🕐</span><div><b>Jadwal:</b> jam ke-0, 12, 24 → lalu tiap 24 jam (maks 7 hari). IV bolus pelan &gt;1 menit. Lanjut DHP oral 3 hari + primakuin saat pasien bisa menelan.</div></div>`;
+  h+=`<div class="rx amber"><div class="name">🚑 Pra-rujukan di Puskesmas</div>
+    <div class="dose">Artesunat IM ${mg} mg (1×)</div>
+    <div class="meta">Beri dosis awal SEBELUM merujuk. Anak: tambah antibiotik spektrum luas IV. Bila injeksi tak ada → 1 dosis DHP, lalu rujuk segera.</div></div>`;
+  h+=`<div class="ref"><b>Penyiapan:</b> serbuk artesunat 60 mg + 1 mL NaHCO₃ 5% → larutkan jernih → encerkan 5 mL D5%/NaCl 0,9% (=10 mg/mL). <b>Alternatif:</b> Kina drip bila artesunat tak tersedia (loading 20 mg/kg 4 jam → 10 mg/kg tiap 8 jam). <b>Acuan:</b> Kemenkes · WHO 2022.</div>`;
+  box.innerHTML=h;box.classList.add('show');
+}
+
+/* ================= RDT ================= */
+let rdt={c:false,pf:false,pan:false};
+function tBand(k){rdt[k]=!rdt[k];document.getElementById('b-'+k).classList.toggle('show',rdt[k]);interpRDT();}
+function interpRDT(){
+  const box=document.getElementById('rdtResult');let cls='rx',name,dose,meta;
+  if(!rdt.c){
+    cls='rx red';name='❌ HASIL TIDAK VALID';dose='Ulangi tes';
+    meta='Garis kontrol (C) tidak muncul. Kit rusak/cara salah — ulangi dengan RDT baru.';
+  } else if(!rdt.pf&&!rdt.pan){
+    cls='rx';name='✅ NEGATIF';dose='Tidak ada antigen';
+    meta='Hanya garis C. Bila gejala kuat & risiko tinggi → konfirmasi mikroskopis / ulang 24 jam.';
+  } else if(rdt.pf&&!rdt.pan){
+    cls='rx red';name='\U0001f534 POSITIF — P. falciparum';dose='Pf (HRP-2)';
+    meta='Garis C + Pf. Terapi: DHP 3 hari + Primakuin dosis tunggal. Nilai tanda berat.';
+  } else if(!rdt.pf&&rdt.pan){
+    cls='rx blue';name='\U0001f535 POSITIF — Non-falciparum';dose='Pan (pLDH)';
+    meta='Garis C + Pan saja → kemungkinan P. vivax / ovale / malariae. Terapi DHP + Primakuin 14 hari (vivaks/ovale). Konfirmasi spesies via mikroskopis bila ada.';
+  } else {
+    cls='rx amber';name='\U0001f7e0 POSITIF — Pf atau Campuran';dose='Pf + Pan';
+    meta='Garis C + Pf + Pan → falciparum (Pf juga bereaksi di pan) ATAU infeksi campur. Tatalaksana sebagai falciparum/campuran; konfirmasi mikroskopis.';
+  }
+  box.innerHTML=`<div class="${cls}"><div class="name">${name}</div><div class="dose">${dose}</div><div class="meta">${meta}</div></div>`;
+}
+interpRDT();
+
+/* ================= SISMAL REPORT ================= */
+const SISMAL_URL='https://sismal.kemkes.go.id/login';
+const QKEY='malarai_sismal_queue';
+function loadQ(){try{return JSON.parse(localStorage.getItem(QKEY)||'[]')}catch(e){return[]}}
+function saveQ(q){localStorage.setItem(QKEY,JSON.stringify(q))}
+function todayStr(){const d=new Date();return d.toISOString().slice(0,10)}
+document.getElementById('r_tgl').value=todayStr();
+
+function buildSummaryText(d){
+  return `=== LAPORAN KASUS MALARIA (SISMAL) ===
+Tanggal temuan : ${d.tgl}
+Faskes         : ${d.faskes}
+Pasien         : ${d.pasien} | ${d.umur} th | ${d.jk}
+Alamat/Desa    : ${d.alamat}
+Diagnosis      : ${d.metode} → ${d.spesies}
+Klasifikasi    : ${d.asal} | ${d.derajat}
+Pengobatan     : ${d.obat}
+Status         : ${d.status}
+=====================================`;
+}
+function readForm(){
+  return {
+    tgl:document.getElementById('r_tgl').value||'-',
+    faskes:document.getElementById('r_faskes').value||'-',
+    pasien:document.getElementById('r_pasien').value||'-',
+    umur:document.getElementById('r_umur').value||'-',
+    jk:document.getElementById('r_jk').value,
+    alamat:document.getElementById('r_alamat').value||'-',
+    metode:document.getElementById('r_metode').value,
+    spesies:document.getElementById('r_spesies').value,
+    asal:document.getElementById('r_asal').value,
+    derajat:document.getElementById('r_derajat').value,
+    obat:document.getElementById('r_obat').value||'-',
+    status:document.getElementById('r_status').value
+  };
+}
+function genReport(){
+  const d=readForm();const txt=buildSummaryText(d);
+  const box=document.getElementById('repResult');
+  box.innerHTML=`<div class="summary" id="sumtxt">${txt.replace(/</g,'&lt;')}</div>
+    <button class="btn small" onclick="copySum()">\U0001f4cb Salin Ringkasan</button>
+    <button class="btn small sec" onclick="saveCase()">\U0001f4be Simpan ke Antrian Lokal</button>
+    <button class="btn small blue" onclick="openSismal()">\U0001f310 Buka Portal SISMAL</button>
+    <div class="alert info" style="margin-top:10px"><span class="i">ℹ️</span><div>SISMAL nasional butuh login akun Dinkes/Puskesmas. Salin ringkasan ini lalu masukkan di portal. Tersedia juga app <b>SISMAL v3</b> di Play Store.</div></div>`;
+  box.classList.add('show');
+  window._lastSum=txt;
+}
+function copySum(){
+  navigator.clipboard.writeText(window._lastSum||'').then(()=>toast('Ringkasan disalin ✓'))
+  .catch(()=>{const t=document.createElement('textarea');t.value=window._lastSum;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove();toast('Ringkasan disalin ✓')});
+}
+function openSismal(){window.open(SISMAL_URL,'_blank');}
+function saveCase(){
+  const d=readForm();const q=loadQ();
+  d._id=Date.now();q.unshift(d);saveQ(q);renderQ();toast('Tersimpan di perangkat ✓');
+}
+function renderQ(){
+  const q=loadQ();document.getElementById('qcount').textContent=q.length+' kasus';
+  const c=document.getElementById('queueList');
+  if(!q.length){c.innerHTML='<p class="mini">Belum ada kasus tersimpan.</p>';return}
+  c.innerHTML=q.map(d=>`<div class="queue-item">
+    <div><b>${d.pasien}</b> · ${d.spesies}<div class="mini">${d.tgl} · ${d.derajat} · ${d.faskes}</div></div>
+    <button class="del" onclick="delCase(${d._id})">Hapus</button></div>`).join('');
+}
+function delCase(id){let q=loadQ().filter(x=>x._id!==id);saveQ(q);renderQ();}
+function toast(msg){
+  const t=document.createElement('div');t.textContent=msg;
+  t.style.cssText='position:fixed;bottom:92px;left:50%;transform:translateX(-50%);background:#16241f;color:#fff;padding:10px 18px;border-radius:24px;font-size:13px;font-weight:600;z-index:99;box-shadow:0 4px 16px rgba(0,0,0,.25)';
+  document.body.appendChild(t);setTimeout(()=>t.remove(),1800);
+}
+
+/* ================= INIT ================= */
+buildSevere();renderQ();
+</script>
+</body>
+</html>
