@@ -1,0 +1,1525 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MalarAI-ID · Expert Validation Portal</title>
+<style>
+/* ===== RESET & ROOT ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:       #0b1120;
+  --surface:  #111827;
+  --surface2: #1e293b;
+  --border:   #1f2d40;
+  --border2:  #2d3f55;
+  --teal:     #0d9488;
+  --teal-lt:  #2dd4bf;
+  --teal-dim: rgba(13,148,136,0.15);
+  --blue:     #3b82f6;
+  --red:      #ef4444;
+  --amber:    #f59e0b;
+  --green:    #22c55e;
+  --purple:   #a855f7;
+  --text:     #f1f5f9;
+  --text2:    #94a3b8;
+  --text3:    #475569;
+  --shadow:   0 4px 24px rgba(0,0,0,0.4);
+  --radius:   14px;
+  --font: 'Segoe UI', system-ui, sans-serif;
+}
+body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; display: flex; overflow: hidden; }
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+  width: 240px;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+}
+.sidebar-logo {
+  padding: 1.25rem 1.25rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+.logo-mark { font-size: 1.1rem; font-weight: 900; color: var(--text); }
+.logo-mark span { color: var(--teal-lt); }
+.logo-sub { font-size: 0.7rem; color: var(--text3); margin-top: 0.15rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
+
+.sidebar-nav { flex: 1; padding: 0.75rem 0.75rem; display: flex; flex-direction: column; gap: 0.2rem; overflow-y: auto; }
+.nav-section-label { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text3); padding: 0.75rem 0.5rem 0.35rem; }
+.nav-link {
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text2);
+  position: relative;
+}
+.nav-link:hover { background: var(--surface2); color: var(--text); }
+.nav-link.active { background: var(--teal-dim); color: var(--teal-lt); }
+.nav-link.active::before { content:''; position:absolute; left:0; top:20%; bottom:20%; width:3px; background:var(--teal); border-radius:0 3px 3px 0; }
+.nav-icon { font-size: 1rem; width: 20px; text-align: center; }
+.nav-badge { margin-left: auto; background: var(--red); color: white; font-size: 0.65rem; font-weight: 800; padding: 0.15rem 0.45rem; border-radius: 20px; }
+.nav-badge.amber { background: var(--amber); color: #1a1a1a; }
+.nav-badge.teal { background: var(--teal); }
+
+.sidebar-user {
+  padding: 0.85rem 1rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+.user-avatar {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--teal), var(--blue));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: white;
+  flex-shrink: 0;
+}
+.user-name { font-size: 0.8rem; font-weight: 700; color: var(--text); }
+.user-role { font-size: 0.68rem; color: var(--teal-lt); }
+.user-status { margin-left: auto; width: 8px; height: 8px; background: var(--green); border-radius: 50%; flex-shrink: 0; box-shadow: 0 0 0 2px rgba(34,197,94,0.3); }
+
+/* ===== MAIN LAYOUT ===== */
+.main { flex: 1; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+
+/* ===== TOP BAR ===== */
+.topbar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-shrink: 0;
+}
+.topbar-title { font-size: 1rem; font-weight: 800; color: var(--text); }
+.topbar-sub { font-size: 0.78rem; color: var(--text3); margin-left: 0.5rem; }
+.topbar-right { margin-left: auto; display: flex; align-items: center; gap: 0.75rem; }
+.topbar-btn {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  color: var(--text2);
+  border-radius: 8px;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font);
+  transition: all 0.15s;
+  display: flex; align-items: center; gap: 0.4rem;
+}
+.topbar-btn:hover { background: var(--border); color: var(--text); }
+.topbar-btn.primary { background: var(--teal); border-color: var(--teal); color: white; }
+.topbar-btn.primary:hover { background: #0f766e; }
+.notif-dot { width: 8px; height: 8px; background: var(--red); border-radius: 50%; }
+
+/* ===== CONTENT AREA ===== */
+.content { flex: 1; overflow-y: auto; overflow-x: hidden; display: flex; }
+.content::-webkit-scrollbar { width: 4px; }
+.content::-webkit-scrollbar-track { background: transparent; }
+.content::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+/* ===== VIEWS ===== */
+.view { display: none; width: 100%; }
+.view.active { display: flex; }
+
+/* ===== DASHBOARD VIEW ===== */
+#view-dashboard { flex-direction: column; padding: 1.5rem; gap: 1.25rem; overflow-y: auto; }
+
+/* Alert banner */
+.alert-banner {
+  background: rgba(239,68,68,0.08);
+  border: 1px solid rgba(239,68,68,0.25);
+  border-radius: var(--radius);
+  padding: 0.85rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.alert-banner-icon { font-size: 1.3rem; }
+.alert-banner-text { flex: 1; }
+.alert-banner-text strong { color: #fca5a5; font-size: 0.88rem; }
+.alert-banner-text p { color: var(--text3); font-size: 0.78rem; margin-top: 0.1rem; }
+.alert-banner-act { background: var(--red); color: white; border: none; border-radius: 8px; padding: 0.45rem 1rem; font-size: 0.78rem; font-weight: 700; cursor: pointer; font-family: var(--font); white-space: nowrap; }
+
+/* KPI row */
+.kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+.kpi-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.kpi-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
+.kpi-num { font-size: 1.6rem; font-weight: 900; line-height: 1; }
+.kpi-label { font-size: 0.72rem; color: var(--text3); margin-top: 0.2rem; }
+.kpi-delta { font-size: 0.68rem; font-weight: 700; margin-top: 0.25rem; }
+.delta-up { color: var(--green); }
+.delta-warn { color: var(--amber); }
+
+/* Two-column grid */
+.two-col { display: grid; grid-template-columns: 1.5fr 1fr; gap: 1.25rem; }
+
+/* Queue table */
+.section-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.section-card-header {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.section-card-title { font-size: 0.88rem; font-weight: 800; }
+.section-card-meta { font-size: 0.72rem; color: var(--text3); }
+.view-link { font-size: 0.75rem; color: var(--teal-lt); cursor: pointer; font-weight: 600; }
+
+.queue-table { width: 100%; border-collapse: collapse; }
+.queue-table th { background: rgba(255,255,255,0.02); padding: 0.6rem 1.25rem; text-align: left; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text3); border-bottom: 1px solid var(--border); }
+.queue-table td { padding: 0.75rem 1.25rem; font-size: 0.82rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.queue-table tr:last-child td { border-bottom: none; }
+.queue-table tr { cursor: pointer; transition: background 0.15s; }
+.queue-table tr:hover td { background: rgba(255,255,255,0.02); }
+.queue-table tr.urgent td { background: rgba(239,68,68,0.04); }
+.queue-table tr.urgent:hover td { background: rgba(239,68,68,0.08); }
+
+.priority-badge { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.68rem; font-weight: 700; padding: 0.22rem 0.6rem; border-radius: 6px; }
+.priority-urgent { background: rgba(239,68,68,0.15); color: #fca5a5; }
+.priority-high { background: rgba(245,158,11,0.15); color: #fcd34d; }
+.priority-normal { background: rgba(100,116,139,0.15); color: #94a3b8; }
+
+.species-pill { display: inline-block; font-size: 0.72rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 20px; }
+.sp-knowlesi { background: rgba(239,68,68,0.18); color: #fca5a5; }
+.sp-falci { background: rgba(59,130,246,0.18); color: #93c5fd; }
+.sp-vivax { background: rgba(34,197,94,0.18); color: #86efac; }
+.sp-malariae { background: rgba(245,158,11,0.18); color: #fcd34d; }
+.sp-ovale { background: rgba(168,85,247,0.18); color: #d8b4fe; }
+.sp-neg { background: rgba(100,116,139,0.15); color: #94a3b8; }
+
+.conf-bar-wrap { display: flex; align-items: center; gap: 0.5rem; }
+.conf-bar { height: 4px; width: 50px; background: var(--border2); border-radius: 2px; overflow: hidden; flex-shrink: 0; }
+.conf-fill { height: 100%; border-radius: 2px; }
+
+/* Activity feed */
+.activity-list { padding: 0.5rem 0; }
+.activity-item { display: flex; gap: 0.75rem; padding: 0.7rem 1.25rem; border-bottom: 1px solid var(--border); }
+.activity-item:last-child { border-bottom: none; }
+.activity-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 0.35rem; }
+.activity-text { font-size: 0.8rem; color: var(--text2); line-height: 1.4; }
+.activity-text strong { color: var(--text); }
+.activity-time { font-size: 0.68rem; color: var(--text3); margin-top: 0.15rem; }
+
+/* Chart placeholder */
+.chart-box { padding: 1.25rem; }
+.chart-bars { display: flex; align-items: flex-end; gap: 0.5rem; height: 100px; }
+.chart-bar-wrap { display: flex; flex-direction: column; align-items: center; gap: 0.3rem; flex: 1; }
+.chart-bar { width: 100%; border-radius: 4px 4px 0 0; transition: opacity 0.2s; }
+.chart-bar:hover { opacity: 0.8; }
+.chart-label { font-size: 0.62rem; color: var(--text3); }
+.chart-legend { display: flex; gap: 1rem; margin-top: 0.75rem; }
+.chart-leg { display: flex; align-items: center; gap: 0.35rem; font-size: 0.72rem; color: var(--text3); }
+.chart-leg-dot { width: 8px; height: 8px; border-radius: 2px; }
+
+/* ===== REVIEW VIEW ===== */
+#view-review { gap: 0; }
+
+.review-list-panel {
+  width: 340px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.review-list-header {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  flex-shrink: 0;
+}
+.review-list-title { font-size: 0.88rem; font-weight: 800; margin-bottom: 0.6rem; }
+.search-input {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  border-radius: 9px;
+  padding: 0.55rem 0.85rem;
+  color: var(--text);
+  font-size: 0.82rem;
+  font-family: var(--font);
+  outline: none;
+}
+.search-input::placeholder { color: var(--text3); }
+.search-input:focus { border-color: var(--teal); }
+.filter-row { display: flex; gap: 0.4rem; margin-top: 0.5rem; flex-wrap: wrap; }
+.filter-chip { background: var(--surface2); border: 1px solid var(--border2); color: var(--text3); border-radius: 20px; padding: 0.25rem 0.65rem; font-size: 0.7rem; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+.filter-chip:hover { border-color: var(--teal); color: var(--teal-lt); }
+.filter-chip.on { background: var(--teal-dim); border-color: var(--teal); color: var(--teal-lt); }
+
+.review-list-scroll { flex: 1; overflow-y: auto; }
+.review-list-scroll::-webkit-scrollbar { width: 3px; }
+.review-list-scroll::-webkit-scrollbar-thumb { background: var(--border2); }
+
+.review-item {
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.15s;
+  display: flex;
+  gap: 0.75rem;
+  position: relative;
+}
+.review-item:hover { background: var(--surface2); }
+.review-item.selected { background: var(--teal-dim); border-left: 3px solid var(--teal); }
+.review-item.urgent-item { border-left: 3px solid var(--red); }
+.review-avatar {
+  width: 38px; height: 38px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.85rem; font-weight: 800; color: white;
+  flex-shrink: 0; font-style: normal;
+}
+.review-info { flex: 1; min-width: 0; }
+.review-patient { font-size: 0.83rem; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.review-meta { font-size: 0.7rem; color: var(--text3); margin-top: 0.1rem; }
+.review-right { text-align: right; flex-shrink: 0; }
+.review-time { font-size: 0.65rem; color: var(--text3); }
+.review-urg-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--red); margin: 0.15rem 0 0.3rem auto; animation: blink 1.5s infinite; }
+@keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+/* ===== CASE DETAIL PANEL ===== */
+.case-detail-panel { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.case-detail-top {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0.85rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+.case-patient-info { display: flex; align-items: center; gap: 0.85rem; }
+.case-avatar-lg { width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, #dc2626, #b91c1c); display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 1rem; }
+.case-name { font-size: 1rem; font-weight: 800; }
+.case-sub { font-size: 0.75rem; color: var(--text3); margin-top: 0.1rem; }
+.case-actions { display: flex; gap: 0.6rem; }
+.case-btn { background: var(--surface2); border: 1px solid var(--border2); color: var(--text2); border-radius: 9px; padding: 0.45rem 0.9rem; font-size: 0.78rem; font-weight: 600; cursor: pointer; font-family: var(--font); transition: all 0.15s; }
+.case-btn:hover { background: var(--border); color: var(--text); }
+.case-btn.confirm { background: var(--teal); border-color: var(--teal); color: white; }
+.case-btn.confirm:hover { background: #0f766e; }
+.case-btn.reject { background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.3); color: #fca5a5; }
+
+.case-body { flex: 1; overflow-y: auto; display: grid; grid-template-columns: 1fr 340px; gap: 0; }
+.case-body::-webkit-scrollbar { display: none; }
+
+/* Image viewer */
+.img-viewer-panel { border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
+.img-toolbar {
+  padding: 0.65rem 1rem;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+.img-tool-btn {
+  background: var(--surface2); border: 1px solid var(--border2); color: var(--text2);
+  border-radius: 7px; padding: 0.35rem 0.7rem; font-size: 0.72rem; font-weight: 600;
+  cursor: pointer; font-family: var(--font); transition: all 0.15s;
+}
+.img-tool-btn:hover { background: var(--border); color: var(--text); }
+.img-tool-btn.on { background: var(--teal-dim); border-color: var(--teal); color: var(--teal-lt); }
+.img-sep { width: 1px; height: 20px; background: var(--border2); margin: 0 0.2rem; }
+
+.img-stage {
+  flex: 1;
+  background: #050a12;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  min-height: 0;
+}
+.smear-canvas {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Blood smear simulation */
+.smear-bg {
+  width: 460px;
+  height: 320px;
+  position: relative;
+  background: radial-gradient(ellipse at center, #1a2a1a 0%, #0d1a0d 60%, #050a05 100%);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 0 40px rgba(0,100,50,0.2);
+}
+.rbc {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #c84040, #8b1a1a);
+  box-shadow: inset -2px -2px 4px rgba(0,0,0,0.4), inset 1px 1px 3px rgba(255,100,100,0.2);
+  opacity: 0.85;
+}
+.rbc.infected {
+  background: radial-gradient(circle at 35% 35%, #d45050, #9b2020);
+  box-shadow: inset -2px -2px 4px rgba(0,0,0,0.4), inset 1px 1px 3px rgba(255,100,100,0.2), 0 0 0 2px rgba(255,80,80,0.4);
+}
+.rbc.box-selected {
+  box-shadow: inset -2px -2px 4px rgba(0,0,0,0.4), 0 0 0 2px #2dd4bf, 0 0 12px rgba(45,212,191,0.5);
+}
+.rbc.box-warn {
+  box-shadow: inset -2px -2px 4px rgba(0,0,0,0.4), 0 0 0 2px #f59e0b, 0 0 10px rgba(245,158,11,0.4);
+}
+.grad-cam-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 8px;
+  opacity: 0;
+  transition: opacity 0.4s;
+  background:
+    radial-gradient(circle 35px at 42% 38%, rgba(239,68,68,0.55) 0%, transparent 70%),
+    radial-gradient(circle 28px at 68% 55%, rgba(239,68,68,0.45) 0%, transparent 70%),
+    radial-gradient(circle 22px at 22% 65%, rgba(245,158,11,0.35) 0%, transparent 70%),
+    radial-gradient(circle 20px at 78% 25%, rgba(239,68,68,0.4) 0%, transparent 70%),
+    radial-gradient(circle 18px at 55% 72%, rgba(245,158,11,0.3) 0%, transparent 70%);
+  pointer-events: none;
+}
+.grad-cam-overlay.visible { opacity: 1; }
+
+.label-tag {
+  position: absolute;
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 0.12rem 0.35rem;
+  border-radius: 4px;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.label-tag.infected-lbl { background: rgba(239,68,68,0.85); color: white; }
+.label-tag.warn-lbl { background: rgba(245,158,11,0.85); color: #1a1a1a; }
+
+.zoom-controls {
+  position: absolute;
+  bottom: 10px; right: 10px;
+  display: flex; flex-direction: column; gap: 0.3rem;
+}
+.zoom-btn {
+  width: 28px; height: 28px;
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 7px;
+  color: white;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.field-nav {
+  padding: 0.5rem 1rem;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-shrink: 0;
+}
+.field-thumb {
+  width: 44px; height: 44px;
+  border-radius: 7px;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.6rem; color: var(--text3);
+  position: relative;
+  overflow: hidden;
+}
+.field-thumb:hover { border-color: var(--teal); }
+.field-thumb.active-thumb { border-color: var(--teal); border-width: 2px; }
+.field-thumb-inner {
+  width: 100%; height: 100%;
+  background: radial-gradient(ellipse, #1a2a1a 0%, #0d1a0d 100%);
+  display: flex; align-items: center; justify-content: center;
+}
+.field-thumb-dot { width: 8px; height: 8px; border-radius: 50%; background: #c84040; position: absolute; }
+.thumb-infected { border-color: rgba(239,68,68,0.5) !important; }
+.field-nav-count { font-size: 0.75rem; color: var(--text3); margin-left: auto; }
+
+/* Right eval panel */
+.eval-panel { overflow-y: auto; display: flex; flex-direction: column; }
+.eval-panel::-webkit-scrollbar { width: 3px; }
+.eval-panel::-webkit-scrollbar-thumb { background: var(--border2); }
+
+.eval-section { padding: 1rem; border-bottom: 1px solid var(--border); }
+.eval-section-title { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text3); margin-bottom: 0.75rem; }
+
+/* AI result card */
+.ai-result-card {
+  background: var(--bg);
+  border-radius: 10px;
+  padding: 0.85rem;
+  border: 1px solid var(--border2);
+}
+.ai-result-header { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.65rem; }
+.ai-result-icon { font-size: 1.3rem; }
+.ai-result-species { font-size: 0.95rem; font-weight: 800; }
+.ai-result-conf { font-size: 0.7rem; color: var(--text3); }
+.ai-conf-row { display: flex; align-items: center; gap: 0.5rem; }
+.ai-conf-label { font-size: 0.72rem; color: var(--text3); width: 90px; }
+.ai-conf-bar { flex: 1; height: 5px; background: var(--border2); border-radius: 3px; overflow: hidden; }
+.ai-conf-fill { height: 100%; border-radius: 3px; background: var(--teal); }
+.ai-conf-val { font-size: 0.72rem; font-weight: 700; color: var(--text); width: 36px; text-align: right; }
+
+/* Expert eval form */
+.eval-label { font-size: 0.78rem; font-weight: 600; color: var(--text2); margin-bottom: 0.4rem; }
+.species-select-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; margin-bottom: 0.75rem; }
+.sp-opt {
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  padding: 0.5rem 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text2);
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex; align-items: center; gap: 0.4rem;
+}
+.sp-opt:hover { border-color: var(--teal); }
+.sp-opt.selected { background: var(--teal-dim); border-color: var(--teal); color: var(--teal-lt); }
+.sp-opt-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+.rating-row { display: flex; gap: 0.4rem; margin-bottom: 0.75rem; }
+.rating-btn {
+  flex: 1; padding: 0.45rem; border-radius: 8px; border: 1px solid var(--border2);
+  background: var(--bg); color: var(--text3); font-size: 0.72rem; font-weight: 600;
+  cursor: pointer; font-family: var(--font); text-align: center; transition: all 0.15s;
+}
+.rating-btn:hover { border-color: var(--teal); color: var(--teal-lt); }
+.rating-btn.r-confirmed { background: rgba(34,197,94,0.1); border-color: var(--green); color: #86efac; }
+.rating-btn.r-modified { background: rgba(245,158,11,0.1); border-color: var(--amber); color: #fcd34d; }
+.rating-btn.r-rejected { background: rgba(239,68,68,0.1); border-color: var(--red); color: #fca5a5; }
+.rating-btn.selected { border-width: 2px; }
+
+.textarea-field {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  border-radius: 9px;
+  padding: 0.65rem 0.85rem;
+  color: var(--text);
+  font-size: 0.8rem;
+  font-family: var(--font);
+  resize: vertical;
+  min-height: 80px;
+  outline: none;
+  line-height: 1.5;
+}
+.textarea-field:focus { border-color: var(--teal); }
+.textarea-field::placeholder { color: var(--text3); }
+
+.checkbox-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem; cursor: pointer; }
+.checkbox-box {
+  width: 16px; height: 16px;
+  border: 1.5px solid var(--border2);
+  border-radius: 4px;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.65rem;
+  transition: all 0.15s;
+}
+.checkbox-box.checked { background: var(--teal); border-color: var(--teal); color: white; }
+.checkbox-label { font-size: 0.78rem; color: var(--text2); }
+
+.submit-eval-btn {
+  width: 100%;
+  background: var(--teal);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 800;
+  cursor: pointer;
+  font-family: var(--font);
+  transition: all 0.2s;
+  margin-top: 0.5rem;
+}
+.submit-eval-btn:hover { background: #0f766e; transform: translateY(-1px); }
+
+/* Parasitemia & metrics */
+.metric-mini { display: flex; justify-content: space-between; padding: 0.4rem 0; border-bottom: 1px solid var(--border); font-size: 0.78rem; }
+.metric-mini:last-child { border-bottom: none; }
+.metric-mini-key { color: var(--text3); }
+.metric-mini-val { font-weight: 700; }
+
+/* ===== ANALYTICS VIEW ===== */
+#view-analytics { flex-direction: column; padding: 1.5rem; gap: 1.25rem; overflow-y: auto; }
+.analytics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+
+.big-number { font-size: 2.5rem; font-weight: 900; line-height: 1; }
+.trend-label { font-size: 0.72rem; color: var(--text3); margin-top: 0.25rem; }
+
+.donut-placeholder {
+  width: 100px; height: 100px;
+  border-radius: 50%;
+  background: conic-gradient(
+    #3b82f6 0% 35%,
+    #ef4444 35% 60%,
+    #22c55e 60% 72%,
+    #f59e0b 72% 80%,
+    #a855f7 80% 85%,
+    #475569 85% 100%
+  );
+  position: relative;
+  flex-shrink: 0;
+}
+.donut-placeholder::after {
+  content: '';
+  position: absolute;
+  inset: 22px;
+  background: var(--surface);
+  border-radius: 50%;
+}
+
+.legend-list { display: flex; flex-direction: column; gap: 0.45rem; }
+.legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.75rem; }
+.legend-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+.legend-name { flex: 1; color: var(--text2); }
+.legend-pct { font-weight: 700; color: var(--text); }
+
+.accuracy-chart { display: flex; flex-direction: column; gap: 0.5rem; }
+.acc-row { display: flex; align-items: center; gap: 0.75rem; font-size: 0.75rem; }
+.acc-label { width: 100px; color: var(--text3); flex-shrink: 0; }
+.acc-bar-wrap { flex: 1; height: 8px; background: var(--border2); border-radius: 4px; overflow: hidden; }
+.acc-bar { height: 100%; border-radius: 4px; }
+.acc-val { width: 40px; text-align: right; font-weight: 700; color: var(--text); font-size: 0.72rem; }
+
+/* ===== RESPONSIVE TWEAKS ===== */
+.full-span { grid-column: 1 / -1; }
+
+/* Scrollbar global */
+* { scrollbar-width: thin; scrollbar-color: var(--border2) transparent; }
+</style>
+</head>
+<body>
+
+<!-- ===== SIDEBAR ===== -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">Malar<span>AI</span>-ID</div>
+    <div class="logo-sub">Expert Portal · v2.1</div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Utama</div>
+    <div class="nav-link active" onclick="switchView('dashboard', this)">
+      <span class="nav-icon">🏠</span> Dashboard
+    </div>
+    <div class="nav-link" onclick="switchView('review', this)">
+      <span class="nav-icon">🔍</span> Antrian Review
+      <span class="nav-badge">7</span>
+    </div>
+    <div class="nav-link" onclick="switchView('analytics', this)">
+      <span class="nav-icon">📊</span> Analitik & Akurasi
+    </div>
+
+    <div class="nav-section-label">Manajemen</div>
+    <div class="nav-link">
+      <span class="nav-icon">👥</span> Tim Expert
+    </div>
+    <div class="nav-link">
+      <span class="nav-icon">🏥</span> Faskes Mitra
+      <span class="nav-badge amber">12</span>
+    </div>
+    <div class="nav-link">
+      <span class="nav-icon">📋</span> Laporan Validasi
+    </div>
+    <div class="nav-link">
+      <span class="nav-icon">🔬</span> Dataset Kontribusi
+      <span class="nav-badge teal">34</span>
+    </div>
+
+    <div class="nav-section-label">Integrasi</div>
+    <div class="nav-link">
+      <span class="nav-icon">📡</span> SISMAL Sync
+    </div>
+    <div class="nav-link">
+      <span class="nav-icon">💬</span> Telemedicine
+    </div>
+    <div class="nav-link">
+      <span class="nav-icon">⚙️</span> Pengaturan API
+    </div>
+  </nav>
+
+  <div class="sidebar-user">
+    <div class="user-avatar">SP</div>
+    <div>
+      <div class="user-name">dr. Sp. PD-KPTI</div>
+      <div class="user-role">Expert · Level 1 WHO</div>
+    </div>
+    <div class="user-status"></div>
+  </div>
+</aside>
+
+<!-- ===== MAIN ===== -->
+<div class="main">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div>
+      <span class="topbar-title" id="topbar-title">Dashboard Expert</span>
+      <span class="topbar-sub" id="topbar-sub">Rabu, 10 Juni 2026</span>
+    </div>
+    <div class="topbar-right">
+      <button class="topbar-btn">🔄 Sync SISMAL</button>
+      <button class="topbar-btn">🔔 <div class="notif-dot"></div></button>
+      <button class="topbar-btn primary" onclick="switchView('review', document.querySelectorAll('.nav-link')[1])">
+        📥 Review Sekarang (7)
+      </button>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- ==================== DASHBOARD VIEW ==================== -->
+    <div class="view active" id="view-dashboard">
+
+      <!-- Alert banner -->
+      <div class="alert-banner">
+        <div class="alert-banner-icon">🚨</div>
+        <div class="alert-banner-text">
+          <strong>3 kasus malaria berat memerlukan validasi segera</strong>
+          <p>P. knowlesi (2 kasus) dan P. falciparum dengan parasitemia &gt;5% dari Kutai Timur dan Mahakam Ulu</p>
+        </div>
+        <button class="alert-banner-act" onclick="switchView('review', document.querySelectorAll('.nav-link')[1])">Tinjau Sekarang →</button>
+      </div>
+
+      <!-- KPI -->
+      <div class="kpi-row">
+        <div class="kpi-card">
+          <div class="kpi-icon" style="background:rgba(239,68,68,0.12);">📥</div>
+          <div>
+            <div class="kpi-num" style="color:#f87171;">7</div>
+            <div class="kpi-label">Menunggu Validasi</div>
+            <div class="kpi-delta delta-warn">⚠ 3 urgent</div>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon" style="background:rgba(34,197,94,0.12);">✅</div>
+          <div>
+            <div class="kpi-num" style="color:#86efac;">142</div>
+            <div class="kpi-label">Divalidasi bulan ini</div>
+            <div class="kpi-delta delta-up">↑ +18 vs bulan lalu</div>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon" style="background:rgba(13,148,136,0.12);">🎯</div>
+          <div>
+            <div class="kpi-num" style="color:#2dd4bf;">94.2%</div>
+            <div class="kpi-label">Akurasi AI (dikonfirmasi)</div>
+            <div class="kpi-delta delta-up">↑ +1.3% vs bulan lalu</div>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon" style="background:rgba(59,130,246,0.12);">⏱</div>
+          <div>
+            <div class="kpi-num" style="color:#93c5fd;">4.2j</div>
+            <div class="kpi-label">Rata-rata waktu validasi</div>
+            <div class="kpi-delta delta-up">↓ lebih cepat 0.8j</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Two col -->
+      <div class="two-col">
+        <!-- Queue table -->
+        <div class="section-card">
+          <div class="section-card-header">
+            <div>
+              <div class="section-card-title">Antrian Validasi</div>
+              <div class="section-card-meta">7 kasus menunggu review</div>
+            </div>
+            <span class="view-link" onclick="switchView('review', document.querySelectorAll('.nav-link')[1])">Lihat semua →</span>
+          </div>
+          <table class="queue-table">
+            <thead>
+              <tr>
+                <th>Pasien</th>
+                <th>Spesies AI</th>
+                <th>Conf.</th>
+                <th>Prioritas</th>
+                <th>Faskes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="urgent" onclick="switchView('review', document.querySelectorAll('.nav-link')[1])">
+                <td><strong>Yohanes M.</strong><br><span style="color:var(--text3);font-size:0.7rem;">L·34th · 09:41</span></td>
+                <td><span class="species-pill sp-knowlesi">P. knowlesi</span></td>
+                <td>
+                  <div class="conf-bar-wrap">
+                    <div class="conf-bar"><div class="conf-fill" style="width:91%;background:#f87171;"></div></div>
+                    <span style="font-size:0.72rem;font-weight:700;color:#f87171;">91%</span>
+                  </div>
+                </td>
+                <td><span class="priority-badge priority-urgent">🔴 URGENT</span></td>
+                <td style="font-size:0.72rem;color:var(--text3);">PKM Muara Wahau</td>
+              </tr>
+              <tr class="urgent">
+                <td><strong>Siti R.</strong><br><span style="color:var(--text3);font-size:0.7rem;">P·28th · 08:53</span></td>
+                <td><span class="species-pill sp-falci">P. falciparum</span></td>
+                <td>
+                  <div class="conf-bar-wrap">
+                    <div class="conf-bar"><div class="conf-fill" style="width:96%;background:var(--teal);"></div></div>
+                    <span style="font-size:0.72rem;font-weight:700;color:var(--teal-lt);">96%</span>
+                  </div>
+                </td>
+                <td><span class="priority-badge priority-urgent">🔴 URGENT</span></td>
+                <td style="font-size:0.72rem;color:var(--text3);">PKM Kongbeng</td>
+              </tr>
+              <tr>
+                <td><strong>Markus W.</strong><br><span style="color:var(--text3);font-size:0.7rem;">L·45th · 07:30</span></td>
+                <td><span class="species-pill sp-vivax">P. vivax</span></td>
+                <td>
+                  <div class="conf-bar-wrap">
+                    <div class="conf-bar"><div class="conf-fill" style="width:88%;background:var(--teal);"></div></div>
+                    <span style="font-size:0.72rem;font-weight:700;color:var(--teal-lt);">88%</span>
+                  </div>
+                </td>
+                <td><span class="priority-badge priority-high">🟡 Tinggi</span></td>
+                <td style="font-size:0.72rem;color:var(--text3);">PKM Sangatta</td>
+              </tr>
+              <tr>
+                <td><strong>Benny L.</strong><br><span style="color:var(--text3);font-size:0.7rem;">L·52th · Kemarin</span></td>
+                <td><span class="species-pill sp-knowlesi">P. knowlesi</span></td>
+                <td>
+                  <div class="conf-bar-wrap">
+                    <div class="conf-bar"><div class="conf-fill" style="width:72%;background:var(--amber);"></div></div>
+                    <span style="font-size:0.72rem;font-weight:700;color:var(--amber);">72%</span>
+                  </div>
+                </td>
+                <td><span class="priority-badge priority-urgent">🔴 URGENT</span></td>
+                <td style="font-size:0.72rem;color:var(--text3);">PKM Muara Bengkal</td>
+              </tr>
+              <tr>
+                <td><strong>Rini M.</strong><br><span style="color:var(--text3);font-size:0.7rem;">P·31th · 08 Jun</span></td>
+                <td><span class="species-pill sp-ovale">P. ovale</span></td>
+                <td>
+                  <div class="conf-bar-wrap">
+                    <div class="conf-bar"><div class="conf-fill" style="width:68%;background:var(--amber);"></div></div>
+                    <span style="font-size:0.72rem;font-weight:700;color:var(--amber);">68%</span>
+                  </div>
+                </td>
+                <td><span class="priority-badge priority-normal">Normal</span></td>
+                <td style="font-size:0.72rem;color:var(--text3);">PKM Busang</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Right column -->
+        <div style="display:flex;flex-direction:column;gap:1.25rem;">
+          <!-- Distribusi spesies -->
+          <div class="section-card">
+            <div class="section-card-header">
+              <div class="section-card-title">Distribusi Spesies (Jun 2026)</div>
+            </div>
+            <div style="padding:1.1rem;display:flex;align-items:center;gap:1.25rem;">
+              <div class="donut-placeholder"></div>
+              <div class="legend-list">
+                <div class="legend-item">
+                  <div class="legend-dot" style="background:#3b82f6;"></div>
+                  <div class="legend-name">P. falciparum</div>
+                  <div class="legend-pct">35%</div>
+                </div>
+                <div class="legend-item">
+                  <div class="legend-dot" style="background:#ef4444;"></div>
+                  <div class="legend-name">P. knowlesi</div>
+                  <div class="legend-pct">25%</div>
+                </div>
+                <div class="legend-item">
+                  <div class="legend-dot" style="background:#22c55e;"></div>
+                  <div class="legend-name">P. vivax</div>
+                  <div class="legend-pct">12%</div>
+                </div>
+                <div class="legend-item">
+                  <div class="legend-dot" style="background:#f59e0b;"></div>
+                  <div class="legend-name">P. malariae</div>
+                  <div class="legend-pct">8%</div>
+                </div>
+                <div class="legend-item">
+                  <div class="legend-dot" style="background:#a855f7;"></div>
+                  <div class="legend-name">P. ovale</div>
+                  <div class="legend-pct">5%</div>
+                </div>
+                <div class="legend-item">
+                  <div class="legend-dot" style="background:#475569;"></div>
+                  <div class="legend-name">Negatif</div>
+                  <div class="legend-pct">15%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Activity -->
+          <div class="section-card" style="flex:1;">
+            <div class="section-card-header">
+              <div class="section-card-title">Aktivitas Terbaru</div>
+            </div>
+            <div class="activity-list">
+              <div class="activity-item">
+                <div class="activity-dot" style="background:var(--green);"></div>
+                <div>
+                  <div class="activity-text"><strong>dr. Wahyu</strong> mengkonfirmasi P. vivax — Markus W.</div>
+                  <div class="activity-time">8 menit lalu</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-dot" style="background:var(--amber);"></div>
+                <div>
+                  <div class="activity-text"><strong>dr. Lestari</strong> memodifikasi diagnosis: P. malariae → <strong>P. knowlesi</strong></div>
+                  <div class="activity-time">24 menit lalu</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-dot" style="background:var(--blue);"></div>
+                <div>
+                  <div class="activity-text">Kasus baru masuk dari PKM Muara Wahau — <strong>P. knowlesi suspek</strong></div>
+                  <div class="activity-time">41 menit lalu</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-dot" style="background:var(--teal);"></div>
+                <div>
+                  <div class="activity-text">34 foto sediaan dikirim ke dataset training oleh <strong>dr. Amir</strong></div>
+                  <div class="activity-time">1 jam lalu</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-dot" style="background:var(--green);"></div>
+                <div>
+                  <div class="activity-text">Sync SISMAL berhasil — <strong>12 laporan terkirim</strong></div>
+                  <div class="activity-time">2 jam lalu</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accuracy trend chart -->
+      <div class="section-card">
+        <div class="section-card-header">
+          <div>
+            <div class="section-card-title">Tren Akurasi AI per Spesies (6 Bulan Terakhir)</div>
+            <div class="section-card-meta">Berdasarkan validasi expert · n=142 kasus</div>
+          </div>
+        </div>
+        <div class="chart-box">
+          <div class="chart-bars">
+            <div class="chart-bar-wrap"><div class="chart-bar" style="height:88%;background:linear-gradient(to top,#3b82f6,#60a5fa);"></div><div class="chart-label">Jan</div></div>
+            <div class="chart-bar-wrap"><div class="chart-bar" style="height:90%;background:linear-gradient(to top,#3b82f6,#60a5fa);"></div><div class="chart-label">Feb</div></div>
+            <div class="chart-bar-wrap"><div class="chart-bar" style="height:87%;background:linear-gradient(to top,#3b82f6,#60a5fa);"></div><div class="chart-label">Mar</div></div>
+            <div class="chart-bar-wrap"><div class="chart-bar" style="height:91%;background:linear-gradient(to top,#3b82f6,#60a5fa);"></div><div class="chart-label">Apr</div></div>
+            <div class="chart-bar-wrap"><div class="chart-bar" style="height:93%;background:linear-gradient(to top,#3b82f6,#60a5fa);"></div><div class="chart-label">Mei</div></div>
+            <div class="chart-bar-wrap"><div class="chart-bar" style="height:96%;background:linear-gradient(to top,#2dd4bf,#0d9488);"></div><div class="chart-label">Jun</div></div>
+
+            <div class="chart-bar-wrap"><div style="width:1px;height:80%;background:var(--border2);margin:0 auto;"></div><div class="chart-label" style="opacity:0;">|</div></div>
+
+            <div class="chart-bar-wrap"><div class="chart-bar" style="height:71%;background:linear-gradient(to top,#ef4444,#f87171);"></div><div class="chart-label">Jan</div></div>
+            <div class="chart-bar-wrap"><div class="chart-bar" style="height:74%;background:linear-gradient(to top,#ef4444,#f87171);"></div><div class="chart-label">Feb</div></div>
+            <div class="chart-bar-wrap"><div class="chart-bar" style="height:76%;background:linear-gradient(to top,#ef4444,#f87171);"></div><div class="chart-label">Mar</div></div>
+            <div class="chart-bar-wrap"><div class="chart-bar" style="height:79%;background:linear-gradient(to top,#ef4444,#f87171);"></div><div class="chart-label">Apr</div></div>
+            <div class="chart-bar-wrap"><div class="chart-bar" style="height:83%;background:linear-gradient(to top,#ef4444,#f87171);"></div><div class="chart-label">Mei</div></div>
+            <div class="chart-bar-wrap"><div class="chart-bar" style="height:87%;background:linear-gradient(to top,#f87171,#fca5a5);"></div><div class="chart-label">Jun</div></div>
+
+            <div class="chart-bar-wrap"><div style="width:1px;height:80%;background:var(--border2);margin:0 auto;"></div><div class="chart-label" style="opacity:0;">|</div></div>
+
+            <div class="chart-bar-wrap"><div class="chart-bar" style="height:90%;background:linear-gradient(to top,#22c55e,#4ade80);"></div><div class="chart-label">Jan</div></div>
+            <div class="chart-bar-wrap"><div class="chart-bar" style="height:92%;background:linear-gradient(to top,#22c55e,#4ade80);"></div><div class="chart-label">Feb</div></div>
+            <div class="chart-bar-wrap"><div class="chart-bar" style="height:91%;background:linear-gradient(to top,#22c55e,#4ade80);"></div><div class="chart-label">Mar</div></div>
+            <div class="chart-bar-wrap"><div class="chart-bar" style="height:93%;background:linear-gradient(to top,#22c55e,#4ade80);"></div><div class="chart-label">Apr</div></div>
+            <div class="chart-bar-wrap"><div class="chart-bar" style="height:94%;background:linear-gradient(to top,#22c55e,#4ade80);"></div><div class="chart-label">Mei</div></div>
+            <div class="chart-bar-wrap"><div class="chart-bar" style="height:95%;background:linear-gradient(to top,#4ade80,#86efac);"></div><div class="chart-label">Jun</div></div>
+          </div>
+          <div class="chart-legend">
+            <div class="chart-leg"><div class="chart-leg-dot" style="background:#3b82f6;"></div>P. falciparum (Rata-rata 94.2%)</div>
+            <div class="chart-leg"><div class="chart-leg-dot" style="background:#ef4444;"></div>P. knowlesi (Rata-rata 80.8% — sedang ditingkatkan)</div>
+            <div class="chart-leg"><div class="chart-leg-dot" style="background:#22c55e;"></div>P. vivax (Rata-rata 92.5%)</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /view-dashboard -->
+
+
+    <!-- ==================== REVIEW VIEW ==================== -->
+    <div class="view" id="view-review">
+
+      <!-- List panel -->
+      <div class="review-list-panel">
+        <div class="review-list-header">
+          <div class="review-list-title">Antrian Review <span style="color:var(--red);font-size:0.85rem;">● 7</span></div>
+          <input class="search-input" placeholder="🔍  Cari pasien atau faskes..." />
+          <div class="filter-row">
+            <div class="filter-chip on">Semua</div>
+            <div class="filter-chip">🔴 Urgent</div>
+            <div class="filter-chip">Conf &lt;80%</div>
+            <div class="filter-chip">Knowlesi</div>
+          </div>
+        </div>
+
+        <div class="review-list-scroll">
+
+          <div class="review-item urgent-item selected" onclick="selectCase(this)">
+            <div class="review-avatar" style="background:linear-gradient(135deg,#dc2626,#991b1b);">YM</div>
+            <div class="review-info">
+              <div class="review-patient">Yohanes Manafe</div>
+              <div class="review-meta">L · 34th · PKM Muara Wahau · <span class="species-pill sp-knowlesi" style="font-size:0.65rem;padding:0.1rem 0.45rem;">P. knowlesi</span></div>
+            </div>
+            <div class="review-right">
+              <div class="review-urg-dot"></div>
+              <div class="review-time">09:41</div>
+            </div>
+          </div>
+
+          <div class="review-item urgent-item" onclick="selectCase(this)">
+            <div class="review-avatar" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);">SR</div>
+            <div class="review-info">
+              <div class="review-patient">Siti Rahayu</div>
+              <div class="review-meta">P · 28th · PKM Kongbeng · <span class="species-pill sp-falci" style="font-size:0.65rem;padding:0.1rem 0.45rem;">P. falciparum</span></div>
+            </div>
+            <div class="review-right">
+              <div class="review-urg-dot"></div>
+              <div class="review-time">08:53</div>
+            </div>
+          </div>
+
+          <div class="review-item" onclick="selectCase(this)">
+            <div class="review-avatar" style="background:linear-gradient(135deg,#16a34a,#15803d);">MW</div>
+            <div class="review-info">
+              <div class="review-patient">Markus Wenda</div>
+              <div class="review-meta">L · 45th · PKM Sangatta · <span class="species-pill sp-vivax" style="font-size:0.65rem;padding:0.1rem 0.45rem;">P. vivax</span></div>
+            </div>
+            <div class="review-right">
+              <div class="review-time">07:30</div>
+            </div>
+          </div>
+
+          <div class="review-item urgent-item" onclick="selectCase(this)">
+            <div class="review-avatar" style="background:linear-gradient(135deg,#dc2626,#991b1b);">BL</div>
+            <div class="review-info">
+              <div class="review-patient">Benny Latumaerissa</div>
+              <div class="review-meta">L · 52th · PKM Muara Bengkal · <span class="species-pill sp-knowlesi" style="font-size:0.65rem;padding:0.1rem 0.45rem;">P. knowlesi?</span></div>
+            </div>
+            <div class="review-right">
+              <div class="review-urg-dot"></div>
+              <div class="review-time">Kemarin</div>
+            </div>
+          </div>
+
+          <div class="review-item" onclick="selectCase(this)">
+            <div class="review-avatar" style="background:linear-gradient(135deg,#9333ea,#7e22ce);">RM</div>
+            <div class="review-info">
+              <div class="review-patient">Rini Maulida</div>
+              <div class="review-meta">P · 31th · PKM Busang · <span class="species-pill sp-ovale" style="font-size:0.65rem;padding:0.1rem 0.45rem;">P. ovale</span></div>
+            </div>
+            <div class="review-right">
+              <div class="review-time">08 Jun</div>
+            </div>
+          </div>
+
+          <div class="review-item" onclick="selectCase(this)">
+            <div class="review-avatar" style="background:linear-gradient(135deg,#b45309,#92400e);">AS</div>
+            <div class="review-info">
+              <div class="review-patient">Ahmad Suryanto</div>
+              <div class="review-meta">L · 40th · PKM Long Bagun · <span class="species-pill sp-malariae" style="font-size:0.65rem;padding:0.1rem 0.45rem;">P. malariae</span></div>
+            </div>
+            <div class="review-right">
+              <div class="review-time">07 Jun</div>
+            </div>
+          </div>
+
+          <div class="review-item" onclick="selectCase(this)">
+            <div class="review-avatar" style="background:linear-gradient(135deg,#475569,#334155);">KW</div>
+            <div class="review-info">
+              <div class="review-patient">Kornelius Wala</div>
+              <div class="review-meta">L · 29th · PKM Tering · <span class="species-pill sp-neg" style="font-size:0.65rem;padding:0.1rem 0.45rem;">Negatif?</span></div>
+            </div>
+            <div class="review-right">
+              <div class="review-time">07 Jun</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Case detail -->
+      <div class="case-detail-panel">
+        <div class="case-detail-top">
+          <div class="case-patient-info">
+            <div class="case-avatar-lg">YM</div>
+            <div>
+              <div class="case-name">Yohanes Manafe</div>
+              <div class="case-sub">L · 34 tahun · No.RM 00234 · PKM Muara Wahau, Kutai Timur · 10 Jun 2026 09:41 WIT</div>
+            </div>
+          </div>
+          <div class="case-actions">
+            <button class="case-btn">💬 Chat Nakes</button>
+            <button class="case-btn">📤 Ke Dataset</button>
+            <button class="case-btn reject">✗ Tolak</button>
+            <button class="case-btn confirm" onclick="simulateConfirm()">✓ Konfirmasi Validasi</button>
+          </div>
+        </div>
+
+        <div class="case-body">
+          <!-- Image viewer -->
+          <div class="img-viewer-panel">
+            <div class="img-toolbar">
+              <button class="img-tool-btn on" id="btn-gradcam" onclick="toggleGradCam()">🧠 Grad-CAM</button>
+              <button class="img-tool-btn" id="btn-boxes" onclick="toggleBoxes()">📦 Bounding Box</button>
+              <button class="img-tool-btn">🎨 Stain Normal</button>
+              <div class="img-sep"></div>
+              <button class="img-tool-btn">100%</button>
+              <button class="img-tool-btn">Fit</button>
+              <div class="img-sep"></div>
+              <button class="img-tool-btn">↓ Unduh</button>
+              <span style="margin-left:auto;font-size:0.72rem;color:var(--text3);">Lapang 1 / 200 · Giemsa 1000×</span>
+            </div>
+
+            <div class="img-stage">
+              <div class="smear-canvas">
+                <div class="smear-bg" id="smear-bg">
+                  <!-- RBCs simulation -->
+                  <div class="rbc" style="width:34px;height:34px;top:12%;left:8%;"></div>
+                  <div class="rbc" style="width:30px;height:30px;top:8%;left:22%;"></div>
+                  <div class="rbc infected box-selected" id="rbc1" style="width:32px;height:32px;top:15%;left:37%;"></div>
+                  <div class="rbc" style="width:28px;height:28px;top:10%;left:52%;"></div>
+                  <div class="rbc" style="width:35px;height:35px;top:13%;left:64%;"></div>
+                  <div class="rbc infected box-warn" id="rbc2" style="width:30px;height:30px;top:9%;left:78%;"></div>
+                  <div class="rbc" style="width:32px;height:32px;top:28%;left:5%;"></div>
+                  <div class="rbc" style="width:29px;height:29px;top:32%;left:18%;"></div>
+                  <div class="rbc infected box-selected" id="rbc3" style="width:33px;height:33px;top:26%;left:32%;"></div>
+                  <div class="rbc" style="width:27px;height:27px;top:30%;left:47%;"></div>
+                  <div class="rbc" style="width:34px;height:34px;top:25%;left:60%;"></div>
+                  <div class="rbc infected" style="width:31px;height:31px;top:31%;left:74%;"></div>
+                  <div class="rbc" style="width:28px;height:28px;top:44%;left:10%;"></div>
+                  <div class="rbc" style="width:33px;height:33px;top:48%;left:24%;"></div>
+                  <div class="rbc infected box-selected" id="rbc4" style="width:30px;height:30px;top:42%;left:39%;"></div>
+                  <div class="rbc" style="width:32px;height:32px;top:46%;left:54%;"></div>
+                  <div class="rbc infected box-warn" style="width:29px;height:29px;top:43%;left:68%;"></div>
+                  <div class="rbc" style="width:35px;height:35px;top:47%;left:82%;"></div>
+                  <div class="rbc" style="width:31px;height:31px;top:62%;left:7%;"></div>
+                  <div class="rbc infected box-selected" id="rbc5" style="width:28px;height:28px;top:66%;left:20%;"></div>
+                  <div class="rbc" style="width:33px;height:33px;top:60%;left:34%;"></div>
+                  <div class="rbc" style="width:30px;height:30px;top:64%;left:49%;"></div>
+                  <div class="rbc" style="width:27px;height:27px;top:61%;left:63%;"></div>
+                  <div class="rbc infected" style="width:32px;height:32px;top:67%;left:77%;"></div>
+                  <div class="rbc" style="width:34px;height:34px;top:78%;left:12%;"></div>
+                  <div class="rbc" style="width:29px;height:29px;top:82%;left:26%;"></div>
+                  <div class="rbc infected box-selected" style="width:31px;height:31px;top:76%;left:42%;"></div>
+                  <div class="rbc" style="width:28px;height:28px;top:80%;left:57%;"></div>
+                  <div class="rbc infected box-warn" style="width:33px;height:33px;top:77%;left:70%;"></div>
+                  <div class="rbc" style="width:30px;height:30px;top:83%;left:84%;"></div>
+
+                  <!-- Label tags -->
+                  <div class="label-tag infected-lbl" id="lbl1" style="top:calc(15% + 34px);left:37%;">Ring ✓</div>
+                  <div class="label-tag warn-lbl" id="lbl2" style="top:calc(9% + 32px);left:78%;">Suspek</div>
+                  <div class="label-tag infected-lbl" id="lbl3" style="top:calc(26% + 35px);left:32%;">Band ✓</div>
+                  <div class="label-tag infected-lbl" id="lbl4" style="top:calc(42% + 32px);left:39%;">Ring ✓</div>
+                  <div class="label-tag infected-lbl" id="lbl5" style="top:calc(66% + 30px);left:20%;">Ring ✓</div>
+
+                  <!-- Grad-CAM overlay -->
+                  <div class="grad-cam-overlay visible" id="gradcam-overlay"></div>
+                </div>
+              </div>
+              <div class="zoom-controls">
+                <div class="zoom-btn">+</div>
+                <div class="zoom-btn">−</div>
+                <div class="zoom-btn">⊡</div>
+              </div>
+            </div>
+
+            <div class="field-nav">
+              <div class="field-thumb active-thumb thumb-infected">
+                <div class="field-thumb-inner">
+                  <div class="field-thumb-dot" style="top:30%;left:35%;"></div>
+                  <div class="field-thumb-dot" style="top:55%;left:60%;width:6px;height:6px;"></div>
+                </div>
+              </div>
+              <div class="field-thumb thumb-infected">
+                <div class="field-thumb-inner">
+                  <div class="field-thumb-dot" style="top:45%;left:25%;"></div>
+                </div>
+              </div>
+              <div class="field-thumb">
+                <div class="field-thumb-inner"></div>
+              </div>
+              <div class="field-thumb thumb-infected">
+                <div class="field-thumb-inner">
+                  <div class="field-thumb-dot" style="top:60%;left:70%;width:6px;height:6px;"></div>
+                  <div class="field-thumb-dot" style="top:25%;left:40%;"></div>
+                </div>
+              </div>
+              <div class="field-thumb">
+                <div class="field-thumb-inner"></div>
+              </div>
+              <div class="field-thumb thumb-infected">
+                <div class="field-thumb-inner">
+                  <div class="field-thumb-dot" style="top:35%;left:55%;"></div>
+                </div>
+              </div>
+              <div class="field-thumb">
+                <div class="field-thumb-inner"></div>
+              </div>
+              <div class="field-thumb">
+                <div class="field-thumb-inner"></div>
+              </div>
+              <div class="field-nav-count" style="font-size:0.72rem;color:var(--text3);">8 ditampilkan / 200 total · 73 terinfeksi</div>
+            </div>
+          </div>
+
+          <!-- Eval panel -->
+          <div class="eval-panel">
+
+            <!-- AI result -->
+            <div class="eval-section">
+              <div class="eval-section-title">Hasil AI MalarAI-ID</div>
+              <div class="ai-result-card">
+                <div class="ai-result-header">
+                  <div class="ai-result-icon">🔴</div>
+                  <div>
+                    <div class="ai-result-species" style="color:#fca5a5;">P. knowlesi</div>
+                    <div class="ai-result-conf">Confidence: 91.3%</div>
+                  </div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:0.4rem;">
+                  <div class="ai-conf-row">
+                    <div class="ai-conf-label">P. knowlesi</div>
+                    <div class="ai-conf-bar"><div class="ai-conf-fill" style="width:91%;background:#f87171;"></div></div>
+                    <div class="ai-conf-val" style="color:#f87171;">91.3%</div>
+                  </div>
+                  <div class="ai-conf-row">
+                    <div class="ai-conf-label">P. malariae</div>
+                    <div class="ai-conf-bar"><div class="ai-conf-fill" style="width:7%;background:var(--amber);"></div></div>
+                    <div class="ai-conf-val" style="color:var(--amber);">7.1%</div>
+                  </div>
+                  <div class="ai-conf-row">
+                    <div class="ai-conf-label">P. falciparum</div>
+                    <div class="ai-conf-bar"><div class="ai-conf-fill" style="width:1%;background:var(--text3);"></div></div>
+                    <div class="ai-conf-val" style="color:var(--text3);">1.6%</div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="margin-top:0.75rem;display:flex;flex-direction:column;gap:0;">
+                <div class="metric-mini"><span class="metric-mini-key">Parasitemia</span><span class="metric-mini-val" style="color:#f87171;">8.2% — BERAT</span></div>
+                <div class="metric-mini"><span class="metric-mini-key">Kepadatan</span><span class="metric-mini-val">24.800/μL</span></div>
+                <div class="metric-mini"><span class="metric-mini-key">Stadium</span><span class="metric-mini-val">Ring (62%), Tropho (28%)</span></div>
+                <div class="metric-mini"><span class="metric-mini-key">Sel teranalisis</span><span class="metric-mini-val">1.847 sel</span></div>
+                <div class="metric-mini"><span class="metric-mini-key">Lapang pandang</span><span class="metric-mini-val">200</span></div>
+              </div>
+            </div>
+
+            <!-- Expert evaluation form -->
+            <div class="eval-section">
+              <div class="eval-section-title">Evaluasi Expert</div>
+
+              <div class="eval-label">Status Validasi</div>
+              <div class="rating-row">
+                <button class="rating-btn r-confirmed selected" onclick="selectRating(this,'r-confirmed')">✓ Konfirmasi</button>
+                <button class="rating-btn r-modified" onclick="selectRating(this,'r-modified')">✎ Modifikasi</button>
+                <button class="rating-btn r-rejected" onclick="selectRating(this,'r-rejected')">✗ Tolak</button>
+              </div>
+
+              <div class="eval-label">Diagnosis Expert (jika berbeda)</div>
+              <div class="species-select-grid">
+                <div class="sp-opt selected" onclick="toggleSp(this)">
+                  <div class="sp-opt-dot" style="background:#ef4444;"></div> P. knowlesi
+                </div>
+                <div class="sp-opt" onclick="toggleSp(this)">
+                  <div class="sp-opt-dot" style="background:#f59e0b;"></div> P. malariae
+                </div>
+                <div class="sp-opt" onclick="toggleSp(this)">
+                  <div class="sp-opt-dot" style="background:#3b82f6;"></div> P. falciparum
+                </div>
+                <div class="sp-opt" onclick="toggleSp(this)">
+                  <div class="sp-opt-dot" style="background:#22c55e;"></div> P. vivax
+                </div>
+                <div class="sp-opt" onclick="toggleSp(this)">
+                  <div class="sp-opt-dot" style="background:#a855f7;"></div> P. ovale
+                </div>
+                <div class="sp-opt" onclick="toggleSp(this)">
+                  <div class="sp-opt-dot" style="background:#475569;"></div> Negatif
+                </div>
+              </div>
+
+              <div class="eval-label">Catatan Klinis Expert</div>
+              <textarea class="textarea-field" placeholder="Tuliskan observasi morfologi, alasan modifikasi diagnosis, atau catatan klinis penting...
+&#10;Contoh: Tampak band form pada lapang pandang 3, 5, dan 8. Morfologi konsisten dengan P. knowlesi. Siklus 24 jam terkonfirmasi dari anamnesis."></textarea>
+
+              <div style="margin-top:0.75rem;">
+                <div class="eval-label">Tindak Lanjut</div>
+                <div class="checkbox-row" onclick="toggleCheck(this)">
+                  <div class="checkbox-box checked">✓</div>
+                  <div class="checkbox-label">Rekomendasikan konfirmasi PCR</div>
+                </div>
+                <div class="checkbox-row" onclick="toggleCheck(this)">
+                  <div class="checkbox-box checked">✓</div>
+                  <div class="checkbox-label">Tandai sebagai malaria berat</div>
+                </div>
+                <div class="checkbox-row" onclick="toggleCheck(this)">
+                  <div class="checkbox-box">✓</div>
+                  <div class="checkbox-label">Kirim foto ke dataset training</div>
+                </div>
+                <div class="checkbox-row" onclick="toggleCheck(this)">
+                  <div class="checkbox-box">✓</div>
+                  <div class="checkbox-label">Notifikasi Dinkes Kabupaten</div>
+                </div>
+              </div>
+
+              <button class="submit-eval-btn" onclick="simulateConfirm()">
+                ✓ Kirim Validasi Expert
+              </button>
+            </div>
+
+          </div><!-- /eval-panel -->
+        </div><!-- /case-body -->
+      </div><!-- /case-detail-panel -->
+
+    </div><!-- /view-review -->
+
+
+    <!-- ==================== ANALYTICS VIEW ==================== -->
+    <div class="view" id="view-analytics">
+
+      <div style="margin-bottom:0.25rem;">
+        <h2 style="font-size:1.1rem;font-weight:800;">Analitik & Akurasi Model</h2>
+        <p style="font-size:0.8rem;color:var(--text3);margin-top:0.2rem;">Berdasarkan 142 kasus tervalidasi · Juni 2026 · Expert: 4 dokter spesialis</p>
+      </div>
+
+      <!-- Top KPIs -->
+      <div class="kpi-row">
+        <div class="kpi-card">
+          <div class="kpi-icon" style="background:var(--teal-dim);">🎯</div>
+          <div><div class="kpi-num" style="color:var(--teal-lt);">94.2%</div><div class="kpi-label">Overall Akurasi</div><div class="kpi-delta delta-up">↑ Target WHO ≥95%</div></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon" style="background:rgba(34,197,94,0.12);">✅</div>
+          <div><div class="kpi-num" style="color:#86efac;">96.1%</div><div class="kpi-label">Sensitivitas</div><div class="kpi-delta delta-up">Melampaui target</div></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon" style="background:rgba(59,130,246,0.12);">🛡</div>
+          <div><div class="kpi-num" style="color:#93c5fd;">91.8%</div><div class="kpi-label">Spesifisitas</div><div class="kpi-delta delta-up">↑ Target WHO ≥90%</div></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon" style="background:rgba(168,85,247,0.12);">📐</div>
+          <div><div class="kpi-num" style="color:#d8b4fe;">0.943</div><div class="kpi-label">AUC-ROC</div><div class="kpi-delta delta-up">Excellent</div></div>
+        </div>
+      </div>
+
+      <!-- Per species accuracy -->
+      <div class="section-card">
+        <div class="section-card-header">
+          <div class="section-card-title">Akurasi per Spesies</div>
+          <div class="section-card-meta">Dibandingkan validasi expert · n=142</div>
+        </div>
+        <div style="padding:1.25rem;">
+          <div class="accuracy-chart">
+            <div class="acc-row">
+              <div class="acc-label">P. falciparum</div>
+              <div class="acc-bar-wrap"><div class="acc-bar" style="width:96%;background:#3b82f6;"></div></div>
+              <div class="acc-val">96.4%</div>
+            </div>
+            <div class="acc-row">
+              <div class="acc-label">P. vivax</div>
+              <div class="acc-bar-wrap"><div class="acc-bar" style="width:95%;background:#22c55e;"></div></div>
+              <div class="acc-val">94.8%</div>
+            </div>
+            <div class="acc-row">
+              <div class="acc-label">P. malariae</div>
+              <div class="acc-bar-wrap"><div class="acc-bar" style="width:91%;background:#f59e0b;"></div></div>
+              <div class="acc-val">91.2%</div>
+            </div>
+            <div class="acc-row">
+              <div class="acc-label">P. ovale</div>
+              <div class="acc-bar-wrap"><div class="acc-bar" style="width:88%;background:#a855f7;"></div></div>
+              <div class="acc-val">88.0%</div>
+            </div>
+            <div class="acc-row">
+              <div class="acc-label" style="color:var(--red);font-weight:700;">P. knowlesi ⚠</div>
+              <div class="acc-bar-wrap"><div class="acc-bar" style="width:87%;background:#ef4444;"></div></div>
+              <div class="acc-val" style="color:#f87171;">86.7%</div>
+            </div>
+            <div class="acc-row">
+              <div class="acc-label">Negatif</div>
+              <div class="acc-bar-wrap"><div class="acc-bar" style="width:98%;background:var(--text3);"></div></div>
+              <div class="acc-val">98.1%</div>
+            </div>
+          </div>
+          <div style="margin-top:1rem;padding:0.75rem;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:10px;">
+            <div style="color:#fca5a5;font-size:0.8rem;font-weight:700;">⚠ P. knowlesi masih di bawah target (target: ≥95%)</div>
+            <div style="color:var(--text3);font-size:0.75rem;margin-top:0.25rem;">Diperlukan tambahan 500+ sediaan P. knowlesi dari Kalimantan untuk fine-tuning model. 8 dari 12 error adalah misklasifikasi sebagai P. malariae.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3-column grid -->
+      <div class="analytics-grid">
+        <div class="section-card">
+          <div class="section-card-header"><div class="section-card-title">Kontribusi Dataset</div></div>
+          <div style="padding:1.1rem;display:flex;flex-direction:column;gap:0.5rem;">
+            <div class="metric-mini"><span class="metric-mini-key">Total foto tervalidasi</span><span class="metric-mini-val" style="color:var(--teal-lt);">3.842</span></div>
+            <div class="metric-mini"><span class="metric-mini-key">Dikirim bulan ini</span><span class="metric-mini-val">284</span></div>
+            <div class="metric-mini"><span class="metric-mini-key">Target untuk P. knowlesi</span><span class="metric-mini-val" style="color:var(--amber);">500 (butuh 216 lagi)</span></div>
+            <div class="metric-mini"><span class="metric-mini-key">Faskes berkontribusi</span><span class="metric-mini-val">12 PKM / RS</span></div>
+            <div class="metric-mini"><span class="metric-mini-key">Expert yang terlibat</span><span class="metric-mini-val">4 Sp.PD-KPTI</span></div>
+          </div>
+        </div>
+        <div class="section-card">
+          <div class="section-card-header"><div class="section-card-title">Waktu Respons Expert</div></div>
+          <div style="padding:1.1rem;display:flex;flex-direction:column;gap:0.5rem;">
+            <div class="metric-mini"><span class="metric-mini-key">Rata-rata (urgent)</span><span class="metric-mini-val" style="color:var(--green);">1.2 jam</span></div>
+            <div class="metric-mini"><span class="metric-mini-key">Rata-rata (normal)</span><span class="metric-mini-val">4.2 jam</span></div>
+            <div class="metric-mini"><span class="metric-mini-key">SLA urgent (&lt;2j)</span><span class="metric-mini-val" style="color:var(--green);">91% terpenuhi</span></div>
+            <div class="metric-mini"><span class="metric-mini-key">SLA normal (&lt;24j)</span><span class="metric-mini-val" style="color:var(--teal-lt);">98% terpenuhi</span></div>
+            <div class="metric-mini"><span class="metric-mini-key">Expert paling aktif</span><span class="metric-mini-val">dr. Wahyu (48 kasus)</span></div>
+          </div>
+        </div>
+        <div class="section-card">
+          <div class="section-card-header"><div class="section-card-title">Modifikasi Diagnosis</div></div>
+          <div style="padding:1.1rem;display:flex;flex-direction:column;gap:0.5rem;">
+            <div class="metric-mini"><span class="metric-mini-key">Dikonfirmasi langsung</span><span class="metric-mini-val" style="color:var(--green);">128 (90.1%)</span></div>
+            <div class="metric-mini"><span class="metric-mini-key">Dimodifikasi</span><span class="metric-mini-val" style="color:var(--amber);">11 (7.7%)</span></div>
+            <div class="metric-mini"><span class="metric-mini-key">Ditolak/Negatif palsu</span><span class="metric-mini-val" style="color:var(--red);">3 (2.1%)</span></div>
+            <div class="metric-mini"><span class="metric-mini-key">Error terbanyak</span><span class="metric-mini-val">knowlesi→malariae</span></div>
+            <div class="metric-mini"><span class="metric-mini-key">Semua mod. → dataset</span><span class="metric-mini-val" style="color:var(--teal-lt);">✓ Otomatis</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /view-analytics -->
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<script>
+function switchView(id, clickedEl) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + id).classList.add('active');
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  if (clickedEl) clickedEl.classList.add('active');
+
+  const titles = {
+    dashboard: ['Dashboard Expert', 'Rabu, 10 Juni 2026'],
+    review: ['Antrian Validasi', '7 kasus menunggu review'],
+    analytics: ['Analitik & Akurasi', 'Berdasarkan 142 kasus tervalidasi']
+  };
+  if (titles[id]) {
+    document.getElementById('topbar-title').textContent = titles[id][0];
+    document.getElementById('topbar-sub').textContent = titles[id][1];
+  }
+}
+
+function selectCase(el) {
+  document.querySelectorAll('.review-item').forEach(i => i.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+let gradCamOn = true;
+function toggleGradCam() {
+  gradCamOn = !gradCamOn;
+  const overlay = document.getElementById('gradcam-overlay');
+  const btn = document.getElementById('btn-gradcam');
+  if (gradCamOn) {
+    overlay.classList.add('visible');
+    btn.classList.add('on');
+  } else {
+    overlay.classList.remove('visible');
+    btn.classList.remove('on');
+  }
+}
+
+let boxesOn = true;
+function toggleBoxes() {
+  boxesOn = !boxesOn;
+  const btn = document.getElementById('btn-boxes');
+  const selectedRbcs = document.querySelectorAll('.box-selected, .box-warn');
+  const labels = document.querySelectorAll('.label-tag');
+  if (boxesOn) {
+    selectedRbcs.forEach(r => { r.style.boxShadow = ''; });
+    btn.classList.add('on');
+    labels.forEach(l => l.style.display = '');
+  } else {
+    selectedRbcs.forEach(r => { r.style.boxShadow = 'inset -2px -2px 4px rgba(0,0,0,0.4)'; });
+    btn.classList.remove('on');
+    labels.forEach(l => l.style.display = 'none');
+  }
+}
+
+function selectRating(el, cls) {
+  document.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function toggleSp(el) {
+  document.querySelectorAll('.sp-opt').forEach(s => s.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function toggleCheck(el) {
+  const box = el.querySelector('.checkbox-box');
+  box.classList.toggle('checked');
+  box.textContent = box.classList.contains('checked') ? '✓' : '';
+}
+
+function simulateConfirm() {
+  const btn = event ? event.target : document.querySelector('.submit-eval-btn');
+  const orig = btn.textContent;
+  btn.textContent = '⏳ Mengirim...';
+  btn.disabled = true;
+  setTimeout(() => {
+    btn.textContent = '✓ Validasi Terkirim ke SISMAL!';
+    btn.style.background = '#16a34a';
+    setTimeout(() => {
+      btn.textContent = orig;
+      btn.style.background = '';
+      btn.disabled = false;
+    }, 2500);
+  }, 1200);
+}
+</script>
+
+</body>
+</html>

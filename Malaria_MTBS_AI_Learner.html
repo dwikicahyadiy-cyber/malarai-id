@@ -1,0 +1,1981 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Malaria dalam Pendekatan MTBS — AI Learner</title>
+<style>
+:root{
+  --red:#C0392B;--red2:#E74C3C;--green:#27AE60;--green2:#2ECC71;
+  --blue:#2980B9;--blue2:#3498DB;--orange:#E67E22;--purple:#8E44AD;
+  --teal:#009688;--teal2:#26A69A;
+  --dark:#0b1120;--dark2:#111827;--card:#1e293b;--card2:#0f2027;
+  --text:#F1F5F9;--muted:#94A3B8;--accent:#F59E0B;--border:#1e2d3d;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Segoe UI",system-ui,sans-serif;background:var(--dark);color:var(--text);min-height:100vh}
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(11,17,32,.96);backdrop-filter:blur(10px);
+  border-bottom:2px solid var(--teal);display:flex;align-items:center;gap:4px;padding:10px 16px;flex-wrap:wrap}
+.logo{font-weight:900;font-size:1rem;color:var(--accent);margin-right:10px;white-space:nowrap}
+.logo a{color:inherit;text-decoration:none}
+nav button{padding:6px 14px;border:none;border-radius:20px;cursor:pointer;font-size:.78rem;font-weight:700;
+  transition:all .2s;background:rgba(255,255,255,.07);color:var(--muted)}
+nav button.active,nav button:hover{background:var(--teal);color:#fff}
+/* HERO */
+.hero{background:linear-gradient(135deg,var(--dark2) 0%,#0f2027 50%,#0b1120 100%);
+  padding:40px 20px 28px;text-align:center;border-bottom:1px solid rgba(255,255,255,.06)}
+.hero h1{font-size:clamp(1.3rem,3vw,1.9rem);font-weight:900;color:#fff;line-height:1.3}
+.hero h1 span{color:var(--teal2)}
+.hero p{color:var(--muted);margin-top:8px;font-size:.88rem}
+.badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+.badge{padding:4px 12px;border-radius:20px;font-size:.7rem;font-weight:700}
+.b-teal{background:rgba(0,150,136,.2);color:#80CBC4;border:1px solid var(--teal)}
+.b-orange{background:rgba(230,126,34,.2);color:#FAD7A0;border:1px solid var(--orange)}
+.b-blue{background:rgba(41,128,185,.2);color:#85C1E9;border:1px solid var(--blue)}
+.b-green{background:rgba(39,174,96,.2);color:#82E0AA;border:1px solid var(--green)}
+/* SECTIONS */
+section{display:none;padding:24px 16px 60px;max-width:960px;margin:0 auto}
+section.active{display:block}
+/* CARDS */
+.card{background:linear-gradient(135deg,rgba(30,41,59,.9),rgba(15,32,39,.9));
+  border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:20px;margin-bottom:16px}
+.card h2{font-size:1.05rem;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.card h3{font-size:.9rem;font-weight:700;margin:12px 0 6px;color:var(--teal2)}
+.card p,.card li{font-size:.82rem;color:var(--muted);line-height:1.7}
+.card ul,.card ol{padding-left:18px;margin-top:6px}
+.card li{margin-bottom:4px}
+/* HIGHLIGHT BOXES */
+.hl{border-radius:10px;padding:14px 16px;margin-bottom:12px;font-size:.82rem;line-height:1.7}
+.hl-red{background:rgba(192,57,43,.12);border-left:3px solid var(--red);color:#F1948A}
+.hl-yellow{background:rgba(243,156,18,.12);border-left:3px solid #F39C12;color:#FAD7A0}
+.hl-green{background:rgba(39,174,96,.12);border-left:3px solid var(--green);color:#82E0AA}
+.hl-blue{background:rgba(41,128,185,.12);border-left:3px solid var(--blue);color:#85C1E9}
+.hl-teal{background:rgba(0,150,136,.12);border-left:3px solid var(--teal);color:#80CBC4}
+.hl-orange{background:rgba(230,126,34,.12);border-left:3px solid var(--orange);color:#FAD7A0}
+/* GRID */
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+/* KLASIFIKASI COLORS */
+.klas-card{border-radius:12px;padding:16px;text-align:center;border:1px solid rgba(255,255,255,.1)}
+.klas-merah{background:linear-gradient(135deg,rgba(192,57,43,.3),rgba(192,57,43,.1));border-color:var(--red)}
+.klas-kuning{background:linear-gradient(135deg,rgba(243,156,18,.3),rgba(243,156,18,.1));border-color:#F39C12}
+.klas-hijau{background:linear-gradient(135deg,rgba(39,174,96,.3),rgba(39,174,96,.1));border-color:var(--green)}
+.klas-card .ikon{font-size:1.8rem;margin-bottom:8px}
+.klas-card h3{font-size:.88rem;font-weight:800;margin-bottom:6px}
+.klas-card p{font-size:.76rem;color:var(--muted);line-height:1.5}
+/* STEP */
+.step{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start}
+.step-num{flex-shrink:0;width:32px;height:32px;border-radius:50%;background:var(--teal);
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.82rem;color:#fff}
+.step-body h4{font-size:.88rem;font-weight:700;margin-bottom:4px}
+.step-body p{font-size:.78rem;color:var(--muted);line-height:1.6}
+/* MCQ */
+.q-block{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:14px}
+.q-block .qnum{font-size:.72rem;font-weight:700;color:var(--teal2);margin-bottom:6px}
+.q-block .qtxt{font-size:.85rem;font-weight:600;margin-bottom:10px;line-height:1.5}
+.opt{padding:8px 12px;margin:4px 0;border-radius:8px;cursor:pointer;font-size:.8rem;
+  border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);transition:.15s;display:flex;gap:8px;align-items:flex-start}
+.opt:hover{border-color:var(--teal);background:rgba(0,150,136,.1)}
+.opt.correct{background:rgba(39,174,96,.18);border-color:var(--green);color:#82E0AA}
+.opt.wrong{background:rgba(192,57,43,.18);border-color:var(--red);color:#F1948A}
+.opt-key{font-weight:700;flex-shrink:0}
+.explain{display:none;margin-top:10px;font-size:.78rem;color:#80CBC4;background:rgba(0,150,136,.1);
+  border-radius:8px;padding:10px;line-height:1.6}
+/* INOVASI */
+.inov-card{border-radius:12px;padding:16px;background:linear-gradient(135deg,rgba(30,41,59,.9),rgba(15,32,39,.9));
+  border:1px solid rgba(255,255,255,.1);margin-bottom:14px}
+.inov-card .tag{display:inline-block;font-size:.65rem;font-weight:700;padding:3px 10px;border-radius:99px;margin-bottom:8px}
+.tag-teal{background:rgba(0,150,136,.2);color:var(--teal2)}
+.tag-orange{background:rgba(230,126,34,.2);color:#FAD7A0}
+.tag-purple{background:rgba(142,68,173,.2);color:#D2B4DE}
+.inov-card h3{font-size:.92rem;font-weight:800;margin-bottom:6px}
+.inov-card p{font-size:.8rem;color:var(--muted);line-height:1.6}
+/* MNEMONIC */
+.mnem{border-radius:12px;overflow:hidden;margin-bottom:14px}
+.mnem-row{display:flex;align-items:center;gap:0;border-bottom:1px solid rgba(255,255,255,.05)}
+.mnem-row:last-child{border-bottom:none}
+.mnem-letter{flex-shrink:0;width:44px;font-size:1.3rem;font-weight:900;text-align:center;padding:12px 0;background:rgba(0,150,136,.2);color:var(--teal2)}
+.mnem-text{padding:10px 14px;font-size:.82rem;line-height:1.5}
+.mnem-text strong{color:#fff}
+/* PENUGASAN */
+.tugas-card{border-radius:12px;padding:16px;background:rgba(30,41,59,.6);border:1px solid rgba(243,156,18,.3);margin-bottom:14px}
+.tugas-card h3{font-size:.9rem;font-weight:800;color:var(--accent);margin-bottom:8px}
+.tugas-card p,.tugas-card li{font-size:.8rem;color:var(--muted);line-height:1.7}
+.tugas-card ul{padding-left:18px;margin-top:6px}
+/* PROGRESS */
+#progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--teal),var(--teal2));z-index:200;width:0;transition:width .1s}
+@media(max-width:600px){
+  nav button{padding:5px 9px;font-size:.72rem}
+  .mnem-letter{width:36px;font-size:1.1rem}
+}
+</style>
+</head>
+<body>
+<div id="progress-bar"></div>
+
+<nav>
+  <div class="logo"><a href="index.html">🧬 MalarAI-ID</a></div>
+  <button class="active" onclick="show('tim1')">📚 Belajar</button>
+  <button onclick="show('tim2')">📋 Intisari</button>
+  <button onclick="show('tim3')">💡 Inovasi</button>
+  <button onclick="show('formulir')">📝 Formulir</button>
+  <button onclick="show('simulasi')">🎭 Simulasi</button>
+  <button onclick="show('tim4')">✅ Soal &amp; Kasus</button>
+</nav>
+
+<div class="hero">
+  <h1>Malaria dalam Pendekatan <span>MTBS</span></h1>
+  <p>Manajemen Terpadu Balita Sakit — Penilaian, Klasifikasi &amp; Tatalaksana Demam</p>
+  <div class="badges">
+    <span class="badge b-teal">📚 Si Paling Belajar</span>
+    <span class="badge b-orange">📋 Si Paling Merangkum</span>
+    <span class="badge b-blue">💡 Si Paling Inovasi</span>
+    <span class="badge b-green">✅ Si Paling Jago Soal</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     TIM 1 — BELAJAR
+══════════════════════════════════════ -->
+<section id="tim1" class="active">
+
+<div class="card">
+  <h2>🏥 Apa itu MTBS?</h2>
+  <div class="hl hl-teal">
+    <strong>MTBS</strong> = Manajemen Terpadu Balita Sakit (Integrated Management of Childhood Illness / IMCI)<br>
+    Suatu <strong>pendekatan keterpaduan</strong> dalam tatalaksana balita sakit di Fasilitas Kesehatan Tingkat Pertama (FKTP).
+  </div>
+  <div class="grid-2" style="margin-top:12px">
+    <div class="hl hl-blue" style="border-radius:10px">
+      <strong>✅ MTBS adalah:</strong><br>
+      • Keterpaduan program &amp; pedoman klinis<br>
+      • Meliputi preventif, promotif, kuratif<br>
+      • Memudahkan pelayanan balita dengan gejala overlapping
+    </div>
+    <div class="hl hl-red" style="border-radius:10px">
+      <strong>❌ MTBS bukan:</strong><br>
+      • Program vertikal tersendiri<br>
+      • Diagnosa spesifik penyakit<br>
+      • Hanya untuk satu kondisi klinis
+    </div>
+  </div>
+  <div class="hl hl-orange" style="margin-top:10px">
+    <strong>🎯 Bukti Efektivitas:</strong> MTBS sudah terbukti dapat menurunkan angka kematian balita secara bermakna jika diterapkan secara luas dan benar. MTBS juga terintegrasi dalam pengelolaan Gizi Buruk di FKTP.
+  </div>
+</div>
+
+<div class="card">
+  <h2>👶 Sasaran MTBS</h2>
+  <div class="grid-2">
+    <div class="klas-card" style="background:linear-gradient(135deg,rgba(41,128,185,.3),rgba(41,128,185,.1));border-color:var(--blue)">
+      <div class="ikon">👶</div>
+      <h3 style="color:#85C1E9">Balita Umur 2 Bulan – 5 Tahun</h3>
+      <p>Sasaran: <strong>Balita SAKIT</strong><br>Menggunakan formulir 2 bln – 5 thn</p>
+    </div>
+    <div class="klas-card" style="background:linear-gradient(135deg,rgba(142,68,173,.3),rgba(142,68,173,.1));border-color:var(--purple)">
+      <div class="ikon">🍼</div>
+      <h3 style="color:#D2B4DE">Bayi Muda Umur &lt;2 Bulan</h3>
+      <p>Sasaran: Bayi <strong>SAKIT maupun SEHAT</strong><br>Menggunakan formulir bayi muda</p>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>🛠️ Alat Bantu Utama MTBS</h2>
+  <div class="grid-2">
+    <div class="hl hl-teal" style="border-radius:10px;text-align:center">
+      <div style="font-size:2rem;margin-bottom:8px">📖</div>
+      <strong>BUKU BAGAN</strong><br>
+      <span style="font-size:.8rem">Bagan algoritma penilaian, klasifikasi, dan tindakan. Tersedia untuk 2 bln–5 thn dan bayi muda &lt;2 bln.</span>
+    </div>
+    <div class="hl hl-orange" style="border-radius:10px;text-align:center">
+      <div style="font-size:2rem;margin-bottom:8px">📋</div>
+      <strong>FORMULIR PENCATATAN</strong><br>
+      <span style="font-size:.8rem">Dokumen pencatatan hasil penilaian, klasifikasi, dan tindakan untuk setiap kunjungan balita sakit.</span>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>📌 11 Sub Materi Pokok MTBS</h2>
+  <p style="font-size:.8rem;color:var(--muted);margin-bottom:12px">Penilaian dan klasifikasi dilakukan untuk 11 masalah berikut:</p>
+  <div class="grid-3">
+    <div class="hl hl-red" style="border-radius:8px;text-align:center"><strong>1</strong><br>Tanda Bahaya Umum</div>
+    <div class="hl hl-orange" style="border-radius:8px;text-align:center"><strong>2</strong><br>Batuk / Sukar Bernapas</div>
+    <div class="hl hl-blue" style="border-radius:8px;text-align:center"><strong>3</strong><br>Diare</div>
+    <div class="hl hl-teal" style="border-radius:8px;text-align:center"><strong>4</strong><br>Demam ⭐</div>
+    <div class="hl hl-orange" style="border-radius:8px;text-align:center"><strong>5</strong><br>Masalah Telinga</div>
+    <div class="hl hl-green" style="border-radius:8px;text-align:center"><strong>6</strong><br>Status Gizi &amp; Pertumbuhan</div>
+    <div class="hl hl-red" style="border-radius:8px;text-align:center"><strong>7</strong><br>Anemia</div>
+    <div class="hl hl-blue" style="border-radius:8px;text-align:center"><strong>8</strong><br>Status HIV</div>
+    <div class="hl hl-green" style="border-radius:8px;text-align:center"><strong>9</strong><br>Imunisasi &amp; Vitamin A</div>
+    <div class="hl hl-teal" style="border-radius:8px;text-align:center"><strong>10</strong><br>Masalah / Keluhan Lain</div>
+    <div class="hl hl-orange" style="border-radius:8px;text-align:center"><strong>11</strong><br>Pemberian Makan</div>
+  </div>
+  <div class="hl hl-teal" style="margin-top:10px">⭐ Nomor 4 (Demam) adalah fokus materi ini, mencakup penilaian dan tatalaksana <strong>Malaria, Campak, dan Dengue</strong>.</div>
+</div>
+
+<div class="card">
+  <h2>🔍 Cara Penilaian dalam MTBS</h2>
+  <div class="grid-2">
+    <div>
+      <div class="step">
+        <div class="step-num">👁️</div>
+        <div class="step-body"><h4>Bertanya</h4><p>Anamnesis kepada ibu/pengasuh tentang keluhan, riwayat sakit, pemberian makan, dan vaksinasi.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-num">👀</div>
+        <div class="step-body"><h4>Melihat</h4><p>Observasi tanda-tanda klinis secara visual: kesadaran, pernapasan, kulit, mata, dan sebagainya.</p></div>
+      </div>
+    </div>
+    <div>
+      <div class="step">
+        <div class="step-num">👂</div>
+        <div class="step-body"><h4>Mendengar</h4><p>Auskultasi suara napas, stridor, wheezing, dan suara lain yang relevan.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-num">✋</div>
+        <div class="step-body"><h4>Meraba</h4><p>Palpasi untuk menilai turgor kulit, hepatosplenomegali, kelenjar limfe, dan tanda kekakuan tengkuk.</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="hl hl-red" style="margin-top:4px">
+    ⚠️ Hasil penilaian MTBS adalah <strong>KLASIFIKASI</strong>, bukan DIAGNOSA. Klasifikasi menentukan tindakan, bukan nama penyakit spesifik.
+  </div>
+</div>
+
+<div class="card">
+  <h2>🎨 Sistem Klasifikasi 3 Warna</h2>
+  <div class="grid-3">
+    <div class="klas-card klas-merah">
+      <div class="ikon">🔴</div>
+      <h3 style="color:#F1948A">MERAH MUDA</h3>
+      <p><strong>Kondisi Berat</strong><br>Perlu <strong>RUJUKAN</strong> segera<br>Lakukan tindakan pra-rujukan dahulu</p>
+    </div>
+    <div class="klas-card klas-kuning">
+      <div class="ikon">🟡</div>
+      <h3 style="color:#FAD7A0">KUNING</h3>
+      <p><strong>Kondisi Sedang</strong><br>Pengobatan oral di Puskesmas<br>Jadwalkan kunjungan ulang</p>
+    </div>
+    <div class="klas-card klas-hijau">
+      <div class="ikon">🟢</div>
+      <h3 style="color:#82E0AA">HIJAU</h3>
+      <p><strong>Kondisi Ringan</strong><br>Konseling ibu<br>Nasihati tanda kembali segera</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- TANDA BAHAYA UMUM & SAGA - MTBS 2022 Hal. 2 -->
+<div class="card" id="saga-card">
+  <h2>🚨 Tanda Bahaya Umum — Segitiga Asesmen Gawat Anak (SAGA)</h2>
+  <div class="hl hl-red">
+    ⚠️ <strong>SELALU dilakukan pertama</strong> pada setiap kunjungan. SAGA terdiri dari <strong>5 kondisi Penampilan</strong>, <strong>4 Usaha Napas</strong>, dan <strong>3 Sirkulasi</strong>.
+  </div>
+
+  <!-- SEGITIGA SAGA VISUAL -->
+  <div style="display:flex;justify-content:center;align-items:center;gap:28px;flex-wrap:wrap;margin:20px 0">
+    <div style="text-align:center">
+      <svg viewBox="0 0 360 320" width="280" height="249" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="tg" x1="50%" y1="0%" x2="50%" y2="100%">
+            <stop offset="0%" stop-color="#FBBF24"/>
+            <stop offset="100%" stop-color="#B45309"/>
+          </linearGradient>
+        </defs>
+        <polygon points="180,30 20,290 340,290" fill="url(#tg)" stroke="#FDE68A" stroke-width="2.5" stroke-linejoin="round"/>
+        <text x="180" y="168" text-anchor="middle" font-size="34" font-weight="900" fill="white" font-family="Segoe UI,Arial,sans-serif" letter-spacing="3">SAGA</text>
+        <text x="180" y="192" text-anchor="middle" font-size="11" fill="rgba(255,255,255,.85)" font-family="Segoe UI,Arial,sans-serif">Segitiga Asesmen Gawat Anak</text>
+        <g transform="translate(82,162) rotate(-56)">
+          <text x="0" y="-6" text-anchor="middle" font-size="14" font-weight="800" fill="white" font-family="Segoe UI,Arial,sans-serif">PENAMPILAN</text>
+          <text x="0" y="11" text-anchor="middle" font-size="11.5" fill="#FDE68A" font-family="Segoe UI,Arial,sans-serif">5 kondisi</text>
+        </g>
+        <g transform="translate(278,162) rotate(56)">
+          <text x="0" y="-6" text-anchor="middle" font-size="14" font-weight="800" fill="white" font-family="Segoe UI,Arial,sans-serif">USAHA NAPAS</text>
+          <text x="0" y="11" text-anchor="middle" font-size="11.5" fill="#FDE68A" font-family="Segoe UI,Arial,sans-serif">4 kondisi</text>
+        </g>
+        <text x="180" y="281" text-anchor="middle" font-size="14" font-weight="800" fill="white" font-family="Segoe UI,Arial,sans-serif">SIRKULASI  —  3 kondisi</text>
+      </svg>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px;min-width:210px;max-width:260px">
+      <div style="background:rgba(220,38,38,.18);border:1px solid rgba(220,38,38,.5);border-radius:10px;padding:11px 14px">
+        <div style="font-weight:800;font-size:.83rem;color:#FCA5A5;margin-bottom:3px">&#128308; GAGAL JANTUNG PARU</div>
+        <div style="font-size:.75rem;color:var(--muted)">Gangguan pada <strong>ketiga</strong> komponen sekaligus</div>
+      </div>
+      <div style="background:rgba(192,57,43,.12);border:1px solid rgba(192,57,43,.4);border-radius:10px;padding:11px 14px">
+        <div style="font-weight:800;font-size:.83rem;color:#F1948A;margin-bottom:3px">&#128308; PENYAKIT SANGAT BERAT</div>
+        <div style="font-size:.75rem;color:var(--muted)">&#8805;1 tanda bahaya ATAU gangguan pada salah satu komponen</div>
+      </div>
+      <div style="background:rgba(39,174,96,.12);border:1px solid rgba(39,174,96,.4);border-radius:10px;padding:11px 14px">
+        <div style="font-weight:800;font-size:.83rem;color:#82E0AA;margin-bottom:3px">&#128994; STABIL</div>
+        <div style="font-size:.75rem;color:var(--muted)">Tidak ada tanda pada ketiga komponen &#8594; lanjutkan penilaian</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3 KOMPONEN -->
+  <div class="grid-3" style="margin-bottom:16px">
+    <div style="background:rgba(231,76,60,.12);border:1px solid rgba(231,76,60,.4);border-radius:12px;padding:14px">
+      <div style="font-weight:800;color:#F1948A;margin-bottom:8px;font-size:.88rem">👁️ PENAMPILAN (5 item)</div>
+      <div style="font-size:.76rem;color:var(--muted);line-height:2">
+        Tanyakan:<br>
+        <span style="color:#eee">• Apakah anak bisa minum/menyusu?</span><br>
+        <span style="color:#eee">• Apakah memuntahkan semua makanan/minuman?</span><br>
+        <span style="color:#eee">• Apakah pernah kejang selama sakit ini?</span><br><br>
+        Lihat &amp; Dengar:<br>
+        <span style="color:#eee">• Apakah anak kejang saat ini?</span><br>
+        <span style="color:#eee">• Tidak dapat berinteraksi/tidak sadar?</span><br>
+        <span style="color:#eee">• Gelisah, rewel, tidak bisa ditenangkan?</span><br>
+        <span style="color:#eee">• Pandangan kosong / mata tidak membuka?</span><br>
+        <span style="color:#eee">• Tidak bersuara / menangis melengking?</span>
+      </div>
+    </div>
+    <div style="background:rgba(230,126,34,.12);border:1px solid rgba(230,126,34,.4);border-radius:12px;padding:14px">
+      <div style="font-weight:800;color:#FAD7A0;margin-bottom:8px;font-size:.88rem">💨 USAHA NAPAS (4 item)</div>
+      <div style="font-size:.76rem;color:var(--muted);line-height:2.1">
+        <span style="color:#eee">• Terdapat tarikan dinding dada ke dalam?</span><br>
+        <span style="color:#eee">• Terdengar stridor?</span><br>
+        <span style="color:#eee">• Terdapat napas cuping hidung?</span><br>
+        <span style="color:#eee">• Mencari posisi paling nyaman dan menolak berbaring?</span>
+      </div>
+    </div>
+    <div style="background:rgba(41,128,185,.12);border:1px solid rgba(41,128,185,.4);border-radius:12px;padding:14px">
+      <div style="font-weight:800;color:#85C1E9;margin-bottom:8px;font-size:.88rem">🫀 SIRKULASI (3 item)</div>
+      <div style="font-size:.76rem;color:var(--muted);line-height:2.1">
+        <span style="color:#eee">• Anak tampak pucat?</span><br>
+        <span style="color:#eee">• Tampak warna biru (sianosis)?</span><br>
+        <span style="color:#eee">• Tampak gambaran kutis marmorata (kulit seperti marmer)?</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABEL KLASIFIKASI SAGA LENGKAP -->
+  <h3 style="margin-bottom:10px">Klasifikasi Status Kegawatan</h3>
+  <div style="overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse;font-size:.8rem">
+      <tr style="background:rgba(0,150,136,.25)">
+        <th style="padding:10px;text-align:left;border:1px solid rgba(255,255,255,.1);min-width:200px">GEJALA / TANDA</th>
+        <th style="padding:10px;text-align:center;border:1px solid rgba(255,255,255,.1);min-width:130px">KLASIFIKASI</th>
+        <th style="padding:10px;text-align:left;border:1px solid rgba(255,255,255,.1)">TINDAKAN / PENGOBATAN</th>
+      </tr>
+      <!-- GAGAL JANTUNG PARU -->
+      <tr style="background:rgba(192,57,43,.18)">
+        <td style="padding:10px;border:1px solid rgba(255,255,255,.08);vertical-align:top;color:var(--muted)">
+          Terdapat satu atau lebih gejala/tanda pada <strong>setiap komponen</strong>:<br>
+          <span style="color:#F1948A">✦ Penampilan</span> <strong style="color:#F1948A">DAN</strong>
+          <span style="color:#FAD7A0"> Usaha Napas</span> <strong style="color:#FAD7A0">DAN</strong>
+          <span style="color:#85C1E9"> Sirkulasi</span>
+        </td>
+        <td style="padding:10px;border:1px solid rgba(255,255,255,.08);text-align:center;vertical-align:middle">
+          <div style="background:rgba(192,57,43,.4);border:2px solid var(--red);border-radius:8px;padding:10px">
+            <div style="font-size:.9rem;font-weight:900;color:#F1948A">🔴 GAGAL</div>
+            <div style="font-size:.9rem;font-weight:900;color:#F1948A">JANTUNG PARU</div>
+          </div>
+        </td>
+        <td style="padding:10px;border:1px solid rgba(255,255,255,.08);vertical-align:top">
+          <ul style="padding-left:16px;line-height:2;font-size:.8rem;color:var(--muted)">
+            <li><strong style="color:#eee">Lakukan Bantuan Hidup Dasar (BHD)</strong></li>
+            <li style="color:#F1948A;font-weight:700">⚠️ RUJUK SEGERA</li>
+          </ul>
+        </td>
+      </tr>
+      <!-- PENYAKIT SANGAT BERAT -->
+      <tr style="background:rgba(192,57,43,.10)">
+        <td style="padding:10px;border:1px solid rgba(255,255,255,.08);vertical-align:top;color:var(--muted)">
+          Terdapat <strong>satu atau lebih</strong> tanda berikut:<br><br>
+          <span style="color:#F1948A">• Tidak bisa minum atau menyusu</span><br>
+          <span style="color:#F1948A">• Memuntahkan semua makanan dan minuman</span><br>
+          <span style="color:#F1948A">• Pernah kejang selama sakit ini</span><br><br>
+          <strong>ATAU</strong> ditemukan ≥1 gejala/tanda pada komponen:<br>
+          <span style="color:#F1948A">Penampilan</span> <strong>ATAU</strong>
+          <span style="color:#FAD7A0"> Usaha Napas</span> <strong>ATAU</strong>
+          <span style="color:#85C1E9"> Sirkulasi</span>
+        </td>
+        <td style="padding:10px;border:1px solid rgba(255,255,255,.08);text-align:center;vertical-align:middle">
+          <div style="background:rgba(192,57,43,.25);border:2px solid rgba(192,57,43,.6);border-radius:8px;padding:10px">
+            <div style="font-size:.88rem;font-weight:900;color:#F1948A">🔴 PENYAKIT</div>
+            <div style="font-size:.88rem;font-weight:900;color:#F1948A">SANGAT BERAT</div>
+          </div>
+        </td>
+        <td style="padding:10px;border:1px solid rgba(255,255,255,.08);vertical-align:top">
+          <ul style="padding-left:16px;line-height:2;font-size:.8rem;color:var(--muted)">
+            <li>Jika sedang <strong>kejang</strong> → beri <strong>Diazepam</strong></li>
+            <li>Jika ada <strong>stridor</strong> → pastikan tidak ada sumbatan jalan napas</li>
+            <li>Berikan <strong>oksigen 3–5 L/menit</strong> melalui nasal prongs (tabung O₂ + humidifier)</li>
+            <li><strong>Cegah agar gula darah tidak turun</strong></li>
+            <li><strong>Jaga tubuh anak tetap hangat</strong></li>
+            <li style="color:#F1948A;font-weight:700">⚠️ RUJUK SEGERA</li>
+          </ul>
+        </td>
+      </tr>
+      <!-- STABIL -->
+      <tr style="background:rgba(39,174,96,.07)">
+        <td style="padding:10px;border:1px solid rgba(255,255,255,.08);vertical-align:middle;color:#82E0AA">
+          <strong>Tidak terdapat salah satu gejala/tanda di atas</strong>
+        </td>
+        <td style="padding:10px;border:1px solid rgba(255,255,255,.08);text-align:center;vertical-align:middle">
+          <div style="background:rgba(39,174,96,.2);border:2px solid var(--green);border-radius:8px;padding:10px">
+            <div style="font-size:.9rem;font-weight:900;color:#82E0AA">🟢 STABIL</div>
+          </div>
+        </td>
+        <td style="padding:10px;border:1px solid rgba(255,255,255,.08);vertical-align:middle;color:#82E0AA">
+          Tidak perlu tindakan — lanjutkan penilaian berikutnya
+        </td>
+      </tr>
+    </table>
+  </div>
+
+
+  <!-- INTERPRETASI SAGA - IDAI 2021 -->
+  <h3 style="margin:18px 0 12px;font-size:.95rem">&#127919; Interpretasi SAGA — Klasifikasi &amp; Zonasi/Triase (Protokol UKK IDAI 2021)</h3>
+  <div class="hl hl-orange" style="font-size:.78rem;margin-bottom:14px">
+    <strong>N</strong> = Normal &nbsp;|&nbsp; <strong style="color:#F1948A">AbN</strong> = Abnormal (ada kelainan)
+    &nbsp;&mdash;&nbsp; setiap sisi segitiga mewakili satu komponen SAGA
+  </div>
+
+  <!-- GRID 7 KLASIFIKASI -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px;margin-bottom:16px">
+
+    <!-- 1. STABIL -->
+    <div style="background:rgba(39,174,96,.12);border:2px dashed #27AE60;border-radius:12px;padding:12px;text-align:center">
+      <div style="font-weight:900;font-size:.85rem;color:#82E0AA;margin-bottom:8px">&#128994; STABIL</div>
+      <svg viewBox="0 0 100 80" width="80" height="64">
+        <polygon points="50,6 8,74 92,74" fill="#FBBF24" stroke="#F59E0B" stroke-width="1.5"/>
+        <text x="50" y="48" text-anchor="middle" font-size="11" font-weight="700" fill="white" font-family="Segoe UI,sans-serif">SAGA</text>
+        <text x="24" y="52" text-anchor="middle" font-size="9" font-weight="700" fill="white" font-family="Segoe UI,sans-serif">N</text>
+        <text x="76" y="52" text-anchor="middle" font-size="9" font-weight="700" fill="white" font-family="Segoe UI,sans-serif">N</text>
+        <text x="50" y="72" text-anchor="middle" font-size="9" font-weight="700" fill="white" font-family="Segoe UI,sans-serif">N</text>
+      </svg>
+      <div style="font-size:.72rem;color:var(--muted);margin-top:6px;line-height:1.5">Semua komponen<br><strong>Normal</strong></div>
+    </div>
+
+    <!-- 2. GAWAT NAPAS -->
+    <div style="background:rgba(243,156,18,.1);border:2px dashed #F39C12;border-radius:12px;padding:12px;text-align:center">
+      <div style="font-weight:900;font-size:.85rem;color:#FAD7A0;margin-bottom:8px">&#128993; GAWAT NAPAS</div>
+      <svg viewBox="0 0 100 80" width="80" height="64">
+        <polygon points="50,6 8,74 92,74" fill="#FBBF24" stroke="#F59E0B" stroke-width="1.5"/>
+        <text x="50" y="48" text-anchor="middle" font-size="11" font-weight="700" fill="white" font-family="Segoe UI,sans-serif">SAGA</text>
+        <text x="24" y="52" text-anchor="middle" font-size="9" font-weight="700" fill="white" font-family="Segoe UI,sans-serif">N</text>
+        <rect x="66" y="42" width="22" height="14" rx="3" fill="#DC2626"/>
+        <text x="77" y="52" text-anchor="middle" font-size="8" font-weight="700" fill="white" font-family="Segoe UI,sans-serif">AbN</text>
+        <text x="50" y="72" text-anchor="middle" font-size="9" font-weight="700" fill="white" font-family="Segoe UI,sans-serif">N</text>
+      </svg>
+      <div style="font-size:.72rem;color:var(--muted);margin-top:6px;line-height:1.5">Usaha Napas <strong style="color:#F1948A">AbN</strong><br>Tampilan N | Sirkulasi N</div>
+    </div>
+
+    <!-- 3. GAGAL NAPAS -->
+    <div style="background:rgba(243,156,18,.1);border:2px dashed #F39C12;border-radius:12px;padding:12px;text-align:center">
+      <div style="font-weight:900;font-size:.85rem;color:#FAD7A0;margin-bottom:8px">&#128993; GAGAL NAPAS</div>
+      <svg viewBox="0 0 100 80" width="80" height="64">
+        <polygon points="50,6 8,74 92,74" fill="#FBBF24" stroke="#F59E0B" stroke-width="1.5"/>
+        <text x="50" y="48" text-anchor="middle" font-size="11" font-weight="700" fill="white" font-family="Segoe UI,sans-serif">SAGA</text>
+        <rect x="12" y="42" width="22" height="14" rx="3" fill="#DC2626"/>
+        <text x="23" y="52" text-anchor="middle" font-size="8" font-weight="700" fill="white" font-family="Segoe UI,sans-serif">AbN</text>
+        <rect x="66" y="42" width="22" height="14" rx="3" fill="#DC2626"/>
+        <text x="77" y="52" text-anchor="middle" font-size="8" font-weight="700" fill="white" font-family="Segoe UI,sans-serif">AbN</text>
+        <text x="50" y="72" text-anchor="middle" font-size="9" font-weight="700" fill="white" font-family="Segoe UI,sans-serif">N/AbN</text>
+      </svg>
+      <div style="font-size:.72rem;color:var(--muted);margin-top:6px;line-height:1.5">Tampilan <strong style="color:#F1948A">AbN</strong> + Usaha Napas <strong style="color:#F1948A">AbN</strong><br>Sirkulasi N/AbN</div>
+    </div>
+
+    <!-- 4. SYOK TERKOMPENSASI -->
+    <div style="background:rgba(243,156,18,.1);border:2px dashed #F39C12;border-radius:12px;padding:12px;text-align:center">
+      <div style="font-weight:900;font-size:.78rem;color:#FAD7A0;margin-bottom:8px">&#128993; SYOK<br>TERKOMPENSASI</div>
+      <svg viewBox="0 0 100 80" width="80" height="64">
+        <polygon points="50,6 8,74 92,74" fill="#FBBF24" stroke="#F59E0B" stroke-width="1.5"/>
+        <text x="50" y="48" text-anchor="middle" font-size="11" font-weight="700" fill="white" font-family="Segoe UI,sans-serif">SAGA</text>
+        <text x="24" y="52" text-anchor="middle" font-size="9" font-weight="700" fill="white" font-family="Segoe UI,sans-serif">N</text>
+        <text x="76" y="52" text-anchor="middle" font-size="9" font-weight="700" fill="white" font-family="Segoe UI,sans-serif">N</text>
+        <rect x="34" y="64" width="32" height="13" rx="3" fill="#DC2626"/>
+        <text x="50" y="74" text-anchor="middle" font-size="8" font-weight="700" fill="white" font-family="Segoe UI,sans-serif">AbN</text>
+      </svg>
+      <div style="font-size:.72rem;color:var(--muted);margin-top:6px;line-height:1.5">Sirkulasi <strong style="color:#F1948A">AbN</strong><br>Tampilan N | Usaha Napas N</div>
+    </div>
+
+    <!-- 5. SYOK DEKOMPENSASI -->
+    <div style="background:rgba(243,156,18,.1);border:2px dashed #F39C12;border-radius:12px;padding:12px;text-align:center">
+      <div style="font-weight:900;font-size:.78rem;color:#FAD7A0;margin-bottom:8px">&#128993; SYOK<br>DEKOMPENSASI</div>
+      <svg viewBox="0 0 100 80" width="80" height="64">
+        <polygon points="50,6 8,74 92,74" fill="#FBBF24" stroke="#F59E0B" stroke-width="1.5"/>
+        <text x="50" y="48" text-anchor="middle" font-size="11" font-weight="700" fill="white" font-family="Segoe UI,sans-serif">SAGA</text>
+        <rect x="12" y="42" width="22" height="14" rx="3" fill="#DC2626"/>
+        <text x="23" y="52" text-anchor="middle" font-size="8" font-weight="700" fill="white" font-family="Segoe UI,sans-serif">AbN</text>
+        <text x="76" y="52" text-anchor="middle" font-size="9" font-weight="700" fill="white" font-family="Segoe UI,sans-serif">N/AbN</text>
+        <rect x="34" y="64" width="32" height="13" rx="3" fill="#DC2626"/>
+        <text x="50" y="74" text-anchor="middle" font-size="8" font-weight="700" fill="white" font-family="Segoe UI,sans-serif">AbN</text>
+      </svg>
+      <div style="font-size:.72rem;color:var(--muted);margin-top:6px;line-height:1.5">Tampilan <strong style="color:#F1948A">AbN</strong> + Sirkulasi <strong style="color:#F1948A">AbN</strong><br>Usaha Napas N/AbN</div>
+    </div>
+
+    <!-- 6. GANGGUAN SSP/METABOLIK -->
+    <div style="background:rgba(243,156,18,.1);border:2px dashed #F39C12;border-radius:12px;padding:12px;text-align:center">
+      <div style="font-weight:900;font-size:.75rem;color:#FAD7A0;margin-bottom:8px">&#128993; GANGGUAN SSP/<br>METABOLIK</div>
+      <svg viewBox="0 0 100 80" width="80" height="64">
+        <polygon points="50,6 8,74 92,74" fill="#FBBF24" stroke="#F59E0B" stroke-width="1.5"/>
+        <text x="50" y="48" text-anchor="middle" font-size="11" font-weight="700" fill="white" font-family="Segoe UI,sans-serif">SAGA</text>
+        <rect x="12" y="42" width="22" height="14" rx="3" fill="#DC2626"/>
+        <text x="23" y="52" text-anchor="middle" font-size="8" font-weight="700" fill="white" font-family="Segoe UI,sans-serif">AbN</text>
+        <text x="76" y="52" text-anchor="middle" font-size="9" font-weight="700" fill="white" font-family="Segoe UI,sans-serif">N</text>
+        <text x="50" y="72" text-anchor="middle" font-size="9" font-weight="700" fill="white" font-family="Segoe UI,sans-serif">N</text>
+      </svg>
+      <div style="font-size:.72rem;color:var(--muted);margin-top:6px;line-height:1.5">Tampilan <strong style="color:#F1948A">AbN</strong><br>Usaha Napas N | Sirkulasi N</div>
+    </div>
+
+    <!-- 7. GAGAL JANTUNG PARU -->
+    <div style="background:rgba(220,38,38,.18);border:2px dashed #DC2626;border-radius:12px;padding:12px;text-align:center">
+      <div style="font-weight:900;font-size:.78rem;color:#FCA5A5;margin-bottom:8px">&#128308; GAGAL<br>JANTUNG PARU</div>
+      <svg viewBox="0 0 100 80" width="80" height="64">
+        <polygon points="50,6 8,74 92,74" fill="#FBBF24" stroke="#F59E0B" stroke-width="1.5"/>
+        <text x="50" y="48" text-anchor="middle" font-size="11" font-weight="700" fill="white" font-family="Segoe UI,sans-serif">SAGA</text>
+        <rect x="12" y="42" width="22" height="14" rx="3" fill="#DC2626"/>
+        <text x="23" y="52" text-anchor="middle" font-size="8" font-weight="700" fill="white" font-family="Segoe UI,sans-serif">AbN</text>
+        <rect x="66" y="42" width="22" height="14" rx="3" fill="#DC2626"/>
+        <text x="77" y="52" text-anchor="middle" font-size="8" font-weight="700" fill="white" font-family="Segoe UI,sans-serif">AbN</text>
+        <rect x="34" y="64" width="32" height="13" rx="3" fill="#DC2626"/>
+        <text x="50" y="74" text-anchor="middle" font-size="8" font-weight="700" fill="white" font-family="Segoe UI,sans-serif">AbN</text>
+      </svg>
+      <div style="font-size:.72rem;color:var(--muted);margin-top:6px;line-height:1.5"><strong style="color:#F1948A">Semua komponen AbN</strong><br>&#8594; BHD + RUJUK SEGERA</div>
+    </div>
+
+  </div>
+
+  <!-- TABEL RINGKASAN -->
+  <div style="overflow-x:auto;margin-top:4px">
+    <table style="width:100%;border-collapse:collapse;font-size:.76rem">
+      <tr style="background:rgba(0,150,136,.22)">
+        <th style="padding:8px 10px;text-align:left;border:1px solid rgba(255,255,255,.1)">Klasifikasi</th>
+        <th style="padding:8px 10px;text-align:center;border:1px solid rgba(255,255,255,.1)">Tampilan</th>
+        <th style="padding:8px 10px;text-align:center;border:1px solid rgba(255,255,255,.1)">Usaha Napas</th>
+        <th style="padding:8px 10px;text-align:center;border:1px solid rgba(255,255,255,.1)">Sirkulasi</th>
+        <th style="padding:8px 10px;text-align:left;border:1px solid rgba(255,255,255,.1)">Tindakan Utama</th>
+      </tr>
+      <tr style="background:rgba(39,174,96,.08);border-bottom:1px solid rgba(255,255,255,.06)">
+        <td style="padding:8px 10px;border:1px solid rgba(255,255,255,.06);font-weight:700;color:#82E0AA">&#128994; Stabil</td>
+        <td style="padding:8px;text-align:center;border:1px solid rgba(255,255,255,.06);color:#82E0AA">N</td>
+        <td style="padding:8px;text-align:center;border:1px solid rgba(255,255,255,.06);color:#82E0AA">N</td>
+        <td style="padding:8px;text-align:center;border:1px solid rgba(255,255,255,.06);color:#82E0AA">N</td>
+        <td style="padding:8px 10px;border:1px solid rgba(255,255,255,.06);color:var(--muted)">Lanjutkan penilaian berikutnya</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,.06)">
+        <td style="padding:8px 10px;border:1px solid rgba(255,255,255,.06);font-weight:700;color:#FAD7A0">&#128993; Gawat Napas</td>
+        <td style="padding:8px;text-align:center;border:1px solid rgba(255,255,255,.06);color:#82E0AA">N</td>
+        <td style="padding:8px;text-align:center;border:1px solid rgba(255,255,255,.06)"><span style="background:#DC2626;color:white;padding:1px 6px;border-radius:4px;font-weight:700">AbN</span></td>
+        <td style="padding:8px;text-align:center;border:1px solid rgba(255,255,255,.06);color:#82E0AA">N</td>
+        <td style="padding:8px 10px;border:1px solid rgba(255,255,255,.06);color:var(--muted)">O&#8322;, posisi, RUJUK</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,.06)">
+        <td style="padding:8px 10px;border:1px solid rgba(255,255,255,.06);font-weight:700;color:#FAD7A0">&#128993; Gagal Napas</td>
+        <td style="padding:8px;text-align:center;border:1px solid rgba(255,255,255,.06)"><span style="background:#DC2626;color:white;padding:1px 6px;border-radius:4px;font-weight:700">AbN</span></td>
+        <td style="padding:8px;text-align:center;border:1px solid rgba(255,255,255,.06)"><span style="background:#DC2626;color:white;padding:1px 6px;border-radius:4px;font-weight:700">AbN</span></td>
+        <td style="padding:8px;text-align:center;border:1px solid rgba(255,255,255,.06);color:var(--muted)">N/AbN</td>
+        <td style="padding:8px 10px;border:1px solid rgba(255,255,255,.06);color:var(--muted)">O&#8322;, BVM, RUJUK SEGERA</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,.06)">
+        <td style="padding:8px 10px;border:1px solid rgba(255,255,255,.06);font-weight:700;color:#FAD7A0">&#128993; Syok Terkompensasi</td>
+        <td style="padding:8px;text-align:center;border:1px solid rgba(255,255,255,.06);color:#82E0AA">N</td>
+        <td style="padding:8px;text-align:center;border:1px solid rgba(255,255,255,.06);color:#82E0AA">N</td>
+        <td style="padding:8px;text-align:center;border:1px solid rgba(255,255,255,.06)"><span style="background:#DC2626;color:white;padding:1px 6px;border-radius:4px;font-weight:700">AbN</span></td>
+        <td style="padding:8px 10px;border:1px solid rgba(255,255,255,.06);color:var(--muted)">Akses IV, bolus cairan, RUJUK</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,.06)">
+        <td style="padding:8px 10px;border:1px solid rgba(255,255,255,.06);font-weight:700;color:#FAD7A0">&#128993; Syok Dekompensasi</td>
+        <td style="padding:8px;text-align:center;border:1px solid rgba(255,255,255,.06)"><span style="background:#DC2626;color:white;padding:1px 6px;border-radius:4px;font-weight:700">AbN</span></td>
+        <td style="padding:8px;text-align:center;border:1px solid rgba(255,255,255,.06);color:var(--muted)">N/AbN</td>
+        <td style="padding:8px;text-align:center;border:1px solid rgba(255,255,255,.06)"><span style="background:#DC2626;color:white;padding:1px 6px;border-radius:4px;font-weight:700">AbN</span></td>
+        <td style="padding:8px 10px;border:1px solid rgba(255,255,255,.06);color:var(--muted)">Resusitasi cairan agresif, RUJUK SEGERA</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,.06)">
+        <td style="padding:8px 10px;border:1px solid rgba(255,255,255,.06);font-weight:700;color:#FAD7A0">&#128993; Gangguan SSP/Metabolik</td>
+        <td style="padding:8px;text-align:center;border:1px solid rgba(255,255,255,.06)"><span style="background:#DC2626;color:white;padding:1px 6px;border-radius:4px;font-weight:700">AbN</span></td>
+        <td style="padding:8px;text-align:center;border:1px solid rgba(255,255,255,.06);color:#82E0AA">N</td>
+        <td style="padding:8px;text-align:center;border:1px solid rgba(255,255,255,.06);color:#82E0AA">N</td>
+        <td style="padding:8px 10px;border:1px solid rgba(255,255,255,.06);color:var(--muted)">Cegah hipoglikemia, atasi kejang, RUJUK</td>
+      </tr>
+      <tr style="background:rgba(220,38,38,.12)">
+        <td style="padding:8px 10px;border:1px solid rgba(255,255,255,.06);font-weight:700;color:#FCA5A5">&#128308; Gagal Jantung Paru</td>
+        <td style="padding:8px;text-align:center;border:1px solid rgba(255,255,255,.06)"><span style="background:#DC2626;color:white;padding:1px 6px;border-radius:4px;font-weight:700">AbN</span></td>
+        <td style="padding:8px;text-align:center;border:1px solid rgba(255,255,255,.06)"><span style="background:#DC2626;color:white;padding:1px 6px;border-radius:4px;font-weight:700">AbN</span></td>
+        <td style="padding:8px;text-align:center;border:1px solid rgba(255,255,255,.06)"><span style="background:#DC2626;color:white;padding:1px 6px;border-radius:4px;font-weight:700">AbN</span></td>
+        <td style="padding:8px 10px;border:1px solid rgba(255,255,255,.06);color:#FCA5A5;font-weight:700">BHD langsung &#8594; RUJUK SEGERA</td>
+      </tr>
+    </table>
+  </div>
+  <div style="font-size:.72rem;color:var(--muted);margin-top:8px">Sumber: Protokol UKK IDAI 2021 &mdash; MTBS 2022</div>
+
+
+  <!-- PERINGATAN PENTING -->
+  <div class="hl hl-red" style="margin-top:14px;font-size:.82rem">
+    🚨 <strong>Perhatian penting (MTBS 2022 hal. 2):</strong><br>
+    "Seorang anak dengan tanda bahaya umum memerlukan penanganan <strong>SEGERA</strong>,
+    selesaikan seluruh penilaian secara cepat dan lakukan penanganan pra-rujukan,
+    sehingga rujukan <strong>tidak tertunda</strong>."
+  </div>
+
+  <!-- HUBUNGAN DENGAN MALARIA -->
+  <div class="hl hl-teal" style="margin-top:10px;font-size:.82rem">
+    🔗 <strong>Kaitan dengan Malaria:</strong>
+    Pada balita dengan <strong>Penyakit Sangat Berat + Demam di daerah endemis</strong>
+    → langsung klasifikasikan sebagai <strong>Penyakit Berat dengan Demam</strong>
+    → berikan Artesunat IM sebagai tindakan pra-rujukan <strong>sebelum merujuk</strong>.
+  </div>
+</div>
+
+<div class="card">
+  <h2>🌡️ Penilaian Demam – Malaria dalam MTBS</h2>
+  <div class="hl hl-teal">
+    Demam dalam MTBS mencakup penilaian terhadap: <strong>Malaria, Campak, dan Dengue</strong>
+  </div>
+  <h3>📍 Aturan Tes Malaria di Daerah Endemis</h3>
+  <div class="hl hl-orange">
+    <strong>Semua balita sakit</strong> yang datang ke Puskesmas di daerah endemis — <strong>meskipun tidak demam</strong> — wajib dilakukan <strong>Tes Malaria (RDT/mikroskop)</strong>.
+  </div>
+  <div class="hl hl-red">
+    <strong>Jika Tes Malaria tidak tersedia</strong> di daerah endemis tinggi atau rendah → Klasifikasikan langsung sebagai <strong>MALARIA</strong>
+  </div>
+  <div class="hl hl-blue">
+    <strong>Demam &gt; 14 hari</strong> dan/atau berulang tanpa sebab yang jelas → Lacak kemungkinan <strong>Tuberkulosis (TB)</strong>, lihat lembar Diagnosis dan Pengobatan TB
+  </div>
+</div>
+
+
+<!-- BAGAN DEMAM LENGKAP DARI MTBS HAL 5 -->
+<div class="card" id="bagan-demam">
+  <h2>🗺️ Bagan Lengkap — Apakah Anak Demam? (MTBS 2022 Hal. 5)</h2>
+  <div class="hl hl-blue" style="font-size:.8rem;margin-bottom:14px">
+    Demam = berdasarkan <strong>anamnesis</strong> ATAU <strong>teraba panas</strong> ATAU <strong>suhu &gt; 37,5°C</strong> (suhu aksila)
+  </div>
+
+  <!-- TANYAKAN & PERIKSA -->
+  <div class="grid-2" style="margin-bottom:16px">
+    <div class="hl hl-teal" style="border-radius:10px">
+      <strong>TANYAKAN:</strong>
+      <ul style="margin-top:6px;font-size:.78rem;color:var(--muted);padding-left:16px;line-height:2">
+        <li>Sudah berapa lama anak demam?</li>
+        <li>Jika &gt; 7 hari, apakah demam setiap hari?</li>
+        <li>Pernah menderita malaria atau minum obat anti malaria?</li>
+        <li>Apakah anak menderita campak dalam 3 bulan terakhir?</li>
+      </ul>
+    </div>
+    <div class="hl hl-blue" style="border-radius:10px">
+      <strong>LIHAT DAN PERIKSA:</strong>
+      <ul style="margin-top:6px;font-size:.78rem;color:var(--muted);padding-left:16px;line-height:2">
+        <li>Lihat dan raba adanya <strong>kaku kuduk</strong></li>
+        <li>Lihat adanya <strong>penyebab lain</strong> dari demam*</li>
+        <li>Tanda CAMPAK: ruam kemerahan menyeluruh DAN salah satu dari batuk/pilek/mata merah</li>
+        <li>Jika ada campak: cek luka mulut (dalam/luas?), nanah mata, kekeruhan kornea</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- CATATAN RDT -->
+  <div class="hl hl-orange" style="margin-bottom:16px;font-size:.78rem">
+    <strong>⚙️ Aturan Tes Malaria (RDT + Mikroskopis):</strong><br>
+    Jika <em>tidak ada klasifikasi berat</em>, lakukan Tes Malaria:<br>
+    • Pada <strong>semua balita sakit di daerah endemis tinggi</strong> (termasuk yang tidak demam)<br>
+    • Di <strong>endemis rendah</strong>: jika tidak ditemukan penyebab pasti demam<br>
+    • Jika tes <strong>tidak tersedia</strong> di daerah endemis (tinggi/rendah) → klasifikasikan sebagai <strong>MALARIA</strong><br>
+    • Demam &gt; 14 hari dan/atau berulang tanpa sebab jelas → lacak kemungkinan <strong>TB</strong> (Buku Bagan hal. 26)
+  </div>
+
+  <!-- ===== TABEL KLASIFIKASI ===== -->
+  <h3 style="margin-bottom:10px">Klasifikasi Demam — Daerah Endemis Malaria (Tinggi atau Rendah)</h3>
+  <div style="overflow-x:auto;margin-bottom:20px">
+    <table style="width:100%;border-collapse:collapse;font-size:.78rem">
+      <tr style="background:rgba(0,150,136,.25)">
+        <th style="padding:10px;text-align:left;border:1px solid rgba(255,255,255,.1);min-width:180px">GEJALA / TANDA</th>
+        <th style="padding:10px;text-align:center;border:1px solid rgba(255,255,255,.1);min-width:130px">KLASIFIKASI</th>
+        <th style="padding:10px;text-align:left;border:1px solid rgba(255,255,255,.1)">TINDAKAN / PENGOBATAN</th>
+      </tr>
+      <!-- MERAH MUDA 1 -->
+      <tr style="background:rgba(192,57,43,.12)">
+        <td style="padding:10px;border:1px solid rgba(255,255,255,.08);color:var(--muted);vertical-align:top">
+          <span style="color:#F1948A;font-weight:700">• Ada tanda bahaya umum</span><br>
+          <span style="color:#F1948A;font-weight:700">ATAU</span><br>
+          <span style="color:#F1948A;font-weight:700">• Kaku kuduk</span>
+        </td>
+        <td style="padding:10px;border:1px solid rgba(255,255,255,.08);text-align:center;vertical-align:middle">
+          <div style="background:rgba(192,57,43,.3);border:2px solid var(--red);border-radius:8px;padding:8px">
+            <div style="font-size:.85rem;font-weight:900;color:#F1948A">🔴 PENYAKIT BERAT</div>
+            <div style="font-size:.75rem;color:#F1948A;font-weight:700">DENGAN DEMAM</div>
+          </div>
+        </td>
+        <td style="padding:10px;border:1px solid rgba(255,255,255,.08);color:var(--muted);vertical-align:top">
+          <ul style="padding-left:16px;line-height:1.9;font-size:.78rem">
+            <li>Beri dosis pertama <strong>Artesunat injeksi IM/IV</strong> untuk malaria berat</li>
+            <li>Beri dosis pertama <strong>antibiotik</strong> yang sesuai</li>
+            <li><strong>Cegah agar gula darah tidak turun</strong></li>
+            <li>Berikan <strong>parasetamol</strong> untuk demam ≥ 38°C</li>
+            <li>Jika tersedia, lakukan Tes Malaria</li>
+            <li style="color:#F1948A;font-weight:700">⚠️ RUJUK SEGERA</li>
+          </ul>
+        </td>
+      </tr>
+      <!-- KUNING 1 -->
+      <tr style="background:rgba(243,156,18,.07)">
+        <td style="padding:10px;border:1px solid rgba(255,255,255,.08);color:var(--muted);vertical-align:top">
+          <span style="color:#FAD7A0">• Demam (anamnesis / teraba panas / suhu &gt;37,5°C)</span><br>
+          <span style="color:#FAD7A0;font-weight:700">DAN</span><br>
+          <span style="color:#FAD7A0">• <strong>Mikroskopis positif ATAU RDT positif</strong></span>
+        </td>
+        <td style="padding:10px;border:1px solid rgba(255,255,255,.08);text-align:center;vertical-align:middle">
+          <div style="background:rgba(243,156,18,.25);border:2px solid #F39C12;border-radius:8px;padding:8px">
+            <div style="font-size:.9rem;font-weight:900;color:#FAD7A0">🟡 MALARIA</div>
+          </div>
+        </td>
+        <td style="padding:10px;border:1px solid rgba(255,255,255,.08);color:var(--muted);vertical-align:top">
+          <ul style="padding-left:16px;line-height:1.9;font-size:.78rem">
+            <li>Beri <strong>obat anti malaria oral pilihan pertama</strong></li>
+            <li>Beri <strong>parasetamol</strong> untuk demam ≥ 38°C</li>
+            <li>Kunjungan ulang <strong>3 hari</strong> jika tetap demam</li>
+            <li>Nasihati kapan harus kembali segera</li>
+            <li>Jika demam berlanjut &gt; 7 hari → <strong>RUJUK</strong> untuk penilaian lebih lanjut</li>
+          </ul>
+        </td>
+      </tr>
+      <!-- HIJAU 1 -->
+      <tr style="background:rgba(39,174,96,.07)">
+        <td style="padding:10px;border:1px solid rgba(255,255,255,.08);color:var(--muted);vertical-align:top">
+          <span style="color:#82E0AA">• Mikroskopis <strong>negatif</strong> atau RDT <strong>negatif</strong></span><br>
+          <span style="color:#82E0AA;font-weight:700">ATAU</span><br>
+          <span style="color:#82E0AA">• Ditemukan penyebab lain dari demam*</span>
+        </td>
+        <td style="padding:10px;border:1px solid rgba(255,255,255,.08);text-align:center;vertical-align:middle">
+          <div style="background:rgba(39,174,96,.2);border:2px solid var(--green);border-radius:8px;padding:8px">
+            <div style="font-size:.78rem;font-weight:900;color:#82E0AA">🟢 DEMAM MUNGKIN</div>
+            <div style="font-size:.78rem;font-weight:900;color:#82E0AA">BUKAN MALARIA</div>
+          </div>
+        </td>
+        <td style="padding:10px;border:1px solid rgba(255,255,255,.08);color:var(--muted);vertical-align:top">
+          <ul style="padding-left:16px;line-height:1.9;font-size:.78rem">
+            <li>Beri <strong>parasetamol</strong> untuk demam ≥ 38°C</li>
+            <li>Obati penyebab lain dari demam</li>
+            <li>Kunjungan ulang <strong>3 hari</strong> jika tetap demam</li>
+            <li>Nasihati kapan harus kembali segera</li>
+            <li>Jika demam berlanjut &gt; 7 hari → <strong>RUJUK</strong> untuk penilaian lebih lanjut</li>
+          </ul>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <h3 style="margin-bottom:10px">Klasifikasi Demam — Non Endemis Malaria dan Tidak Ada Riwayat Bepergian ke Daerah Endemis</h3>
+  <div style="overflow-x:auto;margin-bottom:20px">
+    <table style="width:100%;border-collapse:collapse;font-size:.78rem">
+      <tr style="background:rgba(0,150,136,.25)">
+        <th style="padding:10px;text-align:left;border:1px solid rgba(255,255,255,.1);min-width:180px">GEJALA / TANDA</th>
+        <th style="padding:10px;text-align:center;border:1px solid rgba(255,255,255,.1);min-width:130px">KLASIFIKASI</th>
+        <th style="padding:10px;text-align:left;border:1px solid rgba(255,255,255,.1)">TINDAKAN / PENGOBATAN</th>
+      </tr>
+      <!-- MERAH MUDA NON ENDEMIS -->
+      <tr style="background:rgba(192,57,43,.12)">
+        <td style="padding:10px;border:1px solid rgba(255,255,255,.08);color:var(--muted);vertical-align:top">
+          <span style="color:#F1948A;font-weight:700">• Ada tanda bahaya umum</span><br>
+          <span style="color:#F1948A;font-weight:700">ATAU • Kaku kuduk</span><br>
+          <span style="color:#F1948A;font-weight:700">ATAU • Umur ≤ 3 bulan</span>
+        </td>
+        <td style="padding:10px;border:1px solid rgba(255,255,255,.08);text-align:center;vertical-align:middle">
+          <div style="background:rgba(192,57,43,.3);border:2px solid var(--red);border-radius:8px;padding:8px">
+            <div style="font-size:.85rem;font-weight:900;color:#F1948A">🔴 PENYAKIT BERAT</div>
+            <div style="font-size:.75rem;color:#F1948A;font-weight:700">DENGAN DEMAM</div>
+          </div>
+        </td>
+        <td style="padding:10px;border:1px solid rgba(255,255,255,.08);color:var(--muted);vertical-align:top">
+          <ul style="padding-left:16px;line-height:1.9;font-size:.78rem">
+            <li>Beri dosis pertama <strong>antibiotik</strong> yang sesuai</li>
+            <li><strong>Cegah agar gula darah tidak turun</strong></li>
+            <li>Beri satu dosis <strong>parasetamol</strong> untuk demam ≥ 38°C</li>
+            <li style="color:#F1948A;font-weight:700">⚠️ RUJUK SEGERA</li>
+          </ul>
+        </td>
+      </tr>
+      <!-- HIJAU NON ENDEMIS -->
+      <tr style="background:rgba(39,174,96,.07)">
+        <td style="padding:10px;border:1px solid rgba(255,255,255,.08);color:var(--muted);vertical-align:top">
+          <span style="color:#82E0AA">• <strong>Tidak ada</strong> tanda bahaya umum</span><br>
+          <span style="color:#82E0AA;font-weight:700">DAN</span><br>
+          <span style="color:#82E0AA">• <strong>Tidak ada</strong> kaku kuduk</span>
+        </td>
+        <td style="padding:10px;border:1px solid rgba(255,255,255,.08);text-align:center;vertical-align:middle">
+          <div style="background:rgba(39,174,96,.2);border:2px solid var(--green);border-radius:8px;padding:8px">
+            <div style="font-size:.78rem;font-weight:900;color:#82E0AA">🟢 DEMAM</div>
+            <div style="font-size:.78rem;font-weight:900;color:#82E0AA">BUKAN MALARIA</div>
+          </div>
+        </td>
+        <td style="padding:10px;border:1px solid rgba(255,255,255,.08);color:var(--muted);vertical-align:top">
+          <ul style="padding-left:16px;line-height:1.9;font-size:.78rem">
+            <li>Beri satu dosis <strong>parasetamol</strong> untuk demam ≥ 38°C</li>
+            <li>Obati penyebab lain dari demam</li>
+            <li>Kunjungan ulang <strong>2 hari</strong> jika tetap demam</li>
+            <li>Nasihati kapan harus kembali segera</li>
+            <li>Jika demam berlanjut &gt; 7 hari → <strong>RUJUK</strong> untuk penilaian lebih lanjut</li>
+          </ul>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <h3 style="margin-bottom:10px">Klasifikasi Campak (jika anak menderita campak sekarang atau dalam 3 bulan terakhir)</h3>
+  <div style="overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse;font-size:.78rem">
+      <tr style="background:rgba(0,150,136,.25)">
+        <th style="padding:10px;text-align:left;border:1px solid rgba(255,255,255,.1);min-width:180px">GEJALA / TANDA</th>
+        <th style="padding:10px;text-align:center;border:1px solid rgba(255,255,255,.1);min-width:130px">KLASIFIKASI</th>
+        <th style="padding:10px;text-align:left;border:1px solid rgba(255,255,255,.1)">TINDAKAN / PENGOBATAN</th>
+      </tr>
+      <!-- CAMPAK BERAT -->
+      <tr style="background:rgba(192,57,43,.12)">
+        <td style="padding:10px;border:1px solid rgba(255,255,255,.08);color:var(--muted);vertical-align:top">
+          <span style="color:#F1948A;font-weight:700">• Ada tanda bahaya umum</span><br>
+          <span style="color:#F1948A;font-weight:700">ATAU • Kekeruhan pada kornea mata</span><br>
+          <span style="color:#F1948A;font-weight:700">ATAU • Luka di mulut yang dalam atau luas</span>
+        </td>
+        <td style="padding:10px;border:1px solid rgba(255,255,255,.08);text-align:center;vertical-align:middle">
+          <div style="background:rgba(192,57,43,.3);border:2px solid var(--red);border-radius:8px;padding:8px">
+            <div style="font-size:.75rem;font-weight:900;color:#F1948A">🔴 CAMPAK DENGAN</div>
+            <div style="font-size:.75rem;font-weight:900;color:#F1948A">KOMPLIKASI BERAT***</div>
+          </div>
+        </td>
+        <td style="padding:10px;border:1px solid rgba(255,255,255,.08);color:var(--muted);vertical-align:top">
+          <ul style="padding-left:16px;line-height:1.9;font-size:.78rem">
+            <li>Beri <strong>Vitamin A dosis pengobatan</strong></li>
+            <li>Beri dosis pertama <strong>antibiotik</strong> yang sesuai</li>
+            <li>Jika ada kekeruhan kornea atau nanah mata → tetes/salep mata antibiotik</li>
+            <li>Beri <strong>parasetamol</strong> untuk demam ≥ 38°C</li>
+            <li style="color:#F1948A;font-weight:700">⚠️ RUJUK SEGERA</li>
+          </ul>
+        </td>
+      </tr>
+      <!-- CAMPAK KOMPLIKASI MATA/MULUT -->
+      <tr style="background:rgba(243,156,18,.07)">
+        <td style="padding:10px;border:1px solid rgba(255,255,255,.08);color:var(--muted);vertical-align:top">
+          <span style="color:#FAD7A0">• Ada nanah pada mata</span><br>
+          <span style="color:#FAD7A0;font-weight:700">ATAU</span><br>
+          <span style="color:#FAD7A0">• Ada luka pada mulut</span>
+        </td>
+        <td style="padding:10px;border:1px solid rgba(255,255,255,.08);text-align:center;vertical-align:middle">
+          <div style="background:rgba(243,156,18,.25);border:2px solid #F39C12;border-radius:8px;padding:8px">
+            <div style="font-size:.72rem;font-weight:900;color:#FAD7A0">🟡 CAMPAK DENGAN</div>
+            <div style="font-size:.72rem;font-weight:900;color:#FAD7A0">KOMPLIKASI PADA</div>
+            <div style="font-size:.72rem;font-weight:900;color:#FAD7A0">MATA DAN/ATAU MULUT</div>
+          </div>
+        </td>
+        <td style="padding:10px;border:1px solid rgba(255,255,255,.08);color:var(--muted);vertical-align:top">
+          <ul style="padding-left:16px;line-height:1.9;font-size:.78rem">
+            <li>Beri <strong>Vitamin A dosis pengobatan</strong></li>
+            <li>Jika ada nanah mata → tetes/salep mata antibiotik</li>
+            <li>Jika ada luka mulut → oleskan <strong>antiseptik mulut</strong></li>
+            <li>Jika anak gizi buruk → beri Vitamin A sesuai dosis</li>
+            <li>Kunjungan ulang <strong>3 hari</strong></li>
+            <li>Nasihati kapan harus kembali segera</li>
+          </ul>
+        </td>
+      </tr>
+      <!-- CAMPAK RINGAN -->
+      <tr style="background:rgba(39,174,96,.07)">
+        <td style="padding:10px;border:1px solid rgba(255,255,255,.08);color:var(--muted);vertical-align:top">
+          <span style="color:#82E0AA">• Campak sekarang atau dalam 3 bulan terakhir</span><br>
+          <span style="color:var(--muted);font-size:.75rem">(tanpa komplikasi di atas)</span>
+        </td>
+        <td style="padding:10px;border:1px solid rgba(255,255,255,.08);text-align:center;vertical-align:middle">
+          <div style="background:rgba(39,174,96,.2);border:2px solid var(--green);border-radius:8px;padding:8px">
+            <div style="font-size:.9rem;font-weight:900;color:#82E0AA">🟢 CAMPAK</div>
+          </div>
+        </td>
+        <td style="padding:10px;border:1px solid rgba(255,255,255,.08);color:var(--muted);vertical-align:top">
+          <ul style="padding-left:16px;line-height:1.9;font-size:.78rem">
+            <li>Beri <strong>Vitamin A dosis pengobatan</strong></li>
+            <li>Nasihati kapan harus kembali segera</li>
+          </ul>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- CATATAN KAKI -->
+  <div style="margin-top:14px;font-size:.74rem;color:var(--muted);border-top:1px solid rgba(255,255,255,.08);padding-top:10px">
+    <p>* Suhu berdasarkan suhu aksila</p>
+    <p>** Penyebab lain demam antara lain: infeksi dengue, pneumonia, infeksi saluran kencing, infeksi telinga, luka dengan infeksi, dan lain-lain</p>
+    <p>*** Komplikasi penting lain dari campak: pneumonia, stridor, diare, infeksi telinga, dan gizi buruk</p>
+  </div>
+</div>
+
+<div class="card">
+  <h2>📊 Klasifikasi Demam–Malaria</h2>
+  <div style="overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse;font-size:.8rem">
+      <tr style="background:rgba(0,150,136,.2)">
+        <th style="padding:10px;text-align:left;border-bottom:1px solid rgba(255,255,255,.1)">Klasifikasi</th>
+        <th style="padding:10px;text-align:left;border-bottom:1px solid rgba(255,255,255,.1)">Warna</th>
+        <th style="padding:10px;text-align:left;border-bottom:1px solid rgba(255,255,255,.1)">Kriteria Utama</th>
+        <th style="padding:10px;text-align:left;border-bottom:1px solid rgba(255,255,255,.1)">Tindakan</th>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,.06)">
+        <td style="padding:10px;font-weight:700;color:#F1948A">Malaria Berat</td>
+        <td style="padding:10px">🔴 Merah Muda</td>
+        <td style="padding:10px;color:var(--muted)">Demam + tanda bahaya umum atau tanda malaria berat</td>
+        <td style="padding:10px;color:#F1948A">RUJUK segera + tindakan pra-rujukan</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,.06)">
+        <td style="padding:10px;font-weight:700;color:#FAD7A0">Malaria</td>
+        <td style="padding:10px">🟡 Kuning</td>
+        <td style="padding:10px;color:var(--muted)">Demam + tes malaria positif (atau endemis tanpa tes)</td>
+        <td style="padding:10px;color:#FAD7A0">Antimalaria oral + paracetamol</td>
+      </tr>
+      <tr>
+        <td style="padding:10px;font-weight:700;color:#82E0AA">Demam: Mungkin Bukan Malaria</td>
+        <td style="padding:10px">🟢 Hijau</td>
+        <td style="padding:10px;color:var(--muted)">Demam + tes malaria negatif + ada penyebab lain jelas</td>
+        <td style="padding:10px;color:#82E0AA">Obati penyebab demam, paracetamol</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <h2>💊 Tindakan / Pengobatan Berdasarkan Klasifikasi</h2>
+  <div class="grid-2">
+    <div>
+      <div class="hl hl-red" style="border-radius:10px;margin-bottom:8px">
+        <strong>🔴 Klasifikasi MERAH MUDA (Rujuk)</strong>
+      </div>
+      <ul style="font-size:.8rem;color:var(--muted);padding-left:18px;line-height:2">
+        <li>Memberi tindakan Bantuan Hidup Dasar (BHD)</li>
+        <li>Memberi obat untuk mengatasi kejang</li>
+        <li>Mencegah gula darah tidak turun</li>
+        <li>Memberi <strong>dosis pertama antibiotik IM</strong></li>
+        <li>Memberi profilaksis kotrimoksazol</li>
+        <li>Memberi <strong>obat untuk Malaria Berat</strong> (Artesunat IM)</li>
+        <li>Memberi parasetamol bila demam tinggi</li>
+        <li>Memberi Vitamin A sebelum merujuk</li>
+        <li>Memberi cairan intravena (contoh: Dengue)</li>
+      </ul>
+    </div>
+    <div>
+      <div class="hl hl-yellow" style="border-radius:10px;margin-bottom:8px">
+        <strong>🟡 Klasifikasi KUNING &amp; 🟢 HIJAU (Rawat Jalan)</strong>
+      </div>
+      <ul style="font-size:.8rem;color:var(--muted);padding-left:18px;line-height:2">
+        <li>Pengobatan oral: antibiotik, <strong>antimalaria</strong>, paracetamol, Vit A, zat besi, obat cacingan</li>
+        <li>Cairan tambahan + tablet zinc (untuk diare)</li>
+        <li>Pengobatan infeksi lokal</li>
+        <li>Imunisasi (bila belum lengkap)</li>
+        <li>Nasihati masalah pemberian makan</li>
+        <li>Nasihati kunjungan ulang &amp; kapan kembali segera</li>
+      </ul>
+    </div>
+  </div>
+  <div class="hl hl-orange" style="margin-top:10px">
+    🍽️ <strong>Penting:</strong> Obat <strong>antimalaria oral</strong> harus diberikan <strong>sesudah makan</strong> untuk mencegah mual dan meningkatkan absorpsi.
+  </div>
+</div>
+
+<div class="card">
+  <h2>🗣️ Konseling Ibu</h2>
+  <h3>Langkah Konseling — Metode SALAM</h3>
+  <div class="mnem">
+    <div class="mnem-row" style="background:rgba(0,150,136,.06)">
+      <div class="mnem-letter">S</div>
+      <div class="mnem-text"><strong>Sambut</strong> klien dengan ramah dan sopan — bangun kepercayaan di awal pertemuan</div>
+    </div>
+    <div class="mnem-row">
+      <div class="mnem-letter">T</div>
+      <div class="mnem-text"><strong>Tanyakan</strong> peluang dan hambatan — gali kondisi dan kendala ibu</div>
+    </div>
+    <div class="mnem-row" style="background:rgba(0,150,136,.06)">
+      <div class="mnem-letter">U</div>
+      <div class="mnem-text"><strong>Upayakan</strong> klien memahami permasalahan — pastikan ibu mengerti kondisi anak</div>
+    </div>
+    <div class="mnem-row">
+      <div class="mnem-letter">B</div>
+      <div class="mnem-text"><strong>Bantu</strong> klien menyesuaikan diri, memahami cara pemecahan, dan mengambil keputusan</div>
+    </div>
+    <div class="mnem-row" style="background:rgba(0,150,136,.06)">
+      <div class="mnem-letter">J</div>
+      <div class="mnem-text"><strong>Jelaskan</strong> sumber daya yang tersedia untuk pemecahan masalah</div>
+    </div>
+    <div class="mnem-row">
+      <div class="mnem-letter">U</div>
+      <div class="mnem-text"><strong>Ulangi</strong> informasi dan keputusan yang akan diambil — akhiri dengan janji pertemuan berikutnya</div>
+    </div>
+  </div>
+
+  <h3 style="margin-top:14px">Teknik Komunikasi yang Baik — TNPC</h3>
+  <div class="grid-2">
+    <div class="hl hl-teal" style="border-radius:10px"><strong>T — Tanya</strong><br><span style="font-size:.78rem">Ajukan pertanyaan dan dengarkan jawaban ibu dengan seksama</span></div>
+    <div class="hl hl-blue" style="border-radius:10px"><strong>N — Nasihati</strong><br><span style="font-size:.78rem">Beri ibu nasihat sesuai kebutuhan spesifik kondisi anak</span></div>
+    <div class="hl hl-green" style="border-radius:10px"><strong>P — Puji</strong><br><span style="font-size:.78rem">Berikan pujian jika ibu telah bertindak benar untuk anak</span></div>
+    <div class="hl hl-orange" style="border-radius:10px"><strong>C — Cek Pemahaman</strong><br><span style="font-size:.78rem">Ajukan pertanyaan untuk memastikan ibu memahami nasihat yang diberikan</span></div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>🔄 Kunjungan Ulang</h2>
+  <div class="hl hl-teal">Setiap balita yang mendapat klasifikasi kuning/merah muda harus dijadwalkan kunjungan ulang.</div>
+  <div class="grid-2" style="margin-top:10px">
+    <div class="hl hl-blue" style="border-radius:10px">
+      <strong>📝 Yang harus ditulis:</strong><br>
+      Tulis <strong>kunjungan ulang</strong> untuk setiap klasifikasi (pilih jadwal terpendek dan pasti)
+    </div>
+    <div class="hl hl-orange" style="border-radius:10px">
+      <strong>🚨 Kembali Segera:</strong><br>
+      Nasihati ibu kapan harus kembali segera — <strong>tidak perlu ditulis ulang</strong> di setiap klasifikasi
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>📅 Pelayanan Tindak Lanjut</h2>
+  <div class="hl hl-teal">
+    <strong>Definisi:</strong> Pelayanan tindak lanjut = melayani anak saat dibawa kembali untuk <strong>kunjungan ulang yang sudah dijadwalkan</strong>. Tujuan: melihat apakah kondisi <em>membaik, tetap, atau memburuk</em>.
+  </div>
+  <div class="hl hl-blue" style="margin-top:8px">
+    📖 Panduan: <strong>Buku Bagan MTBS hal. 34–38</strong> tentang Pemberian Pelayanan Tindak Lanjut
+  </div>
+  <h3 style="margin-top:14px">Langkah Pelayanan Tindak Lanjut</h3>
+  <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Siapkan Formulir Pencatatan Baru</h4><p>Ambil formulir baru, isi identitas anak lengkap. Tandai (✓) pada "kunjungan ulang".</p></div></div>
+  <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Tanyakan Kondisi Saat Ini</h4><p>Apakah ada masalah atau keluhan baru yang muncul sejak kunjungan pertama?</p></div></div>
+  <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Jika Tidak Ada Masalah Baru</h4><p>Ikuti petunjuk dalam <strong>kotak Pelayanan Tindak Lanjut</strong> yang sesuai dengan klasifikasi kunjungan pertama.</p></div></div>
+  <div class="step"><div class="step-num">4</div><div class="step-body"><h4>Jika Ada Masalah Baru</h4><p>Periksa ulang secara lengkap, klasifikasikan menggunakan bagan algoritma, dan berikan tindakan seperti pada kunjungan pertama.</p></div></div>
+  <div class="step"><div class="step-num">5</div><div class="step-body"><h4>Pertimbangkan Rujukan</h4><p>Rujuk ke dokter/FKTL jika: kondisi bertambah parah, obat pilihan kedua tidak tersedia, kondisi mengkhawatirkan, atau petugas tidak tahu harus berbuat apa.</p></div></div>
+</div>
+
+</section>
+
+<!-- ══════════════════════════════════════
+     TIM 2 — INTISARI
+══════════════════════════════════════ -->
+<section id="tim2">
+
+<div class="card">
+  <h2>⚡ Intisari Kilat — MTBS &amp; Malaria</h2>
+  <div class="hl hl-teal">📌 <strong>Ingat 3 hal pokok:</strong> Sasaran → Penilaian → Klasifikasi → Tindakan → Tindak Lanjut</div>
+</div>
+
+<div class="card">
+  <h2>🔑 Poin Hafalan Utama</h2>
+  <div class="grid-2">
+    <div class="hl hl-blue" style="border-radius:10px">
+      <strong>Sasaran MTBS:</strong><br>
+      • 2 bln–5 thn → SAKIT<br>
+      • &lt;2 bln → Sakit &amp; Sehat
+    </div>
+    <div class="hl hl-teal" style="border-radius:10px">
+      <strong>Hasil Penilaian:</strong><br>
+      ✅ KLASIFIKASI<br>
+      ❌ Bukan Diagnosis
+    </div>
+    <div class="hl hl-red" style="border-radius:10px">
+      <strong>🔴 Merah Muda =</strong><br>
+      Berat → RUJUK<br>+ Tindakan pra-rujukan
+    </div>
+    <div class="hl hl-yellow" style="border-radius:10px">
+      <strong>🟡 Kuning =</strong><br>
+      Sedang → Rawat Jalan<br>Pengobatan oral
+    </div>
+    <div class="hl hl-green" style="border-radius:10px">
+      <strong>🟢 Hijau =</strong><br>
+      Ringan → Konseling<br>Nasihat kembali segera
+    </div>
+    <div class="hl hl-orange" style="border-radius:10px">
+      <strong>Antimalaria oral:</strong><br>
+      Diberikan <strong>SESUDAH MAKAN</strong><br>⚠️ Jangan sebelum makan
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>🌡️ Alur Demam–Malaria di MTBS</h2>
+  <div style="background:rgba(0,150,136,.06);border-radius:12px;padding:16px">
+    <div style="display:flex;flex-direction:column;gap:0">
+      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:rgba(0,150,136,.1);border-radius:8px 8px 0 0;border:1px solid rgba(0,150,136,.2)">
+        <span style="font-size:1.2rem">🌡️</span>
+        <span style="font-size:.82rem"><strong>Balita datang</strong> → Tanyakan: Apakah ada demam?</span>
+      </div>
+      <div style="text-align:center;padding:4px;color:var(--muted);font-size:.8rem">▼</div>
+      <div style="display:flex;gap:8px">
+        <div style="flex:1;padding:10px;background:rgba(230,126,34,.1);border-radius:8px;border:1px solid rgba(230,126,34,.2);font-size:.78rem">
+          <strong style="color:#FAD7A0">Di daerah endemis:</strong><br>
+          Semua balita sakit (termasuk tidak demam) → <strong>Wajib Tes Malaria</strong>
+        </div>
+        <div style="flex:1;padding:10px;background:rgba(41,128,185,.1);border-radius:8px;border:1px solid rgba(41,128,185,.2);font-size:.78rem">
+          <strong style="color:#85C1E9">Tes tidak tersedia:</strong><br>
+          Endemis tinggi/rendah → Langsung <strong>Klasifikasi: MALARIA</strong>
+        </div>
+      </div>
+      <div style="text-align:center;padding:4px;color:var(--muted);font-size:.8rem">▼</div>
+      <div style="display:flex;gap:8px">
+        <div style="flex:1;padding:10px;background:rgba(192,57,43,.15);border-radius:8px;border:1px solid var(--red);font-size:.78rem;text-align:center">
+          🔴 <strong>Malaria Berat</strong><br>Tanda bahaya umum<br>→ RUJUK
+        </div>
+        <div style="flex:1;padding:10px;background:rgba(243,156,18,.15);border-radius:8px;border:1px solid #F39C12;font-size:.78rem;text-align:center">
+          🟡 <strong>Malaria</strong><br>Tes positif / endemis<br>→ Antimalaria oral
+        </div>
+        <div style="flex:1;padding:10px;background:rgba(39,174,96,.15);border-radius:8px;border:1px solid var(--green);font-size:.78rem;text-align:center">
+          🟢 <strong>Bukan Malaria</strong><br>Tes negatif + sebab lain<br>→ Obati penyebab
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hl hl-blue" style="margin-top:10px">
+    ⏰ <strong>Demam &gt;14 hari berulang</strong> tanpa sebab jelas → Lacak <strong>TB</strong>
+  </div>
+</div>
+
+<div class="card">
+  <h2>🗣️ Ringkasan Konseling</h2>
+  <div class="grid-2">
+    <div>
+      <h3>Metode SALAM</h3>
+      <div style="font-size:.82rem;color:var(--muted);line-height:2.2">
+        <strong style="color:var(--teal2)">S</strong> — Sambut dengan ramah<br>
+        <strong style="color:var(--teal2)">T</strong> — Tanyakan hambatan<br>
+        <strong style="color:var(--teal2)">U</strong> — Upayakan pemahaman<br>
+        <strong style="color:var(--teal2)">B</strong> — Bantu pengambilan keputusan<br>
+        <strong style="color:var(--teal2)">J</strong> — Jelaskan sumber daya<br>
+        <strong style="color:var(--teal2)">U</strong> — Ulangi &amp; akhiri
+      </div>
+    </div>
+    <div>
+      <h3>Teknik Komunikasi TNPC</h3>
+      <div style="font-size:.82rem;color:var(--muted);line-height:2.2">
+        <strong style="color:#FAD7A0">T</strong> — Tanya &amp; dengarkan<br>
+        <strong style="color:#FAD7A0">N</strong> — Nasihati sesuai kebutuhan<br>
+        <strong style="color:#FAD7A0">P</strong> — Puji bila bertindak benar<br>
+        <strong style="color:#FAD7A0">C</strong> — Cek pemahaman ibu
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>🔄 Tindak Lanjut — Ringkasan Cepat</h2>
+  <div style="font-size:.82rem;color:var(--muted);line-height:2">
+    ✅ Kunjungan ulang = pelayanan saat anak <strong>datang sesuai jadwal</strong><br>
+    ✅ Tidak ada masalah baru → <strong>kotak tindak lanjut</strong> sesuai klasifikasi awal<br>
+    ✅ Ada masalah baru → <strong>periksa ulang lengkap</strong> seperti kunjungan pertama<br>
+    🔴 RUJUK jika kondisi memburuk / obat pilihan 2 tidak ada / tidak tahu harus berbuat apa
+  </div>
+</div>
+
+</section>
+
+<!-- ══════════════════════════════════════
+     TIM 3 — INOVASI
+══════════════════════════════════════ -->
+<section id="tim3">
+
+<div class="card">
+  <h2>💡 Inovasi Berbasis MTBS di Era Digital</h2>
+  <div class="hl hl-teal">Tim Inovasi mengidentifikasi 5 terobosan yang dapat diterapkan secara nyata di Puskesmas dan FKTP.</div>
+</div>
+
+<div class="inov-card">
+  <div class="tag tag-teal">⭐ PRIORITAS UTAMA</div>
+  <h3>📱 Aplikasi MTBS Digital — "MTBS Smart"</h3>
+  <p>Formulir pencatatan MTBS versi digital di smartphone. Petugas mengisi data anak, aplikasi otomatis mengarahkan ke bagan yang relevan, menghitung klasifikasi berdasarkan pilihan gejala, dan menampilkan tindakan yang harus dilakukan. Output: formulir terisi otomatis + ringkasan tatalaksana + pengingat kunjungan ulang via WhatsApp ke ibu pasien.</p>
+  <div class="hl hl-blue" style="margin-top:10px;font-size:.78rem">
+    <strong>Manfaat langsung:</strong> Mengurangi kesalahan klasifikasi manusia, mempercepat pelayanan, dan memastikan tidak ada langkah yang terlewat.
+  </div>
+</div>
+
+<div class="inov-card">
+  <div class="tag tag-orange">🔬 DIAGNOSTIK</div>
+  <h3>🔬 Integrasi RDT Malaria dengan Klasifikasi Otomatis</h3>
+  <p>Scanner kamera smartphone memfoto hasil RDT malaria, AI membaca hasil (positif/negatif/invalid) dan otomatis memasukkan hasilnya ke formulir MTBS digital. Jika tidak tersedia RDT, aplikasi menampilkan panduan klasifikasi berdasarkan status endemisitas wilayah Puskesmas secara otomatis.</p>
+  <div class="hl hl-teal" style="margin-top:10px;font-size:.78rem">
+    <strong>Dampak:</strong> Eliminasi kesalahan baca RDT, data langsung tersimpan ke SISMAL.
+  </div>
+</div>
+
+<div class="inov-card">
+  <div class="tag tag-purple">📊 MONITORING</div>
+  <h3>📊 Dashboard MTBS Real-Time Puskesmas</h3>
+  <p>Data dari semua petugas yang menggunakan aplikasi MTBS digital teragregasi otomatis ke dashboard kepala Puskesmas. Menampilkan: jumlah kasus per klasifikasi per hari, angka rujukan, tren demam-malaria, dan kepatuhan kunjungan ulang. Memungkinkan supervisi berbasis data tanpa kunjungan lapangan.</p>
+  <div class="hl hl-orange" style="margin-top:10px;font-size:.78rem">
+    <strong>Dampak:</strong> Deteksi dini outbreak malaria lokal, optimasi stok obat antimalaria.
+  </div>
+</div>
+
+<div class="inov-card">
+  <div class="tag tag-teal">💬 KOMUNIKASI</div>
+  <h3>📲 Sistem Notifikasi Kunjungan Ulang Otomatis</h3>
+  <p>Setelah kunjungan pertama, sistem otomatis mengirimkan pesan WhatsApp/SMS ke orang tua berisi: tanggal kunjungan ulang, tanda bahaya yang harus diwaspadai (KEMBALI SEGERA), dan pengingat H-1 sebelum jadwal kontrol. Terintegrasi dengan nomor HP yang diinput di formulir pendaftaran.</p>
+  <div class="hl hl-green" style="margin-top:10px;font-size:.78rem">
+    <strong>Dampak:</strong> Meningkatkan kepatuhan kunjungan ulang, deteksi dini kondisi memburuk.
+  </div>
+</div>
+
+<div class="inov-card">
+  <div class="tag tag-purple">🎓 EDUKASI</div>
+  <h3>🎓 Micro-Learning MTBS untuk Nakes Baru</h3>
+  <p>Modul pelatihan MTBS berbasis microlearning (5–10 menit/sesi) yang dapat diakses di smartphone kapan saja. Dilengkapi dengan: video simulasi konseling ibu (SALAM &amp; TNPC), kasus interaktif dengan feedback langsung, quiz klasifikasi bergambar, dan sertifikat digital terintegrasi SISDMK. Khususnya berguna untuk daerah terpencil yang sulit dijangkau pelatihan tatap muka.</p>
+  <div class="hl hl-blue" style="margin-top:10px;font-size:.78rem">
+    <strong>Dampak:</strong> Pemerataan kompetensi MTBS di seluruh FKTP Indonesia, termasuk daerah 3T.
+  </div>
+</div>
+
+</section>
+
+<!-- ══════════════════════════════════════
+     TIM 4 — SOAL & KASUS
+══════════════════════════════════════ -->
+<section id="tim4">
+
+<div class="card">
+  <h2>📝 Latihan Soal MCQ — Malaria dalam MTBS</h2>
+  <p style="font-size:.8rem;color:var(--muted);margin-bottom:16px">15 soal pilihan ganda · Klik opsi untuk memeriksa jawaban</p>
+
+  <div id="mcq-container"></div>
+  <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
+    <button onclick="submitMCQ()" style="padding:10px 24px;background:var(--teal);border:none;border-radius:20px;color:#fff;font-weight:700;cursor:pointer;font-size:.85rem">✅ Lihat Hasil</button>
+    <button onclick="resetMCQ()" style="padding:10px 24px;background:rgba(255,255,255,.08);border:none;border-radius:20px;color:var(--muted);font-weight:700;cursor:pointer;font-size:.85rem">🔄 Ulangi</button>
+  </div>
+  <div id="mcq-result" style="display:none;margin-top:14px;padding:14px;border-radius:10px;text-align:center;font-weight:700;font-size:1rem"></div>
+</div>
+
+<div class="card">
+  <h2>📋 Penugasan Studi Kasus</h2>
+
+  <div class="tugas-card">
+    <h3>📌 Penugasan 1 — Penilaian &amp; Klasifikasi</h3>
+    <p><strong>Tujuan:</strong> Peserta mampu melakukan penilaian dan klasifikasi balita dengan demam menggunakan pendekatan MTBS.</p>
+    <ul>
+      <li>Siapkan Buku Bagan MTBS dan Formulir Pencatatan Balita Sakit Umur 2 bln – 5 thn</li>
+      <li>Peserta dibagi menjadi 6 kelompok</li>
+      <li>Tiap kelompok melakukan Penilaian dan Klasifikasi studi kasusnya selama <strong>10 menit</strong></li>
+      <li>Presentasikan hasil klasifikasi beserta alasannya kepada kelompok lain</li>
+    </ul>
+    <div class="hl hl-teal" style="margin-top:10px;font-size:.78rem">
+      <strong>Indikator hasil belajar:</strong> Peserta mampu melakukan penilaian dan klasifikasi balita dengan demam sesuai algoritma MTBS.
+    </div>
+  </div>
+
+  <div class="tugas-card">
+    <h3>📌 Penugasan 2 — Tindakan / Pengobatan</h3>
+    <p><strong>Tujuan:</strong> Peserta mampu menentukan tindakan/pengobatan balita dengan demam sesuai klasifikasi MTBS.</p>
+    <ul>
+      <li>Gunakan formulir pencatatan yang sudah dilengkapi pada Penugasan 1</li>
+      <li>Peserta tetap dalam 6 kelompok sesuai studi kasus sebelumnya</li>
+      <li>Lanjutkan studi kasus untuk menentukan Tindakan/Pengobatan selama <strong>10 menit</strong></li>
+      <li>Tuliskan tindakan hanya yang relevan dengan kondisi anak</li>
+    </ul>
+    <div class="hl hl-orange" style="margin-top:10px;font-size:.78rem">
+      <strong>Catatan:</strong> Jika anak akan dirujuk segera, tuliskan hanya tindakan pra-rujukan yang diperlukan.
+    </div>
+  </div>
+
+  <div class="tugas-card">
+    <h3>📌 Penugasan 3 — Pelayanan Tindak Lanjut</h3>
+    <p><strong>Tujuan:</strong> Peserta mampu memberikan pelayanan tindak lanjut pada kunjungan ulang balita sakit.</p>
+    <ul>
+      <li>Siapkan Formulir Pencatatan Balita Sakit Umur 2 bln – 5 thn yang <strong>baru</strong></li>
+      <li>Tiap kelompok dibagi menjadi 2 sub-kelompok (A dan B)</li>
+      <li><strong>Studi Kasus NINA:</strong> Kelompok 2 (lanjutkan kasus Nina dari penugasan sebelumnya)</li>
+      <li><strong>Studi Kasus RISKA:</strong> Kelompok 4 (lanjutkan kasus Riska dari penugasan sebelumnya)</li>
+      <li>Lakukan Pelayanan Tindak Lanjut/Kunjungan Ulang selama <strong>10 menit</strong></li>
+    </ul>
+    <div class="hl hl-blue" style="margin-top:10px;font-size:.78rem">
+      <strong>Panduan:</strong> Gunakan Buku Bagan MTBS halaman 34–38 sebagai acuan pelayanan tindak lanjut.
+    </div>
+  </div>
+</div>
+
+</section>
+
+<script>
+const QS = [
+  {q:"Singkatan MTBS dalam sistem pelayanan kesehatan anak di Indonesia adalah...",
+   opts:["Manajemen Terpadu Balita Sehat","Manajemen Terpadu Balita Sakit","Metode Tatalaksana Balita Sakit","Manajemen Terstandar Balita Sakit"],
+   ans:1, exp:"MTBS = Manajemen Terpadu Balita Sakit (Integrated Management of Childhood Illness/IMCI). Merupakan pendekatan keterpaduan dalam tatalaksana balita sakit di FKTP."},
+  {q:"Sasaran pelayanan MTBS mencakup balita usia berapa?",
+   opts:["0 – 12 bulan","2 bulan – 5 tahun","1 – 5 tahun","0 – 5 tahun"],
+   ans:1, exp:"MTBS ditujukan untuk balita SAKIT umur 2 bulan – 5 tahun. Untuk bayi muda <2 bulan (sakit maupun sehat) menggunakan formulir yang berbeda."},
+  {q:"Hasil dari proses penilaian dalam pendekatan MTBS disebut...",
+   opts:["Diagnosis klinis","Prognosis penyakit","Klasifikasi","Assessment komprehensif"],
+   ans:2, exp:"Dalam MTBS, hasil penilaian disebut KLASIFIKASI — bukan diagnosa. Klasifikasi menentukan tindakan yang harus dilakukan berdasarkan warna (merah muda, kuning, hijau)."},
+  {q:"Metode penilaian yang digunakan dalam MTBS terdiri dari...",
+   opts:["Anamnesis, pemeriksaan fisik, laboratorium, radiologi","Inspeksi, palpasi, perkusi, auskultasi","Bertanya, melihat, mendengar, meraba","Skrining, triase, observasi, intervensi"],
+   ans:2, exp:"MTBS menggunakan 4 cara penilaian: Bertanya (kepada ibu/pengasuh), Melihat (observasi visual), Mendengar (auskultasi), dan Meraba (palpasi) untuk mendapatkan data klinis yang komprehensif."},
+  {q:"Klasifikasi warna MERAH MUDA dalam sistem MTBS menandakan...",
+   opts:["Kondisi ringan, cukup konseling ibu","Kondisi sedang, pengobatan oral di Puskesmas","Kondisi berat, memerlukan rujukan segera","Kondisi normal, hanya perlu imunisasi"],
+   ans:2, exp:"Merah Muda = kondisi berat yang memerlukan RUJUKAN segera. Sebelum dirujuk, petugas wajib melakukan tindakan pra-rujukan (obat kejang, cegah hipoglikemia, antibiotik IM, dll)."},
+  {q:"Di daerah endemis malaria, balita sakit yang datang ke Puskesmas meskipun tidak demam harus...",
+   opts:["Langsung diberikan antimalaria empiris","Dilakukan tes malaria (RDT atau mikroskop)","Dirujuk ke rumah sakit untuk observasi","Diobservasi 24 jam sebelum keputusan terapi"],
+   ans:1, exp:"Di daerah endemis, SEMUA balita sakit yang datang ke Puskesmas — termasuk yang tidak demam — wajib dilakukan tes malaria. Ini karena gejala malaria pada anak bisa atipikal."},
+  {q:"Jika tes malaria tidak tersedia di daerah endemis tinggi, klasifikasi yang diberikan adalah...",
+   opts:["Demam — Mungkin Bukan Malaria","Suspek Malaria (Menunggu tes)","Malaria","Malaria Berat"],
+   ans:2, exp:"Bila tes malaria tidak tersedia di daerah endemis tinggi atau rendah, klasifikasikan langsung sebagai MALARIA. Hal ini untuk memastikan tidak ada kasus malaria yang terlewat tanpa pengobatan."},
+  {q:"Demam yang berlangsung lebih dari 14 hari dan/atau berulang tanpa sebab jelas mengharuskan petugas untuk...",
+   opts:["Memberi antimalaria dosis penuh secara empiris","Melacak kemungkinan Tuberkulosis (TB)","Langsung merujuk ke rumah sakit","Melakukan pemeriksaan dengue NS1"],
+   ans:1, exp:"Demam >14 hari berulang tanpa sebab yang jelas harus mengarahkan kecurigaan ke TB. Petugas harus melihat lembar Diagnosis dan Pengobatan TB dalam Buku Bagan MTBS."},
+  {q:"Kapan sebaiknya obat antimalaria oral diberikan kepada anak?",
+   opts:["30 menit sebelum makan","Saat perut kosong agar absorpsi maksimal","Sesudah makan","Bersamaan dengan susu formula"],
+   ans:2, exp:"Obat antimalaria oral (DHP, Artesunat-Amodiakuin, dll) harus diberikan SESUDAH MAKAN untuk mencegah mual/muntah dan meningkatkan toleransi serta absorpsi obat."},
+  {q:"Tindakan pra-rujukan untuk balita dengan malaria berat TIDAK termasuk...",
+   opts:["Memberi obat untuk mengatasi kejang","Mencegah gula darah turun (hipoglikemia)","Memberi dosis pertama antibiotik IM","Memberikan antimalaria oral dosis penuh dan tunggu 2 jam"],
+   ans:3, exp:"Untuk malaria berat (merah muda), yang diberikan adalah Artesunat IM sebagai tindakan pra-rujukan — bukan antimalaria oral dosis penuh. Pemberian antimalaria oral lengkap dilakukan untuk klasifikasi Malaria (kuning), bukan untuk yang dirujuk."},
+  {q:"Alat bantu utama pelayanan MTBS yang digunakan oleh petugas kesehatan adalah...",
+   opts:["Lembar balik dan leaflet edukasi","Buku bagan dan formulir pencatatan","SOP dan rekam medis elektronik","Buku register harian dan kartu imunisasi"],
+   ans:1, exp:"Dua alat bantu utama MTBS adalah: (1) Buku Bagan — berisi algoritma/bagan penilaian, klasifikasi, dan tindakan, dan (2) Formulir Pencatatan — untuk mendokumentasikan setiap kunjungan balita sakit."},
+  {q:"Pada kunjungan ulang balita sakit tanpa masalah baru, yang harus dilakukan petugas adalah...",
+   opts:["Melakukan pemeriksaan lengkap seperti kunjungan pertama","Langsung merujuk ke fasilitas lebih tinggi","Mengikuti kotak pelayanan tindak lanjut sesuai klasifikasi awal","Menghentikan semua pengobatan sebelumnya"],
+   ans:2, exp:"Jika tidak ada masalah baru pada kunjungan ulang, ikuti petunjuk dalam 'kotak' Pemberian Pelayanan Tindak Lanjut yang sesuai dengan klasifikasi anak ketika kunjungan pertama (Buku Bagan hal. 34-38)."},
+  {q:"Teknik komunikasi yang baik dalam konseling ibu menurut MTBS disingkat...",
+   opts:["SALAM","TNPC","SOAP","BATU"],
+   ans:1, exp:"Teknik komunikasi yang baik dalam MTBS disingkat TNPC: T=Tanya (ajukan pertanyaan & dengarkan), N=Nasihati (beri nasihat sesuai kebutuhan), P=Puji (beri pujian bila ibu sudah bertindak benar), C=Cek Pemahaman."},
+  {q:"Dalam akronim TNPC, huruf 'C' bermakna...",
+   opts:["Catat semua temuan pemeriksaan dalam rekam medis","Cek pemahaman ibu tentang nasihat yang diberikan","Cari kemungkinan penyebab lain yang belum teridentifikasi","Ceritakan pengalaman pasien lain yang serupa"],
+   ans:1, exp:"C = Cek Pemahaman: Ajukan pertanyaan kepada ibu untuk memastikan ia memahami nasihat yang telah diberikan dan apa yang masih perlu dijelaskan lebih lanjut."},
+  {q:"Balita dengan kondisi MTBS yang datang untuk kunjungan ulang harus DIRUJUK ke dokter jika...",
+   opts:["Ibu meminta sendiri untuk dirujuk ke rumah sakit","Anak sudah mencapai usia 5 tahun","Kondisi bertambah parah atau obat pilihan kedua tidak tersedia","Anak menangis saat pemeriksaan berlangsung"],
+   ans:2, exp:"Berdasarkan panduan MTBS, rujukan saat kunjungan ulang dilakukan jika: kondisi bertambah parah, obat pilihan kedua tidak tersedia, kondisi mengkhawatirkan, atau petugas tidak tahu harus berbuat apa. Panduan ini ada di Buku Bagan MTBS hal. 34-38."}
+];
+
+let answered = new Array(QS.length).fill(null);
+
+function buildMCQ(){
+  const c=document.getElementById('mcq-container');
+  c.innerHTML='';
+  QS.forEach((q,i)=>{
+    let optsHtml='';
+    q.opts.forEach((o,j)=>{
+      optsHtml+='<div class="opt" id="opt'+i+'x'+j+'" onclick="answerMCQ('+i+','+j+')"><span class="opt-key">'+String.fromCharCode(65+j)+'.</span> '+o+'</div>';
+    });
+    c.innerHTML+='<div class="q-block"><div class="qnum">Soal '+( i+1)+' / '+QS.length+'</div><div class="qtxt">'+q.q+'</div>'+optsHtml+'<div class="explain" id="exp'+i+'">💡 '+q.exp+'</div></div>';
+  });
+}
+
+function answerMCQ(qi,oi){
+  if(answered[qi]!==null) return;
+  answered[qi]=oi;
+  const q=QS[qi];
+  for(let j=0;j<q.opts.length;j++){
+    const el=document.getElementById('opt'+qi+'x'+j);
+    if(j===q.ans) el.classList.add('correct');
+    else if(j===oi) el.classList.add('wrong');
+    el.onclick=null;
+  }
+  document.getElementById('exp'+qi).style.display='block';
+}
+
+function submitMCQ(){
+  let score=0;
+  answered.forEach((a,i)=>{ if(a===QS[i].ans) score++; });
+  const total=QS.length;
+  const pct=Math.round(score/total*100);
+  const res=document.getElementById('mcq-result');
+  res.style.display='block';
+  let color=pct>=80?'#82E0AA':pct>=60?'#FAD7A0':'#F1948A';
+  let msg=pct>=80?'🎉 Sangat Baik! Anda menguasai materi MTBS.':pct>=60?'👍 Cukup Baik. Review materi yang masih salah.':'📚 Perlu dipelajari ulang. Jangan menyerah!';
+  res.style.background=pct>=80?'rgba(39,174,96,.15)':pct>=60?'rgba(243,156,18,.15)':'rgba(192,57,43,.15)';
+  res.style.border='1px solid '+color;
+  res.innerHTML='<span style="color:'+color+';font-size:1.4rem">Skor: '+score+' / '+total+' ('+pct+'%)</span><br><span style="font-size:.88rem;color:var(--muted)">'+msg+'</span>';
+}
+
+function resetMCQ(){
+  answered.fill(null);
+  document.getElementById('mcq-result').style.display='none';
+  buildMCQ();
+}
+
+function show(id){
+  document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const map={'tim1':0,'tim2':1,'tim3':2,'formulir':3,'simulasi':4,'tim4':5};
+  if(map[id]!==undefined) document.querySelectorAll('nav button')[map[id]].classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+window.addEventListener('scroll',()=>{
+  const el=document.getElementById('progress-bar');
+  const s=document.documentElement.scrollTop;
+  const t=document.documentElement.scrollHeight-document.documentElement.clientHeight;
+  el.style.width=(s/t*100)+'%';
+});
+
+buildMCQ();
+</script>
+
+<!-- ══════════════════════════════════════
+     FORMULIR PENCATATAN
+══════════════════════════════════════ -->
+<section id="formulir">
+<div class="card">
+  <h2>📝 Cara Pengisian Formulir Pencatatan Balita Sakit 2 bln – 5 thn</h2>
+  <div class="hl hl-teal">Formulir pencatatan adalah dokumen wajib yang diisi setiap kali balita sakit berkunjung ke Puskesmas. Setiap gejala/tanda yang ditemukan DILINGKARI, lalu dituliskan klasifikasi dan tindakannya.</div>
+</div>
+
+<!-- IDENTITAS -->
+<div class="card">
+  <h2>🪪 BAGIAN 1 — Identitas Anak</h2>
+  <div class="grid-2">
+    <div>
+      <h3>Yang harus diisi:</h3>
+      <div class="step"><div class="step-num">①</div><div class="step-body"><h4>Nama Anak &amp; Jenis Kelamin (L/P)</h4><p>Tulis nama lengkap anak dan lingkari L atau P</p></div></div>
+      <div class="step"><div class="step-num">②</div><div class="step-body"><h4>Umur (bulan/tahun) + Tanggal Kunjungan</h4><p>Hitung dari tanggal lahir ke tanggal periksa. Pastikan masuk rentang 2 bulan – 5 tahun.</p></div></div>
+      <div class="step"><div class="step-num">③</div><div class="step-body"><h4>Berat Badan (BB) &amp; Panjang/Tinggi Badan (PB/TB)</h4><p>Timbang BB dalam kg, ukur PB (berbaring &lt;2th) atau TB (berdiri ≥2th) dalam cm</p></div></div>
+      <div class="step"><div class="step-num">④</div><div class="step-body"><h4>LiLA (Lingkar Lengan Atas)</h4><p>Ukur pada balita usia ≥ 6 bulan. Tidak dilakukan pada bayi &lt; 6 bulan.</p></div></div>
+      <div class="step"><div class="step-num">⑤</div><div class="step-body"><h4>Suhu Aksila (°C) &amp; Lingkar Kepala (cm)</h4><p>Suhu: Normal 36,5–37,5°C. Demam jika &gt; 37,5°C</p></div></div>
+    </div>
+    <div>
+      <div class="hl hl-orange" style="border-radius:10px">
+        <strong>Kunjungan Pertama / Ulang:</strong><br>
+        Tandai (✓) pada kotak yang sesuai.<br>
+        • <strong>Kunjungan Pertama</strong>: lakukan penilaian lengkap<br>
+        • <strong>Kunjungan Ulang</strong>: gunakan panduan Pelayanan Tindak Lanjut (Buku Bagan hal. 34–38)
+      </div>
+      <div class="hl hl-blue" style="border-radius:10px;margin-top:10px">
+        <strong>RDT Malaria:</strong><br>
+        Di daerah endemis: tulis hasil RDT (+) atau (–)<br>
+        Tentukan daerah: <strong>Endemis Tinggi / Rendah / Non Endemis</strong><br>
+        Lingkari sesuai wilayah Puskesmas
+      </div>
+      <div class="hl hl-teal" style="border-radius:10px;margin-top:10px">
+        <strong>Keluhan Utama:</strong><br>
+        Tanyakan: "Anak sakit apa?"<br>
+        Catat jawaban ibu secara singkat di kolom yang tersedia
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PENILAIAN SAGA -->
+<div class="card">
+  <h2>🚨 BAGIAN 2 — Penilaian SAGA (Tanda Bahaya Umum)</h2>
+  <div class="hl hl-red">SAGA = Segitiga Asesmen Gawat Anak. Dilakukan PERTAMA KALI pada setiap kunjungan. Terdiri dari 3 komponen: Penampilan, Usaha Napas, Sirkulasi.</div>
+  <div class="grid-3" style="margin-top:12px">
+    <div class="hl hl-blue" style="border-radius:10px">
+      <strong>PENAMPILAN (5 item)</strong><br>
+      <span style="font-size:.75rem">Lingkari jika ditemukan:<br>
+      • Kejang<br>• Tidak bisa interaksi<br>• Gelisah/tidak bisa ditenangkan<br>• Pandangan kosong/mata tidak buka<br>• Tidak bersuara/menangis melengking</span>
+    </div>
+    <div class="hl hl-orange" style="border-radius:10px">
+      <strong>USAHA NAPAS (4 item)</strong><br>
+      <span style="font-size:.75rem">Lingkari jika ditemukan:<br>
+      • Tarikan dinding dada ke dalam<br>• Stridor<br>• Napas cuping hidung<br>• Menolak berbaring/cari posisi nyaman</span>
+    </div>
+    <div class="hl hl-teal" style="border-radius:10px">
+      <strong>SIRKULASI (3 item)</strong><br>
+      <span style="font-size:.75rem">Lingkari jika ditemukan:<br>
+      • Tampak pucat<br>• Sianosis (biru)<br>• Kutis marmorata (kulit marmer)</span>
+    </div>
+  </div>
+  <div style="overflow-x:auto;margin-top:12px">
+    <table style="width:100%;border-collapse:collapse;font-size:.8rem">
+      <tr style="background:rgba(0,150,136,.2)">
+        <th style="padding:10px;text-align:left;border-bottom:1px solid rgba(255,255,255,.1)">Temuan</th>
+        <th style="padding:10px;text-align:left;border-bottom:1px solid rgba(255,255,255,.1)">Klasifikasi</th>
+        <th style="padding:10px;text-align:left;border-bottom:1px solid rgba(255,255,255,.1)">Tindakan</th>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,.06)">
+        <td style="padding:10px;color:var(--muted)">Gangguan pada semua 3 komponen SAGA</td>
+        <td style="padding:10px;font-weight:700;color:#F1948A">🔴 GAGAL JANTUNG DAN PARU</td>
+        <td style="padding:10px;color:#F1948A">BHD → RUJUK SEGERA</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,.06)">
+        <td style="padding:10px;color:var(--muted)">≥1 tanda bahaya: tidak bisa minum/menyusu, memuntahkan semua, pernah kejang, dan/atau gangguan penampilan/napas/sirkulasi</td>
+        <td style="padding:10px;font-weight:700;color:#F1948A">🔴 PENYAKIT SANGAT BERAT</td>
+        <td style="padding:10px;color:#F1948A">Diazepam kejang • O₂ 3-5L • Cegah hipoglikemia • Jaga hangat → RUJUK SEGERA</td>
+      </tr>
+      <tr>
+        <td style="padding:10px;color:var(--muted)">Tidak ada tanda-tanda di atas</td>
+        <td style="padding:10px;font-weight:700;color:#82E0AA">🟢 STABIL</td>
+        <td style="padding:10px;color:#82E0AA">Lanjutkan penilaian berikutnya</td>
+      </tr>
+    </table>
+  </div>
+  <div class="hl hl-red" style="margin-top:10px">⚠️ <strong>Cara penulisan di formulir:</strong> Lingkari gejala/tanda yang ditemukan, kemudian <strong>TULISKAN klasifikasi</strong> di kolom KLASIFIKASI dan <strong>TULISKAN tindakan</strong> di kolom TINDAKAN/PENGOBATAN.</div>
+</div>
+
+<!-- PENILAIAN DEMAM -->
+<div class="card">
+  <h2>🌡️ BAGIAN 3 — Penilaian &amp; Pengisian Bagian Demam</h2>
+  <div class="hl hl-teal">Demam = anamnesis ATAU teraba panas ATAU suhu &gt; 37,5°C. Bagian ini mencakup penilaian Malaria, Campak, dan Dengue.</div>
+
+  <h3 style="margin-top:14px">Langkah Pengisian</h3>
+  <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Tentukan daerah endemis malaria</h4><p>Lingkari: <strong>Endemis Tinggi / Endemis Rendah / Non Endemis</strong> sesuai wilayah Puskesmas. Jika Non Endemis: tanyakan riwayat bepergian ke daerah endemis 2 minggu terakhir.</p></div></div>
+  <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Lakukan Tes Malaria (RDT)</h4><p>• Endemis tinggi: <strong>semua balita sakit</strong> (meskipun tidak demam) → wajib RDT<br>• Endemis rendah: jika tidak ditemukan penyebab pasti demam → RDT<br>• Tulis hasil: (+) atau (–) di kolom RDT Malaria pada formulir identitas</p></div></div>
+  <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Tanyakan &amp; periksa gejala/tanda demam</h4><p>• Sudah berapa lama demam? (lingkari durasinya)<br>• Adakah kaku kuduk? (lihat dan raba)<br>• Adakah tanda bahaya umum?<br>• Pernah menderita campak 3 bulan terakhir?<br>• Gejala campak: ruam kemerahan menyeluruh + batuk/pilek/mata merah</p></div></div>
+  <div class="step"><div class="step-num">4</div><div class="step-body"><h4>Jika demam 2–7 hari: penilaian Dengue</h4><p>Periksa CCTVR (syok): Capillary refill &gt;2 detik, kaki/tangan dingin, nadi lemah<br>Periksa tanda Warning Signs: nyeri perut, muntah terus, akumulasi cairan, perdarahan mukosa, letargi, trombositopenia<br>Lakukan Uji Tourniquet (jika tidak syok dan tidak ada perdarahan)</p></div></div>
+  <div class="step"><div class="step-num">5</div><div class="step-body"><h4>Tentukan klasifikasi dan tulis di kolom</h4><p>Lingkari gejala yang ditemukan, tulis klasifikasi di kolom KLASIFIKASI, tulis tindakan di kolom TINDAKAN/PENGOBATAN</p></div></div>
+
+  <h3 style="margin-top:16px">Alur Klasifikasi Demam (Daerah Endemis Malaria)</h3>
+  <div style="overflow-x:auto;margin-top:10px">
+    <table style="width:100%;border-collapse:collapse;font-size:.78rem">
+      <tr style="background:rgba(0,150,136,.2)">
+        <th style="padding:9px;text-align:left;border-bottom:1px solid rgba(255,255,255,.1)">Kondisi</th>
+        <th style="padding:9px;text-align:left;border-bottom:1px solid rgba(255,255,255,.1)">Klasifikasi</th>
+        <th style="padding:9px;text-align:left;border-bottom:1px solid rgba(255,255,255,.1)">Warna</th>
+        <th style="padding:9px;text-align:left;border-bottom:1px solid rgba(255,255,255,.1)">Tindakan Utama</th>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,.06);background:rgba(192,57,43,.08)">
+        <td style="padding:9px;color:var(--muted)">Ada tanda bahaya umum ATAU kaku kuduk (endemis tinggi/rendah)</td>
+        <td style="padding:9px;font-weight:700;color:#F1948A">Penyakit Berat dengan Demam</td>
+        <td style="padding:9px">🔴 Merah Muda</td>
+        <td style="padding:9px;color:#F1948A">Artesunat IM + antibiotik IM + cegah hipoglikemia + parasetamol → RUJUK SEGERA</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,.06);background:rgba(243,156,18,.06)">
+        <td style="padding:9px;color:var(--muted)">Demam + RDT positif ATAU endemis (tes tidak tersedia)</td>
+        <td style="padding:9px;font-weight:700;color:#FAD7A0">Malaria</td>
+        <td style="padding:9px">🟡 Kuning</td>
+        <td style="padding:9px;color:#FAD7A0">Antimalaria oral lini 1 + parasetamol. Kunjungan ulang 3 hari</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,.06);background:rgba(39,174,96,.06)">
+        <td style="padding:9px;color:var(--muted)">Demam + RDT negatif + ada penyebab lain (endemis tinggi/rendah)</td>
+        <td style="padding:9px;font-weight:700;color:#82E0AA">Demam Mungkin Bukan Malaria</td>
+        <td style="padding:9px">🟢 Hijau</td>
+        <td style="padding:9px;color:#82E0AA">Obati penyebab lain + parasetamol. Kunjungan ulang 3 hari</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,.06)">
+        <td style="padding:9px;color:var(--muted)">Non Endemis + tidak ada riwayat kunjungan endemis + tanda bahaya umum/kaku kuduk</td>
+        <td style="padding:9px;font-weight:700;color:#F1948A">Penyakit Berat dengan Demam</td>
+        <td style="padding:9px">🔴 Merah Muda</td>
+        <td style="padding:9px;color:#F1948A">Antibiotik IM + cegah hipoglikemia + parasetamol → RUJUK SEGERA</td>
+      </tr>
+      <tr>
+        <td style="padding:9px;color:var(--muted)">Non Endemis + tidak ada tanda bahaya, tidak ada kaku kuduk, umur &gt;3 bulan</td>
+        <td style="padding:9px;font-weight:700;color:#82E0AA">Demam Bukan Malaria</td>
+        <td style="padding:9px">🟢 Hijau</td>
+        <td style="padding:9px;color:#82E0AA">Obati penyebab lain + parasetamol. Kunjungan ulang 2 hari</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- DOSIS OBAT -->
+<div class="card">
+  <h2>💊 BAGIAN 4 — Penulisan Tindakan/Pengobatan di Formulir</h2>
+  <div class="hl hl-blue">Tindakan ditulis di kolom TINDAKAN/PENGOBATAN. Tulis hanya yang relevan dengan kondisi anak. Jika akan dirujuk: tulis hanya tindakan pra-rujukan.</div>
+
+  <h3 style="margin-top:14px">Tabel Dosis Antimalaria Oral (Lini Pertama)</h3>
+  <div class="hl hl-orange" style="margin-bottom:10px">🍽️ Semua antimalaria oral diberikan <strong>SESUDAH MAKAN</strong></div>
+  <div style="overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse;font-size:.78rem">
+      <tr style="background:rgba(0,150,136,.2)">
+        <th style="padding:9px;border:1px solid rgba(255,255,255,.1)">Jenis Malaria</th>
+        <th style="padding:9px;border:1px solid rgba(255,255,255,.1)">Obat</th>
+        <th style="padding:9px;border:1px solid rgba(255,255,255,.1)">Hari</th>
+        <th style="padding:9px;border:1px solid rgba(255,255,255,.1)">≤5 kg<br>(0–1 bln)</th>
+        <th style="padding:9px;border:1px solid rgba(255,255,255,.1)">&gt;5–6 kg<br>(2–&lt;6 bln)</th>
+        <th style="padding:9px;border:1px solid rgba(255,255,255,.1)">&gt;6–10 kg<br>(6–12 bln)</th>
+        <th style="padding:9px;border:1px solid rgba(255,255,255,.1)">&gt;10–17 kg<br>(&lt;5 thn)</th>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,.06)">
+        <td rowspan="2" style="padding:9px;font-weight:700;color:#FAD7A0;border:1px solid rgba(255,255,255,.06)">Falsiparum<br>(Lini 1)</td>
+        <td style="padding:9px;border:1px solid rgba(255,255,255,.06)">DHP</td>
+        <td style="padding:9px;border:1px solid rgba(255,255,255,.06)">1–3</td>
+        <td style="padding:9px;text-align:center;border:1px solid rgba(255,255,255,.06)">⅓</td>
+        <td style="padding:9px;text-align:center;border:1px solid rgba(255,255,255,.06)">½</td>
+        <td style="padding:9px;text-align:center;border:1px solid rgba(255,255,255,.06)">½</td>
+        <td style="padding:9px;text-align:center;border:1px solid rgba(255,255,255,.06)">1</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,.06)">
+        <td style="padding:9px;border:1px solid rgba(255,255,255,.06)">Primakuin</td>
+        <td style="padding:9px;border:1px solid rgba(255,255,255,.06)">Hari 1 saja</td>
+        <td style="padding:9px;text-align:center;border:1px solid rgba(255,255,255,.06)">–</td>
+        <td style="padding:9px;text-align:center;border:1px solid rgba(255,255,255,.06)">–</td>
+        <td style="padding:9px;text-align:center;border:1px solid rgba(255,255,255,.06)">¼</td>
+        <td style="padding:9px;text-align:center;border:1px solid rgba(255,255,255,.06)">¼</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,.06)">
+        <td rowspan="2" style="padding:9px;font-weight:700;color:#80CBC4;border:1px solid rgba(255,255,255,.06)">Vivaks<br>(Lini 1)</td>
+        <td style="padding:9px;border:1px solid rgba(255,255,255,.06)">DHP</td>
+        <td style="padding:9px;border:1px solid rgba(255,255,255,.06)">1–3</td>
+        <td style="padding:9px;text-align:center;border:1px solid rgba(255,255,255,.06)">⅓</td>
+        <td style="padding:9px;text-align:center;border:1px solid rgba(255,255,255,.06)">½</td>
+        <td style="padding:9px;text-align:center;border:1px solid rgba(255,255,255,.06)">½</td>
+        <td style="padding:9px;text-align:center;border:1px solid rgba(255,255,255,.06)">1</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,.06)">
+        <td style="padding:9px;border:1px solid rgba(255,255,255,.06)">Primakuin</td>
+        <td style="padding:9px;border:1px solid rgba(255,255,255,.06)">1–14 hari</td>
+        <td style="padding:9px;text-align:center;border:1px solid rgba(255,255,255,.06)">–</td>
+        <td style="padding:9px;text-align:center;border:1px solid rgba(255,255,255,.06)">–</td>
+        <td style="padding:9px;text-align:center;border:1px solid rgba(255,255,255,.06)">¼</td>
+        <td style="padding:9px;text-align:center;border:1px solid rgba(255,255,255,.06)">¼</td>
+      </tr>
+      <tr>
+        <td rowspan="2" style="padding:9px;font-weight:700;color:#D2B4DE;border:1px solid rgba(255,255,255,.06)">Campuran<br>Falsi+Vivaks</td>
+        <td style="padding:9px;border:1px solid rgba(255,255,255,.06)">DHP</td>
+        <td style="padding:9px;border:1px solid rgba(255,255,255,.06)">1–3</td>
+        <td style="padding:9px;text-align:center;border:1px solid rgba(255,255,255,.06)">⅓</td>
+        <td style="padding:9px;text-align:center;border:1px solid rgba(255,255,255,.06)">½</td>
+        <td style="padding:9px;text-align:center;border:1px solid rgba(255,255,255,.06)">½</td>
+        <td style="padding:9px;text-align:center;border:1px solid rgba(255,255,255,.06)">1</td>
+      </tr>
+      <tr>
+        <td style="padding:9px;border:1px solid rgba(255,255,255,.06)">Primakuin</td>
+        <td style="padding:9px;border:1px solid rgba(255,255,255,.06)">1–14 hari</td>
+        <td style="padding:9px;text-align:center;border:1px solid rgba(255,255,255,.06)">–</td>
+        <td style="padding:9px;text-align:center;border:1px solid rgba(255,255,255,.06)">–</td>
+        <td style="padding:9px;text-align:center;border:1px solid rgba(255,255,255,.06)">¼</td>
+        <td style="padding:9px;text-align:center;border:1px solid rgba(255,255,255,.06)">¼</td>
+      </tr>
+    </table>
+  </div>
+
+  <h3 style="margin-top:16px">Artesunat IM/IV untuk Malaria Berat (Pra-Rujukan)</h3>
+  <div class="grid-2" style="margin-top:8px">
+    <div class="hl hl-red" style="border-radius:10px">
+      <strong>Dosis Artesunat Injeksi:</strong><br>
+      • Anak BB &lt; 20 kg: <strong>3 mg/kgBB/kali</strong><br>
+      • Anak BB ≥ 20 kg: 2,4 mg/kgBB/kali<br>
+      • Diberikan jam ke-0, 12, dan 24<br>
+      • Selanjutnya: 2,4 mg/kgBB/24 jam hingga bisa minum oral
+    </div>
+    <div class="hl hl-orange" style="border-radius:10px">
+      <strong>Jika rujukan tidak memungkinkan:</strong><br>
+      Lanjutkan Artesunat IM sesuai jadwal → Saat bisa makan/minum, ganti ke DHP oral selama 3 hari → Jika belum sadar dalam 3 hari, RUJUK SEGERA
+    </div>
+  </div>
+
+  <h3 style="margin-top:16px">Dosis Parasetamol untuk Demam ≥ 38°C</h3>
+  <div style="overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse;font-size:.78rem">
+      <tr style="background:rgba(0,150,136,.2)">
+        <th style="padding:8px;border:1px solid rgba(255,255,255,.1)">BB Anak</th>
+        <th style="padding:8px;border:1px solid rgba(255,255,255,.1)">Tablet 500 mg</th>
+        <th style="padding:8px;border:1px solid rgba(255,255,255,.1)">Tablet 100 mg</th>
+        <th style="padding:8px;border:1px solid rgba(255,255,255,.1)">Sirup 120 mg/5ml</th>
+        <th style="padding:8px;border:1px solid rgba(255,255,255,.1)">Frekuensi</th>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,.06)">
+        <td style="padding:8px;border:1px solid rgba(255,255,255,.06)">4 – &lt;7 kg</td>
+        <td style="padding:8px;text-align:center;border:1px solid rgba(255,255,255,.06)">⅛</td>
+        <td style="padding:8px;text-align:center;border:1px solid rgba(255,255,255,.06)">½</td>
+        <td style="padding:8px;text-align:center;border:1px solid rgba(255,255,255,.06)">2,5 ml</td>
+        <td rowspan="3" style="padding:8px;text-align:center;border:1px solid rgba(255,255,255,.06);color:#80CBC4">Setiap 6 jam sampai demam hilang</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,.06)">
+        <td style="padding:8px;border:1px solid rgba(255,255,255,.06)">7 – &lt;14 kg</td>
+        <td style="padding:8px;text-align:center;border:1px solid rgba(255,255,255,.06)">¼</td>
+        <td style="padding:8px;text-align:center;border:1px solid rgba(255,255,255,.06)">1</td>
+        <td style="padding:8px;text-align:center;border:1px solid rgba(255,255,255,.06)">5 ml</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;border:1px solid rgba(255,255,255,.06)">14 – &lt;19 kg</td>
+        <td style="padding:8px;text-align:center;border:1px solid rgba(255,255,255,.06)">½</td>
+        <td style="padding:8px;text-align:center;border:1px solid rgba(255,255,255,.06)">2</td>
+        <td style="padding:8px;text-align:center;border:1px solid rgba(255,255,255,.06)">7,5 ml</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- KUNJUNGAN ULANG & TINDAK LANJUT -->
+<div class="card">
+  <h2>🔄 BAGIAN 5 — Penulisan Kunjungan Ulang &amp; Tindak Lanjut Malaria</h2>
+  <div class="grid-2">
+    <div>
+      <h3>Kunjungan Ulang Malaria</h3>
+      <table style="width:100%;border-collapse:collapse;font-size:.8rem;margin-top:8px">
+        <tr style="background:rgba(0,150,136,.2)">
+          <th style="padding:8px;text-align:left">Klasifikasi</th>
+          <th style="padding:8px;text-align:center">Kunjungan Ulang</th>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,.06)">
+          <td style="padding:8px;color:#FAD7A0">Malaria (kuning)</td>
+          <td style="padding:8px;text-align:center;font-weight:700">3 hari</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,.06)">
+          <td style="padding:8px;color:#82E0AA">Demam Mungkin Bukan Malaria</td>
+          <td style="padding:8px;text-align:center;font-weight:700">3 hari</td>
+        </tr>
+        <tr>
+          <td style="padding:8px;color:#82E0AA">Demam Bukan Malaria (non endemis)</td>
+          <td style="padding:8px;text-align:center;font-weight:700">2 hari</td>
+        </tr>
+      </table>
+    </div>
+    <div>
+      <h3>Tindak Lanjut Malaria (Sesudah 3 Hari — Jika Masih Demam)</h3>
+      <div class="hl hl-orange" style="border-radius:8px;font-size:.8rem">
+        <strong>Periksa:</strong> Penilaian ulang lengkap + lab hitung parasit + cari penyebab lain<br><br>
+        <strong>Tindakan:</strong><br>
+        • Ada tanda bahaya/kaku kuduk → Penyakit Berat dengan Demam<br>
+        • Ada penyebab lain → obati penyebab<br>
+        • Hanya malaria + hasil mikroskopis <strong>positif falsiparum/vivaks</strong> → <strong>antimalaria lini 2</strong><br>
+        • Hasil mikroskopis <strong>negatif</strong> → <strong>RUJUK</strong> pemeriksaan lanjutan<br>
+        • Tetap demam &gt; 7 hari → <strong>RUJUK</strong>
+      </div>
+    </div>
+  </div>
+</div>
+
+</section>
+<!-- ══════════════════════════════════════
+     SIMULASI KASUS INTERAKTIF
+══════════════════════════════════════ -->
+<section id="simulasi">
+<div class="card">
+  <h2>🎭 Simulasi Kasus Interaktif — Malaria MTBS</h2>
+  <div class="hl hl-teal">Pilih kasus untuk berlatih mengisi formulir MTBS dan menentukan klasifikasi serta tindakan yang tepat.</div>
+  <div class="grid-2" style="margin-top:12px">
+    <div class="klas-card klas-kuning" style="cursor:pointer;transition:.2s" onclick="startCase(1)">
+      <div class="ikon">🟡</div>
+      <h3 style="color:#FAD7A0">KASUS 1 — Budi</h3>
+      <p>Anak laki-laki, 18 bulan, 10 kg<br>Demam 3 hari, daerah endemis rendah<br><em>Tingkat: Dasar</em></p>
+    </div>
+    <div class="klas-card klas-merah" style="cursor:pointer;transition:.2s" onclick="startCase(2)">
+      <div class="ikon">🔴</div>
+      <h3 style="color:#F1948A">KASUS 2 — Sari</h3>
+      <p>Anak perempuan, 2,5 tahun, 12 kg<br>Demam 2 hari + tidak bisa minum + riwayat kejang<br><em>Tingkat: Lanjut</em></p>
+    </div>
+  </div>
+</div>
+
+<div id="sim-area" style="display:none">
+  <div class="card" id="sim-header">
+    <div id="sim-case-title" style="font-size:1.1rem;font-weight:800;margin-bottom:8px"></div>
+    <div id="sim-progress" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px"></div>
+    <div id="sim-content"></div>
+  </div>
+</div>
+
+<script>
+const CASES = {
+  1: {
+    title: "🟡 Kasus 1 — Budi (18 bulan, 10 kg, Laki-laki)",
+    steps: [
+      {
+        type:"info",
+        title:"📋 Data Identitas",
+        content:`<div class="hl hl-blue" style="font-size:.82rem"><strong>Skenario:</strong><br>
+Ibu membawa Budi (L, 18 bulan) ke Puskesmas di daerah <strong>endemis malaria rendah</strong>.<br>
+BB: 10 kg | PB: 78 cm | Suhu: 38,5°C | LiLA: 13 cm<br>
+Keluhan: <em>"Anak saya demam 3 hari, rewel, nafsu makan turun"</em></div>
+<div class="hl hl-teal" style="margin-top:8px;font-size:.82rem">✏️ <strong>Isi formulir:</strong> Tulis nama, centang kunjungan pertama, lingkari daerah <strong>Endemis Rendah</strong>, siapkan RDT Malaria</div>`,
+        q: null
+      },
+      {
+        type:"quiz",
+        title:"🚨 Langkah 1 — Pemeriksaan SAGA",
+        content:`<div class="hl hl-blue" style="font-size:.82rem"><strong>Temuan pemeriksaan:</strong><br>
+• Anak <strong>rewel</strong> tapi masih bisa berinteraksi<br>
+• Masih bisa minum/menyusu<br>
+• Tidak memuntahkan semua makanan<br>
+• <strong>Tidak kejang</strong><br>
+• Dinding dada: <strong>tidak ada tarikan</strong><br>
+• Sirkulasi: kulit <strong>normal, tidak pucat, tidak sianosis</strong></div>`,
+        question: "Berdasarkan pemeriksaan SAGA, klasifikasi Budi adalah...",
+        options: ["🔴 Penyakit Sangat Berat — RUJUK SEGERA", "🟡 Perlu pemeriksaan lebih lanjut (STABIL)", "🟢 Gagal Jantung Paru", "🔴 Infeksi Bakteri Berat"],
+        correct: 1,
+        explanation: "STABIL: tidak ada tanda bahaya pada komponen Penampilan, Usaha Napas, maupun Sirkulasi. Lanjutkan penilaian berikutnya. Tidak perlu tindakan SAGA."
+      },
+      {
+        type:"quiz",
+        title:"💨 Langkah 2 — Batuk &amp; Napas",
+        content:`<div class="hl hl-blue" style="font-size:.82rem"><strong>Temuan:</strong><br>
+• Tidak ada batuk<br>• Tidak ada sukar bernapas<br>• Laju napas: 32x/menit (normal untuk usianya &lt; 40x/menit)<br>• Saturasi O₂: 98%</div>`,
+        question: "Untuk masalah batuk/napas, Budi diklasifikasikan sebagai...",
+        options: ["Pneumonia Berat", "Pneumonia", "Batuk Bukan Pneumonia", "Tidak ada masalah batuk/napas — lanjut penilaian berikutnya"],
+        correct: 3,
+        explanation: "Budi tidak memiliki keluhan batuk maupun sukar bernapas. Tidak ada napas cepat, tidak ada tarikan dinding dada. Lanjutkan ke penilaian demam."
+      },
+      {
+        type:"quiz",
+        title:"🌡️ Langkah 3 — Penilaian Demam (Malaria)",
+        content:`<div class="hl hl-orange" style="font-size:.82rem"><strong>Temuan:</strong><br>
+• Demam sejak 3 hari (suhu aksila 38,5°C)<br>
+• <strong>Tidak ada kaku kuduk</strong><br>
+• Tidak ada tanda bahaya umum<br>
+• Daerah: <strong>Endemis Malaria Rendah</strong><br>
+• Tidak ditemukan penyebab pasti demam lain<br>
+• → Lakukan RDT Malaria<br>
+• Hasil RDT: <strong>POSITIF (P. falciparum)</strong></div>`,
+        question: "Klasifikasi demam Budi yang paling tepat adalah...",
+        options: ["🔴 Penyakit Berat dengan Demam", "🟡 MALARIA", "🟢 Demam Mungkin Bukan Malaria", "🟢 Demam Bukan Malaria"],
+        correct: 1,
+        explanation: "Demam + RDT POSITIF + tidak ada tanda bahaya + tidak ada kaku kuduk → Klasifikasi: MALARIA (Kuning). Meskipun daerah endemis rendah, karena RDT positif maka tetap diklasifikasikan MALARIA."
+      },
+      {
+        type:"quiz",
+        title:"💊 Langkah 4 — Tindakan/Pengobatan",
+        content:`<div class="hl hl-yellow" style="font-size:.82rem">Budi diklasifikasikan <strong>MALARIA</strong> (Kuning), BB 10 kg (masuk kelompok >6–10 kg).<br>
+Spesies: P. falciparum, Lini Pertama: DHP + Primakuin</div>`,
+        question: "Dosis DHP yang diberikan untuk Budi (BB 10 kg) adalah...",
+        options: ["½ tablet DHP 1x/hari selama 3 hari + Primakuin ¼ tab hari 1", "1 tablet DHP 1x/hari selama 3 hari + Primakuin ¼ tab hari 1", "⅓ tablet DHP 1x/hari selama 3 hari", "½ tablet DHP 2x/hari selama 5 hari"],
+        correct: 0,
+        explanation: "BB >6–10 kg → DHP ½ tablet 1x/hari selama 3 hari. Primakuin ¼ tablet diberikan hanya pada hari ke-1 saja (untuk falsiparum). Semua antimalaria diberikan sesudah makan."
+      },
+      {
+        type:"result",
+        title:"✅ Hasil Pengisian Formulir — Budi",
+        content:`<div style="background:rgba(243,156,18,.08);border:1px solid rgba(243,156,18,.3);border-radius:12px;padding:16px;font-size:.82rem">
+<table style="width:100%;border-collapse:collapse">
+<tr style="border-bottom:1px solid rgba(255,255,255,.1)"><td style="padding:6px;font-weight:700;width:35%;color:var(--teal2)">Identitas</td><td style="padding:6px;color:var(--muted)">Budi, L, 18 bulan, BB 10 kg, PB 78 cm, Suhu 38,5°C, LiLA 13 cm | Kunjungan Pertama ✓ | Endemis Rendah (lingkari) | RDT: (+)</td></tr>
+<tr style="border-bottom:1px solid rgba(255,255,255,.1)"><td style="padding:6px;font-weight:700;color:var(--teal2)">Keluhan</td><td style="padding:6px;color:var(--muted)">Demam 3 hari, rewel, nafsu makan turun</td></tr>
+<tr style="border-bottom:1px solid rgba(255,255,255,.1)"><td style="padding:6px;font-weight:700;color:var(--teal2)">SAGA</td><td style="padding:6px;color:#82E0AA">STABIL (tidak ada tanda bahaya)</td></tr>
+<tr style="border-bottom:1px solid rgba(255,255,255,.1)"><td style="padding:6px;font-weight:700;color:var(--teal2)">Batuk/Napas</td><td style="padding:6px;color:#82E0AA">Tidak ada masalah</td></tr>
+<tr style="border-bottom:1px solid rgba(255,255,255,.1)"><td style="padding:6px;font-weight:700;color:var(--teal2)">Demam — Klasifikasi</td><td style="padding:6px"><span style="background:rgba(243,156,18,.2);color:#FAD7A0;padding:2px 10px;border-radius:99px;font-weight:700">🟡 MALARIA</span></td></tr>
+<tr style="border-bottom:1px solid rgba(255,255,255,.1)"><td style="padding:6px;font-weight:700;color:var(--teal2)">Tindakan</td><td style="padding:6px;color:var(--muted)">• DHP ½ tab 1x/hari × 3 hari (sesudah makan)<br>• Primakuin ¼ tab hari ke-1 (sesudah makan)<br>• Parasetamol ¼ tab 500mg (atau 1 tab 100mg) setiap 6 jam bila suhu ≥38°C<br>• Nasihati ibu: obat harus diminum habis, pemberian sesudah makan</td></tr>
+<tr><td style="padding:6px;font-weight:700;color:var(--teal2)">Kunjungan Ulang</td><td style="padding:6px;color:#FAD7A0"><strong>3 hari</strong> — jika masih demam: penilaian ulang + lab mikroskopis + pertimbangkan lini 2</td></tr>
+</table></div>
+<div class="hl hl-green" style="margin-top:12px">🎉 <strong>Selamat!</strong> Anda berhasil menyelesaikan Kasus 1. Budi mendapat tatalaksana MALARIA (Kuning) rawat jalan.</div>`
+      }
+    ]
+  },
+  2: {
+    title: "🔴 Kasus 2 — Sari (2,5 tahun, 12 kg, Perempuan)",
+    steps: [
+      {
+        type:"info",
+        title:"📋 Data Identitas",
+        content:`<div class="hl hl-red" style="font-size:.82rem"><strong>⚠️ Skenario Kasus Gawat:</strong><br>
+Ibu membawa Sari (P, 2,5 tahun) ke Puskesmas di daerah <strong>endemis malaria tinggi</strong>.<br>
+BB: 12 kg | TB: 85 cm | Suhu: 39°C | LiLA: 14 cm<br>
+Keluhan: <em>"Anak demam 2 hari, tadi malam kejang sekali ±3 menit, sekarang lemas dan tidak mau minum"</em></div>
+<div class="hl hl-orange" style="margin-top:8px;font-size:.82rem">✏️ <strong>Isi formulir:</strong> Tulis identitas, centang kunjungan pertama, lingkari <strong>Endemis Tinggi</strong>. Siapkan RDT dan perhatikan SAGA segera!</div>`,
+        q: null
+      },
+      {
+        type:"quiz",
+        title:"🚨 Langkah 1 — Pemeriksaan SAGA (PRIORITAS)",
+        content:`<div class="hl hl-red" style="font-size:.82rem"><strong>Temuan SAGA:</strong><br>
+<strong>PENAMPILAN:</strong><br>
+• Anak tampak lemas, <strong>tidak mau berinteraksi</strong> (pandangan kosong) ✅<br>
+• Rewel dan tidak dapat ditenangkan ✅<br><br>
+<strong>USAHA NAPAS:</strong><br>
+• Tidak ada tarikan dinding dada ✗<br>
+• Tidak ada stridor ✗<br><br>
+<strong>SIRKULASI:</strong><br>
+• Kulit normal, tidak sianosis ✗<br><br>
+<strong>TANDA BAHAYA:</strong><br>
+• Tidak bisa minum (lemas, menolak minum) ✅<br>
+• Riwayat <strong>kejang semalam</strong> ✅</div>`,
+        question: "Klasifikasi SAGA untuk Sari adalah...",
+        options: ["🟢 STABIL — lanjut penilaian biasa", "🔴 PENYAKIT SANGAT BERAT — ada tanda bahaya", "🟡 Perlu observasi 30 menit", "🔴 Gagal Jantung Paru — BHD langsung"],
+        correct: 1,
+        explanation: "PENYAKIT SANGAT BERAT: ditemukan ≥1 tanda bahaya: tidak bisa minum + riwayat kejang + gangguan penampilan (tidak bisa interaksi). Selesaikan penilaian dengan CEPAT dan lakukan penanganan pra-rujukan segera."
+      },
+      {
+        type:"quiz",
+        title:"🌡️ Langkah 2 — Penilaian Demam (CEPAT)",
+        content:`<div class="hl hl-red" style="font-size:.82rem"><strong>Temuan demam (penilaian cepat):</strong><br>
+• Demam 2 hari, suhu 39°C<br>
+• Daerah: <strong>Endemis Malaria TINGGI</strong><br>
+• Ada tanda bahaya umum (tidak bisa minum, riwayat kejang)<br>
+• Kaku kuduk: <strong>ditemukan</strong> ✅<br>
+• RDT: <strong>POSITIF</strong> (tidak wajib sebelum memulai tindakan — tindakan pra-rujukan tidak boleh tertunda)</div>`,
+        question: "Klasifikasi demam Sari yang paling tepat adalah...",
+        options: ["🟡 MALARIA (kuning) — rawat jalan", "🔴 PENYAKIT BERAT DENGAN DEMAM (merah muda)", "🟢 Demam Mungkin Bukan Malaria", "🟡 Malaria dengan komplikasi ringan"],
+        correct: 1,
+        explanation: "Ada tanda bahaya umum (tidak bisa minum, kejang) + kaku kuduk → PENYAKIT BERAT DENGAN DEMAM (Merah Muda). Kondisi ini memerlukan tindakan pra-rujukan SEGERA dan rujukan tanpa penundaan."
+      },
+      {
+        type:"quiz",
+        title:"🏥 Langkah 3 — Tindakan Pra-Rujukan",
+        content:`<div class="hl hl-red" style="font-size:.82rem">Sari: BB 12 kg, PENYAKIT BERAT DENGAN DEMAM, ada riwayat kejang<br>
+Saat ini tidak dalam kondisi kejang aktif. Suhu 39°C.</div>`,
+        question: "Urutan tindakan pra-rujukan yang BENAR untuk Sari adalah...",
+        options: [
+          "Berikan antimalaria oral → tunggu 1 jam → rujuk jika tidak membaik",
+          "Artesunat IM (dosis 3mg/kgBB=36mg) + cegah hipoglikemia + parasetamol + RUJUK SEGERA",
+          "Infus RL 500ml + diazepam IV profilaksis + tunggu hasil lab → baru rujuk",
+          "Pasang IV line → berikan DHP oral → observasi 2 jam di Puskesmas"
+        ],
+        correct: 1,
+        explanation: "Tindakan pra-rujukan malaria berat (anak BB <20kg): Artesunat IM 3mg/kgBB = 3×12 = 36mg. Selain itu: cegah hipoglikemia (ASI/air gula jika masih bisa menelan, atau NGT), Parasetamol untuk demam ≥38°C. RUJUK SEGERA — jangan tunda!"}
+      ,
+      {
+        type:"result",
+        title:"✅ Hasil Pengisian Formulir — Sari",
+        content:`<div style="background:rgba(192,57,43,.08);border:1px solid rgba(192,57,43,.3);border-radius:12px;padding:16px;font-size:.82rem">
+<table style="width:100%;border-collapse:collapse">
+<tr style="border-bottom:1px solid rgba(255,255,255,.1)"><td style="padding:6px;font-weight:700;width:35%;color:var(--teal2)">Identitas</td><td style="padding:6px;color:var(--muted)">Sari, P, 2,5 thn, BB 12 kg, TB 85 cm, Suhu 39°C, LiLA 14 cm | Kunjungan Pertama ✓ | Endemis Tinggi (lingkari) | RDT: (+)</td></tr>
+<tr style="border-bottom:1px solid rgba(255,255,255,.1)"><td style="padding:6px;font-weight:700;color:var(--teal2)">Keluhan</td><td style="padding:6px;color:var(--muted)">Demam 2 hari, kejang semalam ±3 mnt, lemas, tidak mau minum</td></tr>
+<tr style="border-bottom:1px solid rgba(255,255,255,.1)"><td style="padding:6px;font-weight:700;color:var(--teal2)">SAGA</td><td style="padding:6px"><span style="background:rgba(192,57,43,.2);color:#F1948A;padding:2px 8px;border-radius:99px;font-weight:700">🔴 PENYAKIT SANGAT BERAT</span></td></tr>
+<tr style="border-bottom:1px solid rgba(255,255,255,.1)"><td style="padding:6px;font-weight:700;color:var(--teal2)">Demam — Klasifikasi</td><td style="padding:6px"><span style="background:rgba(192,57,43,.2);color:#F1948A;padding:2px 8px;border-radius:99px;font-weight:700">🔴 PENYAKIT BERAT DENGAN DEMAM</span></td></tr>
+<tr style="border-bottom:1px solid rgba(255,255,255,.1)"><td style="padding:6px;font-weight:700;color:var(--teal2)">Tindakan Pra-Rujukan</td><td style="padding:6px;color:var(--muted)">1. Artesunat IM 36 mg (3 mg/kgBB × 12 kg) — dosis ke-0<br>2. Cegah hipoglikemia: beri air gula 50 ml via NGT/oral (jika tidak bisa menelan)<br>3. Parasetamol ¼ tab 500mg atau 1 tab 100mg (demam ≥38°C)<br>4. Jaga tubuh tetap hangat<br>5. Pasang oksigen bila ada gangguan napas</td></tr>
+<tr><td style="padding:6px;font-weight:700;color:var(--teal2)">Kunjungan Ulang</td><td style="padding:6px;color:#F1948A"><strong>RUJUK SEGERA ke Rumah Sakit</strong><br>Jelaskan kepada ibu: kondisi anak serius, perlu perawatan di RS</td></tr>
+</table></div>
+<div class="hl hl-red" style="margin-top:12px">⚠️ <strong>Ingat:</strong> Seorang anak dengan tanda bahaya umum memerlukan penanganan SEGERA. Selesaikan seluruh penilaian secara cepat dan lakukan penanganan pra-rujukan, sehingga rujukan tidak tertunda.</div>
+<div class="hl hl-green" style="margin-top:8px">🎉 <strong>Selamat!</strong> Anda berhasil menyelesaikan Kasus 2 yang lebih kompleks. Penanganan cepat &amp; tepat dapat menyelamatkan nyawa Sari.</div>`
+      }
+    ]
+  }
+};
+
+let currentCase = null;
+let currentStep = 0;
+let stepAnswered = [];
+
+function startCase(n) {
+  currentCase = n;
+  currentStep = 0;
+  stepAnswered = new Array(CASES[n].steps.length).fill(false);
+  document.getElementById('sim-area').style.display = 'block';
+  document.getElementById('sim-header').scrollIntoView({behavior:'smooth'});
+  renderStep();
+}
+
+function renderStep() {
+  const c = CASES[currentCase];
+  const step = c.steps[currentStep];
+  document.getElementById('sim-case-title').innerHTML = c.title;
+
+  // Progress dots
+  let prog = '';
+  c.steps.forEach((s,i) => {
+    let bg = i < currentStep ? 'var(--green)' : i === currentStep ? 'var(--teal2)' : 'rgba(255,255,255,.2)';
+    prog += '<div style="width:24px;height:24px;border-radius:50%;background:'+bg+';display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700">'+(i+1)+'</div>';
+  });
+  document.getElementById('sim-progress').innerHTML = prog;
+
+  let html = '<div class="hl hl-teal" style="margin-bottom:14px"><strong>'+step.title+'</strong></div>';
+  html += step.content;
+
+  if (step.type === 'quiz' && !stepAnswered[currentStep]) {
+    html += '<div style="margin-top:14px"><p style="font-size:.85rem;font-weight:700;margin-bottom:10px">'+step.question+'</p>';
+    step.options.forEach((o, i) => {
+      html += '<div class="opt" id="sopt'+i+'" onclick="answerSim('+i+')"><span class="opt-key">'+String.fromCharCode(65+i)+'.</span>'+o+'</div>';
+    });
+    html += '</div>';
+  } else if ((step.type === 'quiz' && stepAnswered[currentStep]) || step.type === 'result') {
+    if (step.type === 'quiz') {
+      html += '<div style="margin-top:14px"><p style="font-size:.85rem;font-weight:700;margin-bottom:10px">'+step.question+'</p>';
+      step.options.forEach((o, i) => {
+        let cls = i === step.correct ? ' correct' : '';
+        html += '<div class="opt'+cls+'"><span class="opt-key">'+String.fromCharCode(65+i)+'.</span>'+o+'</div>';
+      });
+      html += '<div class="explain" style="display:block;margin-top:10px">💡 '+step.explanation+'</div></div>';
+    }
+    if (currentStep < CASES[currentCase].steps.length - 1) {
+      html += '<button onclick="nextStep()" style="margin-top:14px;padding:10px 24px;background:var(--teal);border:none;border-radius:20px;color:#fff;font-weight:700;cursor:pointer">Lanjut ke Langkah Berikutnya →</button>';
+    }
+  }
+
+  if (step.type === 'info') {
+    html += '<button onclick="nextStep()" style="margin-top:14px;padding:10px 24px;background:var(--teal);border:none;border-radius:20px;color:#fff;font-weight:700;cursor:pointer">Mulai Pemeriksaan →</button>';
+  }
+
+  document.getElementById('sim-content').innerHTML = html;
+}
+
+function answerSim(i) {
+  const step = CASES[currentCase].steps[currentStep];
+  stepAnswered[currentStep] = true;
+  let html = '<p style="font-size:.85rem;font-weight:700;margin-bottom:10px">'+step.question+'</p>';
+  step.options.forEach((o, j) => {
+    let cls = j === step.correct ? ' correct' : (j === i && i !== step.correct ? ' wrong' : '');
+    html += '<div class="opt'+cls+'"><span class="opt-key">'+String.fromCharCode(65+j)+'.</span>'+o+'</div>';
+  });
+  html += '<div class="explain" style="display:block;margin-top:10px">💡 '+step.explanation+'</div>';
+  if (currentStep < CASES[currentCase].steps.length - 1) {
+    html += '<button onclick="nextStep()" style="margin-top:14px;padding:10px 24px;background:var(--teal);border:none;border-radius:20px;color:#fff;font-weight:700;cursor:pointer">Lanjut ke Langkah Berikutnya →</button>';
+  }
+  const prev = document.getElementById('sim-content').innerHTML.split('<div style="margin-top:14px">')[0];
+  document.getElementById('sim-content').innerHTML = prev + '<div style="margin-top:14px">' + html + '</div>';
+}
+
+function nextStep() {
+  currentStep++;
+  renderStep();
+  document.getElementById('sim-area').scrollIntoView({behavior:'smooth'});
+}
+</script>
+</section>
+</body>
+</html>
