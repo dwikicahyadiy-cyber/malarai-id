@@ -263,4 +263,8 @@ async function deployAll(){
     dstatus('');
   }catch(err){ dlog('❌ '+err.message); dstatus('❌ '+err.message,'#f87171'); btn.disabled=false; btn.textContent='🚀 Deploy & Buat Link'; }
 }
-function copyLink(){ const u=document.getElementById('final-url-
+function copyLink(){ const u=document.getElementById('final-url-text').textContent; navigator.clipboard.writeText(u).then(()=>{ const b=document.getElementById('copy-btn'); b.textContent='✅ Tersalin'; b.classList.add('copied'); setTimeout(()=>{b.textContent='📋 Salin';b.classList.remove('copied');},2200); }); }
+function shareWA(){ const u=document.getElementById('final-url-text').textContent; window.open('https://wa.me/?text='+encodeURIComponent('Materi & Aplikasi Pelatihan Malaria (MalarAI-ID): '+u),'_blank'); }
+</script>
+</body>
+</html>
