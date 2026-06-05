@@ -1,0 +1,1705 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MalarAI-ID · Mockup UI/UX Aplikasi</title>
+<style>
+  /* ===== GLOBAL ===== */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #0f172a;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ===== HEADER DESKTOP ===== */
+  .desktop-header {
+    width: 100%;
+    background: #1e293b;
+    border-bottom: 1px solid #334155;
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .desktop-logo { color: #f1f5f9; font-weight: 800; font-size: 1.1rem; }
+  .desktop-logo span { color: #2dd4bf; }
+  .screen-nav { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .screen-btn {
+    background: #334155;
+    color: #94a3b8;
+    border: none;
+    border-radius: 8px;
+    padding: 0.4rem 0.9rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .screen-btn:hover { background: #475569; color: #f1f5f9; }
+  .screen-btn.active { background: #0d9488; color: white; }
+
+  /* ===== PHONE FRAME ===== */
+  .stage {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 2rem 1rem;
+    gap: 3rem;
+    flex-wrap: wrap;
+  }
+  .phone-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .phone-label {
+    color: #64748b;
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .phone {
+    width: 360px;
+    height: 760px;
+    background: #111827;
+    border-radius: 44px;
+    border: 8px solid #1e293b;
+    box-shadow: 0 0 0 2px #334155, 0 40px 80px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.05);
+    position: relative;
+    overflow: hidden;
+  }
+  /* Notch */
+  .phone::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%; transform: translateX(-50%);
+    width: 120px; height: 28px;
+    background: #111827;
+    border-radius: 0 0 20px 20px;
+    z-index: 100;
+  }
+  .screen {
+    width: 100%;
+    height: 100%;
+    border-radius: 36px;
+    overflow: hidden;
+    position: relative;
+    display: none;
+    flex-direction: column;
+  }
+  .screen.active { display: flex; }
+
+  /* ===== STATUS BAR ===== */
+  .status-bar {
+    height: 44px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 0 1.5rem 0.3rem;
+    flex-shrink: 0;
+    font-size: 0.72rem;
+    font-weight: 700;
+  }
+  .status-bar .time { color: #f1f5f9; }
+  .status-icons { display: flex; gap: 0.3rem; align-items: center; color: #f1f5f9; font-size: 0.8rem; }
+
+  /* ===== BOTTOM NAV ===== */
+  .bottom-nav {
+    height: 70px;
+    background: #1e293b;
+    border-top: 1px solid #334155;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-shrink: 0;
+    padding: 0 0.5rem;
+  }
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    cursor: pointer;
+    padding: 0.4rem 0.8rem;
+    border-radius: 12px;
+    transition: background 0.2s;
+    flex: 1;
+  }
+  .nav-item:hover { background: #334155; }
+  .nav-item.nav-active { background: rgba(13,148,136,0.15); }
+  .nav-item .nav-icon { font-size: 1.3rem; }
+  .nav-item .nav-label { font-size: 0.62rem; font-weight: 600; color: #64748b; }
+  .nav-item.nav-active .nav-label { color: #2dd4bf; }
+
+  /* ===== SCROLL CONTENT ===== */
+  .scroll-content {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none;
+  }
+  .scroll-content::-webkit-scrollbar { display: none; }
+
+  /* ============================================================
+     SCREEN 1: SPLASH
+  ============================================================ */
+  #splash {
+    background: linear-gradient(160deg, #0f4c75 0%, #0d9488 60%, #065f46 100%);
+  }
+  .splash-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    padding: 2rem;
+  }
+  .splash-logo-ring {
+    width: 100px; height: 100px;
+    border-radius: 28px;
+    background: rgba(255,255,255,0.15);
+    border: 2px solid rgba(255,255,255,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  }
+  .splash-title { color: white; font-size: 2rem; font-weight: 900; text-align: center; line-height: 1.1; }
+  .splash-title span { color: #a7f3d0; }
+  .splash-sub { color: rgba(255,255,255,0.75); font-size: 0.88rem; text-align: center; line-height: 1.5; }
+  .splash-btn {
+    background: white;
+    color: #0d9488;
+    border: none;
+    border-radius: 16px;
+    padding: 1rem 2.5rem;
+    font-size: 0.95rem;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: inherit;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    margin-top: 1rem;
+    width: 100%;
+    transition: all 0.2s;
+  }
+  .splash-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+  .splash-version { color: rgba(255,255,255,0.4); font-size: 0.72rem; }
+
+  /* ============================================================
+     SCREEN 2: HOME DASHBOARD
+  ============================================================ */
+  #home { background: #0f172a; }
+  #home .status-bar { background: #0f172a; }
+
+  .home-header {
+    background: linear-gradient(135deg, #0f4c75, #0d9488);
+    padding: 1rem 1.25rem 2rem;
+    border-radius: 0 0 28px 28px;
+  }
+  .home-greeting { color: rgba(255,255,255,0.7); font-size: 0.8rem; }
+  .home-name { color: white; font-size: 1.15rem; font-weight: 800; margin-bottom: 1rem; }
+  .home-location {
+    display: flex; align-items: center; gap: 0.4rem;
+    background: rgba(255,255,255,0.12);
+    border-radius: 20px;
+    padding: 0.35rem 0.75rem;
+    width: fit-content;
+  }
+  .home-location span { color: rgba(255,255,255,0.85); font-size: 0.75rem; font-weight: 600; }
+
+  .home-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    margin-top: -0.75rem;
+  }
+  .stat-card {
+    background: #1e293b;
+    border-radius: 16px;
+    padding: 1rem;
+    border: 1px solid #334155;
+  }
+  .stat-card.highlight { background: linear-gradient(135deg, #0d9488, #0f766e); border: none; }
+  .stat-num { font-size: 1.6rem; font-weight: 900; color: #f1f5f9; }
+  .stat-label { font-size: 0.72rem; color: #64748b; margin-top: 0.15rem; }
+  .stat-card.highlight .stat-label { color: rgba(255,255,255,0.7); }
+  .stat-icon { font-size: 1.2rem; margin-bottom: 0.4rem; }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1.25rem 0.5rem;
+  }
+  .section-title-s { color: #f1f5f9; font-size: 0.9rem; font-weight: 700; }
+  .see-all { color: #2dd4bf; font-size: 0.75rem; font-weight: 600; cursor: pointer; }
+
+  .quick-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    padding: 0 1.25rem;
+    margin-bottom: 1rem;
+  }
+  .quick-btn {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 16px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+  }
+  .quick-btn:hover { background: #334155; border-color: #2dd4bf; }
+  .quick-btn-icon { font-size: 1.6rem; }
+  .quick-btn-label { color: #e2e8f0; font-size: 0.82rem; font-weight: 700; line-height: 1.2; }
+  .quick-btn-sub { color: #64748b; font-size: 0.72rem; }
+  .quick-btn.primary { background: linear-gradient(135deg, #0d9488, #0891b2); border: none; }
+  .quick-btn.primary .quick-btn-label { color: white; }
+  .quick-btn.primary .quick-btn-sub { color: rgba(255,255,255,0.65); }
+
+  .recent-list { padding: 0 1.25rem 1rem; }
+  .recent-item {
+    background: #1e293b;
+    border-radius: 14px;
+    padding: 0.85rem 1rem;
+    margin-bottom: 0.6rem;
+    border: 1px solid #334155;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .recent-icon {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+  .recent-info { flex: 1; min-width: 0; }
+  .recent-name { color: #f1f5f9; font-size: 0.83rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .recent-meta { color: #64748b; font-size: 0.72rem; margin-top: 0.1rem; }
+  .recent-badge {
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 0.25rem 0.6rem;
+    border-radius: 8px;
+    flex-shrink: 0;
+  }
+  .badge-falci { background: rgba(59,130,246,0.2); color: #93c5fd; }
+  .badge-vivax { background: rgba(34,197,94,0.2); color: #86efac; }
+  .badge-knowlesi { background: rgba(239,68,68,0.2); color: #fca5a5; }
+  .badge-neg { background: rgba(100,116,139,0.2); color: #94a3b8; }
+
+  /* ============================================================
+     SCREEN 3: KAMERA / SCAN
+  ============================================================ */
+  #kamera { background: #000; }
+  #kamera .status-bar { background: transparent; position: absolute; top: 0; left: 0; right: 0; z-index: 10; }
+
+  .camera-viewfinder {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .camera-bg-circles {
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    top: -50%;
+    left: -50%;
+  }
+  .circle-cell {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .scan-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+  }
+  .scan-frame {
+    width: 240px; height: 240px;
+    position: relative;
+  }
+  .scan-frame::before, .scan-frame::after {
+    content: '';
+    position: absolute;
+    width: 40px; height: 40px;
+    border-color: #2dd4bf;
+    border-style: solid;
+  }
+  .scan-frame::before { top: 0; left: 0; border-width: 3px 0 0 3px; border-radius: 8px 0 0 0; }
+  .scan-frame::after { bottom: 0; right: 0; border-width: 0 3px 3px 0; border-radius: 0 0 8px 0; }
+  .scan-corner-tr {
+    position: absolute; top: 0; right: 0; width: 40px; height: 40px;
+    border-top: 3px solid #2dd4bf; border-right: 3px solid #2dd4bf;
+    border-radius: 0 8px 0 0;
+  }
+  .scan-corner-bl {
+    position: absolute; bottom: 0; left: 0; width: 40px; height: 40px;
+    border-bottom: 3px solid #2dd4bf; border-left: 3px solid #2dd4bf;
+    border-radius: 0 0 0 8px;
+  }
+  .scan-line {
+    position: absolute;
+    left: 3px; right: 3px;
+    height: 2px;
+    background: linear-gradient(to right, transparent, #2dd4bf, transparent);
+    top: 50%;
+    animation: scanMove 2s ease-in-out infinite;
+  }
+  @keyframes scanMove {
+    0%, 100% { top: 10%; }
+    50% { top: 90%; }
+  }
+
+  .scan-cells {
+    position: absolute;
+    inset: 10px;
+  }
+  .cell-dot {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+  }
+  .cell-dot.infected {
+    background: rgba(239,68,68,0.3);
+    border-color: rgba(239,68,68,0.6);
+    box-shadow: 0 0 8px rgba(239,68,68,0.4);
+  }
+  .cell-dot.detected {
+    box-shadow: 0 0 0 2px #2dd4bf, 0 0 12px rgba(45,212,191,0.4);
+  }
+
+  .cam-top-bar {
+    position: absolute;
+    top: 50px; left: 0; right: 0;
+    z-index: 10;
+    padding: 0.75rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .cam-badge {
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 20px;
+    padding: 0.35rem 0.85rem;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  .cam-badge.online { border-color: #2dd4bf; color: #2dd4bf; }
+  .cam-quality-bar {
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(8px);
+    border-radius: 12px;
+    padding: 0.4rem 0.75rem;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .quality-dots { display: flex; gap: 3px; }
+  .qdot { width: 6px; height: 6px; border-radius: 50%; background: #334155; }
+  .qdot.good { background: #2dd4bf; }
+
+  .cam-instruction {
+    position: absolute;
+    z-index: 10;
+    bottom: 200px; left: 1.25rem; right: 1.25rem;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
+    padding: 0.75rem 1rem;
+    text-align: center;
+  }
+  .cam-instruction p { color: rgba(255,255,255,0.85); font-size: 0.8rem; line-height: 1.4; }
+  .cam-instruction strong { color: #2dd4bf; }
+
+  .cam-controls {
+    position: absolute;
+    bottom: 60px; left: 0; right: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0 2rem;
+  }
+  .cam-btn-side {
+    width: 50px; height: 50px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem;
+    cursor: pointer;
+    color: white;
+  }
+  .cam-btn-main {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    background: white;
+    border: none;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.8rem;
+    cursor: pointer;
+    box-shadow: 0 0 0 6px rgba(255,255,255,0.2);
+  }
+  .cam-progress {
+    position: absolute;
+    bottom: 145px; left: 1.25rem; right: 1.25rem;
+    z-index: 10;
+  }
+  .cam-progress-label { color: rgba(255,255,255,0.6); font-size: 0.7rem; margin-bottom: 0.35rem; display: flex; justify-content: space-between; }
+  .cam-progress-bar { height: 4px; background: rgba(255,255,255,0.15); border-radius: 2px; overflow: hidden; }
+  .cam-progress-fill { height: 100%; width: 35%; background: linear-gradient(to right, #0d9488, #2dd4bf); border-radius: 2px; }
+
+  /* ============================================================
+     SCREEN 4: ANALISIS (LOADING)
+  ============================================================ */
+  #analisis { background: #0f172a; }
+
+  .analysis-header {
+    background: #1e293b;
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    border-bottom: 1px solid #334155;
+  }
+  .back-btn { color: #2dd4bf; font-size: 1.2rem; cursor: pointer; }
+  .analysis-header-text h3 { color: #f1f5f9; font-size: 0.95rem; font-weight: 700; }
+  .analysis-header-text p { color: #64748b; font-size: 0.75rem; }
+
+  .analysis-patient-card {
+    margin: 1rem 1.25rem;
+    background: #1e293b;
+    border-radius: 16px;
+    padding: 1rem;
+    border: 1px solid #334155;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .patient-avatar {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #0d9488, #0891b2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+  }
+  .patient-name { color: #f1f5f9; font-size: 0.9rem; font-weight: 700; }
+  .patient-meta { color: #64748b; font-size: 0.73rem; margin-top: 0.1rem; }
+
+  .ai-processing-box {
+    margin: 0 1.25rem;
+    background: linear-gradient(135deg, #0f2027, #1a3a4c);
+    border-radius: 20px;
+    padding: 1.5rem 1.25rem;
+    border: 1px solid #1e4a5c;
+    text-align: center;
+  }
+  .ai-brain-anim {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #0d9488 0%, #0f4c75 70%);
+    margin: 0 auto 1rem;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2.2rem;
+    position: relative;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(13,148,136,0.4); }
+    50% { box-shadow: 0 0 0 20px rgba(13,148,136,0); }
+  }
+  .ai-spin-ring {
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    border-top-color: #2dd4bf;
+    border-right-color: #2dd4bf;
+    animation: spin 1.5s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .ai-status-text { color: #e2e8f0; font-size: 0.9rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .ai-status-sub { color: #64748b; font-size: 0.78rem; margin-bottom: 1.25rem; }
+
+  .ai-steps { text-align: left; display: flex; flex-direction: column; gap: 0.5rem; }
+  .ai-step {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.6rem 0.75rem;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.03);
+  }
+  .ai-step-icon { width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; flex-shrink: 0; }
+  .ai-step-icon.done { background: rgba(13,148,136,0.2); }
+  .ai-step-icon.active { background: rgba(13,148,136,0.3); animation: pulse 1.5s infinite; }
+  .ai-step-icon.pending { background: rgba(255,255,255,0.05); }
+  .ai-step-label { color: #94a3b8; font-size: 0.8rem; font-weight: 600; }
+  .ai-step.done-step .ai-step-label { color: #2dd4bf; }
+  .ai-step.active-step .ai-step-label { color: #f1f5f9; }
+
+  .image-grid {
+    margin: 1rem 1.25rem;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.4rem;
+  }
+  .img-thumb {
+    aspect-ratio: 1;
+    border-radius: 8px;
+    background: #1e293b;
+    border: 1px solid #334155;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .img-thumb.processed { border-color: #0d9488; }
+  .img-thumb.processing { border-color: #2dd4bf; border-style: dashed; }
+  .img-thumb-count {
+    position: absolute; inset: 0;
+    background: rgba(13,148,136,0.8);
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-size: 0.7rem; font-weight: 700;
+  }
+
+  /* ============================================================
+     SCREEN 5: HASIL
+  ============================================================ */
+  #hasil { background: #0f172a; }
+
+  .result-header {
+    background: linear-gradient(135deg, #1a3a5c, #0d9488);
+    padding: 1rem 1.25rem 2rem;
+    position: relative;
+  }
+  .result-header-top { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .result-title { color: white; font-size: 0.95rem; font-weight: 700; }
+  .result-sub { color: rgba(255,255,255,0.65); font-size: 0.73rem; }
+
+  .result-main-card {
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .result-species-icon {
+    width: 60px; height: 60px;
+    border-radius: 16px;
+    background: rgba(255,255,255,0.15);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.8rem;
+    flex-shrink: 0;
+  }
+  .result-species-name { color: white; font-size: 1.1rem; font-weight: 900; }
+  .result-species-latin { color: rgba(255,255,255,0.65); font-style: italic; font-size: 0.78rem; }
+  .result-confidence {
+    margin-top: 0.5rem;
+    background: rgba(255,255,255,0.15);
+    border-radius: 20px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #a7f3d0;
+    display: inline-block;
+  }
+
+  .result-body { padding: 0 1.25rem; margin-top: -0.75rem; }
+
+  .result-alert-box {
+    background: rgba(239,68,68,0.1);
+    border: 1px solid rgba(239,68,68,0.3);
+    border-radius: 14px;
+    padding: 0.85rem 1rem;
+    margin-bottom: 0.75rem;
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+  .result-alert-box.warning {
+    background: rgba(245,158,11,0.1);
+    border-color: rgba(245,158,11,0.3);
+  }
+  .result-alert-box.success {
+    background: rgba(13,148,136,0.1);
+    border-color: rgba(13,148,136,0.3);
+  }
+  .alert-icon { font-size: 1.2rem; flex-shrink: 0; }
+  .alert-content { flex: 1; }
+  .alert-title-r { color: #fca5a5; font-size: 0.82rem; font-weight: 700; }
+  .result-alert-box.warning .alert-title-r { color: #fcd34d; }
+  .result-alert-box.success .alert-title-r { color: #2dd4bf; }
+  .alert-desc { color: #94a3b8; font-size: 0.73rem; margin-top: 0.15rem; line-height: 1.4; }
+
+  .metrics-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+    margin-bottom: 0.75rem;
+  }
+  .metric-card {
+    background: #1e293b;
+    border-radius: 14px;
+    padding: 0.85rem;
+    border: 1px solid #334155;
+    text-align: center;
+  }
+  .metric-val { color: #f1f5f9; font-size: 1.25rem; font-weight: 900; }
+  .metric-val.danger { color: #f87171; }
+  .metric-val.warn { color: #fbbf24; }
+  .metric-label { color: #64748b; font-size: 0.7rem; margin-top: 0.1rem; }
+
+  .stadium-list { margin-bottom: 0.75rem; }
+  .stadium-item {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid #1e293b;
+  }
+  .stadium-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .stadium-name { color: #94a3b8; font-size: 0.8rem; flex: 1; }
+  .stadium-pct { color: #f1f5f9; font-size: 0.8rem; font-weight: 700; }
+  .stadium-bar-wrap { width: 60px; height: 4px; background: #334155; border-radius: 2px; }
+  .stadium-bar { height: 100%; border-radius: 2px; }
+
+  .xai-card {
+    background: #1e293b;
+    border-radius: 16px;
+    padding: 1rem;
+    border: 1px solid #334155;
+    margin-bottom: 0.75rem;
+  }
+  .xai-title { color: #94a3b8; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.75rem; }
+  .xai-img-placeholder {
+    width: 100%; height: 110px;
+    background: linear-gradient(135deg, #0f2027, #1a3a4c);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .xai-cells {
+    position: absolute; inset: 0;
+    display: flex; flex-wrap: wrap; gap: 4px; padding: 8px; align-content: center; justify-content: center;
+  }
+  .xai-cell {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    position: relative;
+  }
+  .xai-cell.hot {
+    background: rgba(239,68,68,0.4);
+    border-color: #f87171;
+    box-shadow: 0 0 10px rgba(239,68,68,0.5);
+  }
+  .xai-cell.warm {
+    background: rgba(245,158,11,0.3);
+    border-color: #fbbf24;
+  }
+  .xai-label-overlay {
+    position: absolute;
+    bottom: 6px; right: 8px;
+    background: rgba(0,0,0,0.7);
+    color: #2dd4bf;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 0.2rem 0.5rem;
+    border-radius: 6px;
+  }
+  .xai-legend { display: flex; gap: 0.75rem; margin-top: 0.5rem; flex-wrap: wrap; }
+  .xai-leg { display: flex; align-items: center; gap: 0.3rem; font-size: 0.68rem; color: #64748b; }
+  .xai-leg-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  .result-actions { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.5rem; }
+  .result-action-btn {
+    border-radius: 14px;
+    padding: 0.85rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 0.6rem;
+    border: none;
+    width: 100%;
+    text-align: left;
+  }
+  .result-action-btn.primary { background: #0d9488; color: white; }
+  .result-action-btn.secondary { background: #1e293b; color: #f1f5f9; border: 1px solid #334155; }
+  .result-action-btn.danger-btn { background: rgba(239,68,68,0.1); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+
+  /* ============================================================
+     SCREEN 6: LAPORAN
+  ============================================================ */
+  #laporan { background: #0f172a; }
+
+  .report-header {
+    background: #1e293b;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #334155;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .report-title { color: #f1f5f9; font-size: 0.95rem; font-weight: 700; }
+  .share-btn {
+    background: #0d9488;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 0.4rem 0.85rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+  }
+
+  .report-card {
+    margin: 1rem 1.25rem;
+    background: #1e293b;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid #334155;
+  }
+  .report-card-header {
+    background: linear-gradient(135deg, #0f4c75, #0d9488);
+    padding: 1rem;
+  }
+  .report-card-header h4 { color: white; font-size: 0.88rem; font-weight: 800; }
+  .report-card-header p { color: rgba(255,255,255,0.65); font-size: 0.72rem; margin-top: 0.1rem; }
+  .report-card-body { padding: 0.85rem 1rem; }
+
+  .report-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #334155;
+    align-items: flex-start;
+  }
+  .report-row:last-child { border-bottom: none; }
+  .report-key { color: #64748b; font-size: 0.78rem; }
+  .report-val { color: #f1f5f9; font-size: 0.78rem; font-weight: 600; text-align: right; max-width: 55%; }
+  .report-val.danger { color: #f87171; }
+  .report-val.success { color: #2dd4bf; }
+
+  .sismal-status {
+    margin: 0 1.25rem;
+    background: rgba(13,148,136,0.08);
+    border: 1px solid rgba(13,148,136,0.25);
+    border-radius: 14px;
+    padding: 0.85rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .sismal-icon { font-size: 1.4rem; }
+  .sismal-text h4 { color: #2dd4bf; font-size: 0.82rem; font-weight: 700; }
+  .sismal-text p { color: #64748b; font-size: 0.72rem; margin-top: 0.1rem; }
+  .sismal-check { color: #2dd4bf; font-size: 1.2rem; margin-left: auto; }
+
+  .tatalaksana-box {
+    margin: 0.75rem 1.25rem;
+    background: #1e293b;
+    border-radius: 16px;
+    padding: 1rem;
+    border: 1px solid #334155;
+  }
+  .tlx-title { color: #94a3b8; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.75rem; }
+  .tlx-item {
+    display: flex; align-items: flex-start; gap: 0.6rem;
+    padding: 0.4rem 0;
+    border-bottom: 1px solid #334155;
+  }
+  .tlx-item:last-child { border-bottom: none; }
+  .tlx-bullet { width: 6px; height: 6px; border-radius: 50%; background: #0d9488; flex-shrink: 0; margin-top: 0.35rem; }
+  .tlx-text { color: #94a3b8; font-size: 0.8rem; line-height: 1.4; }
+  .tlx-text strong { color: #e2e8f0; }
+
+  /* ============================================================
+     SCREEN 7: PASIEN
+  ============================================================ */
+  #pasien { background: #0f172a; }
+
+  .pasien-header {
+    background: #1e293b;
+    padding: 1rem 1.25rem 0.75rem;
+    border-bottom: 1px solid #334155;
+  }
+  .pasien-title-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+  .pasien-title { color: #f1f5f9; font-size: 1rem; font-weight: 800; }
+  .add-btn {
+    background: #0d9488;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 0.4rem 0.85rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+  }
+  .search-bar {
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 0.65rem 1rem;
+    color: #f1f5f9;
+    font-size: 0.85rem;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .search-bar span:first-child { color: #64748b; }
+  .search-bar span:last-child { color: #475569; font-size: 0.82rem; }
+
+  .filter-tabs {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .filter-tab {
+    background: #1e293b;
+    color: #64748b;
+    border: 1px solid #334155;
+    border-radius: 20px;
+    padding: 0.35rem 0.85rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .filter-tab.active { background: #0d9488; color: white; border-color: #0d9488; }
+
+  .pasien-list { padding: 0.75rem 1.25rem; }
+  .pasien-card {
+    background: #1e293b;
+    border-radius: 16px;
+    padding: 1rem;
+    margin-bottom: 0.65rem;
+    border: 1px solid #334155;
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .pasien-card:hover { border-color: #2dd4bf; background: #1e3a4c; }
+  .pasien-avatar-p {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: white;
+    flex-shrink: 0;
+  }
+  .pasien-info { flex: 1; min-width: 0; }
+  .pasien-nama { color: #f1f5f9; font-size: 0.88rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pasien-detail { color: #64748b; font-size: 0.72rem; margin-top: 0.15rem; }
+  .pasien-right { text-align: right; flex-shrink: 0; }
+  .pasien-status-badge {
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 0.22rem 0.55rem;
+    border-radius: 8px;
+    margin-bottom: 0.2rem;
+    display: inline-block;
+  }
+  .pasien-date { color: #475569; font-size: 0.68rem; }
+
+  /* ===== SHARED UTILS ===== */
+  .divider-line { height: 1px; background: #1e293b; margin: 0 1.25rem; }
+</style>
+</head>
+<body>
+
+<!-- DESKTOP HEADER -->
+<div class="desktop-header">
+  <div class="desktop-logo">Malar<span>AI</span>-ID · Mockup UI/UX</div>
+  <div class="screen-nav">
+    <button class="screen-btn active" onclick="showScreen('splash', this)">① Splash</button>
+    <button class="screen-btn" onclick="showScreen('home', this)">② Beranda</button>
+    <button class="screen-btn" onclick="showScreen('kamera', this)">③ Kamera</button>
+    <button class="screen-btn" onclick="showScreen('analisis', this)">④ AI Analisis</button>
+    <button class="screen-btn" onclick="showScreen('hasil', this)">⑤ Hasil</button>
+    <button class="screen-btn" onclick="showScreen('laporan', this)">⑥ Laporan</button>
+    <button class="screen-btn" onclick="showScreen('pasien', this)">⑦ Pasien</button>
+  </div>
+</div>
+
+<!-- STAGE -->
+<div class="stage">
+  <div class="phone-wrap">
+    <div class="phone-label">MalarAI-ID · Antarmuka Nakes</div>
+
+    <div class="phone">
+
+      <!-- ====== SCREEN 1: SPLASH ====== -->
+      <div class="screen active" id="splash">
+        <div class="status-bar" style="background:transparent;">
+          <span class="time" style="color:white;">09:41</span>
+          <div class="status-icons">📶 🔋</div>
+        </div>
+        <div class="splash-body">
+          <div class="splash-logo-ring">🧬</div>
+          <div>
+            <div class="splash-title">Malar<span>AI</span><br>Indonesia</div>
+          </div>
+          <p class="splash-sub">Deteksi cepat <em>Plasmodium</em> dari foto sediaan darah menggunakan kecerdasan buatan — untuk nakes di mana pun berada</p>
+          <button class="splash-btn" onclick="showScreen('home', document.querySelectorAll('.screen-btn')[1])">Masuk ke Aplikasi →</button>
+          <span class="splash-version">v2.1.0 · Tervalidasi Kemenkes RI</span>
+        </div>
+      </div>
+
+      <!-- ====== SCREEN 2: HOME ====== -->
+      <div class="screen" id="home">
+        <div class="status-bar" style="background:#0f172a;">
+          <span class="time">09:41</span>
+          <div class="status-icons">📶 🔋</div>
+        </div>
+        <div class="scroll-content">
+          <div class="home-header">
+            <div class="home-greeting">Selamat pagi,</div>
+            <div class="home-name">dr. Adwiki Cahyadi Y. 👋</div>
+            <div class="home-location">
+              <span>📍</span>
+              <span>Puskesmas Muara Wahau, Kutai Timur</span>
+            </div>
+          </div>
+
+          <div class="home-stats">
+            <div class="stat-card highlight">
+              <div class="stat-icon">🔬</div>
+              <div class="stat-num">12</div>
+              <div class="stat-label">Pemeriksaan hari ini</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">✅</div>
+              <div class="stat-num">9</div>
+              <div class="stat-label">Selesai dianalisis</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">⚠️</div>
+              <div class="stat-num" style="color:#f87171;">3</div>
+              <div class="stat-label">Perlu tindak lanjut</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">📡</div>
+              <div class="stat-num" style="color:#2dd4bf;">12</div>
+              <div class="stat-label">Dikirim ke SISMAL</div>
+            </div>
+          </div>
+
+          <div class="section-header">
+            <span class="section-title-s">Aksi Cepat</span>
+          </div>
+          <div class="quick-actions">
+            <div class="quick-btn primary" onclick="showScreen('kamera', document.querySelectorAll('.screen-btn')[2])">
+              <div class="quick-btn-icon">📸</div>
+              <div class="quick-btn-label">Scan Sediaan Baru</div>
+              <div class="quick-btn-sub">Buka kamera AI</div>
+            </div>
+            <div class="quick-btn" onclick="showScreen('pasien', document.querySelectorAll('.screen-btn')[6])">
+              <div class="quick-btn-icon">👤</div>
+              <div class="quick-btn-label">Data Pasien</div>
+              <div class="quick-btn-sub">Kelola rekam medis</div>
+            </div>
+            <div class="quick-btn">
+              <div class="quick-btn-icon">📊</div>
+              <div class="quick-btn-label">Statistik Puskesmas</div>
+              <div class="quick-btn-sub">Laporan mingguan</div>
+            </div>
+            <div class="quick-btn">
+              <div class="quick-btn-icon">💬</div>
+              <div class="quick-btn-label">Konsultasi Dokter</div>
+              <div class="quick-btn-sub">Telemedicine</div>
+            </div>
+          </div>
+
+          <div class="section-header">
+            <span class="section-title-s">Pemeriksaan Terbaru</span>
+            <span class="see-all">Lihat semua</span>
+          </div>
+          <div class="recent-list">
+            <div class="recent-item">
+              <div class="recent-icon" style="background:rgba(239,68,68,0.15);">🔴</div>
+              <div class="recent-info">
+                <div class="recent-name">Yohanes Manafe</div>
+                <div class="recent-meta">L · 34 th · 10 menit lalu</div>
+              </div>
+              <span class="recent-badge badge-knowlesi">P. knowlesi</span>
+            </div>
+            <div class="recent-item">
+              <div class="recent-icon" style="background:rgba(59,130,246,0.15);">🔵</div>
+              <div class="recent-info">
+                <div class="recent-name">Siti Rahayu</div>
+                <div class="recent-meta">P · 28 th · 42 menit lalu</div>
+              </div>
+              <span class="recent-badge badge-falci">P. falciparum</span>
+            </div>
+            <div class="recent-item">
+              <div class="recent-icon" style="background:rgba(34,197,94,0.15);">🟢</div>
+              <div class="recent-info">
+                <div class="recent-name">Markus Wenda</div>
+                <div class="recent-meta">L · 45 th · 1 jam lalu</div>
+              </div>
+              <span class="recent-badge badge-vivax">P. vivax</span>
+            </div>
+            <div class="recent-item">
+              <div class="recent-icon" style="background:rgba(100,116,139,0.15);">⚪</div>
+              <div class="recent-info">
+                <div class="recent-name">Dewi Anggraini</div>
+                <div class="recent-meta">P · 22 th · 2 jam lalu</div>
+              </div>
+              <span class="recent-badge badge-neg">Negatif</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bottom-nav">
+          <div class="nav-item nav-active">
+            <div class="nav-icon">🏠</div>
+            <div class="nav-label" style="color:#2dd4bf;">Beranda</div>
+          </div>
+          <div class="nav-item" onclick="showScreen('kamera', document.querySelectorAll('.screen-btn')[2])">
+            <div class="nav-icon">📸</div>
+            <div class="nav-label">Scan</div>
+          </div>
+          <div class="nav-item" onclick="showScreen('pasien', document.querySelectorAll('.screen-btn')[6])">
+            <div class="nav-icon">👥</div>
+            <div class="nav-label">Pasien</div>
+          </div>
+          <div class="nav-item">
+            <div class="nav-icon">📊</div>
+            <div class="nav-label">Laporan</div>
+          </div>
+          <div class="nav-item">
+            <div class="nav-icon">⚙️</div>
+            <div class="nav-label">Pengaturan</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====== SCREEN 3: KAMERA ====== -->
+      <div class="screen" id="kamera">
+        <div class="status-bar" style="color:white;">
+          <span class="time" style="color:white;">09:41</span>
+          <div class="status-icons" style="color:white;">📶 🔋</div>
+        </div>
+
+        <div class="camera-viewfinder">
+          <!-- Simulated blood smear background -->
+          <div class="scan-cells" style="position:absolute;inset:0;overflow:hidden;">
+            <!-- Many RBCs simulation -->
+            <div class="cell-dot" style="width:32px;height:32px;top:15%;left:8%;"></div>
+            <div class="cell-dot" style="width:28px;height:28px;top:18%;left:22%;"></div>
+            <div class="cell-dot infected detected" style="width:30px;height:30px;top:22%;left:38%;"></div>
+            <div class="cell-dot" style="width:25px;height:25px;top:12%;left:52%;"></div>
+            <div class="cell-dot" style="width:33px;height:33px;top:16%;left:65%;"></div>
+            <div class="cell-dot" style="width:29px;height:29px;top:20%;left:80%;"></div>
+            <div class="cell-dot" style="width:27px;height:27px;top:35%;left:5%;"></div>
+            <div class="cell-dot infected" style="width:31px;height:31px;top:38%;left:18%;"></div>
+            <div class="cell-dot" style="width:26px;height:26px;top:32%;left:32%;"></div>
+            <div class="cell-dot" style="width:34px;height:34px;top:40%;left:48%;"></div>
+            <div class="cell-dot infected detected" style="width:29px;height:29px;top:35%;left:62%;"></div>
+            <div class="cell-dot" style="width:28px;height:28px;top:42%;left:76%;"></div>
+            <div class="cell-dot" style="width:30px;height:30px;top:55%;left:10%;"></div>
+            <div class="cell-dot" style="width:27px;height:27px;top:58%;left:25%;"></div>
+            <div class="cell-dot infected" style="width:32px;height:32px;top:52%;left:40%;"></div>
+            <div class="cell-dot" style="width:25px;height:25px;top:60%;left:55%;"></div>
+            <div class="cell-dot" style="width:29px;height:29px;top:55%;left:70%;"></div>
+            <div class="cell-dot" style="width:31px;height:31px;top:58%;left:85%;"></div>
+            <div class="cell-dot" style="width:28px;height:28px;top:72%;left:8%;"></div>
+            <div class="cell-dot infected detected" style="width:30px;height:30px;top:75%;left:22%;"></div>
+            <div class="cell-dot" style="width:26px;height:26px;top:70%;left:38%;"></div>
+            <div class="cell-dot" style="width:33px;height:33px;top:78%;left:52%;"></div>
+            <div class="cell-dot" style="width:27px;height:27px;top:72%;left:68%;"></div>
+            <div class="cell-dot infected" style="width:29px;height:29px;top:76%;left:82%;"></div>
+          </div>
+        </div>
+
+        <div class="cam-top-bar">
+          <div class="cam-badge">Lapang 71/200</div>
+          <div class="cam-quality-bar">
+            <span style="color:rgba(255,255,255,0.6);font-size:0.7rem;">Fokus</span>
+            <div class="quality-dots">
+              <div class="qdot good"></div>
+              <div class="qdot good"></div>
+              <div class="qdot good"></div>
+              <div class="qdot good"></div>
+              <div class="qdot"></div>
+            </div>
+          </div>
+          <div class="cam-badge online">● Online</div>
+        </div>
+
+        <div class="scan-overlay">
+          <div class="scan-frame">
+            <div class="scan-corner-tr"></div>
+            <div class="scan-corner-bl"></div>
+            <div class="scan-line"></div>
+          </div>
+        </div>
+
+        <div class="cam-progress">
+          <div class="cam-progress-label">
+            <span style="color:rgba(255,255,255,0.6);">Progres scan</span>
+            <span style="color:#2dd4bf;">71 / 200 lapang pandang</span>
+          </div>
+          <div class="cam-progress-bar">
+            <div class="cam-progress-fill"></div>
+          </div>
+        </div>
+
+        <div class="cam-instruction">
+          <p>Posisikan <strong>lapang pandang</strong> di dalam bingkai. Tahan stabil hingga AI mengkonfirmasi kualitas gambar ✓</p>
+        </div>
+
+        <div class="cam-controls">
+          <div class="cam-btn-side">💡</div>
+          <div class="cam-btn-main" onclick="showScreen('analisis', document.querySelectorAll('.screen-btn')[3])">🔬</div>
+          <div class="cam-btn-side">🔄</div>
+        </div>
+      </div>
+
+      <!-- ====== SCREEN 4: ANALISIS AI ====== -->
+      <div class="screen" id="analisis">
+        <div class="status-bar" style="background:#0f172a;">
+          <span class="time">09:43</span>
+          <div class="status-icons">📶 🔋</div>
+        </div>
+
+        <div class="analysis-header">
+          <div class="back-btn">←</div>
+          <div class="analysis-header-text">
+            <h3>Analisis AI</h3>
+            <p>EfficientNet-B3 · On-device</p>
+          </div>
+        </div>
+
+        <div class="scroll-content">
+          <div class="analysis-patient-card">
+            <div class="patient-avatar">👤</div>
+            <div>
+              <div class="patient-name">Yohanes Manafe</div>
+              <div class="patient-meta">L · 34 th · No. RM: 00234 · 10 Sep 2026</div>
+            </div>
+          </div>
+
+          <div class="ai-processing-box">
+            <div class="ai-brain-anim">
+              🧠
+              <div class="ai-spin-ring"></div>
+            </div>
+            <div class="ai-status-text">Menganalisis Sediaan Darah</div>
+            <div class="ai-status-sub">Memproses 200 lapang pandang...</div>
+
+            <div class="ai-steps">
+              <div class="ai-step done-step">
+                <div class="ai-step-icon done">✅</div>
+                <div class="ai-step-label">Pre-processing & normalisasi warna</div>
+              </div>
+              <div class="ai-step done-step">
+                <div class="ai-step-icon done">✅</div>
+                <div class="ai-step-label">Deteksi & segmentasi eritrosit (1.847 sel)</div>
+              </div>
+              <div class="ai-step active-step">
+                <div class="ai-step-icon active">⚙️</div>
+                <div class="ai-step-label">Klasifikasi spesies & stadium parasit...</div>
+              </div>
+              <div class="ai-step">
+                <div class="ai-step-icon pending">⏳</div>
+                <div class="ai-step-label" style="color:#475569;">Hitung densitas parasitemia</div>
+              </div>
+              <div class="ai-step">
+                <div class="ai-step-icon pending">⏳</div>
+                <div class="ai-step-label" style="color:#475569;">Generate laporan klinis</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-header">
+            <span class="section-title-s" style="font-size:0.8rem;">Gambar yang Diproses</span>
+            <span class="see-all">71 foto</span>
+          </div>
+          <div class="image-grid">
+            <div class="img-thumb processed">🔴<div class="img-thumb-count">✓</div></div>
+            <div class="img-thumb processed">🟠<div class="img-thumb-count">✓</div></div>
+            <div class="img-thumb processed">🔴<div class="img-thumb-count">✓</div></div>
+            <div class="img-thumb processed">⚪<div class="img-thumb-count">✓</div></div>
+            <div class="img-thumb processed">🔴<div class="img-thumb-count">✓</div></div>
+            <div class="img-thumb processing">⚙️</div>
+            <div class="img-thumb"></div>
+            <div class="img-thumb"></div>
+          </div>
+
+          <div style="padding:1rem 1.25rem;">
+            <div style="background:#1e293b;border-radius:14px;padding:1rem;border:1px solid #334155;">
+              <div style="color:#64748b;font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.5rem;">Inferensi On-Device</div>
+              <div style="display:flex;justify-content:space-between;font-size:0.8rem;">
+                <span style="color:#94a3b8;">Model</span><span style="color:#f1f5f9;font-weight:700;">EfficientNet-B3 (TFLite)</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-top:0.35rem;">
+                <span style="color:#94a3b8;">Ukuran model</span><span style="color:#f1f5f9;font-weight:700;">11.8 MB</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-top:0.35rem;">
+                <span style="color:#94a3b8;">Koneksi internet</span><span style="color:#2dd4bf;font-weight:700;">Tidak diperlukan ✓</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="padding:1rem 1.25rem;border-top:1px solid #334155;">
+          <button onclick="showScreen('hasil', document.querySelectorAll('.screen-btn')[4])" style="width:100%;background:linear-gradient(135deg,#0d9488,#0891b2);color:white;border:none;border-radius:14px;padding:0.9rem;font-size:0.9rem;font-weight:800;font-family:inherit;cursor:pointer;">
+            Lihat Hasil Analisis →
+          </button>
+        </div>
+      </div>
+
+      <!-- ====== SCREEN 5: HASIL ====== -->
+      <div class="screen" id="hasil">
+        <div class="status-bar" style="background:#1a3a5c;">
+          <span class="time" style="color:white;">09:44</span>
+          <div class="status-icons" style="color:white;">📶 🔋</div>
+        </div>
+
+        <div class="scroll-content">
+          <div class="result-header">
+            <div class="result-header-top">
+              <div class="back-btn" style="color:white;cursor:pointer;" onclick="showScreen('analisis', document.querySelectorAll('.screen-btn')[3])">←</div>
+              <div>
+                <div class="result-title">Hasil Pemeriksaan</div>
+                <div class="result-sub">Yohanes Manafe · 10 Jun 2026 · 09:44</div>
+              </div>
+            </div>
+            <div class="result-main-card">
+              <div class="result-species-icon">🔴</div>
+              <div>
+                <div class="result-species-name">P. knowlesi</div>
+                <div class="result-species-latin">Plasmodium knowlesi</div>
+                <div class="result-confidence">Confidence: 91.3% ✓</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="result-body">
+            <div style="height:0.75rem;"></div>
+
+            <div class="result-alert-box">
+              <div class="alert-icon">🚨</div>
+              <div class="alert-content">
+                <div class="alert-title-r">MALARIA BERAT — Tindakan Segera</div>
+                <div class="alert-desc">Parasitemia 8.2% melebihi ambang batas malaria berat (>5%). Segera lakukan tatalaksana sesuai pedoman Kemenkes.</div>
+              </div>
+            </div>
+
+            <div class="result-alert-box warning">
+              <div class="alert-icon">⚠️</div>
+              <div class="alert-content">
+                <div class="alert-title-r">Konfirmasi PCR Dianjurkan</div>
+                <div class="alert-desc">P. knowlesi memerlukan konfirmasi PCR untuk diferensiasi definitif dari P. malariae. Kirim sampel ke lab rujukan.</div>
+              </div>
+            </div>
+
+            <div class="metrics-row">
+              <div class="metric-card">
+                <div class="metric-val danger">8.2%</div>
+                <div class="metric-label">Parasitemia</div>
+              </div>
+              <div class="metric-card">
+                <div class="metric-val warn">24.800/μL</div>
+                <div class="metric-label">Kepadatan Parasit</div>
+              </div>
+              <div class="metric-card">
+                <div class="metric-val">1.847</div>
+                <div class="metric-label">Sel Teranalisis</div>
+              </div>
+              <div class="metric-card">
+                <div class="metric-val" style="color:#2dd4bf;">200</div>
+                <div class="metric-label">Lapang Pandang</div>
+              </div>
+            </div>
+
+            <div class="xai-card">
+              <div class="xai-title">🧠 Explainable AI · Grad-CAM</div>
+              <div class="xai-img-placeholder">
+                <div class="xai-cells">
+                  <div class="xai-cell"></div>
+                  <div class="xai-cell warm"></div>
+                  <div class="xai-cell"></div>
+                  <div class="xai-cell hot"></div>
+                  <div class="xai-cell"></div>
+                  <div class="xai-cell"></div>
+                  <div class="xai-cell warm"></div>
+                  <div class="xai-cell"></div>
+                  <div class="xai-cell hot"></div>
+                  <div class="xai-cell"></div>
+                  <div class="xai-cell"></div>
+                  <div class="xai-cell warm"></div>
+                  <div class="xai-cell"></div>
+                  <div class="xai-cell"></div>
+                  <div class="xai-cell hot"></div>
+                  <div class="xai-cell"></div>
+                  <div class="xai-cell"></div>
+                  <div class="xai-cell warm"></div>
+                  <div class="xai-cell"></div>
+                  <div class="xai-cell"></div>
+                </div>
+                <div class="xai-label-overlay">Grad-CAM Aktif</div>
+              </div>
+              <div class="xai-legend">
+                <div class="xai-leg"><div class="xai-leg-dot" style="background:#f87171;"></div>Eritrosit terinfeksi</div>
+                <div class="xai-leg"><div class="xai-leg-dot" style="background:#fbbf24;"></div>Suspek</div>
+                <div class="xai-leg"><div class="xai-leg-dot" style="background:#334155;"></div>Normal</div>
+              </div>
+            </div>
+
+            <div class="xai-card" style="margin-bottom:0.75rem;">
+              <div class="xai-title">Stadium Parasit</div>
+              <div class="stadium-item">
+                <div class="stadium-dot" style="background:#f87171;"></div>
+                <div class="stadium-name">Ring form (trofozoit muda)</div>
+                <div class="stadium-pct">62%</div>
+                <div class="stadium-bar-wrap"><div class="stadium-bar" style="width:62%;background:#f87171;"></div></div>
+              </div>
+              <div class="stadium-item">
+                <div class="stadium-dot" style="background:#fbbf24;"></div>
+                <div class="stadium-name">Trofozoit lanjut</div>
+                <div class="stadium-pct">28%</div>
+                <div class="stadium-bar-wrap"><div class="stadium-bar" style="width:28%;background:#fbbf24;"></div></div>
+              </div>
+              <div class="stadium-item">
+                <div class="stadium-dot" style="background:#a78bfa;"></div>
+                <div class="stadium-name">Skizon</div>
+                <div class="stadium-pct">10%</div>
+                <div class="stadium-bar-wrap"><div class="stadium-bar" style="width:10%;background:#a78bfa;"></div></div>
+              </div>
+            </div>
+
+            <div class="result-actions">
+              <button class="result-action-btn primary" onclick="showScreen('laporan', document.querySelectorAll('.screen-btn')[5])">
+                📋 Buat & Kirim Laporan Kemenkes
+              </button>
+              <button class="result-action-btn secondary">
+                💬 Konsultasi Dokter Spesialis
+              </button>
+              <button class="result-action-btn danger-btn">
+                🚑 Aktifkan Protokol Malaria Berat
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====== SCREEN 6: LAPORAN ====== -->
+      <div class="screen" id="laporan">
+        <div class="status-bar" style="background:#1e293b;">
+          <span class="time">09:46</span>
+          <div class="status-icons">📶 🔋</div>
+        </div>
+
+        <div class="report-header">
+          <div>
+            <div class="report-title">Laporan Kemenkes RI</div>
+            <div style="color:#64748b;font-size:0.72rem;margin-top:0.1rem;">Form Malaria · 10 Jun 2026</div>
+          </div>
+          <button class="share-btn">📤 Kirim</button>
+        </div>
+
+        <div class="scroll-content">
+          <div class="report-card">
+            <div class="report-card-header">
+              <h4>Data Pasien</h4>
+              <p>Rekam Medis No. 00234</p>
+            </div>
+            <div class="report-card-body">
+              <div class="report-row">
+                <div class="report-key">Nama Pasien</div>
+                <div class="report-val">Yohanes Manafe</div>
+              </div>
+              <div class="report-row">
+                <div class="report-key">Jenis Kelamin / Usia</div>
+                <div class="report-val">Laki-laki / 34 tahun</div>
+              </div>
+              <div class="report-row">
+                <div class="report-key">Tanggal Pemeriksaan</div>
+                <div class="report-val">10 Juni 2026</div>
+              </div>
+              <div class="report-row">
+                <div class="report-key">Faskes</div>
+                <div class="report-val">PKM Muara Wahau, Kutai Timur</div>
+              </div>
+              <div class="report-row">
+                <div class="report-key">Pemeriksa</div>
+                <div class="report-val">dr. Adwiki Cahyadi Y.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="report-card">
+            <div class="report-card-header">
+              <h4>Hasil Pemeriksaan AI</h4>
+              <p>MalarAI-ID v2.1 · EfficientNet-B3</p>
+            </div>
+            <div class="report-card-body">
+              <div class="report-row">
+                <div class="report-key">Hasil Sediaan Darah</div>
+                <div class="report-val danger">POSITIF MALARIA</div>
+              </div>
+              <div class="report-row">
+                <div class="report-key">Spesies</div>
+                <div class="report-val danger">P. knowlesi</div>
+              </div>
+              <div class="report-row">
+                <div class="report-key">Parasitemia</div>
+                <div class="report-val danger">8.2% (24.800/μL)</div>
+              </div>
+              <div class="report-row">
+                <div class="report-key">Stadium Dominan</div>
+                <div class="report-val">Ring form (62%)</div>
+              </div>
+              <div class="report-row">
+                <div class="report-key">Confidence AI</div>
+                <div class="report-val success">91.3% ✓</div>
+              </div>
+              <div class="report-row">
+                <div class="report-key">Klasifikasi Berat</div>
+                <div class="report-val danger">MALARIA BERAT</div>
+              </div>
+              <div class="report-row">
+                <div class="report-key">Saran Konfirmasi</div>
+                <div class="report-val">PCR dianjurkan</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="sismal-status">
+            <div class="sismal-icon">🌐</div>
+            <div class="sismal-text">
+              <h4>Terkirim ke SISMAL</h4>
+              <p>09:46 WIB · ID Laporan: MAL-2026-KTI-00892</p>
+            </div>
+            <div class="sismal-check">✓</div>
+          </div>
+
+          <div class="tatalaksana-box">
+            <div class="tlx-title">📋 Rekomendasi Tatalaksana</div>
+            <div class="tlx-item">
+              <div class="tlx-bullet"></div>
+              <div class="tlx-text"><strong>Artesunat IV</strong> — lini pertama malaria berat (2.4 mg/kgBB di jam 0, 12, 24, lalu 24 jam)</div>
+            </div>
+            <div class="tlx-item">
+              <div class="tlx-bullet"></div>
+              <div class="tlx-text">Monitor ketat: GDS, tanda vital, output urin setiap 4 jam</div>
+            </div>
+            <div class="tlx-item">
+              <div class="tlx-bullet"></div>
+              <div class="tlx-text">Rujuk ke RSUD Kutai Timur untuk penanganan ICU jika memburuk</div>
+            </div>
+            <div class="tlx-item">
+              <div class="tlx-bullet"></div>
+              <div class="tlx-text">Kirim sampel darah EDTA ke Lab Rujukan untuk konfirmasi PCR <em>P. knowlesi</em></div>
+            </div>
+          </div>
+
+          <div style="padding:0 1.25rem 1rem;">
+            <button style="width:100%;background:#1e293b;color:#f1f5f9;border:1px solid #334155;border-radius:14px;padding:0.85rem;font-size:0.85rem;font-weight:700;font-family:inherit;cursor:pointer;margin-bottom:0.5rem;">
+              🖨️ Cetak Laporan PDF
+            </button>
+            <button style="width:100%;background:#1e293b;color:#f1f5f9;border:1px solid #334155;border-radius:14px;padding:0.85rem;font-size:0.85rem;font-weight:700;font-family:inherit;cursor:pointer;">
+              📩 Kirim via WhatsApp ke Dinkes
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====== SCREEN 7: PASIEN ====== -->
+      <div class="screen" id="pasien">
+        <div class="status-bar" style="background:#1e293b;">
+          <span class="time">09:41</span>
+          <div class="status-icons">📶 🔋</div>
+        </div>
+
+        <div class="pasien-header">
+          <div class="pasien-title-row">
+            <div class="pasien-title">Data Pasien</div>
+            <button class="add-btn">+ Tambah</button>
+          </div>
+          <div class="search-bar">
+            <span>🔍</span>
+            <span>Cari nama atau No. RM...</span>
+          </div>
+        </div>
+
+        <div class="filter-tabs">
+          <div class="filter-tab active">Semua (24)</div>
+          <div class="filter-tab">Positif (18)</div>
+          <div class="filter-tab">Follow-up (5)</div>
+          <div class="filter-tab">Negatif (6)</div>
+        </div>
+
+        <div class="scroll-content">
+          <div class="pasien-list">
+
+            <div class="pasien-card">
+              <div class="pasien-avatar-p" style="background:linear-gradient(135deg,#dc2626,#b91c1c);">YM</div>
+              <div class="pasien-info">
+                <div class="pasien-nama">Yohanes Manafe</div>
+                <div class="pasien-detail">L · 34 th · No. RM 00234 · Muara Wahau</div>
+              </div>
+              <div class="pasien-right">
+                <div class="pasien-status-badge badge-knowlesi">P. knowlesi</div>
+                <div class="pasien-date">Hari ini</div>
+              </div>
+            </div>
+
+            <div class="pasien-card">
+              <div class="pasien-avatar-p" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);">SR</div>
+              <div class="pasien-info">
+                <div class="pasien-nama">Siti Rahayu</div>
+                <div class="pasien-detail">P · 28 th · No. RM 00231 · Kongbeng</div>
+              </div>
+              <div class="pasien-right">
+                <div class="pasien-status-badge badge-falci">P. falciparum</div>
+                <div class="pasien-date">Hari ini</div>
+              </div>
+            </div>
+
+            <div class="pasien-card">
+              <div class="pasien-avatar-p" style="background:linear-gradient(135deg,#16a34a,#15803d);">MW</div>
+              <div class="pasien-info">
+                <div class="pasien-nama">Markus Wenda</div>
+                <div class="pasien-detail">L · 45 th · No. RM 00228 · Sangatta</div>
+              </div>
+              <div class="pasien-right">
+                <div class="pasien-status-badge badge-vivax">P. vivax</div>
+                <div class="pasien-date">Hari ini</div>
+              </div>
+            </div>
+
+            <div class="pasien-card">
+              <div class="pasien-avatar-p" style="background:linear-gradient(135deg,#475569,#334155);">DA</div>
+              <div class="pasien-info">
+                <div class="pasien-nama">Dewi Anggraini</div>
+                <div class="pasien-detail">P · 22 th · No. RM 00226 · Muara Wahau</div>
+              </div>
+              <div class="pasien-right">
+                <div class="pasien-status-badge badge-neg">Negatif</div>
+                <div class="pasien-date">Hari ini</div>
+              </div>
+            </div>
+
+            <div class="pasien-card">
+              <div class="pasien-avatar-p" style="background:linear-gradient(135deg,#dc2626,#b91c1c);">BL</div>
+              <div class="pasien-info">
+                <div class="pasien-nama">Benny Latumaerissa</div>
+                <div class="pasien-detail">L · 52 th · No. RM 00220 · Muara Bengkal</div>
+              </div>
+              <div class="pasien-right">
+                <div class="pasien-status-badge badge-falci">P. falciparum</div>
+                <div class="pasien-date">Kemarin</div>
+              </div>
+            </div>
+
+            <div class="pasien-card">
+              <div class="pasien-avatar-p" style="background:linear-gradient(135deg,#9333ea,#7e22ce);">RM</div>
+              <div class="pasien-info">
+                <div class="pasien-nama">Rini Maulida</div>
+                <div class="pasien-detail">P · 31 th · No. RM 00218 · Busang</div>
+              </div>
+              <div class="pasien-right">
+                <div class="pasien-status-badge" style="background:rgba(147,51,234,0.2);color:#c084fc;">P. ovale</div>
+                <div class="pasien-date">08 Jun</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="bottom-nav">
+          <div class="nav-item" onclick="showScreen('home', document.querySelectorAll('.screen-btn')[1])">
+            <div class="nav-icon">🏠</div>
+            <div class="nav-label">Beranda</div>
+          </div>
+          <div class="nav-item" onclick="showScreen('kamera', document.querySelectorAll('.screen-btn')[2])">
+            <div class="nav-icon">📸</div>
+            <div class="nav-label">Scan</div>
+          </div>
+          <div class="nav-item nav-active">
+            <div class="nav-icon">👥</div>
+            <div class="nav-label" style="color:#2dd4bf;">Pasien</div>
+          </div>
+          <div class="nav-item">
+            <div class="nav-icon">📊</div>
+            <div class="nav-label">Laporan</div>
+          </div>
+          <div class="nav-item">
+            <div class="nav-icon">⚙️</div>
+            <div class="nav-label">Pengaturan</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /phone -->
+
+    <div class="phone-label" style="margin-top:0.25rem;color:#475569;font-size:0.7rem;">Gunakan tombol di atas untuk navigasi antar layar</div>
+  </div><!-- /phone-wrap -->
+</div><!-- /stage -->
+
+<script>
+  function showScreen(id, btn) {
+    // hide all screens
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    // show target
+    const target = document.getElementById(id);
+    if (target) target.classList.add('active');
+    // update nav
+    document.querySelectorAll('.screen-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+  }
+</script>
+
+</body>
+</html>
