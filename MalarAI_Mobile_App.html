@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#0d9488">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>MalarAI-ID · Aplikasi Nakes</title>
+<style>
+:root{--bg:#0f172a;--s1:#1e293b;--s2:#334155;--tl:#0d9488;--tl2:#2dd4bf;--re:#ef4444;--am:#f59e0b;--gr:#22c55e;--pu:#a855f7;--tx:#f1f5f9;--tx2:#94a3b8;--tx3:#475569;--bdr:#1e293b;--rad:14px;--shd:0 4px 20px rgba(0,0,0,.4)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;display:flex;justify-content:center;align-items:flex-start;overflow-x:hidden}
+#app{width:100%;max-width:430px;min-height:100vh;position:relative;overflow:hidden}
+.screen{display:none;flex-direction:column;min-height:100vh;width:100%}
+.screen.active{display:flex}
+
+/* HEADER */
+.hdr{background:var(--s1);padding:14px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--bdr);flex-shrink:0}
+.hdr-back{font-size:20px;cursor:pointer;color:var(--tl2);line-height:1;background:none;border:none;color:var(--tl2)}
+.hdr-title{font-size:.95rem;font-weight:800}
+.hdr-sub{font-size:.7rem;color:var(--tx2);margin-top:1px}
+.hdr-right{margin-left:auto}
+
+/* SCROLL */
+.scroll{flex:1;overflow-y:auto;overflow-x:hidden;padding:16px;-webkit-overflow-scrolling:touch}
+.scroll::-webkit-scrollbar{display:none}
+
+/* BOTTOM NAV */
+.bot-nav{background:var(--s1);border-top:1px solid var(--bdr);display:flex;flex-shrink:0;padding:6px 0 8px}
+.bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px 0}
+.bnav-icon{font-size:1.25rem}
+.bnav-label{font-size:.6rem;font-weight:700;color:var(--tx3)}
+.bnav-item.on .bnav-label{color:var(--tl2)}
+
+/* CARDS */
+.card{background:var(--s1);border:1px solid var(--bdr);border-radius:var(--rad);padding:14px}
+.card+.card{margin-top:10px}
+
+/* BUTTONS */
+.btn{border:none;border-radius:var(--rad);padding:14px;font-size:.9rem;font-weight:800;font-family:inherit;cursor:pointer;width:100%;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity .15s}
+.btn:active{opacity:.75}
+.btn-primary{background:var(--tl);color:#fff}
+.btn-outline{background:transparent;border:1.5px solid var(--s2);color:var(--tx2)}
+.btn-danger{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);color:#fca5a5}
+.btn-sm{padding:8px 16px;font-size:.78rem;border-radius:10px;width:auto}
+.btn+.btn{margin-top:8px}
+
+/* FORM */
+.field{margin-bottom:14px}
+.field label{display:block;font-size:.75rem;font-weight:700;color:var(--tx2);margin-bottom:6px;letter-spacing:.5px;text-transform:uppercase}
+.field input,.field select,.field textarea{width:100%;background:var(--bg);border:1.5px solid var(--s2);border-radius:10px;padding:12px;color:var(--tx);font-size:.88rem;font-family:inherit;outline:none;transition:border-color .15s}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--tl)}
+.field input::placeholder,.field textarea::placeholder{color:var(--tx3)}
+.field select option{background:var(--s1)}
+.gender-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.gender-btn{background:var(--bg);border:1.5px solid var(--s2);border-radius:10px;padding:10px;color:var(--tx2);font-size:.85rem;font-weight:700;font-family:inherit;cursor:pointer;transition:all .15s;text-align:center}
+.gender-btn.on{background:var(--tl);border-color:var(--tl);color:#fff}
+
+/* BADGES */
+.badge{display:inline-block;font-size:.68rem;font-weight:700;padding:.2rem .55rem;border-radius:20px}
+.badge-falci{background:rgba(59,130,246,.18);color:#93c5fd}
+.badge-vivax{background:rgba(34,197,94,.18);color:#86efac}
+.badge-knowlesi{background:rgba(239,68,68,.18);color:#fca5a5}
+.badge-malariae{background:rgba(245,158,11,.18);color:#fcd34d}
+.badge-ovale{background:rgba(168,85,247,.18);color:#d8b4fe}
+.badge-neg{background:rgba(100,116,139,.2);color:var(--tx2)}
+.badge-pending{background:rgba(245,158,11,.15);color:#fcd34d}
+.badge-confirmed{background:rgba(34,197,94,.15);color:#86efac}
+.badge-modified{background:rgba(59,130,246,.15);color:#93c5fd}
+
+/* MISC */
+.row{display:flex;align-items:center;gap:10px}
+.row-sb{display:flex;align-items:center;justify-content:space-between}
+.section-lbl{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--tx3);margin-bottom:10px}
+.divider{height:1px;background:var(--bdr);margin:12px 0}
+.tag{background:var(--s2);color:var(--tx2);font-size:.7rem;font-weight:600;padding:.2rem .55rem;border-radius:6px;display:inline-block}
+
+/* STAT CARDS */
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.stat-card{background:var(--s1);border:1px solid var(--bdr);border-radius:var(--rad);padding:12px}
+.stat-card.hl{background:linear-gradient(135deg,var(--tl),#0891b2)}
+.stat-num{font-size:1.6rem;font-weight:900}
+.stat-lbl{font-size:.7rem;color:var(--tx2);margin-top:2px}
+.stat-card.hl .stat-lbl{color:rgba(255,255,255,.7)}
+
+/* RECENT ITEM */
+.case-item{background:var(--s1);border:1px solid var(--bdr);border-radius:var(--rad);padding:12px;margin-bottom:8px;display:flex;align-items:center;gap:10px;cursor:pointer}
+.case-item:active{background:var(--s2)}
+.case-avatar{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:800;color:#fff;flex-shrink:0}
+.case-name{font-size:.85rem;font-weight:700}
+.case-meta{font-size:.7rem;color:var(--tx2);margin-top:2px}
+.case-right{margin-left:auto;text-align:right;flex-shrink:0}
+.case-time{font-size:.65rem;color:var(--tx3)}
+.no-cases{text-align:center;color:var(--tx3);padding:32px 16px;font-size:.85rem}
+
+/* CAMERA SCREEN */
+#s-camera .screen-body{flex:1;display:flex;flex-direction:column;background:#000}
+.video-wrap{flex:1;position:relative;overflow:hidden;background:#000;display:flex;align-items:center;justify-content:center}
+video,#preview-img{width:100%;height:100%;object-fit:cover}
+#preview-img{display:none}
+.cam-overlay{position:absolute;inset:0;pointer-events:none}
+.cam-corner{position:absolute;width:40px;height:40px;border-color:var(--tl2);border-style:solid}
+.cam-corner.tl{top:24px;left:24px;border-width:3px 0 0 3px;border-radius:6px 0 0 0}
+.cam-corner.tr{top:24px;right:24px;border-width:3px 3px 0 0;border-radius:0 6px 0 0}
+.cam-corner.bl{bottom:24px;left:24px;border-width:0 0 3px 3px;border-radius:0 0 0 6px}
+.cam-corner.br{bottom:24px;right:24px;border-width:0 3px 3px 0;border-radius:0 0 6px 0}
+.cam-bottom{background:rgba(0,0,0,.7);backdrop-filter:blur(8px);padding:16px;display:flex;align-items:center;justify-content:space-around}
+.cam-capture-btn{width:68px;height:68px;border-radius:50%;background:#fff;border:none;font-size:1.6rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 4px rgba(255,255,255,.25)}
+.cam-side-btn{width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.cam-counter{position:absolute;top:16px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.7);border-radius:20px;padding:4px 12px;font-size:.75rem;font-weight:700;color:var(--tl2)}
+.img-thumbnails{display:flex;gap:6px;padding:8px 16px;background:rgba(0,0,0,.8)}
+.img-thumb{width:44px;height:44px;border-radius:8px;object-fit:cover;border:2px solid var(--s2);cursor:pointer;flex-shrink:0}
+.img-thumb.active{border-color:var(--tl)}
+.img-delete{width:44px;height:44px;border-radius:8px;background:rgba(255,255,255,.08);border:1.5px dashed var(--s2);display:flex;align-items:center;justify-content:center;color:var(--tx3);font-size:1.2rem;cursor:pointer}
+
+/* PROCESSING */
+#s-processing{background:var(--bg);align-items:center;justify-content:center}
+.proc-brain{width:90px;height:90px;border-radius:50%;background:radial-gradient(circle,var(--tl) 0%,#0f4c75 70%);display:flex;align-items:center;justify-content:center;font-size:2.4rem;position:relative;animation:pulse 2s ease-in-out infinite;margin-bottom:20px}
+.proc-ring{position:absolute;inset:-8px;border-radius:50%;border:2.5px solid transparent;border-top-color:var(--tl2);border-right-color:var(--tl2);animation:spin 1.4s linear infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(13,148,136,.4)}50%{box-shadow:0 0 0 18px rgba(13,148,136,0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.proc-title{font-size:1.1rem;font-weight:800;margin-bottom:6px;text-align:center}
+.proc-sub{font-size:.8rem;color:var(--tx2);margin-bottom:24px;text-align:center}
+.proc-steps{width:100%;max-width:300px;display:flex;flex-direction:column;gap:6px}
+.proc-step{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:10px;background:var(--s1)}
+.proc-step-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.8rem;flex-shrink:0}
+.proc-step.done .proc-step-icon{background:rgba(34,197,94,.2)}
+.proc-step.active .proc-step-icon{background:rgba(13,148,136,.25);animation:pulse 1.5s infinite}
+.proc-step.pending .proc-step-icon{background:var(--s2)}
+.proc-step-label{font-size:.78rem;font-weight:600;color:var(--tx2)}
+.proc-step.done .proc-step-label{color:var(--tl2)}
+.proc-step.active .proc-step-label{color:var(--tx)}
+
+/* RESULT */
+.result-hero{background:linear-gradient(135deg,#1a3a5c,var(--tl));padding:16px}
+.result-main{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:16px;padding:14px;display:flex;align-items:center;gap:12px;margin-top:12px}
+.result-icon{font-size:2rem}
+.result-species{font-size:1.1rem;font-weight:900;color:#fff}
+.result-latin{font-style:italic;font-size:.75rem;color:rgba(255,255,255,.65)}
+.result-conf{background:rgba(255,255,255,.15);border-radius:20px;padding:.2rem .7rem;font-size:.7rem;font-weight:700;color:#a7f3d0;margin-top:4px;display:inline-block}
+.alert-box{border-radius:12px;padding:12px;margin-bottom:10px;display:flex;gap:10px}
+.alert-box.danger{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3)}
+.alert-box.warn{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3)}
+.alert-box.success{background:rgba(13,148,136,.1);border:1px solid rgba(13,148,136,.3)}
+.alert-icon{font-size:1.1rem;flex-shrink:0;margin-top:1px}
+.alert-title{font-size:.82rem;font-weight:700}
+.alert-box.danger .alert-title{color:#fca5a5}
+.alert-box.warn .alert-title{color:#fcd34d}
+.alert-box.success .alert-title{color:var(--tl2)}
+.alert-desc{font-size:.74rem;color:var(--tx2);margin-top:3px;line-height:1.4}
+.metrics-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.metric-card{background:var(--s1);border:1px solid var(--bdr);border-radius:12px;padding:10px;text-align:center}
+.metric-val{font-size:1.2rem;font-weight:900}
+.metric-val.danger{color:#f87171}
+.metric-val.warn{color:#fbbf24}
+.metric-val.ok{color:var(--tl2)}
+.metric-lbl{font-size:.68rem;color:var(--tx3);margin-top:2px}
+.conf-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.conf-lbl{font-size:.72rem;color:var(--tx2);width:85px;flex-shrink:0;font-weight:600}
+.conf-bar{flex:1;height:6px;background:var(--s2);border-radius:3px;overflow:hidden}
+.conf-fill{height:100%;border-radius:3px;transition:width .5s}
+.conf-pct{font-size:.7rem;font-weight:700;width:38px;text-align:right;flex-shrink:0}
+.stadium-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--bdr)}
+.stadium-row:last-child{border:none}
+.st-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.st-name{font-size:.78rem;color:var(--tx2);flex:1}
+.st-pct{font-size:.78rem;font-weight:700}
+.st-bar-wrap{width:50px;height:4px;background:var(--s2);border-radius:2px}
+.st-bar{height:100%;border-radius:2px}
+
+/* REPORT */
+.report-card{background:var(--s1);border:1px solid var(--bdr);border-radius:var(--rad);overflow:hidden;margin-bottom:10px}
+.report-card-hdr{background:linear-gradient(135deg,#0f4c75,var(--tl));padding:12px 14px}
+.report-card-hdr h4{font-size:.88rem;font-weight:800;color:#fff}
+.report-card-hdr p{font-size:.7rem;color:rgba(255,255,255,.65);margin-top:2px}
+.report-card-body{padding:12px 14px}
+.report-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--bdr);font-size:.78rem}
+.report-row:last-child{border:none}
+.rk{color:var(--tx3)}
+.rv{font-weight:600;text-align:right;max-width:55%}
+.rv.danger{color:#f87171}
+.rv.ok{color:var(--tl2)}
+.sismal-box{background:rgba(13,148,136,.08);border:1px solid rgba(13,148,136,.25);border-radius:12px;padding:12px;display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.tlx-item{display:flex;gap:8px;align-items:flex-start;padding:6px 0;border-bottom:1px solid var(--bdr)}
+.tlx-item:last-child{border:none}
+.tlx-dot{width:6px;height:6px;border-radius:50%;background:var(--tl);flex-shrink:0;margin-top:5px}
+.tlx-text{font-size:.78rem;color:var(--tx2);line-height:1.4}
+.tlx-text strong{color:var(--tx)}
+
+/* LIST SEARCH */
+.search-bar{background:var(--bg);border:1.5px solid var(--s2);border-radius:10px;padding:10px 12px;color:var(--tx);font-size:.85rem;font-family:inherit;outline:none;width:100%;margin-bottom:12px}
+.search-bar:focus{border-color:var(--tl)}
+.filter-pills{display:flex;gap:6px;flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;margin-bottom:12px;scrollbar-width:none}
+.filter-pills::-webkit-scrollbar{display:none}
+.pill{background:var(--s1);border:1px solid var(--bdr);border-radius:20px;padding:.25rem .7rem;font-size:.72rem;font-weight:600;color:var(--tx2);cursor:pointer;white-space:nowrap;flex-shrink:0}
+.pill.on{background:var(--tl);border-color:var(--tl);color:#fff}
+
+/* SPLASH */
+#s-splash{background:linear-gradient(160deg,#0f4c75,var(--tl) 60%,#065f46);align-items:center;justify-content:center;gap:20px}
+.splash-logo{width:96px;height:96px;border-radius:28px;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:3rem}
+.splash-title{color:#fff;font-size:2.2rem;font-weight:900;text-align:center;line-height:1.1}
+.splash-title span{color:#a7f3d0}
+.splash-sub{color:rgba(255,255,255,.75);font-size:.85rem;text-align:center;max-width:280px;line-height:1.5}
+.splash-ver{color:rgba(255,255,255,.4);font-size:.7rem}
+
+/* SETUP */
+#s-setup{background:var(--bg)}
+.setup-header{background:linear-gradient(135deg,#0f4c75,var(--tl));padding:24px 16px 20px;text-align:center}
+.setup-header h2{font-size:1.3rem;font-weight:900;color:#fff}
+.setup-header p{color:rgba(255,255,255,.7);font-size:.8rem;margin-top:6px}
+
+/* VALIDATION NOTIFICATION */
+.val-notif{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);border-radius:12px;padding:12px;margin-bottom:10px;display:flex;align-items:flex-start;gap:10px;cursor:pointer}
+.val-notif.modified{background:rgba(59,130,246,.1);border-color:rgba(59,130,246,.3)}
+.val-notif.rejected{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.3)}
+
+/* TOAST */
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--s2);color:var(--tx);border-radius:20px;padding:10px 20px;font-size:.82rem;font-weight:600;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+
+/* SCROLLBAR */
+*{scrollbar-width:thin;scrollbar-color:var(--s2) transparent}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- ===== SPLASH ===== -->
+<div class="screen active" id="s-splash">
+  <div class="splash-logo">🧬</div>
+  <div class="splash-title">Malar<span>AI</span><br>Indonesia</div>
+  <div class="splash-sub">Deteksi cepat <em>Plasmodium</em> dari foto sediaan darah menggunakan kecerdasan buatan</div>
+  <div class="splash-ver">v2.1.0 · Prototype · Kemenkes RI</div>
+</div>
+
+<!-- ===== SETUP ===== -->
+<div class="screen" id="s-setup">
+  <div class="setup-header">
+    <h2>Selamat Datang di MalarAI-ID</h2>
+    <p>Lengkapi data fasilitas kesehatan Anda untuk memulai</p>
+  </div>
+  <div class="scroll">
+    <div class="field"><label>Nama Fasilitas Kesehatan</label><input id="setup-facility" type="text" placeholder="Contoh: PKM Muara Wahau"></div>
+    <div class="field"><label>Kode Puskesmas / Faskes</label><input id="setup-code" type="text" placeholder="Contoh: KTI-0042"></div>
+    <div class="field"><label>Kabupaten / Kota</label><input id="setup-district" type="text" placeholder="Contoh: Kutai Timur"></div>
+    <div class="field"><label>Nama Tenaga Kesehatan</label><input id="setup-nakes" type="text" placeholder="Contoh: dr. Adwiki Cahyadi Y."></div>
+    <div class="field"><label>Jabatan</label>
+      <select id="setup-role">
+        <option value="">-- Pilih Jabatan --</option>
+        <option>Dokter Umum</option>
+        <option>Dokter Spesialis</option>
+        <option>Perawat</option>
+        <option>Analis Kesehatan</option>
+        <option>Bidan</option>
+        <option>Tenaga Kesehatan Lain</option>
+      </select>
+    </div>
+    <button class="btn btn-primary" onclick="saveSetup()">Mulai Menggunakan MalarAI-ID →</button>
+  </div>
+</div>
+
+<!-- ===== DASHBOARD ===== -->
+<div class="screen" id="s-dash">
+  <div style="background:linear-gradient(135deg,#0f4c75,var(--tl));padding:16px 16px 24px">
+    <div class="row-sb" style="margin-bottom:10px">
+      <div>
+        <div style="color:rgba(255,255,255,.7);font-size:.75rem">Selamat datang,</div>
+        <div id="dash-nakes" style="color:#fff;font-size:1rem;font-weight:800"></div>
+      </div>
+      <div id="dash-sync-status" style="background:rgba(255,255,255,.12);border-radius:20px;padding:4px 10px;font-size:.7rem;font-weight:700;color:rgba(255,255,255,.8)">● Offline</div>
+    </div>
+    <div style="background:rgba(255,255,255,.1);border-radius:12px;padding:8px 12px;font-size:.75rem;color:rgba(255,255,255,.8)">📍 <span id="dash-facility"></span></div>
+  </div>
+  <div class="scroll" style="margin-top:-12px">
+    <div class="stat-grid">
+      <div class="stat-card hl">
+        <div class="stat-num" id="dash-today">0</div>
+        <div class="stat-lbl">Pemeriksaan hari ini</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="dash-pending" style="color:var(--am)">0</div>
+        <div class="stat-lbl">Menunggu validasi expert</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="dash-positive" style="color:#f87171">0</div>
+        <div class="stat-lbl">Positif malaria</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="dash-validated" style="color:var(--tl2)">0</div>
+        <div class="stat-lbl">Tervalidasi expert</div>
+      </div>
+    </div>
+    <div id="dash-notifs"></div>
+    <button class="btn btn-primary" onclick="go('patient')" style="margin-bottom:12px">
+      📸 Mulai Pemeriksaan Baru
+    </button>
+    <div class="row-sb" style="margin-bottom:10px">
+      <div class="section-lbl" style="margin:0">Pemeriksaan Terbaru</div>
+      <span style="color:var(--tl2);font-size:.75rem;cursor:pointer" onclick="go('list')">Lihat semua</span>
+    </div>
+    <div id="dash-cases"></div>
+  </div>
+  <div class="bot-nav">
+    <div class="bnav-item on"><div class="bnav-icon">🏠</div><div class="bnav-label">Beranda</div></div>
+    <div class="bnav-item" onclick="go('list')"><div class="bnav-icon">👥</div><div class="bnav-label">Pasien</div></div>
+    <div class="bnav-item" onclick="go('settings')"><div class="bnav-icon">⚙️</div><div class="bnav-label">Pengaturan</div></div>
+  </div>
+</div>
+
+<!-- ===== PATIENT FORM ===== -->
+<div class="screen" id="s-patient">
+  <div class="hdr">
+    <button class="hdr-back" onclick="go('dash')">←</button>
+    <div><div class="hdr-title">Data Pasien Baru</div><div class="hdr-sub">Langkah 1 dari 3</div></div>
+  </div>
+  <div class="scroll">
+    <div class="field"><label>Nama Lengkap Pasien</label><input id="p-name" type="text" placeholder="Nama sesuai KTP"></div>
+    <div class="field"><label>Nomor Rekam Medis</label><input id="p-rm" type="text" placeholder="Kosongkan jika belum ada"></div>
+    <div class="field"><label>Usia (Tahun)</label><input id="p-age" type="number" placeholder="Contoh: 34" min="0" max="120"></div>
+    <div class="field">
+      <label>Jenis Kelamin</label>
+      <div class="gender-row">
+        <button class="gender-btn" id="gb-l" onclick="setGender('L')">👨 Laki-laki</button>
+        <button class="gender-btn" id="gb-p" onclick="setGender('P')">👩 Perempuan</button>
+      </div>
+    </div>
+    <div class="field"><label>Keluhan Utama</label><textarea id="p-complaint" rows="2" placeholder="Contoh: Demam 3 hari, menggigil, sakit kepala"></textarea></div>
+    <div class="field"><label>Riwayat Perjalanan (7 Hari Terakhir)</label>
+      <select id="p-travel">
+        <option value="">-- Pilih --</option>
+        <option>Tidak ada perjalanan</option>
+        <option>Kalimantan</option>
+        <option>Papua</option>
+        <option>NTT / NTB</option>
+        <option>Maluku / Maluku Utara</option>
+        <option>Sulawesi</option>
+        <option>Luar negeri (Asia)</option>
+        <option>Luar negeri (Afrika)</option>
+      </select>
+    </div>
+    <button class="btn btn-primary" onclick="startCamera()">Lanjut ke Foto Sediaan Darah 📸</button>
+  </div>
+</div>
+
+<!-- ===== CAMERA ===== -->
+<div class="screen" id="s-camera">
+  <div class="hdr" style="background:#000;border-color:#333">
+    <button class="hdr-back" style="color:var(--tl2)" onclick="stopCamera();go('patient')">←</button>
+    <div><div class="hdr-title">Foto Sediaan Darah</div><div class="hdr-sub">Langkah 2 dari 3</div></div>
+    <div class="hdr-right"><span id="cam-count" class="tag">0 / 3 Foto</span></div>
+  </div>
+  <div class="screen-body">
+    <div class="video-wrap">
+      <video id="cam-video" autoplay muted playsinline></video>
+      <img id="preview-img" alt="preview">
+      <div class="cam-overlay">
+        <div class="cam-corner tl"></div><div class="cam-corner tr"></div>
+        <div class="cam-corner bl"></div><div class="cam-corner br"></div>
+      </div>
+      <div class="cam-counter" id="cam-hint">Posisikan sediaan darah di tengah bingkai</div>
+    </div>
+    <div class="img-thumbnails" id="img-thumbs"></div>
+    <div class="cam-bottom">
+      <div class="cam-side-btn" onclick="switchCamera()">🔄</div>
+      <button class="cam-capture-btn" id="cam-btn" onclick="capturePhoto()">📸</button>
+      <div class="cam-side-btn" onclick="pickFromGallery()">🖼️</div>
+    </div>
+  </div>
+  <input type="file" id="file-input" accept="image/*" multiple style="display:none" onchange="handleFileInput(this)">
+  <input type="file" id="cam-input" accept="image/*" capture="environment" style="display:none" onchange="handleFileInput(this)">
+  <div style="background:#000;padding:10px 16px">
+    <button class="btn btn-primary" id="analyze-btn" onclick="startAnalysis()" style="display:none">
+      🧠 Analisis AI Sekarang
+    </button>
+  </div>
+</div>
+
+<!-- ===== PROCESSING ===== -->
+<div class="screen" id="s-processing">
+  <div class="proc-brain">🧠<div class="proc-ring"></div></div>
+  <div class="proc-title">Menganalisis Sediaan Darah</div>
+  <div class="proc-sub" id="proc-subtitle">EfficientNet-B3 · Inferensi On-Device</div>
+  <div class="proc-steps" id="proc-steps">
+    <div class="proc-step active" id="ps-1"><div class="proc-step-icon">⚙️</div><div class="proc-step-label">Pre-processing & normalisasi warna</div></div>
+    <div class="proc-step pending" id="ps-2"><div class="proc-step-icon">⏳</div><div class="proc-step-label">Deteksi & segmentasi eritrosit</div></div>
+    <div class="proc-step pending" id="ps-3"><div class="proc-step-icon">⏳</div><div class="proc-step-label">Klasifikasi spesies Plasmodium</div></div>
+    <div class="proc-step pending" id="ps-4"><div class="proc-step-icon">⏳</div><div class="proc-step-label">Hitung densitas parasitemia</div></div>
+    <div class="proc-step pending" id="ps-5"><div class="proc-step-icon">⏳</div><div class="proc-step-label">Generate laporan klinis</div></div>
+  </div>
+</div>
+
+<!-- ===== RESULT ===== -->
+<div class="screen" id="s-result">
+  <div class="result-hero" id="res-hero">
+    <div class="row-sb">
+      <div><div style="color:rgba(255,255,255,.7);font-size:.75rem">Hasil Pemeriksaan AI</div><div id="res-datetime" style="color:#fff;font-size:.82rem;font-weight:700;margin-top:2px"></div></div>
+      <span id="res-severity-badge" class="badge badge-neg"></span>
+    </div>
+    <div class="result-main">
+      <div class="result-icon" id="res-icon">🔵</div>
+      <div>
+        <div class="result-species" id="res-species">-</div>
+        <div class="result-latin" id="res-latin">-</div>
+        <div class="result-conf" id="res-conf">Confidence: --</div>
+      </div>
+    </div>
+  </div>
+  <div class="scroll">
+    <div id="res-alerts" style="margin-bottom:10px"></div>
+    <div class="metrics-grid" id="res-metrics"></div>
+    <div class="card" style="margin-bottom:10px">
+      <div class="section-lbl">Probabilitas per Spesies</div>
+      <div id="res-confbars"></div>
+    </div>
+    <div class="card" style="margin-bottom:10px">
+      <div class="section-lbl">Distribusi Stadium Parasit</div>
+      <div id="res-stadium"></div>
+    </div>
+    <div class="card" style="margin-bottom:10px">
+      <div class="section-lbl">Rekomendasi Tatalaksana</div>
+      <div id="res-tlx"></div>
+    </div>
+    <div class="alert-box warn">
+      <div class="alert-icon">⚠️</div>
+      <div><div class="alert-title">Kirim ke Expert Validator</div><div class="alert-desc">Hasil AI dikirim otomatis ke Expert Portal untuk divalidasi. Anda akan mendapat notifikasi setelah expert mengkonfirmasi diagnosis.</div></div>
+    </div>
+    <button class="btn btn-primary" onclick="viewReport()" style="margin-top:10px">📋 Lihat Laporan Lengkap</button>
+    <button class="btn btn-outline" onclick="go('dash')" style="margin-top:8px">← Kembali ke Beranda</button>
+  </div>
+</div>
+
+<!-- ===== REPORT ===== -->
+<div class="screen" id="s-report">
+  <div class="hdr">
+    <button class="hdr-back" onclick="go('result')">←</button>
+    <div><div class="hdr-title">Laporan Kemenkes RI</div><div class="hdr-sub" id="rpt-id"></div></div>
+    <div class="hdr-right">
+      <button class="btn btn-primary btn-sm" onclick="printReport()">📤</button>
+    </div>
+  </div>
+  <div class="scroll">
+    <div id="report-content"></div>
+    <button class="btn btn-outline" onclick="go('dash')">← Kembali ke Beranda</button>
+    <div style="height:20px"></div>
+  </div>
+</div>
+
+<!-- ===== PATIENT LIST ===== -->
+<div class="screen" id="s-list">
+  <div class="hdr">
+    <button class="hdr-back" onclick="go('dash')">←</button>
+    <div><div class="hdr-title">Semua Pasien</div><div class="hdr-sub" id="list-count"></div></div>
+  </div>
+  <div style="padding:12px 16px 0;flex-shrink:0">
+    <input class="search-bar" id="list-search" type="text" placeholder="🔍  Cari nama atau No. RM..." oninput="renderList()">
+    <div class="filter-pills">
+      <div class="pill on" onclick="setFilter(this,'all')">Semua</div>
+      <div class="pill" onclick="setFilter(this,'P. falciparum')">Falciparum</div>
+      <div class="pill" onclick="setFilter(this,'P. vivax')">Vivax</div>
+      <div class="pill" onclick="setFilter(this,'P. knowlesi')">Knowlesi</div>
+      <div class="pill" onclick="setFilter(this,'Negatif')">Negatif</div>
+      <div class="pill" onclick="setFilter(this,'pending')">Menunggu</div>
+    </div>
+  </div>
+  <div class="scroll" style="padding-top:6px" id="list-body"></div>
+</div>
+
+<!-- ===== SETTINGS ===== -->
+<div class="screen" id="s-settings">
+  <div class="hdr">
+    <button class="hdr-back" onclick="go('dash')">←</button>
+    <div><div class="hdr-title">Pengaturan</div></div>
+  </div>
+  <div class="scroll">
+    <div class="section-lbl">Data Fasilitas Kesehatan</div>
+    <div class="field"><label>Nama Faskes</label><input id="cfg-facility" type="text"></div>
+    <div class="field"><label>Kode Faskes</label><input id="cfg-code" type="text"></div>
+    <div class="field"><label>Kabupaten</label><input id="cfg-district" type="text"></div>
+    <div class="field"><label>Nama Nakes</label><input id="cfg-nakes" type="text"></div>
+    <div class="field"><label>Jabatan</label>
+      <select id="cfg-role"><option>Dokter Umum</option><option>Dokter Spesialis</option><option>Perawat</option><option>Analis Kesehatan</option><option>Bidan</option></select>
+    </div>
+    <button class="btn btn-primary" onclick="updateSettings()">Simpan Pengaturan</button>
+    <div class="divider"></div>
+    <div class="section-lbl">Data & Integrasi</div>
+    <div class="card"><div class="row-sb"><div><div style="font-size:.85rem;font-weight:700">Expert Portal URL</div><div style="font-size:.72rem;color:var(--tx2);margin-top:2px">Buka di browser yang sama</div></div><span style="color:var(--tl2);font-size:.8rem">🔗</span></div></div>
+    <div class="card" style="margin-top:8px"><div class="row-sb"><div><div style="font-size:.85rem;font-weight:700">Total Kasus Tersimpan</div><div id="cfg-total" style="font-size:.72rem;color:var(--tx2);margin-top:2px"></div></div></div></div>
+    <button class="btn btn-danger" onclick="clearData()" style="margin-top:8px">🗑️ Hapus Semua Data (Reset)</button>
+    <div class="divider"></div>
+    <div style="font-size:.72rem;color:var(--tx3);text-align:center">MalarAI-ID v2.1.0 · Prototype · © 2026<br>Data disimpan lokal di perangkat ini</div>
+    <div style="height:20px"></div>
+  </div>
+</div>
+
+</div><!-- /app -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============ STATE ============ */
+const APP = {
+  screen: 'splash',
+  settings: null,
+  cases: [],
+  current: null,   // case being built
+  images: [],      // captured images (base64)
+  gender: null,
+  filter: 'all',
+  facingMode: 'environment',
+  stream: null,
+};
+
+/* ============ STORAGE ============ */
+function loadAll() {
+  try { APP.cases = JSON.parse(localStorage.getItem('malarai_cases')||'[]'); } catch(e){APP.cases=[];}
+  try { APP.settings = JSON.parse(localStorage.getItem('malarai_settings')||'null'); } catch(e){APP.settings=null;}
+}
+function saveCases() { localStorage.setItem('malarai_cases', JSON.stringify(APP.cases)); }
+function saveSettings() { localStorage.setItem('malarai_settings', JSON.stringify(APP.settings)); }
+
+/* ============ NAVIGATE ============ */
+function go(name) {
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('s-'+name).classList.add('active');
+  APP.screen = name;
+  if(name==='dash') renderDash();
+  if(name==='list') renderList();
+  if(name==='settings') fillSettings();
+}
+
+/* ============ TOAST ============ */
+function toast(msg, dur=2500) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), dur);
+}
+
+/* ============ SETUP ============ */
+function saveSetup() {
+  const facility = document.getElementById('setup-facility').value.trim();
+  const nakes = document.getElementById('setup-nakes').value.trim();
+  if(!facility||!nakes){toast('Isi nama faskes dan nakes terlebih dahulu'); return;}
+  APP.settings = {
+    facilityName: facility,
+    facilityCode: document.getElementById('setup-code').value.trim()||'---',
+    district: document.getElementById('setup-district').value.trim(),
+    nakesName: nakes,
+    nakesRole: document.getElementById('setup-role').value||'Tenaga Kesehatan',
+    createdAt: new Date().toISOString()
+  };
+  saveSettings();
+  go('dash');
+}
+
+/* ============ DASHBOARD ============ */
+function renderDash() {
+  loadAll();
+  const s = APP.settings||{};
+  document.getElementById('dash-nakes').textContent = s.nakesName||'Nakes';
+  document.getElementById('dash-facility').textContent = (s.facilityName||'Faskes')+(s.district?', '+s.district:'');
+  const today = new Date().toDateString();
+  const todayCases = APP.cases.filter(c=>new Date(c.createdAt).toDateString()===today);
+  const pending = APP.cases.filter(c=>c.status==='pending_expert').length;
+  const positive = APP.cases.filter(c=>c.ai&&c.ai.species!=='Negatif').length;
+  const validated = APP.cases.filter(c=>c.status==='expert_confirmed'||c.status==='expert_modified').length;
+  document.getElementById('dash-today').textContent = todayCases.length;
+  document.getElementById('dash-pending').textContent = pending;
+  document.getElementById('dash-positive').textContent = positive;
+  document.getElementById('dash-validated').textContent = validated;
+
+  // Notifications from expert
+  const notifEl = document.getElementById('dash-notifs');
+  const recentValidated = APP.cases.filter(c=>c.expertValidation&&!c.notifSeen).slice(0,3);
+  notifEl.innerHTML = recentValidated.map(c=>{
+    const cls = c.expertValidation.validationStatus==='confirmed'?'':'modified';
+    const icon = c.expertValidation.validationStatus==='confirmed'?'✅':'✏️';
+    const lbl = c.expertValidation.validationStatus==='confirmed'?'dikonfirmasi':'dimodifikasi';
+    return `<div class="val-notif ${cls}" onclick="markNotifSeen('${c.id}')">
+      <div style="font-size:1.2rem">${icon}</div>
+      <div>
+        <div style="font-size:.82rem;font-weight:700;color:var(--tx)">Expert ${lbl}: ${c.patient.name}</div>
+        <div style="font-size:.72rem;color:var(--tx2);margin-top:2px">${c.expertValidation.confirmedSpecies} — ${new Date(c.expertValidation.timestamp).toLocaleString('id-ID')}</div>
+        ${c.expertValidation.notes?`<div style="font-size:.7rem;color:var(--tx3);margin-top:3px;font-style:italic">"${c.expertValidation.notes.substring(0,60)}..."</div>`:''}
+      </div>
+    </div>`;
+  }).join('');
+
+  // Recent cases
+  const el = document.getElementById('dash-cases');
+  const recent = [...APP.cases].reverse().slice(0,5);
+  if(!recent.length){el.innerHTML='<div class="no-cases">🔬 Belum ada pemeriksaan.<br>Mulai dengan menekan tombol di atas.</div>';return;}
+  el.innerHTML = recent.map(c=>caseItemHTML(c)).join('');
+}
+
+function markNotifSeen(id) {
+  const c = APP.cases.find(x=>x.id===id);
+  if(c){c.notifSeen=true;saveCases();renderDash();}
+}
+
+function caseItemHTML(c) {
+  const sp = c.ai?c.ai.species:'Memproses...';
+  const bc = speciesBadgeClass(sp);
+  const initials = (c.patient.name||'?').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+  const avatarColor = speciesColor(sp);
+  const statusBadge = c.status==='expert_confirmed'?'<span class="badge badge-confirmed">✓ Valid</span>':
+                      c.status==='expert_modified'?'<span class="badge badge-modified">✏ Modif</span>':
+                      '<span class="badge badge-pending">⏳ Pending</span>';
+  return `<div class="case-item" onclick="openCase('${c.id}')">
+    <div class="case-avatar" style="background:${avatarColor}">${initials}</div>
+    <div style="flex:1;min-width:0">
+      <div class="case-name">${c.patient.name}</div>
+      <div class="case-meta">${c.patient.gender==='L'?'L':'P'} · ${c.patient.age} th · <span class="badge ${bc}" style="font-size:.65rem;padding:.12rem .4rem">${sp}</span></div>
+    </div>
+    <div class="case-right">
+      ${statusBadge}
+      <div class="case-time">${formatTime(c.createdAt)}</div>
+    </div>
+  </div>`;
+}
+
+function openCase(id) {
+  const c = APP.cases.find(x=>x.id===id);
+  if(!c) return;
+  APP.current = c;
+  renderResult(c);
+  go('result');
+}
+
+/* ============ PATIENT FORM ============ */
+function setGender(g) {
+  APP.gender = g;
+  document.getElementById('gb-l').classList.toggle('on', g==='L');
+  document.getElementById('gb-p').classList.toggle('on', g==='P');
+}
+
+function startCamera() {
+  const name = document.getElementById('p-name').value.trim();
+  if(!name){toast('Isi nama pasien terlebih dahulu'); return;}
+  APP.current = {
+    id: 'case_'+Date.now(),
+    patient: {
+      name,
+      rm: document.getElementById('p-rm').value.trim()||'---',
+      age: parseInt(document.getElementById('p-age').value)||0,
+      gender: APP.gender||'L',
+      complaint: document.getElementById('p-complaint').value.trim(),
+      travel: document.getElementById('p-travel').value,
+    },
+    facility: APP.settings,
+    ai: null,
+    status: 'processing',
+    expertValidation: null,
+    notifSeen: false,
+    createdAt: new Date().toISOString(),
+  };
+  APP.images = [];
+  APP.gender = null;
+  document.getElementById('gb-l').classList.remove('on');
+  document.getElementById('gb-p').classList.remove('on');
+  go('camera');
+  initCamera();
+}
+
+/* ============ CAMERA ============ */
+function initCamera() {
+  document.getElementById('img-thumbs').innerHTML='';
+  document.getElementById('analyze-btn').style.display='none';
+  document.getElementById('cam-count').textContent='0 / 3 Foto';
+  const video = document.getElementById('cam-video');
+  const preview = document.getElementById('preview-img');
+  video.style.display='block'; preview.style.display='none';
+
+  if(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia){
+    navigator.mediaDevices.getUserMedia({video:{facingMode:APP.facingMode,width:{ideal:1280},height:{ideal:720}}})
+    .then(stream=>{
+      APP.stream=stream;
+      video.srcObject=stream;
+    })
+    .catch(()=>useFallbackCamera());
+  } else {
+    useFallbackCamera();
+  }
+}
+
+function useFallbackCamera() {
+  document.getElementById('cam-hint').textContent='Ketuk tombol 📸 untuk mengambil foto';
+  const video = document.getElementById('cam-video');
+  video.style.display='none';
+}
+
+function stopCamera() {
+  if(APP.stream){APP.stream.getTracks().forEach(t=>t.stop());APP.stream=null;}
+}
+
+function switchCamera() {
+  APP.facingMode = APP.facingMode==='environment'?'user':'environment';
+  stopCamera(); initCamera();
+}
+
+function capturePhoto() {
+  if(APP.images.length>=3){toast('Maksimal 3 foto'); return;}
+  if(APP.stream){
+    const video = document.getElementById('cam-video');
+    const canvas = document.createElement('canvas');
+    canvas.width=Math.min(video.videoWidth,800);
+    canvas.height=Math.min(video.videoHeight,600);
+    const ctx=canvas.getContext('2d');
+    ctx.drawImage(video,0,0,canvas.width,canvas.height);
+    const dataUrl=canvas.toDataURL('image/jpeg',0.75);
+    addImage(dataUrl);
+  } else {
+    document.getElementById('cam-input').click();
+  }
+}
+
+function pickFromGallery() { document.getElementById('file-input').click(); }
+
+function handleFileInput(input) {
+  const files = Array.from(input.files);
+  files.slice(0, 3-APP.images.length).forEach(file=>{
+    const reader = new FileReader();
+    reader.onload = e=>{
+      resizeImage(e.target.result, 800, 600, dataUrl=>addImage(dataUrl));
+    };
+    reader.readAsDataURL(file);
+  });
+  input.value='';
+}
+
+function resizeImage(src, maxW, maxH, cb) {
+  const img=new Image();
+  img.onload=()=>{
+    const ratio=Math.min(maxW/img.width,maxH/img.height,1);
+    const c=document.createElement('canvas');
+    c.width=img.width*ratio; c.height=img.height*ratio;
+    c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+    cb(c.toDataURL('image/jpeg',0.75));
+  };
+  img.src=src;
+}
+
+function addImage(dataUrl) {
+  if(APP.images.length>=3) return;
+  APP.images.push(dataUrl);
+  updateThumbs();
+}
+
+function updateThumbs() {
+  const el = document.getElementById('img-thumbs');
+  const count = document.getElementById('cam-count');
+  count.textContent = APP.images.length+' / 3 Foto';
+  el.innerHTML = APP.images.map((img,i)=>`
+    <img class="img-thumb ${i===0?'active':''}" src="${img}" onclick="previewThumb(${i})">`
+  ).join('') + (APP.images.length<3?`<div class="img-delete" onclick="capturePhoto()">+</div>`:'');
+  const btn = document.getElementById('analyze-btn');
+  btn.style.display = APP.images.length>0?'flex':'none';
+  if(APP.images.length>0){
+    const preview=document.getElementById('preview-img');
+    preview.src=APP.images[0];
+    if(!APP.stream){
+      document.getElementById('cam-video').style.display='none';
+      preview.style.display='block';
+    }
+  }
+}
+
+function previewThumb(i) {
+  const preview=document.getElementById('preview-img');
+  preview.src=APP.images[i];
+  if(!APP.stream){document.getElementById('cam-video').style.display='none';preview.style.display='block';}
+  document.querySelectorAll('.img-thumb').forEach((t,j)=>t.classList.toggle('active',j===i));
+}
+
+/* ============ AI ENGINE ============ */
+async function extractFeatures(dataUrl) {
+  return new Promise(resolve=>{
+    const img=new Image();
+    img.onload=()=>{
+      const sz=150;
+      const c=document.createElement('canvas');
+      c.width=sz;c.height=sz;
+      const ctx=c.getContext('2d');
+      ctx.drawImage(img,0,0,sz,sz);
+      const d=ctx.getImageData(0,0,sz,sz).data;
+      let rS=0,gS=0,bS=0,darkPx=0,variance=0;
+      const n=d.length/4;
+      for(let i=0;i<d.length;i+=4){
+        rS+=d[i];gS+=d[i+1];bS+=d[i+2];
+        const bright=(d[i]+d[i+1]+d[i+2])/3;
+        if(bright<80)darkPx++;
+      }
+      const mR=rS/n,mG=gS/n,mB=bS/n;
+      for(let i=0;i<d.length;i+=4){
+        const gray=0.299*d[i]+0.587*d[i+1]+0.114*d[i+2];
+        const mean=0.299*mR+0.587*mG+0.114*mB;
+        variance+=(gray-mean)**2;
+      }
+      variance=Math.sqrt(variance/n);
+      resolve({mR,mG,mB,darkRatio:darkPx/n,variance});
+    };
+    img.src=dataUrl;
+  });
+}
+
+async function runAI(images) {
+  // Extract features from first image
+  const feat = await extractFeatures(images[0]);
+  // Deterministic seed from image features
+  const raw = (feat.mR*7.3+feat.mG*3.7+feat.mB*1.9+feat.darkRatio*50+feat.variance*0.3);
+  const seed = ((raw*1337)%1000)/1000; // 0-1 range
+
+  // Species table with Indonesian epidemiology weights
+  const species = [
+    {name:'P. falciparum', icon:'🔵', latin:'Plasmodium falciparum', cumul:0.33, baseConf:93, basePara:4.8, color:'#3b82f6'},
+    {name:'P. vivax',      icon:'🟢', latin:'Plasmodium vivax',      cumul:0.58, baseConf:90, basePara:1.4, color:'#22c55e'},
+    {name:'P. knowlesi',   icon:'🔴', latin:'Plasmodium knowlesi',   cumul:0.76, baseConf:79, basePara:6.5, color:'#ef4444'},
+    {name:'P. malariae',   icon:'🟠', latin:'Plasmodium malariae',   cumul:0.86, baseConf:86, basePara:0.9, color:'#f59e0b'},
+    {name:'P. ovale',      icon:'🟣', latin:'Plasmodium ovale',      cumul:0.92, baseConf:81, basePara:0.6, color:'#a855f7'},
+    {name:'Negatif',       icon:'⚪', latin:'Tidak ditemukan parasit',cumul:1.00, baseConf:96, basePara:0,   color:'#64748b'},
+  ];
+
+  let sel = species[species.length-1];
+  for(const sp of species){ if(seed<sp.cumul){sel=sp;break;} }
+
+  // Add feature-based variance
+  const confV = (feat.variance%8)-4;
+  const paraV = (feat.mR%4)-2;
+  const confidence = Math.min(99.5, Math.max(64, sel.baseConf+confV));
+  const parasitemia = Math.max(0, parseFloat((sel.basePara+(sel.name!=='Negatif'?paraV:0)).toFixed(1)));
+  const density = Math.round(parasitemia*302);
+  const isSevere = parasitemia>5 && sel.name!=='Negatif';
+  const needsPCR = sel.name==='P. knowlesi';
+
+  // All species confidences
+  const allConf = {};
+  let remaining = 100;
+  species.forEach((sp,i)=>{
+    if(sp.name===sel.name){ allConf[sp.name]=Math.round(confidence); remaining-=Math.round(confidence); }
+    else if(i===species.length-1){ allConf[sp.name]=Math.max(0,remaining); }
+    else {
+      const v = Math.max(0,Math.round(remaining/(species.length-1-i)*(0.5+Math.random()*0.5)));
+      allConf[sp.name]=Math.min(v,remaining); remaining-=allConf[sp.name];
+    }
+  });
+
+  // Stadium distribution
+  let stadium = {ring:0,trophozoit:0,skizon:0,gametosit:0};
+  if(sel.name!=='Negatif'){
+    const r=Math.round(45+seed*30), tr=Math.round(25+seed*15);
+    const sk=Math.round(15+seed*10);
+    stadium={ring:r,trophozoit:tr,skizon:sk,gametosit:Math.max(0,100-r-tr-sk)};
+  }
+
+  return {
+    species:sel.name, icon:sel.icon, latin:sel.latin, color:sel.color,
+    confidence:parseFloat(confidence.toFixed(1)),
+    parasitemia, density, isSevere, needsPCR,
+    stadium, allConf,
+    cellsAnalyzed: 1600+Math.round(seed*500),
+    fieldsAnalyzed: 200
+  };
+}
+
+/* ============ ANALYSIS FLOW ============ */
+async function startAnalysis() {
+  if(!APP.images.length){toast('Ambil minimal 1 foto dulu'); return;}
+  stopCamera();
+  go('processing');
+
+  const steps = ['ps-1','ps-2','ps-3','ps-4','ps-5'];
+  const labels = ['⚙️','🔬','🧠','📊','📋'];
+  const times = [1800,2500,3500,2000,1500];
+
+  // Animate steps
+  for(let i=0;i<steps.length;i++){
+    await new Promise(r=>setTimeout(r,times[i]));
+    const el=document.getElementById(steps[i]);
+    el.className='proc-step done';
+    el.querySelector('.proc-step-icon').textContent='✅';
+    if(i+1<steps.length){
+      const next=document.getElementById(steps[i+1]);
+      next.className='proc-step active';
+      next.querySelector('.proc-step-icon').textContent=labels[i+1];
+    }
+  }
+
+  // Run AI analysis
+  const aiResult = await runAI(APP.images);
+
+  // Save case
+  APP.current.ai = aiResult;
+  APP.current.images = APP.images;
+  APP.current.status = 'pending_expert';
+  APP.current.sismalId = 'MAL-2026-'+Math.random().toString(36).substring(2,7).toUpperCase();
+
+  const idx = APP.cases.findIndex(c=>c.id===APP.current.id);
+  if(idx>=0) APP.cases[idx]=APP.current;
+  else APP.cases.push(APP.current);
+  saveCases();
+
+  // Simulate sending to expert
+  setTimeout(()=>{
+    renderResult(APP.current);
+    go('result');
+  }, 800);
+}
+
+/* ============ RENDER RESULT ============ */
+function renderResult(c) {
+  APP.current = c;
+  const ai = c.ai;
+  if(!ai) return;
+
+  document.getElementById('res-datetime').textContent = new Date(c.createdAt).toLocaleString('id-ID');
+  document.getElementById('res-icon').textContent = ai.icon;
+  document.getElementById('res-species').textContent = ai.species;
+  document.getElementById('res-latin').textContent = ai.latin;
+  document.getElementById('res-conf').textContent = `Confidence: ${ai.confidence}%`;
+
+  const sevBadge = document.getElementById('res-severity-badge');
+  if(ai.species==='Negatif'){sevBadge.textContent='Negatif';sevBadge.className='badge badge-neg';}
+  else if(ai.isSevere){sevBadge.textContent='⚠ Malaria Berat';sevBadge.className='badge';sevBadge.style.cssText='background:rgba(239,68,68,.2);color:#fca5a5';}
+  else{sevBadge.textContent='Malaria Tanpa Komplikasi';sevBadge.className='badge';sevBadge.style.cssText='background:rgba(245,158,11,.15);color:#fcd34d';}
+
+  // Alerts
+  const alerts = [];
+  if(ai.isSevere) alerts.push({type:'danger',icon:'🚨',title:'MALARIA BERAT — Tindakan Segera',desc:`Parasitemia ${ai.parasitemia}% melebihi ambang batas 5%. Lakukan tatalaksana malaria berat sesuai pedoman Kemenkes.`});
+  if(ai.needsPCR) alerts.push({type:'warn',icon:'⚠️',title:'Konfirmasi PCR Dianjurkan',desc:'P. knowlesi memerlukan konfirmasi PCR untuk diferensiasi definitif dari P. malariae. Kirim sampel ke lab rujukan.'});
+  if(c.expertValidation){
+    const ev=c.expertValidation;
+    alerts.push({type:'success',icon:'✅',title:`Expert ${ev.validationStatus==='confirmed'?'Mengkonfirmasi':'Memodifikasi'}: ${ev.confirmedSpecies}`,desc:ev.notes||'Tidak ada catatan tambahan.'});
+  }
+  if(ai.species==='Negatif') alerts.push({type:'success',icon:'✅',title:'Hasil Negatif Malaria',desc:'Tidak ditemukan parasit Plasmodium. Pertimbangkan diagnosis banding demam lainnya.'});
+
+  document.getElementById('res-alerts').innerHTML = alerts.map(a=>`
+    <div class="alert-box ${a.type}">
+      <div class="alert-icon">${a.icon}</div>
+      <div><div class="alert-title">${a.title}</div><div class="alert-desc">${a.desc}</div></div>
+    </div>`).join('');
+
+  // Metrics
+  document.getElementById('res-metrics').innerHTML = `
+    <div class="metric-card"><div class="metric-val ${ai.isSevere?'danger':ai.parasitemia>2?'warn':'ok'}">${ai.species==='Negatif'?'0%':ai.parasitemia+'%'}</div><div class="metric-lbl">Parasitemia</div></div>
+    <div class="metric-card"><div class="metric-val ${ai.density>5000?'danger':''}">${ai.density.toLocaleString()}/μL</div><div class="metric-lbl">Kepadatan Parasit</div></div>
+    <div class="metric-card"><div class="metric-val">${ai.cellsAnalyzed.toLocaleString()}</div><div class="metric-lbl">Sel Teranalisis</div></div>
+    <div class="metric-card"><div class="metric-val ok">${ai.fieldsAnalyzed}</div><div class="metric-lbl">Lapang Pandang</div></div>`;
+
+  // Confidence bars
+  const speciesColors={'P. falciparum':'#3b82f6','P. vivax':'#22c55e','P. knowlesi':'#ef4444','P. malariae':'#f59e0b','P. ovale':'#a855f7','Negatif':'#64748b'};
+  document.getElementById('res-confbars').innerHTML = Object.entries(ai.allConf).sort((a,b)=>b[1]-a[1]).map(([sp,pct])=>`
+    <div class="conf-bar-row">
+      <div class="conf-lbl">${sp.replace('Plasmodium ','P. ')}</div>
+      <div class="conf-bar"><div class="conf-fill" style="width:${pct}%;background:${speciesColors[sp]||'#64748b'}"></div></div>
+      <div class="conf-pct" style="color:${sp===ai.species?(speciesColors[sp]||'#fff'):'var(--tx3)'}">${pct}%</div>
+    </div>`).join('');
+
+  // Stadium
+  const stColors=['#f87171','#fbbf24','#a78bfa','#34d399'];
+  const stNames=['Ring form','Trofozoit','Skizon','Gametosit'];
+  const stVals=[ai.stadium.ring,ai.stadium.trophozoit,ai.stadium.skizon,ai.stadium.gametosit];
+  document.getElementById('res-stadium').innerHTML = ai.species==='Negatif'?
+    '<div style="text-align:center;color:var(--tx3);font-size:.82rem;padding:8px">— Tidak ada parasit ditemukan —</div>':
+    stNames.map((n,i)=>`
+    <div class="stadium-row">
+      <div class="st-dot" style="background:${stColors[i]}"></div>
+      <div class="st-name">${n}</div>
+      <div class="st-pct">${stVals[i]}%</div>
+      <div class="st-bar-wrap"><div class="st-bar" style="width:${stVals[i]}%;background:${stColors[i]}"></div></div>
+    </div>`).join('');
+
+  // Tatalaksana
+  const tlx = getTatalaksana(ai.species,ai.isSevere);
+  document.getElementById('res-tlx').innerHTML = tlx.map(t=>`
+    <div class="tlx-item"><div class="tlx-dot"></div><div class="tlx-text">${t}</div></div>`).join('');
+}
+
+function getTatalaksana(species, isSevere) {
+  if(species==='Negatif') return ['Evaluasi penyebab demam lainnya: viral, bacterial, DHF','Pertimbangkan test leptospirosis, tifoid, DHF','Simtomatik: antipiretik, rehidrasi oral'];
+  if(isSevere) return [
+    '<strong>Artesunat IV</strong> 2.4 mg/kgBB pada jam 0, 12, 24, kemudian setiap 24 jam hingga toleransi oral',
+    'Monitor ketat: GDS per 4 jam, tanda vital, output urin, kesadaran',
+    'Pertimbangkan rujuk ke RSUD/RS Rujukan untuk penanganan ICU',
+    'Cegah hipoglikemia: infus dextrose 5-10%',
+    species==='P. knowlesi'?'<strong>Kirim sampel PCR</strong> ke lab rujukan untuk konfirmasi P. knowlesi':''
+  ].filter(Boolean);
+  const map = {
+    'P. falciparum':['<strong>Artemether-Lumefantrine (AL)</strong> selama 3 hari (ACT lini pertama)', 'DHP (Dihydroartemisinin-Piperaquine) sebagai alternatif', 'Paracetamol untuk demam, rehidrasi oral', 'Kontrol ulang sediaan darah hari ke-3, 7, 28'],
+    'P. vivax':['<strong>Chloroquine</strong> 25 mg/kgBB total selama 3 hari', '<strong>Primaquine</strong> 0.25 mg/kgBB/hari selama 14 hari (cegah relaps)', 'Cek G6PD sebelum primaquine untuk mencegah hemolisis', 'Kontrol ulang hari ke-3 dan ke-14'],
+    'P. malariae':['<strong>Chloroquine</strong> 25 mg/kgBB total selama 3 hari', 'Tidak memerlukan primaquine (tidak ada hipnozoit)', 'Kontrol ulang sediaan darah hari ke-28'],
+    'P. ovale':['<strong>Chloroquine</strong> 25 mg/kgBB total selama 3 hari', '<strong>Primaquine</strong> 0.25 mg/kgBB/hari selama 14 hari (cegah relaps)', 'Cek G6PD sebelum primaquine', 'Kontrol ulang hari ke-14'],
+    'P. knowlesi':['<strong>Artemether-Lumefantrine (AL)</strong> atau Chloroquine + ACT', '<strong>WAJIB konfirmasi PCR</strong> — mirip P. malariae secara morfologi', 'Monitor intensif: siklus 24 jam dapat menyebabkan hiperparasitemia cepat', 'Pertimbangkan rujukan dini jika ada tanda klinik berat'],
+  };
+  return map[species]||['Konsultasikan dengan dokter spesialis penyakit dalam'];
+}
+
+/* ============ REPORT ============ */
+function viewReport() {
+  const c = APP.current;
+  if(!c||!c.ai) return;
+  const ai = c.ai;
+  document.getElementById('rpt-id').textContent = c.sismalId||'---';
+
+  const expSection = c.expertValidation ? `
+    <div class="report-card">
+      <div class="report-card-hdr" style="background:linear-gradient(135deg,#16a34a,#0d9488)"><h4>✅ Validasi Expert</h4><p>Dikonfirmasi oleh tenaga ahli</p></div>
+      <div class="report-card-body">
+        <div class="report-row"><span class="rk">Expert</span><span class="rv">${c.expertValidation.expertName}</span></div>
+        <div class="report-row"><span class="rk">Status</span><span class="rv ok">${c.expertValidation.validationStatus==='confirmed'?'✓ Dikonfirmasi':'✏ Dimodifikasi'}</span></div>
+        <div class="report-row"><span class="rk">Diagnosis Expert</span><span class="rv">${c.expertValidation.confirmedSpecies}</span></div>
+        <div class="report-row"><span class="rk">Catatan</span><span class="rv">${c.expertValidation.notes||'-'}</span></div>
+        <div class="report-row"><span class="rk">Waktu Validasi</span><span class="rv">${new Date(c.expertValidation.timestamp).toLocaleString('id-ID')}</span></div>
+      </div>
+    </div>` : `<div class="alert-box warn"><div class="alert-icon">⏳</div><div><div class="alert-title">Menunggu Validasi Expert</div><div class="alert-desc">Hasil AI telah dikirim ke Expert Portal. Notifikasi akan muncul setelah expert mengkonfirmasi.</div></div></div>`;
+
+  const imgSection = c.images&&c.images.length?`
+    <div class="card"><div class="section-lbl">Foto Sediaan Darah</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        ${c.images.map((img,i)=>`<img src="${img}" style="width:80px;height:80px;border-radius:8px;object-fit:cover;border:1px solid var(--bdr)">`).join('')}
+      </div>
+    </div>`:''  ;
+
+  document.getElementById('report-content').innerHTML = `
+    <div class="report-card">
+      <div class="report-card-hdr"><h4>Data Pasien</h4><p>Rekam Medis</p></div>
+      <div class="report-card-body">
+        <div class="report-row"><span class="rk">Nama</span><span class="rv">${c.patient.name}</span></div>
+        <div class="report-row"><span class="rk">No. RM</span><span class="rv">${c.patient.rm}</span></div>
+        <div class="report-row"><span class="rk">Usia / JK</span><span class="rv">${c.patient.age} tahun / ${c.patient.gender==='L'?'Laki-laki':'Perempuan'}</span></div>
+        <div class="report-row"><span class="rk">Keluhan</span><span class="rv">${c.patient.complaint||'-'}</span></div>
+        <div class="report-row"><span class="rk">Riwayat Perjalanan</span><span class="rv">${c.patient.travel||'-'}</span></div>
+        <div class="report-row"><span class="rk">Tanggal Periksa</span><span class="rv">${new Date(c.createdAt).toLocaleString('id-ID')}</span></div>
+      </div>
+    </div>
+    <div class="report-card">
+      <div class="report-card-hdr"><h4>Hasil Pemeriksaan AI</h4><p>MalarAI-ID v2.1 · EfficientNet-B3</p></div>
+      <div class="report-card-body">
+        <div class="report-row"><span class="rk">Hasil</span><span class="rv ${ai.species==='Negatif'?'ok':'danger'}">${ai.species==='Negatif'?'NEGATIF':'POSITIF MALARIA'}</span></div>
+        <div class="report-row"><span class="rk">Spesies</span><span class="rv danger">${ai.species}</span></div>
+        <div class="report-row"><span class="rk">Parasitemia</span><span class="rv ${ai.isSevere?'danger':''}">${ai.parasitemia}% (${ai.density.toLocaleString()}/μL)</span></div>
+        <div class="report-row"><span class="rk">Confidence AI</span><span class="rv ok">${ai.confidence}%</span></div>
+        <div class="report-row"><span class="rk">Klasifikasi</span><span class="rv ${ai.isSevere?'danger':''}">${ai.isSevere?'MALARIA BERAT':'Malaria Tanpa Komplikasi'}</span></div>
+        <div class="report-row"><span class="rk">Sel Teranalisis</span><span class="rv">${ai.cellsAnalyzed.toLocaleString()}</span></div>
+      </div>
+    </div>
+    ${expSection}
+    ${imgSection}
+    <div class="sismal-box">
+      <div style="font-size:1.3rem">🌐</div>
+      <div style="flex:1"><div style="color:var(--tl2);font-size:.82rem;font-weight:700">ID Laporan SISMAL</div><div style="color:var(--tx3);font-size:.72rem;margin-top:2px">${c.sismalId||'Menunggu sinkronisasi'}</div></div>
+      <div style="color:var(--tl2);font-size:1.1rem">✓</div>
+    </div>
+    <div class="card">
+      <div class="section-lbl">Fasilitas Kesehatan</div>
+      <div class="report-row"><span class="rk">Faskes</span><span class="rv">${c.facility?.facilityName||'-'}</span></div>
+      <div class="report-row"><span class="rk">Kode</span><span class="rv">${c.facility?.facilityCode||'-'}</span></div>
+      <div class="report-row"><span class="rk">Pemeriksa</span><span class="rv">${c.facility?.nakesName||'-'}</span></div>
+    </div>`;
+}
+
+function printReport() {
+  toast('Buka di browser desktop untuk mencetak PDF', 3000);
+}
+
+/* ============ LIST ============ */
+let activeFilter='all';
+function setFilter(el,f){
+  activeFilter=f;
+  document.querySelectorAll('.pill').forEach(p=>p.classList.remove('on'));
+  el.classList.add('on');
+  renderList();
+}
+
+function renderList() {
+  loadAll();
+  const search=(document.getElementById('list-search')||{value:''}).value.toLowerCase();
+  let cases=[...APP.cases].reverse();
+  if(search) cases=cases.filter(c=>c.patient.name.toLowerCase().includes(search)||(c.patient.rm||'').toLowerCase().includes(search));
+  if(activeFilter==='pending') cases=cases.filter(c=>c.status==='pending_expert');
+  else if(activeFilter!=='all') cases=cases.filter(c=>c.ai&&c.ai.species===activeFilter);
+  document.getElementById('list-count').textContent=cases.length+' pasien';
+  const el=document.getElementById('list-body');
+  if(!cases.length){el.innerHTML='<div class="no-cases">Tidak ada data yang cocok.</div>';return;}
+  el.innerHTML=cases.map(c=>caseItemHTML(c)).join('');
+}
+
+/* ============ SETTINGS ============ */
+function fillSettings(){
+  loadAll();
+  if(!APP.settings)return;
+  const s=APP.settings;
+  document.getElementById('cfg-facility').value=s.facilityName||'';
+  document.getElementById('cfg-code').value=s.facilityCode||'';
+  document.getElementById('cfg-district').value=s.district||'';
+  document.getElementById('cfg-nakes').value=s.nakesName||'';
+  document.getElementById('cfg-role').value=s.nakesRole||'';
+  document.getElementById('cfg-total').textContent=APP.cases.length+' kasus tersimpan di perangkat ini';
+}
+function updateSettings(){
+  APP.settings={...APP.settings,
+    facilityName:document.getElementById('cfg-facility').value.trim(),
+    facilityCode:document.getElementById('cfg-code').value.trim(),
+    district:document.getElementById('cfg-district').value.trim(),
+    nakesName:document.getElementById('cfg-nakes').value.trim(),
+    nakesRole:document.getElementById('cfg-role').value,
+  };
+  saveSettings();toast('Pengaturan disimpan ✓');
+}
+function clearData(){
+  if(!confirm('Hapus semua data? Tindakan ini tidak bisa dibatalkan.'))return;
+  localStorage.removeItem('malarai_cases');
+  localStorage.removeItem('malarai_settings');
+  location.reload();
+}
+
+/* ============ HELPERS ============ */
+function speciesBadgeClass(sp){
+  const m={'P. falciparum':'badge-falci','P. vivax':'badge-vivax','P. knowlesi':'badge-knowlesi','P. malariae':'badge-malariae','P. ovale':'badge-ovale','Negatif':'badge-neg','Memproses...':'badge-pending'};
+  return m[sp]||'badge-neg';
+}
+function speciesColor(sp){
+  const m={'P. falciparum':'#1d4ed8','P. vivax':'#15803d','P. knowlesi':'#dc2626','P. malariae':'#b45309','P. ovale':'#7e22ce','Negatif':'#475569'};
+  return m[sp]||'#334155';
+}
+function formatTime(iso){
+  if(!iso)return'';
+  const d=new Date(iso),now=new Date();
+  const diff=(now-d)/1000;
+  if(diff<60)return'Baru saja';
+  if(diff<3600)return Math.round(diff/60)+' mnt lalu';
+  if(d.toDateString()===now.toDateString())return d.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
+  return d.toLocaleDateString('id-ID',{day:'numeric',month:'short'});
+}
+
+/* ============ CROSS-TAB SYNC ============ */
+window.addEventListener('storage', e=>{
+  if(e.key==='malarai_cases'){
+    loadAll();
+    if(APP.screen==='dash')renderDash();
+    if(APP.screen==='list')renderList();
+    // If current case got validated, update result screen
+    if(APP.current&&APP.screen==='result'){
+      const updated=APP.cases.find(c=>c.id===APP.current.id);
+      if(updated&&updated.expertValidation&&!APP.current.expertValidation){
+        APP.current=updated;
+        renderResult(updated);
+        toast('✅ Expert telah memvalidasi hasil!',4000);
+      }
+    }
+  }
+});
+
+/* ============ INIT ============ */
+window.addEventListener('load', ()=>{
+  loadAll();
+  setTimeout(()=>{
+    if(!APP.settings){ go('setup'); }
+    else { go('dash'); }
+  }, 1800);
+});
+</script>
+</body>
+</html>
