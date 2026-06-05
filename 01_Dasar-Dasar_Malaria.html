@@ -1,0 +1,1842 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dasar-Dasar Malaria | AI Learner Team</title>
+<style>
+  :root {
+    --primary: #1a5276;
+    --primary-light: #2980b9;
+    --accent: #e74c3c;
+    --accent2: #27ae60;
+    --accent3: #f39c12;
+    --accent4: #8e44ad;
+    --bg: #f0f4f8;
+    --card: #ffffff;
+    --text: #2c3e50;
+    --text-light: #7f8c8d;
+    --border: #dce6f0;
+    --shadow: 0 4px 20px rgba(26,82,118,0.10);
+    --shadow-hover: 0 8px 30px rgba(26,82,118,0.18);
+    --radius: 16px;
+    --radius-sm: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, #1a5276 0%, #2980b9 50%, #1abc9c 100%);
+    color: white; padding: 48px 32px 40px; text-align: center; position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content:''; position:absolute; top:-60px; right:-60px; width:240px; height:240px;
+    background:rgba(255,255,255,0.06); border-radius:50%;
+  }
+  .hero::after {
+    content:''; position:absolute; bottom:-80px; left:-40px; width:300px; height:300px;
+    background:rgba(255,255,255,0.04); border-radius:50%;
+  }
+  .hero-badge {
+    display:inline-block; background:rgba(255,255,255,0.2); backdrop-filter:blur(10px);
+    border:1px solid rgba(255,255,255,0.3); border-radius:50px; padding:6px 18px;
+    font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase; margin-bottom:16px;
+  }
+  .hero h1 { font-size:2.4rem; font-weight:800; line-height:1.2; margin-bottom:12px; }
+  .hero p { font-size:1.05rem; opacity:0.88; max-width:600px; margin:0 auto 20px; }
+  .hero-meta { display:flex; justify-content:center; gap:24px; flex-wrap:wrap; font-size:13px; opacity:0.8; }
+  .hero-meta span { display:flex; align-items:center; gap:6px; }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: white; border-bottom: 2px solid var(--border);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    display: flex; overflow-x: auto; gap: 0; scrollbar-width: none;
+  }
+  nav::-webkit-scrollbar { display:none; }
+  .nav-btn {
+    flex: none; padding: 14px 20px; border: none; background: none; cursor: pointer;
+    font-size: 13px; font-weight: 600; color: var(--text-light);
+    border-bottom: 3px solid transparent; transition: all 0.2s; white-space: nowrap;
+    display: flex; align-items: center; gap: 7px;
+  }
+  .nav-btn:hover { color: var(--primary); background: var(--bg); }
+  .nav-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+  .nav-btn .nav-icon { font-size: 16px; }
+
+  /* MAIN */
+  main { max-width: 1100px; margin: 0 auto; padding: 32px 20px; }
+
+  /* SECTIONS */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* CARDS */
+  .card {
+    background: var(--card); border-radius: var(--radius); padding: 28px 32px;
+    box-shadow: var(--shadow); margin-bottom: 24px; border: 1px solid var(--border);
+    transition: box-shadow 0.2s;
+  }
+  .card:hover { box-shadow: var(--shadow-hover); }
+  .card-title {
+    font-size: 1.2rem; font-weight: 700; color: var(--primary); margin-bottom: 16px;
+    display: flex; align-items: center; gap: 10px; padding-bottom: 12px;
+    border-bottom: 2px solid var(--border);
+  }
+  .card-title .icon { font-size: 22px; }
+
+  /* TEAM HEADERS */
+  .team-header {
+    border-radius: var(--radius); padding: 20px 28px; margin-bottom: 24px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .team-header.tim1 { background: linear-gradient(135deg, #1a5276, #2980b9); color: white; }
+  .team-header.tim2 { background: linear-gradient(135deg, #1e8449, #27ae60); color: white; }
+  .team-header.tim3 { background: linear-gradient(135deg, #7d3c98, #8e44ad); color: white; }
+  .team-header.tim4 { background: linear-gradient(135deg, #b7770d, #f39c12); color: white; }
+  .team-avatar { width: 56px; height: 56px; border-radius: 50%; background:rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center; font-size:28px; flex-shrink:0; }
+  .team-info h2 { font-size: 1.3rem; font-weight: 800; }
+  .team-info p { opacity: 0.85; font-size: 0.9rem; margin-top: 4px; }
+
+  /* GRID */
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 24px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; margin-bottom: 24px; }
+
+  /* SPECIES TABLE */
+  .species-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px; }
+  .species-card {
+    border-radius: 12px; padding: 18px 16px; text-align: center;
+    border: 2px solid transparent; transition: transform 0.2s;
+    cursor: default;
+  }
+  .species-card:hover { transform: translateY(-3px); }
+  .species-card.falciparum { background:#fef9e7; border-color:#f39c12; }
+  .species-card.vivax { background:#eafaf1; border-color:#27ae60; }
+  .species-card.malariae { background:#eaf2fb; border-color:#2980b9; }
+  .species-card.ovale { background:#f5eef8; border-color:#8e44ad; }
+  .species-card.knowlesi { background:#fef5e7; border-color:#e67e22; }
+  .species-icon { font-size:32px; margin-bottom:8px; }
+  .species-name { font-style:italic; font-weight:700; font-size:0.85rem; color:var(--primary); }
+  .species-aka { font-size:0.75rem; color:var(--text-light); margin:4px 0; }
+  .species-detail { font-size:0.78rem; line-height:1.5; }
+
+  /* INFO BOXES */
+  .info-box {
+    border-radius: 10px; padding: 16px 20px; margin-bottom: 14px;
+    border-left: 4px solid;
+  }
+  .info-box.blue { background:#eaf2fb; border-color:#2980b9; }
+  .info-box.green { background:#eafaf1; border-color:#27ae60; }
+  .info-box.red { background:#fdf0ed; border-color:#e74c3c; }
+  .info-box.yellow { background:#fef9e7; border-color:#f39c12; }
+  .info-box.purple { background:#f5eef8; border-color:#8e44ad; }
+  .info-box h4 { font-size:0.9rem; font-weight:700; margin-bottom:6px; }
+  .info-box p, .info-box ul { font-size:0.88rem; line-height:1.6; }
+  .info-box ul { padding-left: 18px; }
+
+  /* SIKLUS DIAGRAM */
+  .cycle-diagram {
+    background: linear-gradient(135deg, #eaf2fb 0%, #f5eef8 100%);
+    border-radius: 14px; padding: 24px; margin-bottom: 20px;
+  }
+  .cycle-steps { display: flex; flex-wrap: wrap; gap: 0; justify-content: center; align-items: center; }
+  .cycle-step {
+    background: white; border-radius: 10px; padding: 14px 16px;
+    text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    min-width: 130px; flex: 1; max-width: 160px;
+  }
+  .cycle-step .step-num { font-size:22px; margin-bottom:4px; }
+  .cycle-step .step-name { font-size:0.78rem; font-weight:700; color:var(--primary); }
+  .cycle-step .step-desc { font-size:0.7rem; color:var(--text-light); margin-top:4px; line-height:1.4; }
+  .cycle-arrow { font-size:20px; color:var(--primary-light); padding:0 4px; align-self:center; }
+
+  /* MASA INKUBASI TABLE */
+  table { width:100%; border-collapse:collapse; font-size:0.88rem; }
+  th { background:var(--primary); color:white; padding:10px 14px; text-align:left; }
+  td { padding:10px 14px; border-bottom:1px solid var(--border); }
+  tr:nth-child(even) td { background:#f8fafd; }
+  tr:hover td { background:#eaf2fb; }
+
+  /* SUMMARY CARDS */
+  .summary-card {
+    background: linear-gradient(135deg, #fff 0%, #f8fbff 100%);
+    border-radius: 14px; padding: 22px; border: 1.5px solid var(--border);
+    position: relative; overflow: hidden;
+  }
+  .summary-card::before {
+    content:''; position:absolute; top:0; left:0; right:0; height:4px;
+  }
+  .summary-card.s1::before { background: linear-gradient(90deg, #e74c3c, #f39c12); }
+  .summary-card.s2::before { background: linear-gradient(90deg, #27ae60, #1abc9c); }
+  .summary-card.s3::before { background: linear-gradient(90deg, #2980b9, #8e44ad); }
+  .summary-card.s4::before { background: linear-gradient(90deg, #f39c12, #e74c3c); }
+  .summary-card.s5::before { background: linear-gradient(90deg, #8e44ad, #2980b9); }
+  .summary-card h3 { font-size:1rem; font-weight:700; margin-bottom:12px; color:var(--primary); }
+  .summary-item { display:flex; align-items:flex-start; gap:8px; margin-bottom:8px; font-size:0.86rem; line-height:1.5; }
+  .summary-item .bullet { width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:white; flex-shrink:0; margin-top:1px; }
+  .b-red { background:#e74c3c; }
+  .b-green { background:#27ae60; }
+  .b-blue { background:#2980b9; }
+  .b-yellow { background:#f39c12; }
+  .b-purple { background:#8e44ad; }
+
+  /* MNEMONIC */
+  .mnemonic-box {
+    background: linear-gradient(135deg, #1a5276, #8e44ad);
+    color: white; border-radius: 14px; padding: 24px; margin-bottom: 20px; text-align:center;
+  }
+  .mnemonic-title { font-size:0.85rem; text-transform:uppercase; letter-spacing:2px; opacity:0.8; margin-bottom:10px; }
+  .mnemonic-word { font-size:2.5rem; font-weight:900; letter-spacing:6px; margin-bottom:12px; }
+  .mnemonic-breakdown { display:flex; justify-content:center; gap:12px; flex-wrap:wrap; }
+  .mnemonic-letter { background:rgba(255,255,255,0.15); border-radius:8px; padding:8px 14px; font-size:0.85rem; }
+  .mnemonic-letter strong { font-size:1.2rem; display:block; }
+
+  /* INOVASI */
+  .innov-card {
+    border-radius: 14px; padding: 22px; border: 1.5px solid;
+    margin-bottom: 16px; transition: transform 0.2s;
+  }
+  .innov-card:hover { transform: translateX(4px); }
+  .innov-card h4 { font-size:1rem; font-weight:700; margin-bottom:8px; display:flex; align-items:center; gap:8px; }
+  .innov-card p { font-size:0.87rem; line-height:1.6; }
+  .innov-card .tag { display:inline-block; border-radius:20px; padding:3px 12px; font-size:0.75rem; font-weight:600; margin-top:10px; }
+  .ic1 { background:#fef5e7; border-color:#f39c12; }
+  .ic2 { background:#eafaf1; border-color:#27ae60; }
+  .ic3 { background:#eaf2fb; border-color:#2980b9; }
+  .ic4 { background:#f5eef8; border-color:#8e44ad; }
+  .ic5 { background:#fef9e7; border-color:#e67e22; }
+
+  /* QUIZ */
+  .quiz-item {
+    background:white; border-radius:14px; border:1.5px solid var(--border);
+    margin-bottom:20px; overflow:hidden; box-shadow:var(--shadow);
+  }
+  .quiz-question {
+    padding:20px 24px; background:linear-gradient(135deg,#eaf2fb,#f5eef8);
+    font-weight:600; font-size:0.95rem; line-height:1.5;
+    display:flex; gap:12px; align-items:flex-start;
+  }
+  .quiz-num { background:var(--primary); color:white; border-radius:50%; width:28px; height:28px; display:flex; align-items:center; justify-content:center; font-size:0.8rem; font-weight:700; flex-shrink:0; margin-top:1px; }
+  .quiz-options { padding:16px 24px; display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .quiz-option {
+    padding:10px 14px; border-radius:8px; border:1.5px solid var(--border);
+    font-size:0.87rem; cursor:pointer; transition:all 0.2s; background:white;
+    display:flex; align-items:center; gap:8px;
+  }
+  .quiz-option:hover { border-color:var(--primary-light); background:#eaf2fb; }
+  .quiz-option.correct { background:#eafaf1; border-color:#27ae60; }
+  .quiz-option.wrong { background:#fdf0ed; border-color:#e74c3c; }
+  .quiz-option.reveal-correct { background:#eafaf1; border-color:#27ae60; }
+  .quiz-option .opt-letter { width:24px; height:24px; border-radius:50%; background:var(--bg); border:1.5px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:0.78rem; font-weight:700; flex-shrink:0; }
+  .quiz-answer {
+    display:none; padding:16px 24px; background:linear-gradient(135deg,#eafaf1,#f0fff8);
+    border-top:1px solid #c8f2d8; font-size:0.87rem; line-height:1.6;
+  }
+  .quiz-answer.show { display:block; }
+  .quiz-answer strong { color:#1e8449; }
+  .quiz-source { font-size:0.78rem; color:var(--text-light); margin-top:8px; font-style:italic; }
+
+  /* WHO UPDATE BOX */
+  .who-update {
+    background: linear-gradient(135deg, #1a5276 0%, #154360 100%);
+    color: white; border-radius: 14px; padding: 22px 26px; margin-bottom: 20px;
+  }
+  .who-update h3 { font-size:1rem; font-weight:700; margin-bottom:12px; opacity:0.9; display:flex; align-items:center; gap:8px; }
+  .who-update ul { padding-left:18px; font-size:0.87rem; line-height:1.8; opacity:0.9; }
+
+  /* KLASIFIKASI */
+  .klasifikasi-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:14px; margin-bottom:20px; }
+  .klas-card { border-radius:12px; padding:18px; text-align:center; border:2px solid; }
+  .klas-card h4 { font-size:0.9rem; font-weight:700; margin-bottom:8px; }
+  .klas-card p { font-size:0.8rem; line-height:1.5; }
+  .k1 { background:#fef9e7; border-color:#f39c12; }
+  .k2 { background:#fdf0ed; border-color:#e74c3c; }
+  .k3 { background:#eafaf1; border-color:#27ae60; }
+  .k4 { background:#eaf2fb; border-color:#2980b9; }
+  .k5 { background:#f5eef8; border-color:#8e44ad; }
+
+  /* SCORE */
+  .score-display {
+    text-align:center; padding:20px; background:linear-gradient(135deg,#eaf2fb,#f5eef8);
+    border-radius:14px; margin-bottom:20px; display:none;
+  }
+  .score-display.show { display:block; }
+  .score-num { font-size:3rem; font-weight:900; color:var(--primary); }
+  .score-label { color:var(--text-light); font-size:0.9rem; margin-top:4px; }
+
+  /* BADGE */
+  .badge { display:inline-block; padding:4px 12px; border-radius:20px; font-size:0.75rem; font-weight:700; }
+  .badge-blue { background:#eaf2fb; color:#2980b9; }
+  .badge-green { background:#eafaf1; color:#27ae60; }
+  .badge-red { background:#fdf0ed; color:#e74c3c; }
+  .badge-yellow { background:#fef9e7; color:#d4ac0d; }
+  .badge-purple { background:#f5eef8; color:#8e44ad; }
+
+  /* COMPARE TABLE */
+  .compare-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
+  .compare-cell { border-radius:10px; padding:16px; }
+  .cc-materi { background:#eaf2fb; border-left:4px solid #2980b9; }
+  .cc-who { background:#eafaf1; border-left:4px solid #27ae60; }
+  .cc-label { font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--text-light); margin-bottom:6px; }
+  .cc-content { font-size:0.87rem; line-height:1.6; }
+
+  /* FOOTER */
+  footer {
+    text-align:center; padding:28px; background:var(--primary); color:rgba(255,255,255,0.7);
+    font-size:0.82rem; margin-top:40px;
+  }
+  footer strong { color:white; }
+
+  /* MICRO CELLS */
+  .micro-row { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+  .micro-cell { text-align:center; }
+  .micro-label { font-size:0.78rem; font-weight:700; color:var(--primary); margin:8px 0 4px; }
+  .micro-desc { font-size:0.73rem; line-height:1.5; color:var(--text); text-align:left; }
+  @media(max-width:680px){ .micro-row { grid-template-columns:repeat(2,1fr); } }
+  @media(max-width:400px){ .micro-row { grid-template-columns:1fr 1fr; } }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    .hero h1 { font-size:1.6rem; }
+    .quiz-options { grid-template-columns:1fr; }
+    .compare-row { grid-template-columns:1fr; }
+    .cycle-steps { flex-direction:column; }
+    .cycle-arrow { transform:rotate(90deg); }
+    main { padding: 20px 14px; }
+    .card { padding: 20px 18px; }
+  }
+
+  /* ANIMATIONS */
+  .fade-in { animation: fadeIn 0.4s ease; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">🧬 AI Learner Team — Pelatihan Malaria 2026</div>
+  <h1>Dasar-Dasar Malaria</h1>
+  <p>Materi Pelajaran 01 · Disusun oleh empat tim AI Learner berdasarkan pedoman Kemenkes RI & WHO 2024</p>
+  <div class="hero-meta">
+    <span>🎓 Dr. dr. Nelly Al Audhah, M.Sc</span>
+    <span>📅 2–7 Juni 2026</span>
+    <span>🌐 Pelatihan Tatalaksana Malaria</span>
+  </div>
+</div>
+
+<!-- NAVIGATION -->
+<nav>
+  <button class="nav-btn active" onclick="showSection('belajar')" id="nav-belajar">
+    <span class="nav-icon">📚</span> Si Paling Belajar
+  </button>
+  <button class="nav-btn" onclick="showSection('merangkum')" id="nav-merangkum">
+    <span class="nav-icon">📋</span> Si Paling Merangkum
+  </button>
+  <button class="nav-btn" onclick="showSection('inovasi')" id="nav-inovasi">
+    <span class="nav-icon">💡</span> Si Paling Inovasi
+  </button>
+  <button class="nav-btn" onclick="showSection('soal')" id="nav-soal">
+    <span class="nav-icon">🏆</span> Si Paling Jago Soal
+  </button>
+</nav>
+
+<main>
+
+<!-- ============================================================ -->
+<!-- SECTION 1: SI PALING BELAJAR -->
+<!-- ============================================================ -->
+<div class="section active fade-in" id="section-belajar">
+
+  <div class="team-header tim1">
+    <div class="team-avatar">📚</div>
+    <div class="team-info">
+      <h2>Tim 1 — Si Paling Belajar</h2>
+      <p>Analisis materi mendalam · Komparasi WHO 2024 · Pedoman Kemenkes RI</p>
+    </div>
+  </div>
+
+  <!-- 1. DEFINISI -->
+  <div class="card">
+    <div class="card-title"><span class="icon">🔬</span> 1. Definisi & Etiologi Malaria</div>
+
+    <div class="info-box blue">
+      <h4>Definisi (Materi & Kemenkes RI)</h4>
+      <p>Penyakit infeksi yang disebabkan oleh parasit <em>Plasmodium</em> spp yang hidup dan berkembang biak di <strong>sel darah merah manusia</strong> sebagai inang sementara (<em>host intermediate</em>), ditularkan melalui gigitan nyamuk <em>Anopheles</em> spp betina (<em>host definitif</em>).</p>
+    </div>
+
+    <div class="who-update">
+      <h3>🌐 Update WHO Guidelines 2024</h3>
+      <ul>
+        <li>WHO Guidelines for Malaria terbaru diterbitkan <strong>30 November 2024</strong> — versi paling komprehensif hingga saat ini</li>
+        <li>Termasuk rekomendasi baru vaksin malaria (R21/Matrix-M), penggunaan tafenoquine, dan uji G6PD bedside</li>
+        <li>Indonesia: KMK No. HK.01.07/MENKES/1988/2024 — Peta Jalan Eliminasi Malaria 2025–2045</li>
+        <li>Target: <strong>405 kabupaten/kota bebas malaria</strong> pada akhir 2024; eliminasi nasional 2030</li>
+      </ul>
+    </div>
+
+    <!-- SPESIES -->
+    <div class="card-title" style="margin-top:20px; border:none; padding:0 0 10px;"><span class="icon">🦠</span> 5 Spesies Plasmodium pada Manusia</div>
+    <div class="species-grid">
+      <div class="species-card falciparum">
+        <div class="species-icon">🔴</div>
+        <div class="species-name">P. falciparum</div>
+        <div class="species-aka">Malaria Tropika</div>
+        <div class="species-detail">
+          Infeksi <strong>semua eritrosit</strong> (10–40%)<br>
+          Siklus: 24 jam (menggigil)<br>
+          ⚠️ Risiko komplikasi berat<br>
+          Gametosit: hari ke-8
+        </div>
+      </div>
+      <div class="species-card vivax">
+        <div class="species-icon">🟢</div>
+        <div class="species-name">P. vivax</div>
+        <div class="species-aka">Malaria Tertiana</div>
+        <div class="species-detail">
+          Infeksi <strong>retikulosit</strong> (&lt;2%)<br>
+          Siklus: 48 jam<br>
+          Ada <strong>hipnozoit</strong> (relaps 3–4 th)<br>
+          Gametosit: hari ke-2–3
+        </div>
+      </div>
+      <div class="species-card malariae">
+        <div class="species-icon">🔵</div>
+        <div class="species-name">P. malariae</div>
+        <div class="species-aka">Malaria Quartana</div>
+        <div class="species-detail">
+          Infeksi <strong>eritrosit tua</strong> (~1%)<br>
+          Siklus: 72 jam<br>
+          Gametosit: beberapa bulan<br>
+          Relatif jinak
+        </div>
+      </div>
+      <div class="species-card ovale">
+        <div class="species-icon">🟣</div>
+        <div class="species-name">P. ovale</div>
+        <div class="species-aka">Malaria Ovale</div>
+        <div class="species-detail">
+          Infeksi <strong>retikulosit</strong> (&lt;2%)<br>
+          Ada <strong>hipnozoit</strong> (relaps bertahun-tahun)<br>
+          Inkubasi ekstrinsik: 15 hari<br>
+          Jarang di Indonesia
+        </div>
+      </div>
+      <div class="species-card knowlesi">
+        <div class="species-icon">🟠</div>
+        <div class="species-name">P. knowlesi</div>
+        <div class="species-aka">Malaria Zoonosis</div>
+        <div class="species-detail">
+          Dari primata (<em>Macaca</em> spp)<br>
+          Siklus: 24 jam<br>
+          Endemik Kalimantan &amp; Malaysia<br>
+          Bisa berat seperti <em>falciparum</em>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. SIKLUS HIDUP -->
+  <div class="card">
+    <div class="card-title"><span class="icon">🔄</span> 2. Siklus Hidup Plasmodium spp</div>
+
+    <div class="cycle-diagram">
+      <p style="text-align:center;font-size:0.85rem;font-weight:600;color:#1a5276;margin-bottom:16px;">SIKLUS PADA HOST INTERMEDIATE (Aseksual — Manusia)</p>
+      <div class="cycle-steps">
+        <div class="cycle-step">
+          <div class="step-num">🦟</div>
+          <div class="step-name">Sporozoit</div>
+          <div class="step-desc">Nyamuk gigit manusia → sporozoit dari kelenjar liur masuk darah</div>
+        </div>
+        <div class="cycle-arrow">→</div>
+        <div class="cycle-step">
+          <div class="step-num">🫀</div>
+          <div class="step-name">Hati</div>
+          <div class="step-desc">±½ jam → invasi hepatosit → trofozoit hati</div>
+        </div>
+        <div class="cycle-arrow">→</div>
+        <div class="cycle-step">
+          <div class="step-num">🟡</div>
+          <div class="step-name">Skizon Hati</div>
+          <div class="step-desc">10.000–30.000 merozoit; Ekso-eritrositer ±2 minggu</div>
+        </div>
+        <div class="cycle-arrow">→</div>
+        <div class="cycle-step">
+          <div class="step-num">🔴</div>
+          <div class="step-name">Eritrosit</div>
+          <div class="step-desc">Merozoit invasi eritrosit → skizogoni</div>
+        </div>
+        <div class="cycle-arrow">→</div>
+        <div class="cycle-step">
+          <div class="step-num">💥</div>
+          <div class="step-name">Skizon Pecah</div>
+          <div class="step-desc">8–30 merozoit → demam, menggigil</div>
+        </div>
+        <div class="cycle-arrow">→</div>
+        <div class="cycle-step">
+          <div class="step-num">♀♂</div>
+          <div class="step-name">Gametosit</div>
+          <div class="step-desc">Sebagian → mikro &amp; makrogametosit</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cycle-diagram" style="background:linear-gradient(135deg,#fef9e7,#fef5e7);">
+      <p style="text-align:center;font-size:0.85rem;font-weight:600;color:#7d6608;margin-bottom:16px;">SIKLUS PADA HOST DEFINITIF (Seksual — Nyamuk Anopheles betina)</p>
+      <div class="cycle-steps">
+        <div class="cycle-step">
+          <div class="step-num">🩸</div>
+          <div class="step-name">Hisap Darah</div>
+          <div class="step-desc">Gametosit masuk usus nyamuk saat menghisap darah</div>
+        </div>
+        <div class="cycle-arrow">→</div>
+        <div class="cycle-step">
+          <div class="step-num">🤝</div>
+          <div class="step-name">Zigot</div>
+          <div class="step-desc">Mikro + makrogametosit → pembuahan → zigot</div>
+        </div>
+        <div class="cycle-arrow">→</div>
+        <div class="cycle-step">
+          <div class="step-num">🐛</div>
+          <div class="step-name">Ookinet</div>
+          <div class="step-desc">Menembus dinding lambung nyamuk</div>
+        </div>
+        <div class="cycle-arrow">→</div>
+        <div class="cycle-step">
+          <div class="step-num">⚪</div>
+          <div class="step-name">Ookista</div>
+          <div class="step-desc">Berkembang di dinding lambung</div>
+        </div>
+        <div class="cycle-arrow">→</div>
+        <div class="cycle-step">
+          <div class="step-num">🦟</div>
+          <div class="step-name">Sporozoit</div>
+          <div class="step-desc">Siap ditularkan ke manusia melalui air liur (Sporogoni)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-box purple">
+      <h4>🔑 Poin Penting: Hipnozoit (P. vivax & P. ovale)</h4>
+      <ul>
+        <li><strong>Takisporozoit:</strong> berkembang cepat → skizogoni langsung</li>
+        <li><strong>Bradisporozoit/Hipnozoit:</strong> laten di hati 8–9 bulan sebelum reaktivasi → penyebab relaps</li>
+        <li>P. vivax relaps 3–4 tahun; P. ovale bertahun-tahun jika tidak diobati tuntas</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 3. CARA TRANSMISI -->
+  <div class="card">
+    <div class="card-title"><span class="icon">🔁</span> 3. Cara Transmisi Malaria</div>
+    <div class="grid-2">
+      <div class="info-box green">
+        <h4>✅ Penularan Natural (Utama)</h4>
+        <p>Gigitan nyamuk <em>Anopheles</em> betina → sporozoit masuk ke peredaran darah manusia</p>
+      </div>
+      <div class="info-box yellow">
+        <h4>⚠️ Penularan Un-Natural</h4>
+        <ul>
+          <li><strong>Transplasenta:</strong> dari ibu hamil ke janin</li>
+          <li><strong>Transfusi darah:</strong> darah donor terinfeksi</li>
+          <li><strong>Penggunaan jarum suntik bersama</strong></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- MASA INKUBASI -->
+    <div class="card-title" style="margin-top:20px;border:none;padding:0 0 10px;"><span class="icon">⏱️</span> Masa Inkubasi</div>
+    <div class="info-box blue" style="margin-bottom:14px;">
+      <h4>Inkubasi Intrinsik (Manusia)</h4>
+      <p>Sporozoit masuk → gejala klinis demam (fase ekso-eritrositer + eritrositer)</p>
+    </div>
+    <table style="margin-bottom:16px;">
+      <thead>
+        <tr>
+          <th>Spesies</th>
+          <th>Jenis Malaria</th>
+          <th>Inkubasi Intrinsik</th>
+          <th>Siklus Demam</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><em>P. falciparum</em></td>
+          <td>Tropika</td>
+          <td>7–14 hari</td>
+          <td>24 jam (quotidian)</td>
+        </tr>
+        <tr>
+          <td><em>P. vivax</em></td>
+          <td>Tertiana</td>
+          <td>12–17 hari (bisa 6–12 bulan)</td>
+          <td>48 jam</td>
+        </tr>
+        <tr>
+          <td><em>P. malariae</em></td>
+          <td>Quartana</td>
+          <td>18–40 hari</td>
+          <td>72 jam</td>
+        </tr>
+        <tr>
+          <td><em>P. ovale</em></td>
+          <td>Ovale</td>
+          <td>16–18 hari (bisa lebih)</td>
+          <td>48 jam</td>
+        </tr>
+        <tr>
+          <td><em>P. knowlesi</em></td>
+          <td>Simian</td>
+          <td>9–12 hari</td>
+          <td>24 jam</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="info-box yellow">
+      <h4>Inkubasi Ekstrinsik (Nyamuk) — Suhu Optimal 26.7°C</h4>
+      <ul>
+        <li>P. falciparum: 10–12 hari</li>
+        <li>P. vivax: 8–11 hari (55 hari pada 16°C; 7 hari pada 28°C)</li>
+        <li>P. malariae: 14 hari</li>
+        <li>P. ovale: 15 hari</li>
+        <li>⚠️ Pada suhu ≥32°C: <strong>parasit mati</strong> dalam tubuh nyamuk</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 4. FAKTOR RISIKO -->
+  <div class="card">
+    <div class="card-title"><span class="icon">⚠️</span> 4. Faktor Risiko</div>
+    <div class="grid-3">
+      <div class="info-box blue">
+        <h4>👤 Hospes Intermediate (Manusia)</h4>
+        <ul>
+          <li>Bayi & anak balita (imunitas rendah)</li>
+          <li>Wanita hamil (trimester I & II)</li>
+          <li>Defisiensi G6PD, Sickle cell, Talasemia</li>
+          <li>Mobilitas tinggi / pekerja hutan</li>
+          <li>Tidak pakai alat pelindung</li>
+        </ul>
+      </div>
+      <div class="info-box yellow">
+        <h4>🦟 Hospes Definitif (Nyamuk)</h4>
+        <ul>
+          <li>Kepadatan populasi Anopheles</li>
+          <li>Umur nyamuk (longevity)</li>
+          <li>Perilaku: endofagik vs eksofagik</li>
+          <li>Antropofilik vs zoofilik</li>
+          <li>Breeding habit (air tawar/payau)</li>
+        </ul>
+      </div>
+      <div class="info-box green">
+        <h4>🌍 Lingkungan</h4>
+        <ul>
+          <li>Suhu optimal nyamuk: 25–27°C</li>
+          <li>Kelembaban &lt;60% → usia nyamuk memendek</li>
+          <li>Curah hujan → tempat berkembang biak</li>
+          <li>Salinitas air (An. sundaicus: 12–18‰)</li>
+          <li>Perubahan iklim & musim</li>
+        </ul>
+      </div>
+    </div>
+    <div class="info-box red">
+      <h4>🏘️ Faktor Sosial Budaya (Risiko Tinggi)</h4>
+      <ul>
+        <li>Migrasi dari/ke daerah endemis (pekerja tambang, perkebunan, nelayan, TNI/POLRI)</li>
+        <li>Nomaden, bencana alam, situasi konflik</li>
+        <li>Wisatawan ke daerah endemis (malaria impor)</li>
+        <li>Kebiasaan malam hari di luar rumah tanpa perlindungan</li>
+        <li>Pembukaan lahan baru / transmigrasi</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 5. GEJALA KLINIS & DIAGNOSIS -->
+  <div class="card">
+    <div class="card-title"><span class="icon">🏥</span> 5. Gejala Klinis & Diagnosis</div>
+    <div class="grid-2">
+      <div>
+        <div class="info-box blue">
+          <h4>🌡️ Trias Malaria (Gejala Klasik)</h4>
+          <ol style="padding-left:18px;font-size:0.88rem;line-height:1.8;">
+            <li><strong>Menggigil</strong> (Cold stage)</li>
+            <li><strong>Demam</strong> ≥38°C (Hot stage)</li>
+            <li><strong>Berkeringat</strong> + lemas (Sweating stage)</li>
+          </ol>
+          <p style="margin-top:8px;font-size:0.82rem;">+ Sakit kepala, mual, muntah, nyeri otot & sendi, diare</p>
+        </div>
+        <div class="info-box yellow">
+          <h4>📋 Anamnesis Penting</h4>
+          <ul>
+            <li>Riwayat bermalam/berkunjung ke daerah endemis (1–4 minggu)</li>
+            <li>Riwayat malaria sebelumnya</li>
+            <li>Riwayat minum obat malaria 1 bulan terakhir</li>
+            <li>Riwayat transfusi darah</li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <div class="info-box green">
+          <h4>🔍 Pemeriksaan Fisik</h4>
+          <ul>
+            <li>Demam (suhu ≥37,5°C)</li>
+            <li>Konjungtiva & telapak tangan pucat (anemia)</li>
+            <li>Splenomegali (pembesaran limpa)</li>
+            <li>Hepatomegali (pembesaran hati)</li>
+          </ul>
+        </div>
+        <div class="info-box red">
+          <h4>🔬 Konfirmasi Wajib</h4>
+          <ul>
+            <li><strong>Mikroskopik:</strong> gold standard, identifikasi spesies & parasitemia</li>
+            <li><strong>RDT (Rapid Diagnostic Test):</strong> cepat, untuk fasilitas terbatas</li>
+          </ul>
+          <p style="margin-top:8px;font-size:0.8rem;"><em>WHO 2024: uji G6PD bedside (kualitatif/semikuantitatif) kini direkomendasikan sebelum pemberian primaquine/tafenoquine</em></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. KEKAMBUHAN & KLASIFIKASI -->
+  <div class="card">
+    <div class="card-title"><span class="icon">📊</span> 6. Kekambuhan & Klasifikasi Malaria</div>
+
+    <div class="info-box purple" style="margin-bottom:20px;">
+      <h4>🔁 Rekurensi (Kekambuhan)</h4>
+      <ul>
+        <li><strong>Rekrudensi:</strong> kambuh dalam 8 minggu (parasit tidak terbasmi)</li>
+        <li><strong>Rekurensi:</strong> kambuh >24 minggu (hipnozoit — P. vivax/ovale)</li>
+        <li>Sebab: spesies parasit, tidak ke daerah endemis, pengobatan tidak adekuat</li>
+      </ul>
+    </div>
+
+    <p style="font-weight:700;margin-bottom:12px;color:var(--primary);">Klasifikasi Berdasarkan Endemisitas:</p>
+    <div class="klasifikasi-grid">
+      <div class="klas-card k1">
+        <h4>🏡 Indogenous</h4>
+        <p>Penularan lokal, tidak ada riwayat ke daerah endemis dalam 4 minggu</p>
+      </div>
+      <div class="klas-card k2">
+        <h4>✈️ Import</h4>
+        <p>Ada riwayat ke daerah endemis dalam 4 minggu terakhir</p>
+      </div>
+      <div class="klas-card k3">
+        <h4>🔗 Introduced</h4>
+        <p>Kasus indogenous yang tertular langsung dari kasus import (radius 100m, 2–4 minggu)</p>
+      </div>
+      <div class="klas-card k4">
+        <h4>🔄 Relaps</h4>
+        <p>Kambuh setelah sembuh; rekrudensi (&lt;8 minggu) atau rekurensi (&gt;24 minggu)</p>
+      </div>
+      <div class="klas-card k5">
+        <h4>❓ Unclassified</h4>
+        <p>Asal usul sulit dilacak</p>
+      </div>
+    </div>
+
+    <div class="compare-row">
+      <div class="compare-cell cc-materi">
+        <div class="cc-label">📖 Materi</div>
+        <div class="cc-content">Transmisi stabil (endemik): imunitas terbentuk, kelompok terbanyak = ibu hamil & anak. Transmisi tidak stabil: semua populasi berisiko berat.</div>
+      </div>
+      <div class="compare-cell cc-who">
+        <div class="cc-label">🌐 WHO 2024</div>
+        <div class="cc-content">Konfirmasi — wanita hamil dengan malaria berat di daerah non-endemik risiko fatal &gt;10x dibanding daerah endemik karena tidak ada imunitas protektif.</div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- 7. MORFOLOGI MIKROSKOPIK -->
+  <div class="card">
+    <div class="card-title"><span class="icon">🔬</span> 7. Gambaran Morfologi Mikroskopik — Sediaan Darah Tepi</div>
+    <div class="info-box blue" style="margin-bottom:20px;">
+      <h4>🎯 Mengapa Morfologi Penting?</h4>
+      <p>Identifikasi spesies pada sediaan darah tepi (SDT) adalah <strong>gold standard diagnosis malaria</strong>. Setiap spesies memiliki ciri khas yang membedakannya — menguasai ini = mampu mendiagnosis akurat tanpa PCR.</p>
+    </div>
+
+    <!-- LEGEND -->
+    <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:20px;font-size:0.8rem;">
+      <span style="display:flex;align-items:center;gap:6px;"><svg width="16" height="16"><circle cx="8" cy="8" r="7" fill="#f9d0d0" stroke="#c0a0a0" stroke-width="1"/></svg> Eritrosit normal</span>
+      <span style="display:flex;align-items:center;gap:6px;"><svg width="16" height="16"><circle cx="8" cy="8" r="7" fill="#fde8e8" stroke="#c0a0a0" stroke-width="1"/></svg> Eritrosit membesar</span>
+      <span style="display:flex;align-items:center;gap:6px;"><svg width="16" height="16"><circle cx="8" cy="8" r="6" fill="#3498db" opacity="0.7"/></svg> Sitoplasma parasit</span>
+      <span style="display:flex;align-items:center;gap:6px;"><svg width="16" height="16"><circle cx="8" cy="8" r="6" fill="#c0392b"/></svg> Kromatin/nukleus</span>
+      <span style="display:flex;align-items:center;gap:6px;"><svg width="16" height="16"><circle cx="8" cy="8" r="6" fill="#f39c12"/></svg> Titik Schüffner/James</span>
+    </div>
+
+    <!-- ========== P. FALCIPARUM ========== -->
+    <div style="background:#fef9e7;border-radius:14px;padding:20px;margin-bottom:18px;border:2px solid #f39c12;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+        <span style="font-size:22px;">🔴</span>
+        <div>
+          <strong style="font-size:1rem;color:#7d6608;font-style:italic;">Plasmodium falciparum</strong>
+          <span style="font-size:0.8rem;color:#7d6608;margin-left:8px;">— Malaria Tropika</span>
+        </div>
+        <span style="margin-left:auto;background:#e74c3c;color:white;padding:3px 10px;border-radius:20px;font-size:0.75rem;font-weight:700;">⚠️ Komplikasi Berat</span>
+      </div>
+      <div class="micro-row">
+        <!-- Ring -->
+        <div class="micro-cell">
+          <svg viewBox="0 0 90 90" width="90" height="90">
+            <circle cx="45" cy="45" r="42" fill="#f9d0d0" stroke="#d0a0a0" stroke-width="1.5"/>
+            <!-- thin ring -->
+            <circle cx="35" cy="35" r="10" fill="none" stroke="#3498db" stroke-width="2.5" opacity="0.8"/>
+            <circle cx="35" cy="26" r="3" fill="#c0392b"/>
+            <!-- double chromatin (headphone) -->
+            <circle cx="28" cy="31" r="2.2" fill="#c0392b"/>
+            <!-- second ring (multiple infection) -->
+            <circle cx="56" cy="52" r="8" fill="none" stroke="#3498db" stroke-width="2" opacity="0.7"/>
+            <circle cx="56" cy="44" r="2.5" fill="#c0392b"/>
+            <!-- accolé position (at edge) -->
+            <circle cx="10" cy="45" r="7" fill="none" stroke="#3498db" stroke-width="2" opacity="0.6" clip-path="url(#rbc-clip)"/>
+            <circle cx="10" cy="38" r="2" fill="#c0392b"/>
+          </svg>
+          <div class="micro-label">Cincin (Ring)</div>
+          <div class="micro-desc">• Cincin tipis halus<br>• 1/5 diameter eritrosit<br>• Sering 2 kromatin<br>• Posisi appliqué (tepi)<br>• Multiple rings/sel</div>
+        </div>
+        <!-- Trophozoite -->
+        <div class="micro-cell">
+          <svg viewBox="0 0 90 90" width="90" height="90">
+            <circle cx="45" cy="45" r="42" fill="#f5f5f5" stroke="#cccccc" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <text x="45" y="38" text-anchor="middle" font-size="9" fill="#888">Tidak tampak</text>
+            <text x="45" y="50" text-anchor="middle" font-size="9" fill="#888">di darah tepi</text>
+            <text x="45" y="62" text-anchor="middle" font-size="8" fill="#aaa">(sekuestrasi)</text>
+          </svg>
+          <div class="micro-label">Trofozoit</div>
+          <div class="micro-desc">• TIDAK tampak di darah tepi<br>• Sekuestrasi di kapiler organ dalam<br>• Maurer's clefts pada SDT</div>
+        </div>
+        <!-- Schizont -->
+        <div class="micro-cell">
+          <svg viewBox="0 0 90 90" width="90" height="90">
+            <circle cx="45" cy="45" r="42" fill="#f9d0d0" stroke="#d0a0a0" stroke-width="1.5"/>
+            <!-- skizon berisi banyak merozoit -->
+            <circle cx="45" cy="45" r="26" fill="#5dade2" opacity="0.25"/>
+            <!-- 16 merozoites arranged in circle -->
+            <circle cx="45" cy="21" r="4.5" fill="#c0392b"/><circle cx="45" cy="21" r="2.5" fill="#fce5cd"/>
+            <circle cx="61" cy="27" r="4.5" fill="#c0392b"/><circle cx="61" cy="27" r="2.5" fill="#fce5cd"/>
+            <circle cx="69" cy="43" r="4.5" fill="#c0392b"/><circle cx="69" cy="43" r="2.5" fill="#fce5cd"/>
+            <circle cx="62" cy="60" r="4.5" fill="#c0392b"/><circle cx="62" cy="60" r="2.5" fill="#fce5cd"/>
+            <circle cx="45" cy="68" r="4.5" fill="#c0392b"/><circle cx="45" cy="68" r="2.5" fill="#fce5cd"/>
+            <circle cx="28" cy="61" r="4.5" fill="#c0392b"/><circle cx="28" cy="61" r="2.5" fill="#fce5cd"/>
+            <circle cx="21" cy="45" r="4.5" fill="#c0392b"/><circle cx="21" cy="45" r="2.5" fill="#fce5cd"/>
+            <circle cx="28" cy="29" r="4.5" fill="#c0392b"/><circle cx="28" cy="29" r="2.5" fill="#fce5cd"/>
+            <!-- hemozoin central -->
+            <circle cx="45" cy="45" r="5" fill="#4a235a"/>
+          </svg>
+          <div class="micro-label">Skizon</div>
+          <div class="micro-desc">• 8–24 merozoit<br>• Jarang di darah tepi<br>• Hemozoin (pigmen) sentral<br>• Maurer's clefts</div>
+        </div>
+        <!-- Gametocyte -->
+        <div class="micro-cell">
+          <svg viewBox="0 0 90 90" width="90" height="90">
+            <circle cx="45" cy="45" r="42" fill="#f9d0d0" stroke="#d0a0a0" stroke-width="1.5"/>
+            <!-- BANANA / CRESCENT shaped gametocyte -->
+            <path d="M 25 30 Q 15 45 25 60 Q 45 75 65 60 Q 75 45 65 30 Q 45 15 25 30 Z" fill="#3498db" opacity="0.75"/>
+            <!-- nucleus -->
+            <ellipse cx="45" cy="45" rx="8" ry="6" fill="#c0392b"/>
+            <!-- hemozoin granules -->
+            <circle cx="38" cy="48" r="2" fill="#4a235a"/>
+            <circle cx="52" cy="42" r="2" fill="#4a235a"/>
+          </svg>
+          <div class="micro-label">Gametosit</div>
+          <div class="micro-desc">• Bentuk <strong>PISANG/SABIT</strong> 🍌<br>• Patognomonik falciparum<br>• Timbul hari ke-8<br>• Mikro: ujung lancip<br>• Makro: ujung tumpul</div>
+        </div>
+      </div>
+      <div class="info-box red" style="margin-top:12px;margin-bottom:0;">
+        <h4>🔑 Ciri Khas Falciparum — Wajib Hafal</h4>
+        <p>Cincin tipis halus · Double chromatin · Posisi appliqué · Multiple rings per sel · Gametosit PISANG/SABIT · Skizon & trofozoit jarang di darah tepi · Eritrosit TIDAK membesar</p>
+      </div>
+    </div>
+
+    <!-- ========== P. VIVAX ========== -->
+    <div style="background:#eafaf1;border-radius:14px;padding:20px;margin-bottom:18px;border:2px solid #27ae60;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+        <span style="font-size:22px;">🟢</span>
+        <div>
+          <strong style="font-size:1rem;color:#1a7040;font-style:italic;">Plasmodium vivax</strong>
+          <span style="font-size:0.8rem;color:#1a7040;margin-left:8px;">— Malaria Tertiana</span>
+        </div>
+        <span style="margin-left:auto;background:#27ae60;color:white;padding:3px 10px;border-radius:20px;font-size:0.75rem;font-weight:700;">Hipnozoit → Relaps</span>
+      </div>
+      <div class="micro-row">
+        <!-- Ring -->
+        <div class="micro-cell">
+          <svg viewBox="0 0 90 90" width="90" height="90">
+            <!-- eritrosit membesar -->
+            <circle cx="45" cy="45" r="42" fill="#fde8e8" stroke="#d0a0a0" stroke-width="1.5"/>
+            <!-- Schuffner's dots -->
+            <circle cx="20" cy="25" r="2" fill="#f39c12" opacity="0.7"/>
+            <circle cx="65" cy="20" r="2" fill="#f39c12" opacity="0.7"/>
+            <circle cx="70" cy="65" r="2" fill="#f39c12" opacity="0.7"/>
+            <circle cx="18" cy="65" r="2" fill="#f39c12" opacity="0.7"/>
+            <circle cx="72" cy="40" r="1.5" fill="#f39c12" opacity="0.6"/>
+            <circle cx="25" cy="72" r="1.5" fill="#f39c12" opacity="0.6"/>
+            <!-- large ring -->
+            <circle cx="45" cy="45" r="15" fill="none" stroke="#3498db" stroke-width="3" opacity="0.8"/>
+            <circle cx="45" cy="30" r="4" fill="#c0392b"/>
+          </svg>
+          <div class="micro-label">Cincin (Ring)</div>
+          <div class="micro-desc">• Cincin besar, tebal<br>• 1/3 diameter eritrosit<br>• 1 kromatin besar<br>• Schüffner's dots (+)<br>• Eritrosit membesar</div>
+        </div>
+        <!-- Trophozoite -->
+        <div class="micro-cell">
+          <svg viewBox="0 0 90 90" width="90" height="90">
+            <circle cx="45" cy="45" r="42" fill="#fde8e8" stroke="#d0a0a0" stroke-width="1.5"/>
+            <!-- Schuffner's dots -->
+            <circle cx="15" cy="30" r="2" fill="#f39c12" opacity="0.7"/>
+            <circle cx="70" cy="18" r="2" fill="#f39c12" opacity="0.7"/>
+            <circle cx="75" cy="60" r="2" fill="#f39c12" opacity="0.7"/>
+            <circle cx="14" cy="60" r="2" fill="#f39c12" opacity="0.7"/>
+            <circle cx="75" cy="38" r="1.5" fill="#f39c12" opacity="0.6"/>
+            <circle cx="20" cy="72" r="1.5" fill="#f39c12" opacity="0.6"/>
+            <!-- amoeboid trophozoite (irregular) -->
+            <path d="M 30 35 Q 22 40 28 52 Q 35 62 48 58 Q 62 55 65 43 Q 68 30 55 28 Q 42 22 30 35 Z" fill="#3498db" opacity="0.65"/>
+            <!-- nucleus -->
+            <circle cx="45" cy="42" r="6" fill="#c0392b"/>
+            <!-- vacuole -->
+            <circle cx="40" cy="47" r="5" fill="white" opacity="0.6"/>
+          </svg>
+          <div class="micro-label">Trofozoit</div>
+          <div class="micro-desc">• Bentuk AMEBOID<br>• Tidak beraturan, pseudopod<br>• Vakuola makanan besar<br>• Schüffner's dots jelas<br>• Eritrosit membesar pucat</div>
+        </div>
+        <!-- Schizont -->
+        <div class="micro-cell">
+          <svg viewBox="0 0 90 90" width="90" height="90">
+            <circle cx="45" cy="45" r="42" fill="#fde8e8" stroke="#d0a0a0" stroke-width="1.5"/>
+            <!-- Schuffner dots -->
+            <circle cx="12" cy="32" r="1.8" fill="#f39c12" opacity="0.6"/>
+            <circle cx="75" cy="25" r="1.8" fill="#f39c12" opacity="0.6"/>
+            <circle cx="78" cy="62" r="1.8" fill="#f39c12" opacity="0.6"/>
+            <circle cx="12" cy="62" r="1.8" fill="#f39c12" opacity="0.6"/>
+            <!-- Banyak merozoit (16-24) -->
+            <circle cx="45" cy="45" r="30" fill="#5dade2" opacity="0.2"/>
+            <!-- 16 merozoites -->
+            <circle cx="45" cy="18" r="4" fill="#c0392b"/><circle cx="45" cy="18" r="2.2" fill="#f5cba7"/>
+            <circle cx="59" cy="22" r="4" fill="#c0392b"/><circle cx="59" cy="22" r="2.2" fill="#f5cba7"/>
+            <circle cx="69" cy="33" r="4" fill="#c0392b"/><circle cx="69" cy="33" r="2.2" fill="#f5cba7"/>
+            <circle cx="72" cy="47" r="4" fill="#c0392b"/><circle cx="72" cy="47" r="2.2" fill="#f5cba7"/>
+            <circle cx="67" cy="61" r="4" fill="#c0392b"/><circle cx="67" cy="61" r="2.2" fill="#f5cba7"/>
+            <circle cx="56" cy="70" r="4" fill="#c0392b"/><circle cx="56" cy="70" r="2.2" fill="#f5cba7"/>
+            <circle cx="44" cy="73" r="4" fill="#c0392b"/><circle cx="44" cy="73" r="2.2" fill="#f5cba7"/>
+            <circle cx="31" cy="70" r="4" fill="#c0392b"/><circle cx="31" cy="70" r="2.2" fill="#f5cba7"/>
+            <circle cx="21" cy="60" r="4" fill="#c0392b"/><circle cx="21" cy="60" r="2.2" fill="#f5cba7"/>
+            <circle cx="17" cy="46" r="4" fill="#c0392b"/><circle cx="17" cy="46" r="2.2" fill="#f5cba7"/>
+            <circle cx="20" cy="31" r="4" fill="#c0392b"/><circle cx="20" cy="31" r="2.2" fill="#f5cba7"/>
+            <circle cx="31" cy="21" r="4" fill="#c0392b"/><circle cx="31" cy="21" r="2.2" fill="#f5cba7"/>
+            <!-- inner ring -->
+            <circle cx="45" cy="38" r="3.5" fill="#c0392b"/><circle cx="55" cy="44" r="3.5" fill="#c0392b"/>
+            <circle cx="45" cy="52" r="3.5" fill="#c0392b"/><circle cx="36" cy="44" r="3.5" fill="#c0392b"/>
+            <!-- hemozoin -->
+            <circle cx="45" cy="45" r="4" fill="#4a235a"/>
+          </svg>
+          <div class="micro-label">Skizon</div>
+          <div class="micro-desc">• <strong>12–24 merozoit</strong><br>• Mengisi seluruh eritrosit<br>• Eritrosit sangat membesar<br>• Schüffner's dots jelas<br>• Hemozoin sentral</div>
+        </div>
+        <!-- Gametocyte -->
+        <div class="micro-cell">
+          <svg viewBox="0 0 90 90" width="90" height="90">
+            <circle cx="45" cy="45" r="42" fill="#fde8e8" stroke="#d0a0a0" stroke-width="1.5"/>
+            <!-- Schuffner dots -->
+            <circle cx="14" cy="32" r="1.8" fill="#f39c12" opacity="0.6"/>
+            <circle cx="73" cy="28" r="1.8" fill="#f39c12" opacity="0.6"/>
+            <circle cx="75" cy="63" r="1.8" fill="#f39c12" opacity="0.6"/>
+            <!-- Round oval gametocyte -->
+            <circle cx="45" cy="45" r="26" fill="#3498db" opacity="0.65"/>
+            <!-- nucleus -->
+            <circle cx="45" cy="45" r="8" fill="#c0392b"/>
+            <!-- hemozoin -->
+            <circle cx="38" cy="50" r="2.5" fill="#4a235a"/>
+            <circle cx="52" cy="40" r="2.5" fill="#4a235a"/>
+          </svg>
+          <div class="micro-label">Gametosit</div>
+          <div class="micro-desc">• Bentuk BULAT/OVAL<br>• Mengisi eritrosit membesar<br>• Schüffner's dots (+)<br>• Timbul hari ke 2–3<br>• Mikro: lebih kecil</div>
+        </div>
+      </div>
+      <div class="info-box green" style="margin-top:12px;margin-bottom:0;">
+        <h4>🔑 Ciri Khas Vivax — Wajib Hafal</h4>
+        <p>Eritrosit MEMBESAR & PUCAT · Trofozoit amoeboid (tidak beraturan) · Schüffner's dots · Skizon 12–24 merozoit · Gametosit bulat · Hipnozoit → relaps</p>
+      </div>
+    </div>
+
+    <!-- ========== P. MALARIAE ========== -->
+    <div style="background:#eaf2fb;border-radius:14px;padding:20px;margin-bottom:18px;border:2px solid #2980b9;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+        <span style="font-size:22px;">🔵</span>
+        <div>
+          <strong style="font-size:1rem;color:#1a5276;font-style:italic;">Plasmodium malariae</strong>
+          <span style="font-size:0.8rem;color:#1a5276;margin-left:8px;">— Malaria Quartana</span>
+        </div>
+        <span style="margin-left:auto;background:#2980b9;color:white;padding:3px 10px;border-radius:20px;font-size:0.75rem;font-weight:700;">Band Form Khas</span>
+      </div>
+      <div class="micro-row">
+        <!-- Ring -->
+        <div class="micro-cell">
+          <svg viewBox="0 0 90 90" width="90" height="90">
+            <circle cx="45" cy="45" r="42" fill="#f9d0d0" stroke="#d0a0a0" stroke-width="1.5"/>
+            <!-- thick compact ring -->
+            <circle cx="45" cy="45" r="14" fill="none" stroke="#3498db" stroke-width="4" opacity="0.85"/>
+            <circle cx="45" cy="31" r="4.5" fill="#c0392b"/>
+          </svg>
+          <div class="micro-label">Cincin (Ring)</div>
+          <div class="micro-desc">• Cincin TEBAL kompak<br>• 1/3 diameter eritrosit<br>• 1 kromatin besar<br>• Eritrosit TIDAK membesar<br>• Tidak ada stippling</div>
+        </div>
+        <!-- Trophozoite BAND FORM -->
+        <div class="micro-cell">
+          <svg viewBox="0 0 90 90" width="90" height="90">
+            <circle cx="45" cy="45" r="42" fill="#f9d0d0" stroke="#d0a0a0" stroke-width="1.5"/>
+            <!-- BAND FORM - rectangle across cell -->
+            <rect x="8" y="37" width="74" height="16" rx="8" fill="#3498db" opacity="0.75"/>
+            <!-- nucleus at one end -->
+            <circle cx="18" cy="45" r="6" fill="#c0392b"/>
+            <!-- hemozoin granules along band -->
+            <circle cx="35" cy="45" r="2.5" fill="#4a235a" opacity="0.8"/>
+            <circle cx="50" cy="45" r="2.5" fill="#4a235a" opacity="0.8"/>
+            <circle cx="65" cy="45" r="2.5" fill="#4a235a" opacity="0.8"/>
+          </svg>
+          <div class="micro-label">Trofozoit</div>
+          <div class="micro-desc">• <strong>BAND FORM</strong> ⬛<br>• Pita melintang eritrosit<br>• PATOGNOMONIK malariae<br>• Kromatin di satu ujung<br>• Hemozoin sepanjang pita</div>
+        </div>
+        <!-- Schizont ROSETTE -->
+        <div class="micro-cell">
+          <svg viewBox="0 0 90 90" width="90" height="90">
+            <circle cx="45" cy="45" r="42" fill="#f9d0d0" stroke="#d0a0a0" stroke-width="1.5"/>
+            <!-- ROSETTE pattern - 8 merozoites around central hemozoin -->
+            <circle cx="45" cy="45" r="4" fill="#4a235a"/>
+            <!-- 8 merozoites in rosette -->
+            <circle cx="45" cy="26" r="6" fill="#c0392b"/><circle cx="45" cy="26" r="3.5" fill="#f5cba7"/>
+            <circle cx="58" cy="31" r="6" fill="#c0392b"/><circle cx="58" cy="31" r="3.5" fill="#f5cba7"/>
+            <circle cx="64" cy="45" r="6" fill="#c0392b"/><circle cx="64" cy="45" r="3.5" fill="#f5cba7"/>
+            <circle cx="58" cy="59" r="6" fill="#c0392b"/><circle cx="58" cy="59" r="3.5" fill="#f5cba7"/>
+            <circle cx="45" cy="64" r="6" fill="#c0392b"/><circle cx="45" cy="64" r="3.5" fill="#f5cba7"/>
+            <circle cx="32" cy="59" r="6" fill="#c0392b"/><circle cx="32" cy="59" r="3.5" fill="#f5cba7"/>
+            <circle cx="26" cy="45" r="6" fill="#c0392b"/><circle cx="26" cy="45" r="3.5" fill="#f5cba7"/>
+            <circle cx="32" cy="31" r="6" fill="#c0392b"/><circle cx="32" cy="31" r="3.5" fill="#f5cba7"/>
+          </svg>
+          <div class="micro-label">Skizon</div>
+          <div class="micro-desc">• <strong>ROSETTE</strong> 🌸<br>• 6–12 merozoit melingkar<br>• Hemozoin di tengah<br>• PATOGNOMONIK malariae<br>• Eritrosit normal/kecil</div>
+        </div>
+        <!-- Gametocyte -->
+        <div class="micro-cell">
+          <svg viewBox="0 0 90 90" width="90" height="90">
+            <circle cx="45" cy="45" r="42" fill="#f9d0d0" stroke="#d0a0a0" stroke-width="1.5"/>
+            <!-- Round, fills most RBC -->
+            <circle cx="45" cy="45" r="22" fill="#3498db" opacity="0.65"/>
+            <circle cx="45" cy="45" r="8" fill="#c0392b"/>
+            <circle cx="38" cy="50" r="2" fill="#4a235a"/>
+          </svg>
+          <div class="micro-label">Gametosit</div>
+          <div class="micro-desc">• Bulat kompak<br>• Mengisi sebagian besar eritrosit<br>• Timbul lambat (bulan-bulan)<br>• Eritrosit normal</div>
+        </div>
+      </div>
+      <div class="info-box blue" style="margin-top:12px;margin-bottom:0;">
+        <h4>🔑 Ciri Khas Malariae — Wajib Hafal</h4>
+        <p>Eritrosit TIDAK membesar · BAND FORM (trofozoit pita melintang) · Skizon ROSETTE 6–12 merozoit · Tidak ada Schüffner's dots · Gametosit lambat (bulan) · Siklus 72 jam</p>
+      </div>
+    </div>
+
+    <!-- ========== P. OVALE ========== -->
+    <div style="background:#f5eef8;border-radius:14px;padding:20px;margin-bottom:18px;border:2px solid #8e44ad;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+        <span style="font-size:22px;">🟣</span>
+        <div>
+          <strong style="font-size:1rem;color:#6c3483;font-style:italic;">Plasmodium ovale</strong>
+          <span style="font-size:0.8rem;color:#6c3483;margin-left:8px;">— Malaria Ovale</span>
+        </div>
+        <span style="margin-left:auto;background:#8e44ad;color:white;padding:3px 10px;border-radius:20px;font-size:0.75rem;font-weight:700;">Eritrosit Oval Bergerigi</span>
+      </div>
+      <div class="micro-row">
+        <!-- Ring -->
+        <div class="micro-cell">
+          <svg viewBox="0 0 90 90" width="90" height="90">
+            <!-- Oval RBC with fimbriated edges -->
+            <ellipse cx="45" cy="45" rx="40" ry="34" fill="#fde8e8" stroke="#d0a0a0" stroke-width="1.5"/>
+            <!-- fimbriated edges (James' dots) -->
+            <circle cx="8" cy="40" r="2.5" fill="#f39c12" opacity="0.7"/>
+            <circle cx="80" cy="50" r="2.5" fill="#f39c12" opacity="0.7"/>
+            <circle cx="40" cy="12" r="2" fill="#f39c12" opacity="0.7"/>
+            <circle cx="55" cy="78" r="2" fill="#f39c12" opacity="0.7"/>
+            <circle cx="15" cy="55" r="1.8" fill="#f39c12" opacity="0.6"/>
+            <!-- compact ring -->
+            <circle cx="45" cy="45" r="12" fill="none" stroke="#3498db" stroke-width="3" opacity="0.8"/>
+            <circle cx="45" cy="33" r="3.5" fill="#c0392b"/>
+          </svg>
+          <div class="micro-label">Cincin (Ring)</div>
+          <div class="micro-desc">• Mirip vivax tapi lebih kompak<br>• Eritrosit mulai OVAL<br>• James' dots (stippling)<br>• 1 kromatin<br>• Lebih kecil dari vivax</div>
+        </div>
+        <!-- Trophozoite -->
+        <div class="micro-cell">
+          <svg viewBox="0 0 90 90" width="90" height="90">
+            <ellipse cx="45" cy="45" rx="40" ry="34" fill="#fde8e8" stroke="#d0a0a0" stroke-width="1.5"/>
+            <!-- James dots -->
+            <circle cx="8" cy="38" r="2.2" fill="#f39c12" opacity="0.7"/>
+            <circle cx="80" cy="52" r="2.2" fill="#f39c12" opacity="0.7"/>
+            <circle cx="38" cy="12" r="2" fill="#f39c12" opacity="0.6"/>
+            <circle cx="57" cy="76" r="2" fill="#f39c12" opacity="0.6"/>
+            <!-- compact irregular trophozoite -->
+            <path d="M 32 38 Q 28 45 34 54 Q 42 62 55 57 Q 65 50 62 40 Q 56 28 44 30 Q 35 30 32 38 Z" fill="#3498db" opacity="0.7"/>
+            <circle cx="45" cy="44" r="5.5" fill="#c0392b"/>
+          </svg>
+          <div class="micro-label">Trofozoit</div>
+          <div class="micro-desc">• Kompak, kurang ameboid<br>• Eritrosit OVAL/lonjong<br>• James' dots (Schüffner-like)<br>• Tepi eritrosit bergerigi<br>• Membesar ringan</div>
+        </div>
+        <!-- Schizont -->
+        <div class="micro-cell">
+          <svg viewBox="0 0 90 90" width="90" height="90">
+            <ellipse cx="45" cy="45" rx="40" ry="34" fill="#fde8e8" stroke="#d0a0a0" stroke-width="1.5"/>
+            <!-- James dots -->
+            <circle cx="7" cy="40" r="2" fill="#f39c12" opacity="0.6"/>
+            <circle cx="81" cy="50" r="2" fill="#f39c12" opacity="0.6"/>
+            <!-- 8 merozoites -->
+            <circle cx="45" cy="20" r="5.5" fill="#c0392b"/><circle cx="45" cy="20" r="3" fill="#f5cba7"/>
+            <circle cx="60" cy="28" r="5.5" fill="#c0392b"/><circle cx="60" cy="28" r="3" fill="#f5cba7"/>
+            <circle cx="66" cy="44" r="5.5" fill="#c0392b"/><circle cx="66" cy="44" r="3" fill="#f5cba7"/>
+            <circle cx="58" cy="59" r="5.5" fill="#c0392b"/><circle cx="58" cy="59" r="3" fill="#f5cba7"/>
+            <circle cx="44" cy="65" r="5.5" fill="#c0392b"/><circle cx="44" cy="65" r="3" fill="#f5cba7"/>
+            <circle cx="30" cy="59" r="5.5" fill="#c0392b"/><circle cx="30" cy="59" r="3" fill="#f5cba7"/>
+            <circle cx="23" cy="44" r="5.5" fill="#c0392b"/><circle cx="23" cy="44" r="3" fill="#f5cba7"/>
+            <circle cx="30" cy="28" r="5.5" fill="#c0392b"/><circle cx="30" cy="28" r="3" fill="#f5cba7"/>
+            <circle cx="45" cy="45" r="4" fill="#4a235a"/>
+          </svg>
+          <div class="micro-label">Skizon</div>
+          <div class="micro-desc">• 6–12 merozoit<br>• Lebih sedikit dari vivax<br>• Eritrosit oval membesar<br>• James' dots (+)<br>• Hemozoin gelap</div>
+        </div>
+        <!-- Gametocyte -->
+        <div class="micro-cell">
+          <svg viewBox="0 0 90 90" width="90" height="90">
+            <ellipse cx="45" cy="45" rx="40" ry="34" fill="#fde8e8" stroke="#d0a0a0" stroke-width="1.5"/>
+            <!-- James dots -->
+            <circle cx="7" cy="40" r="2" fill="#f39c12" opacity="0.6"/>
+            <circle cx="81" cy="50" r="2" fill="#f39c12" opacity="0.6"/>
+            <!-- Round gametocyte -->
+            <ellipse cx="45" cy="45" rx="20" ry="18" fill="#3498db" opacity="0.65"/>
+            <circle cx="45" cy="45" r="7" fill="#c0392b"/>
+            <circle cx="40" cy="49" r="2" fill="#4a235a"/>
+          </svg>
+          <div class="micro-label">Gametosit</div>
+          <div class="micro-desc">• Bulat oval<br>• Eritrosit oval bergerigi<br>• James' dots (+)<br>• Mirip vivax tapi oval</div>
+        </div>
+      </div>
+      <div class="info-box purple" style="margin-top:12px;margin-bottom:0;">
+        <h4>🔑 Ciri Khas Ovale — Wajib Hafal</h4>
+        <p>Eritrosit OVAL bergerigi (fimbriated) · James' dots (seperti Schüffner) · Trofozoit lebih kompak dari vivax · Skizon 6–12 merozoit · Hipnozoit ada → relaps · Jarang di Indonesia</p>
+      </div>
+    </div>
+
+    <!-- ========== P. KNOWLESI ========== -->
+    <div style="background:#fef5e7;border-radius:14px;padding:20px;margin-bottom:4px;border:2px solid #e67e22;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+        <span style="font-size:22px;">🟠</span>
+        <div>
+          <strong style="font-size:1rem;color:#ca6f1e;font-style:italic;">Plasmodium knowlesi</strong>
+          <span style="font-size:0.8rem;color:#ca6f1e;margin-left:8px;">— Malaria Simian (Zoonosis)</span>
+        </div>
+        <span style="margin-left:auto;background:#e67e22;color:white;padding:3px 10px;border-radius:20px;font-size:0.75rem;font-weight:700;">Mirip Malariae!</span>
+      </div>
+      <div class="micro-row">
+        <div class="micro-cell">
+          <svg viewBox="0 0 90 90" width="90" height="90">
+            <circle cx="45" cy="45" r="42" fill="#f9d0d0" stroke="#d0a0a0" stroke-width="1.5"/>
+            <!-- thin ring, mirip falciparum -->
+            <circle cx="40" cy="40" r="11" fill="none" stroke="#3498db" stroke-width="2.5" opacity="0.8"/>
+            <circle cx="40" cy="29" r="3.2" fill="#c0392b"/>
+            <!-- second ring -->
+            <circle cx="56" cy="55" r="9" fill="none" stroke="#3498db" stroke-width="2" opacity="0.7"/>
+            <circle cx="56" cy="46" r="2.8" fill="#c0392b"/>
+          </svg>
+          <div class="micro-label">Cincin (Ring)</div>
+          <div class="micro-desc">• Mirip falciparum (tipis)<br>• Dapat multiple per sel<br>• Sulit dibedakan secara morfologi<br>• Butuh <strong>PCR</strong> untuk konfirmasi</div>
+        </div>
+        <div class="micro-cell">
+          <svg viewBox="0 0 90 90" width="90" height="90">
+            <circle cx="45" cy="45" r="42" fill="#f9d0d0" stroke="#d0a0a0" stroke-width="1.5"/>
+            <!-- Band form mirip malariae -->
+            <rect x="8" y="38" width="74" height="14" rx="7" fill="#3498db" opacity="0.7"/>
+            <circle cx="18" cy="45" r="5.5" fill="#c0392b"/>
+            <circle cx="42" cy="45" r="2" fill="#4a235a" opacity="0.7"/>
+            <circle cx="60" cy="45" r="2" fill="#4a235a" opacity="0.7"/>
+          </svg>
+          <div class="micro-label">Trofozoit</div>
+          <div class="micro-desc">• Band form mirip malariae<br>• Sering sulit dibedakan<br>• Eritrosit TIDAK membesar<br>• Secara morfologi = malariae</div>
+        </div>
+        <div class="micro-cell">
+          <svg viewBox="0 0 90 90" width="90" height="90">
+            <circle cx="45" cy="45" r="42" fill="#f9d0d0" stroke="#d0a0a0" stroke-width="1.5"/>
+            <!-- 16 merozoites (lebih banyak dari malariae) -->
+            <circle cx="45" cy="45" r="5" fill="#4a235a"/>
+            <circle cx="45" cy="22" r="5" fill="#c0392b"/><circle cx="45" cy="22" r="2.8" fill="#f5cba7"/>
+            <circle cx="57" cy="26" r="5" fill="#c0392b"/><circle cx="57" cy="26" r="2.8" fill="#f5cba7"/>
+            <circle cx="65" cy="37" r="5" fill="#c0392b"/><circle cx="65" cy="37" r="2.8" fill="#f5cba7"/>
+            <circle cx="67" cy="51" r="5" fill="#c0392b"/><circle cx="67" cy="51" r="2.8" fill="#f5cba7"/>
+            <circle cx="60" cy="63" r="5" fill="#c0392b"/><circle cx="60" cy="63" r="2.8" fill="#f5cba7"/>
+            <circle cx="47" cy="69" r="5" fill="#c0392b"/><circle cx="47" cy="69" r="2.8" fill="#f5cba7"/>
+            <circle cx="33" cy="65" r="5" fill="#c0392b"/><circle cx="33" cy="65" r="2.8" fill="#f5cba7"/>
+            <circle cx="24" cy="54" r="5" fill="#c0392b"/><circle cx="24" cy="54" r="2.8" fill="#f5cba7"/>
+            <circle cx="22" cy="40" r="5" fill="#c0392b"/><circle cx="22" cy="40" r="2.8" fill="#f5cba7"/>
+            <circle cx="29" cy="27" r="5" fill="#c0392b"/><circle cx="29" cy="27" r="2.8" fill="#f5cba7"/>
+          </svg>
+          <div class="micro-label">Skizon</div>
+          <div class="micro-desc">• 10–16 merozoit<br>• Lebih banyak dari malariae<br>• Tanpa pola rosette khas<br>• Hemozoin sentral</div>
+        </div>
+        <div class="micro-cell">
+          <svg viewBox="0 0 90 90" width="90" height="90">
+            <circle cx="45" cy="45" r="42" fill="#f9d0d0" stroke="#d0a0a0" stroke-width="1.5"/>
+            <circle cx="45" cy="45" r="20" fill="#3498db" opacity="0.65"/>
+            <circle cx="45" cy="45" r="7" fill="#c0392b"/>
+          </svg>
+          <div class="micro-label">Gametosit</div>
+          <div class="micro-desc">• Bulat, mirip malariae<br>• Sulit dibedakan morfologi<br>• Konfirmasi wajib PCR<br>• Zoonosis dari <em>Macaca</em> spp</div>
+        </div>
+      </div>
+      <div class="info-box yellow" style="margin-top:12px;margin-bottom:0;">
+        <h4>🔑 Ciri Khas Knowlesi — Wajib Hafal</h4>
+        <p>Morfologi MIRIP malariae (band form) dan falciparum (ring tipis) · Eritrosit tidak membesar · <strong>Konfirmasi PCR wajib</strong> · Endemik Kalimantan & Sabah Malaysia · Siklus 24 jam → bisa berat · Reservoir primata (<em>Macaca fascicularis</em>)</p>
+      </div>
+    </div>
+
+    <!-- TABEL RINGKAS MORFOLOGI -->
+    <div style="margin-top:20px;overflow-x:auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>Spesies</th>
+            <th>Ukuran RBC</th>
+            <th>Stippling</th>
+            <th>Trofozoit Khas</th>
+            <th>Skizon Khas</th>
+            <th>Gametosit Khas</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>🔴 <em>P. falciparum</em></td>
+            <td>Normal</td>
+            <td>Maurer's clefts</td>
+            <td>Tidak tampak (sekuestrasi)</td>
+            <td>8–24 merozoit, jarang di darah tepi</td>
+            <td><strong>🍌 PISANG/SABIT</strong></td>
+          </tr>
+          <tr>
+            <td>🟢 <em>P. vivax</em></td>
+            <td>⬆️ Membesar & pucat</td>
+            <td>Schüffner's dots +++</td>
+            <td><strong>Ameboid</strong>, tidak beraturan</td>
+            <td>12–24 merozoit (terbanyak)</td>
+            <td>Bulat, mengisi RBC besar</td>
+          </tr>
+          <tr>
+            <td>🔵 <em>P. malariae</em></td>
+            <td>Normal / ⬇️ Kecil</td>
+            <td>Tidak ada</td>
+            <td><strong>⬛ BAND FORM</strong> (pita)</td>
+            <td><strong>🌸 ROSETTE</strong> 6–12 merozoit</td>
+            <td>Bulat kompak</td>
+          </tr>
+          <tr>
+            <td>🟣 <em>P. ovale</em></td>
+            <td>⬆️ Oval bergerigi</td>
+            <td>James' dots +</td>
+            <td>Kompak, kurang ameboid</td>
+            <td>6–12 merozoit</td>
+            <td>Bulat oval</td>
+          </tr>
+          <tr>
+            <td>🟠 <em>P. knowlesi</em></td>
+            <td>Normal</td>
+            <td>Tidak ada</td>
+            <td>Band form (mirip malariae)</td>
+            <td>10–16 merozoit</td>
+            <td>Bulat (PCR untuk konfirmasi)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div><!-- end section-belajar -->
+
+
+<!-- ============================================================ -->
+<!-- SECTION 2: SI PALING MERANGKUM -->
+<!-- ============================================================ -->
+<div class="section fade-in" id="section-merangkum">
+
+  <div class="team-header tim2">
+    <div class="team-avatar">📋</div>
+    <div class="team-info">
+      <h2>Tim 2 — Si Paling Merangkum</h2>
+      <p>Intisari cepat · Mudah diingat · Siap hafalan ujian</p>
+    </div>
+  </div>
+
+  <!-- MNEMONIC -->
+  <div class="mnemonic-box">
+    <div class="mnemonic-title">✨ Mnemonic — 5 Spesies Plasmodium</div>
+    <div class="mnemonic-word">FoVMO-K</div>
+    <div class="mnemonic-breakdown">
+      <div class="mnemonic-letter"><strong>Fo</strong>falciparum</div>
+      <div class="mnemonic-letter"><strong>V</strong>ivax</div>
+      <div class="mnemonic-letter"><strong>M</strong>alariae</div>
+      <div class="mnemonic-letter"><strong>O</strong>vale</div>
+      <div class="mnemonic-letter"><strong>K</strong>nowlesi</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <!-- KARTU 1 -->
+    <div class="summary-card s1">
+      <h3>🦠 Karakteristik Unik Tiap Spesies</h3>
+      <div class="summary-item"><div class="bullet b-red">F</div><div><em>falciparum</em> — invasi semua eritrosit, komplikasi berat, <strong>TIDAK ada hipnozoit</strong></div></div>
+      <div class="summary-item"><div class="bullet b-green">V</div><div><em>vivax</em> — retikulosit, hipnozoit → relaps 3–4 tahun, <strong>butuh primaquine/tafenoquine</strong></div></div>
+      <div class="summary-item"><div class="bullet b-blue">M</div><div><em>malariae</em> — eritrosit tua, 72 jam, gametosit timbul bulan-bulan</div></div>
+      <div class="summary-item"><div class="bullet b-purple">O</div><div><em>ovale</em> — seperti vivax, hipnozoit, jarang di Indonesia</div></div>
+      <div class="summary-item"><div class="bullet b-yellow">K</div><div><em>knowlesi</em> — dari monyet, zoonosis Kalimantan, 24 jam, bisa berat</div></div>
+    </div>
+
+    <!-- KARTU 2 -->
+    <div class="summary-card s2">
+      <h3>⏱️ Angka-Angka Penting Hafalan</h3>
+      <div class="summary-item"><div class="bullet b-blue">🌡</div><div>Suhu optimal nyamuk: <strong>25–27°C</strong></div></div>
+      <div class="summary-item"><div class="bullet b-blue">💧</div><div>Kelembaban &lt;<strong>60%</strong> → usia nyamuk memendek</div></div>
+      <div class="summary-item"><div class="bullet b-blue">🌊</div><div>Salinitas optimal An. sundaicus: <strong>12–18‰</strong></div></div>
+      <div class="summary-item"><div class="bullet b-blue">✈️</div><div>Jarak terbang: An. sundaicus <strong>3 km</strong></div></div>
+      <div class="summary-item"><div class="bullet b-blue">🔥</div><div>Suhu ≥<strong>32°C</strong> → parasit mati dalam nyamuk</div></div>
+      <div class="summary-item"><div class="bullet b-blue">🏥</div><div>Rekrudensi: &lt;8 minggu / Rekurensi: &gt;24 minggu</div></div>
+      <div class="summary-item"><div class="bullet b-blue">📍</div><div>Kasus introduced: radius <strong>100 meter</strong>, 2–4 minggu</div></div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <!-- KARTU 3 -->
+    <div class="summary-card s3">
+      <h3>🔄 Urutan Siklus Hidup (Hafalan Cepat)</h3>
+      <div class="summary-item"><div class="bullet b-blue">1</div><div><strong>Sporozoit</strong> → masuk darah dari kelenjar liur nyamuk</div></div>
+      <div class="summary-item"><div class="bullet b-blue">2</div><div><strong>Hati (Eksoeritrositer)</strong> → ±½ jam → trofozoit → skizon → 10.000–30.000 merozoit</div></div>
+      <div class="summary-item"><div class="bullet b-blue">3</div><div><strong>Eritrosit (Skizogoni)</strong> → merozoit → trofozoit → skizon pecah → merozoit baru → DEMAM</div></div>
+      <div class="summary-item"><div class="bullet b-blue">4</div><div><strong>Gametosit</strong> → mikro (jantan) + makro (betina) → dihisap nyamuk</div></div>
+      <div class="summary-item"><div class="bullet b-blue">5</div><div><strong>Sporogoni (nyamuk)</strong> → zigot → ookinet → ookista → sporozoit baru</div></div>
+    </div>
+
+    <!-- KARTU 4 -->
+    <div class="summary-card s4">
+      <h3>🏥 Diagnosis — Urutan Langkah</h3>
+      <div class="summary-item"><div class="bullet b-yellow">1</div><div><strong>Anamnesis:</strong> trias malaria + riwayat perjalanan ke endemis (≤4 minggu)</div></div>
+      <div class="summary-item"><div class="bullet b-yellow">2</div><div><strong>Pemeriksaan fisik:</strong> demam ≥37.5°C, pucat, splenomegali, hepatomegali</div></div>
+      <div class="summary-item"><div class="bullet b-yellow">3</div><div><strong>WAJIB konfirmasi:</strong> Mikroskopik (gold standard) atau RDT</div></div>
+      <div class="summary-item"><div class="bullet b-yellow">4</div><div><strong>WHO 2024 tambahan:</strong> Uji G6PD sebelum beri primaquine/tafenoquine</div></div>
+    </div>
+  </div>
+
+  <!-- TABEL RINGKAS SPESIES -->
+  <div class="card">
+    <div class="card-title"><span class="icon">📊</span> Tabel Komparasi Cepat Antar Spesies</div>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>Spesies</th>
+            <th>Eritrosit</th>
+            <th>% Terinfeksi</th>
+            <th>Hipnozoit</th>
+            <th>Siklus Demam</th>
+            <th>Komplikasi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>🔴 <em>P. falciparum</em></td>
+            <td>Semua stadium</td>
+            <td>10–40%</td>
+            <td>❌ Tidak</td>
+            <td>24 jam</td>
+            <td>⚠️ Berat</td>
+          </tr>
+          <tr>
+            <td>🟢 <em>P. vivax</em></td>
+            <td>Retikulosit</td>
+            <td>&lt;2%</td>
+            <td>✅ Ada</td>
+            <td>48 jam</td>
+            <td>Ringan-sedang</td>
+          </tr>
+          <tr>
+            <td>🔵 <em>P. malariae</em></td>
+            <td>Eritrosit tua</td>
+            <td>~1%</td>
+            <td>❌ Tidak</td>
+            <td>72 jam</td>
+            <td>Ringan</td>
+          </tr>
+          <tr>
+            <td>🟣 <em>P. ovale</em></td>
+            <td>Retikulosit</td>
+            <td>&lt;2%</td>
+            <td>✅ Ada</td>
+            <td>48 jam</td>
+            <td>Ringan</td>
+          </tr>
+          <tr>
+            <td>🟠 <em>P. knowlesi</em></td>
+            <td>Semua stadium</td>
+            <td>Bervariasi</td>
+            <td>❌ Tidak</td>
+            <td>24 jam</td>
+            <td>⚠️ Berat</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- FLASHCARD PERILAKU NYAMUK -->
+  <div class="card">
+    <div class="card-title"><span class="icon">🦟</span> Perilaku Nyamuk Anopheles — Ringkasan</div>
+    <div class="grid-3">
+      <div class="info-box blue">
+        <h4>🛏️ Breeding Habit</h4>
+        <p>Air tawar (mayoritas) & air payau (An. sundaicus). Terpengaruh sinar matahari, arus air, dan salinitas.</p>
+      </div>
+      <div class="info-box yellow">
+        <h4>🍽️ Feeding Habit</h4>
+        <p><strong>Waktu:</strong> senja-tengah malam atau tengah malam-pagi<br><strong>Tempat:</strong> eksofagik / endofagik<br><strong>Sumber:</strong> antropofilik / zoofilik</p>
+      </div>
+      <div class="info-box green">
+        <h4>😴 Resting Habit</h4>
+        <p>Endofilik (dalam rumah) atau eksofilik (luar rumah) di tempat teduh, lembab, aman, gelap.</p>
+      </div>
+    </div>
+    <div class="info-box purple">
+      <h4>💡 Implikasi Pengendalian</h4>
+      <p>Zooprofilaksis (sapi/kerbau di luar rumah) → mengurangi gigitan pada manusia. Predator larva: ikan kepala timah, Gambusia, nila merah, mujair → pengendalian biologis.</p>
+    </div>
+  </div>
+
+
+  <!-- MORFOLOGI RINGKASAN -->
+  <div class="card">
+    <div class="card-title"><span class="icon">🔬</span> Mnemonic Morfologi Mikroskopik — "3 Ciri Khas Mudah Diingat"</div>
+
+    <div class="mnemonic-box" style="background:linear-gradient(135deg,#1a5276,#e67e22);">
+      <div class="mnemonic-title">✨ Ciri PATOGNOMONIK per Spesies</div>
+      <div class="mnemonic-word" style="font-size:1.6rem;letter-spacing:2px;">FA · VI · MA · OV · KN</div>
+    </div>
+
+    <div class="grid-2">
+      <div class="summary-card s1">
+        <h3>🔴 Falciparum — "TIPIS PISANG BANYAK"</h3>
+        <div class="summary-item"><div class="bullet b-red">1</div><div>Cincin <strong>TIPIS</strong>, double chromatin, appliqué (di tepi RBC)</div></div>
+        <div class="summary-item"><div class="bullet b-red">2</div><div>Gametosit <strong>PISANG/SABIT</strong> 🍌 — satu-satunya spesies!</div></div>
+        <div class="summary-item"><div class="bullet b-red">3</div><div><strong>Banyak</strong> ring per sel; trofozoit/skizon TIDAK tampak di darah tepi</div></div>
+        <div class="summary-item"><div class="bullet b-red">⚠</div><div>Maurer's clefts · Eritrosit normal · Parasitemia 10–40%</div></div>
+      </div>
+      <div class="summary-card s2">
+        <h3>🟢 Vivax — "BESAR AMEBOID SCHÜFFNER"</h3>
+        <div class="summary-item"><div class="bullet b-green">1</div><div>Eritrosit <strong>MEMBESAR</strong> & pucat</div></div>
+        <div class="summary-item"><div class="bullet b-green">2</div><div>Trofozoit <strong>AMEBOID</strong> (tidak beraturan, berpseudopod)</div></div>
+        <div class="summary-item"><div class="bullet b-green">3</div><div><strong>Schüffner's dots</strong> jelas (+++) di eritrosit membesar</div></div>
+        <div class="summary-item"><div class="bullet b-green">+</div><div>Skizon 12–24 merozoit (terbanyak dari semua spesies)</div></div>
+      </div>
+      <div class="summary-card s3">
+        <h3>🔵 Malariae — "BAND ROSETTE KOMPAK"</h3>
+        <div class="summary-item"><div class="bullet b-blue">1</div><div>Trofozoit <strong>BAND FORM</strong> ⬛ — pita melintang sel</div></div>
+        <div class="summary-item"><div class="bullet b-blue">2</div><div>Skizon <strong>ROSETTE</strong> 🌸 — 6–12 merozoit melingkar</div></div>
+        <div class="summary-item"><div class="bullet b-blue">3</div><div>Eritrosit <strong>TIDAK membesar</strong>, tidak ada stippling</div></div>
+        <div class="summary-item"><div class="bullet b-blue">+</div><div>Gametosit timbul sangat lambat (bulan-bulan)</div></div>
+      </div>
+      <div class="summary-card s4">
+        <h3>🟣 Ovale — "OVAL GERIGI JAMES"</h3>
+        <div class="summary-item"><div class="bullet b-yellow">1</div><div>Eritrosit <strong>OVAL</strong> dengan tepi bergerigi (fimbriated)</div></div>
+        <div class="summary-item"><div class="bullet b-yellow">2</div><div><strong>James' dots</strong> (seperti Schüffner tapi pada RBC oval)</div></div>
+        <div class="summary-item"><div class="bullet b-yellow">3</div><div>Trofozoit kompak — kurang ameboid dibanding vivax</div></div>
+        <div class="summary-item"><div class="bullet b-yellow">+</div><div>Knowlesi 🟠: mirip malariae + falciparum → <strong>wajib PCR</strong></div></div>
+      </div>
+    </div>
+
+    <div class="info-box red">
+      <h4>⚡ Tips Ujian — Bila Ada 1 Foto, Lihat Ini Dulu:</h4>
+      <p><strong>Ada gametosit pisang? → Falciparum.</strong> · <strong>RBC membesar ameboid? → Vivax.</strong> · <strong>Band form / rosette? → Malariae.</strong> · <strong>RBC oval bergerigi? → Ovale.</strong> · <strong>Mirip 2 spesies sekaligus? → Knowlesi (cek PCR).</strong></p>
+    </div>
+  </div>
+
+</div><!-- end section-merangkum -->
+
+
+<!-- ============================================================ -->
+<!-- SECTION 3: SI PALING INOVASI -->
+<!-- ============================================================ -->
+<div class="section fade-in" id="section-inovasi">
+
+  <div class="team-header tim3">
+    <div class="team-avatar">💡</div>
+    <div class="team-info">
+      <h2>Tim 3 — Si Paling Inovasi</h2>
+      <p>Inovasi aplikatif berbasis materi · Implementasi program · Evidence-based</p>
+    </div>
+  </div>
+
+  <div class="info-box blue" style="margin-bottom:24px;">
+    <h4>🎯 Dasar Pemikiran Inovasi</h4>
+    <p>Berdasarkan materi dasar malaria, terdapat gap antara pengetahuan biologis parasit dengan implementasi program di lapangan. Tim inovasi mengidentifikasi 6 area strategis yang dapat segera diaplikasikan oleh tenaga kesehatan.</p>
+  </div>
+
+  <div class="innov-card ic1">
+    <h4>🗺️ 1. Pemetaan Risiko Berbasis Faktor Lingkungan Real-Time</h4>
+    <p>Manfaatkan data curah hujan, suhu, dan salinitas yang kini tersedia secara digital (BMKG API, satelit) untuk membuat <strong>peta risiko dinamis</strong> per kecamatan. Ketika suhu 25–27°C dan curah hujan tinggi, sistem otomatis mengirimkan alert ke puskesmas untuk peningkatan surveilans aktif dan distribusi kelambu.</p>
+    <span class="tag" style="background:#fef9e7;color:#b7770d;">💻 Digital Health · Surveilans</span>
+  </div>
+
+  <div class="innov-card ic2">
+    <h4>🐄 2. Optimalisasi Zooprofilaksis sebagai Barrier Alami</h4>
+    <p>Program <strong>"Kandang Strategis"</strong>: edukasi komunitas untuk menempatkan kandang ternak (sapi/kerbau) di antara area perindukan nyamuk dan rumah penduduk. Didukung studi kasus dari Kalimantan yang menunjukkan penurunan gigitan pada manusia hingga 40%. Dapat diintegrasikan dengan program Dinas Peternakan.</p>
+    <span class="tag" style="background:#eafaf1;color:#1e8449;">🌿 One Health · Berbasis Komunitas</span>
+  </div>
+
+  <div class="innov-card ic3">
+    <h4>📱 3. Skrining Digital G6PD sebelum Anti-Relaps</h4>
+    <p>Sesuai <strong>WHO Guidelines 2024</strong>, uji G6PD kini wajib sebelum primaquine/tafenoquine. Inovasi: integrasikan hasil uji G6PD (kualitatif/semikuantitatif) ke dalam aplikasi SITB/SISMAL agar otomatis memilih regimen yang aman. Mencegah hemolisis pada pasien defisiensi G6PD yang tidak terdeteksi.</p>
+    <span class="tag" style="background:#eaf2fb;color:#1a5276;">🔬 Farmakogenomik · Keselamatan Pasien</span>
+  </div>
+
+  <div class="innov-card ic4">
+    <h4>🎓 4. Edukasi Mitigasi Malaria Impor untuk Pekerja Migran</h4>
+    <p>Kelompok pekerja tambang, perkebunan, kehutanan, dan TNI/POLRI adalah risiko tertinggi malaria impor. Inovasi: <strong>modul pelatihan singkat (microlearning)</strong> berbasis QR code yang bisa diakses sebelum keberangkatan dan sesudah pulang. Terintegrasi dengan pemeriksaan pra-kerja dan MCU tahunan.</p>
+    <span class="tag" style="background:#f5eef8;color:#7d3c98;">📚 Promosi Kesehatan · Malaria Impor</span>
+  </div>
+
+  <div class="innov-card ic5">
+    <h4>🌡️ 5. Pemantauan Hipnozoit — Sistem Follow-Up Relaps</h4>
+    <p>P. vivax dengan hipnozoit bisa relaps hingga 3–4 tahun. Inovasi: <strong>sistem pengingat otomatis</strong> berbasis nomor HP pasien yang diintegrasikan ke Puskesmas — kirim pesan pengingat kontrol setiap 6 bulan selama 4 tahun. Kunci keberhasilan eliminasi karena memutus rantai relaps-reinfeksi.</p>
+    <span class="tag" style="background:#fef5e7;color:#ca6f1e;">🔔 mHealth · Eliminasi Malaria</span>
+  </div>
+
+  <div class="innov-card ic1">
+    <h4>🔬 6. Bioindikator Larva sebagai Deteksi Dini Wabah</h4>
+    <p>Materi menyebutkan tanaman lumut tertentu (Heteromorpha, Enteromorpha) sebagai indikator keberadaan larva An. sundaicus. Inovasi: latih kader desa untuk <strong>survei bioindikator bulanan</strong> di lagun/tambak sebagai sistem early warning wabah malaria pesisir — murah, mudah, tanpa peralatan canggih.</p>
+    <span class="tag" style="background:#fef9e7;color:#b7770d;">👥 Pemberdayaan Masyarakat · Early Warning</span>
+  </div>
+
+  <div class="who-update" style="margin-top:24px;">
+    <h3>🎯 Prioritas Inovasi untuk Program Indonesia 2025–2045</h3>
+    <ul>
+      <li>Selaraskan semua inovasi dengan KMK No. HK.01.07/MENKES/1988/2024 (Peta Jalan Eliminasi Malaria 2025–2045)</li>
+      <li>Fokus pada <strong>kabupaten/kota yang belum mencapai eliminasi</strong> — terutama Papua, Maluku, NTT</li>
+      <li>Integrasikan pendekatan <strong>One Health</strong> (manusia, hewan, lingkungan) sesuai tren global</li>
+      <li>Manfaatkan vaksin R21/Matrix-M (rekomendasi WHO 2023–2024) jika tersedia di Indonesia</li>
+    </ul>
+  </div>
+
+</div><!-- end section-inovasi -->
+
+
+<!-- ============================================================ -->
+<!-- SECTION 4: SI PALING JAGO MENJAWAB SOAL -->
+<!-- ============================================================ -->
+<div class="section fade-in" id="section-soal">
+
+  <div class="team-header tim4">
+    <div class="team-avatar">🏆</div>
+    <div class="team-info">
+      <h2>Tim 4 — Si Paling Jago Menjawab Soal</h2>
+      <p>10 soal pilihan ganda · Jawaban + alasan ilmiah · Referensi jelas</p>
+    </div>
+  </div>
+
+  <div id="scoreDisplay" class="score-display">
+    <div class="score-num" id="scoreNum">0/10</div>
+    <div class="score-label">Skor Anda — Klik soal untuk lihat jawaban</div>
+  </div>
+
+  <!-- SOAL 1 -->
+  <div class="quiz-item">
+    <div class="quiz-question">
+      <div class="quiz-num">1</div>
+      <div>Seorang pasien datang dengan demam yang berulang setiap 72 jam, pemeriksaan sediaan darah tebal ditemukan parasit dengan gambaran "band form" pada eritrosit tua. Spesies Plasmodium apa yang paling mungkin?</div>
+    </div>
+    <div class="quiz-options">
+      <div class="quiz-option" onclick="checkAnswer(this, false, 1)"><div class="opt-letter">A</div> P. falciparum</div>
+      <div class="quiz-option" onclick="checkAnswer(this, false, 1)"><div class="opt-letter">B</div> P. vivax</div>
+      <div class="quiz-option" onclick="checkAnswer(this, true, 1)"><div class="opt-letter">C</div> P. malariae</div>
+      <div class="quiz-option" onclick="checkAnswer(this, false, 1)"><div class="opt-letter">D</div> P. ovale</div>
+    </div>
+    <div class="quiz-answer" id="ans1">
+      <strong>✅ Jawaban Benar: C — P. malariae</strong><br><br>
+      <strong>Alasan:</strong> P. malariae memiliki siklus skizogoni 72 jam (malaria quartana) sehingga demam terjadi setiap 3 hari. Karakteristik unik: menginfeksi <em>eritrosit tua</em> dan membentuk "band form" (tropozoit berbentuk pita melintang eritrosit). Parasitemia rendah (~1%) sehingga jarang menyebabkan komplikasi berat.
+      <div class="quiz-source">📚 Sumber: Materi Slide 37 (Dr. Nelly AA); WHO Guidelines Malaria 2024; Kemenkes RI Pedoman Tatalaksana Malaria</div>
+    </div>
+  </div>
+
+  <!-- SOAL 2 -->
+  <div class="quiz-item">
+    <div class="quiz-question">
+      <div class="quiz-num">2</div>
+      <div>Seorang ibu hamil dari daerah endemis Papua didiagnosis malaria P. vivax. Dokter berencana memberikan primaquine untuk mencegah relaps. Sebelum pemberian, pemeriksaan apa yang WAJIB dilakukan menurut WHO Guidelines 2024?</div>
+    </div>
+    <div class="quiz-options">
+      <div class="quiz-option" onclick="checkAnswer(this, false, 2)"><div class="opt-letter">A</div> Kadar Hemoglobin</div>
+      <div class="quiz-option" onclick="checkAnswer(this, true, 2)"><div class="opt-letter">B</div> Uji G6PD (Glukosa-6-Fosfat Dehidrogenase)</div>
+      <div class="quiz-option" onclick="checkAnswer(this, false, 2)"><div class="opt-letter">C</div> Fungsi ginjal (ureum/kreatinin)</div>
+      <div class="quiz-option" onclick="checkAnswer(this, false, 2)"><div class="opt-letter">D</div> Uji Widal</div>
+    </div>
+    <div class="quiz-answer" id="ans2">
+      <strong>✅ Jawaban Benar: B — Uji G6PD</strong><br><br>
+      <strong>Alasan:</strong> WHO Guidelines Malaria (November 2024) menetapkan rekomendasi baru bahwa uji G6PD kualitatif/semikuantitatif (<em>near-patient test</em>) wajib dilakukan sebelum pemberian primaquine atau tafenoquine. Pasien dengan defisiensi G6PD berisiko mengalami hemolisis berat. Catatan: pada ibu hamil, primaquine biasanya ditunda hingga persalinan dan menyusui selesai.
+      <div class="quiz-source">📚 Sumber: WHO Guidelines for Malaria, 30 November 2024 (Recommendation update on G6PD testing)</div>
+    </div>
+  </div>
+
+  <!-- SOAL 3 -->
+  <div class="quiz-item">
+    <div class="quiz-question">
+      <div class="quiz-num">3</div>
+      <div>Sporozoit yang masuk ke hepatosit manusia ada yang tidak berkembang lanjut dan tetap laten selama 8–9 bulan. Stadium ini disebut apa dan ditemukan pada spesies apa?</div>
+    </div>
+    <div class="quiz-options">
+      <div class="quiz-option" onclick="checkAnswer(this, false, 3)"><div class="opt-letter">A</div> Takisporozoit — P. falciparum & P. malariae</div>
+      <div class="quiz-option" onclick="checkAnswer(this, true, 3)"><div class="opt-letter">B</div> Hipnozoit (bradisporozoit) — P. vivax & P. ovale</div>
+      <div class="quiz-option" onclick="checkAnswer(this, false, 3)"><div class="opt-letter">C</div> Gametosit — P. falciparum & P. vivax</div>
+      <div class="quiz-option" onclick="checkAnswer(this, false, 3)"><div class="opt-letter">D</div> Ookista — P. vivax & P. malariae</div>
+    </div>
+    <div class="quiz-answer" id="ans3">
+      <strong>✅ Jawaban Benar: B — Hipnozoit (P. vivax & P. ovale)</strong><br><br>
+      <strong>Alasan:</strong> Hipnozoit atau bradisporozoit adalah stadium dorman di hepatosit yang tidak berkembang menjadi skizon hati. Stadium ini hanya ditemukan pada <em>P. vivax</em> dan <em>P. ovale</em>. Inilah yang menjadi dasar biologis terjadinya relaps jangka panjang (P. vivax hingga 3–4 tahun, P. ovale bertahun-tahun). Penanganannya memerlukan obat anti-hipnozoit seperti primaquine atau tafenoquine.
+      <div class="quiz-source">📚 Sumber: Materi Slide 36 (Dr. Nelly AA); WHO 2024</div>
+    </div>
+  </div>
+
+  <!-- SOAL 4 -->
+  <div class="quiz-item">
+    <div class="quiz-question">
+      <div class="quiz-num">4</div>
+      <div>Seorang petugas surveilans menemukan pasien positif malaria yang tinggal di daerah eliminasi, dengan riwayat tinggal dalam radius 100 meter dari kasus malaria import 3 minggu sebelum demam, tanpa riwayat perjalanan sendiri. Klasifikasi kasus ini adalah?</div>
+    </div>
+    <div class="quiz-options">
+      <div class="quiz-option" onclick="checkAnswer(this, false, 4)"><div class="opt-letter">A</div> Malaria Import</div>
+      <div class="quiz-option" onclick="checkAnswer(this, false, 4)"><div class="opt-letter">B</div> Malaria Indogenous</div>
+      <div class="quiz-option" onclick="checkAnswer(this, true, 4)"><div class="opt-letter">C</div> Malaria Introduced</div>
+      <div class="quiz-option" onclick="checkAnswer(this, false, 4)"><div class="opt-letter">D</div> Malaria Relaps</div>
+    </div>
+    <div class="quiz-answer" id="ans4">
+      <strong>✅ Jawaban Benar: C — Malaria Introduced</strong><br><br>
+      <strong>Alasan:</strong> Malaria <em>introduced</em> adalah kasus indogenous yang tertular langsung dari kasus import. Kriteria: (1) tinggal di daerah eliminasi/pemeliharaan, (2) positif malaria, (3) riwayat tinggal dalam radius <strong>100 meter</strong> dari kasus malaria import pada <strong>2–4 minggu</strong> sebelum mulai demam, (4) tidak ada riwayat perjalanan sendiri ke endemis. Kasus ini penting untuk pelacakan rantai penularan.
+      <div class="quiz-source">📚 Sumber: Materi Slide 51 (Dr. Nelly AA); Kemenkes RI — Pedoman Tatalaksana Malaria</div>
+    </div>
+  </div>
+
+  <!-- SOAL 5 -->
+  <div class="quiz-item">
+    <div class="quiz-question">
+      <div class="quiz-num">5</div>
+      <div>Suhu udara di suatu daerah mencapai 32°C selama musim kemarau. Apa dampaknya terhadap penularan malaria di daerah tersebut?</div>
+    </div>
+    <div class="quiz-options">
+      <div class="quiz-option" onclick="checkAnswer(this, false, 5)"><div class="opt-letter">A</div> Penularan meningkat karena nyamuk lebih aktif</div>
+      <div class="quiz-option" onclick="checkAnswer(this, false, 5)"><div class="opt-letter">B</div> Penularan stabil karena suhu ideal</div>
+      <div class="quiz-option" onclick="checkAnswer(this, true, 5)"><div class="opt-letter">C</div> Penularan terhenti karena parasit mati dalam nyamuk</div>
+      <div class="quiz-option" onclick="checkAnswer(this, false, 5)"><div class="opt-letter">D</div> Penularan berkurang tapi tidak terhenti</div>
+    </div>
+    <div class="quiz-answer" id="ans5">
+      <strong>✅ Jawaban Benar: C — Parasit mati dalam nyamuk pada suhu ≥32°C</strong><br><br>
+      <strong>Alasan:</strong> Suhu optimal inkubasi ekstrinsik (sporogoni dalam nyamuk) adalah 26,7°C. Pada suhu <strong>≥32°C, parasit Plasmodium mati</strong> di dalam tubuh nyamuk sehingga nyamuk tidak lagi infektif. Sebaliknya, suhu rendah (16°C) memperlambat sporogoni P. vivax hingga 55 hari. Ini menjelaskan pola musiman malaria: kasus meningkat saat musim hujan dengan suhu moderat.
+      <div class="quiz-source">📚 Sumber: Materi Slide 41 (Dr. Nelly AA); WHO Vector Control Guidelines</div>
+    </div>
+  </div>
+
+  <!-- SOAL 6 -->
+  <div class="quiz-item">
+    <div class="quiz-question">
+      <div class="quiz-num">6</div>
+      <div>Mengapa P. falciparum paling sering menimbulkan komplikasi berat dibanding spesies lain?</div>
+    </div>
+    <div class="quiz-options">
+      <div class="quiz-option" onclick="checkAnswer(this, false, 6)"><div class="opt-letter">A</div> Karena menginfeksi hanya eritrosit muda</div>
+      <div class="quiz-option" onclick="checkAnswer(this, true, 6)"><div class="opt-letter">B</div> Karena menginfeksi semua stadium eritrosit sehingga parasitemia sangat tinggi (10–40%)</div>
+      <div class="quiz-option" onclick="checkAnswer(this, false, 6)"><div class="opt-letter">C</div> Karena memiliki hipnozoit yang aktif</div>
+      <div class="quiz-option" onclick="checkAnswer(this, false, 6)"><div class="opt-letter">D</div> Karena siklus skizogoni 72 jam</div>
+    </div>
+    <div class="quiz-answer" id="ans6">
+      <strong>✅ Jawaban Benar: B — Invasi semua stadium eritrosit</strong><br><br>
+      <strong>Alasan:</strong> P. vivax dan P. ovale hanya menginfeksi retikulosit (&lt;2%), P. malariae hanya eritrosit tua (~1%), sehingga parasitemia terbatas. Sebaliknya, <em>P. falciparum</em> mampu menginfeksi semua stadium eritrosit → parasitemia mencapai <strong>10–40%</strong>. Tingginya parasitemia menyebabkan: anemia berat, sumbatan mikrosirkulasi (sequestration) terutama di otak dan ginjal, hipoglikemia, dan berbagai komplikasi organ. P. knowlesi juga bisa berbahaya dengan mekanisme serupa.
+      <div class="quiz-source">📚 Sumber: Materi Slide 37 (Dr. Nelly AA); WHO Guidelines for Malaria 2024</div>
+    </div>
+  </div>
+
+  <!-- SOAL 7 -->
+  <div class="quiz-item">
+    <div class="quiz-question">
+      <div class="quiz-num">7</div>
+      <div>Nyamuk Anopheles sundaicus dapat berkembang biak optimal pada air payau dengan kadar garam berapa, dan tidak dapat hidup pada kadar berapa?</div>
+    </div>
+    <div class="quiz-options">
+      <div class="quiz-option" onclick="checkAnswer(this, false, 7)"><div class="opt-letter">A</div> Optimal 5–10‰, mati &gt;20‰</div>
+      <div class="quiz-option" onclick="checkAnswer(this, true, 7)"><div class="opt-letter">B</div> Optimal 12–18‰, tidak berkembang &gt;40‰</div>
+      <div class="quiz-option" onclick="checkAnswer(this, false, 7)"><div class="opt-letter">C</div> Optimal 20–30‰, tidak berkembang &gt;50‰</div>
+      <div class="quiz-option" onclick="checkAnswer(this, false, 7)"><div class="opt-letter">D</div> Hanya air tawar murni (0‰)</div>
+    </div>
+    <div class="quiz-answer" id="ans7">
+      <strong>✅ Jawaban Benar: B — Optimal 12–18‰, tidak berkembang &gt;40‰</strong><br><br>
+      <strong>Alasan:</strong> An. sundaicus adalah vektor malaria pesisir pantai Indonesia yang tumbuh optimal pada air payau kadar garam <strong>12–18‰</strong> dan tidak dapat berkembang biak pada kadar garam <strong>&gt;40‰</strong>. Jarak terbangnya mencapai 3 km dari tempat perkembangbiakan (dilaporkan di pesisir Garut, 1981). Pengetahuan ini penting untuk pengendalian vektor di daerah pesisir.
+      <div class="quiz-source">📚 Sumber: Materi Slide 26 (Dr. Nelly AA); Kemenkes RI — Entomologi Malaria</div>
+    </div>
+  </div>
+
+  <!-- SOAL 8 -->
+  <div class="quiz-item">
+    <div class="quiz-question">
+      <div class="quiz-num">8</div>
+      <div>Pasien didiagnosis malaria P. vivax dan sudah sembuh setelah pengobatan standar. Enam bulan kemudian demam malaria kambuh tanpa riwayat perjalanan baru. Ini disebut apa?</div>
+    </div>
+    <div class="quiz-options">
+      <div class="quiz-option" onclick="checkAnswer(this, false, 8)"><div class="opt-letter">A</div> Rekrudensi</div>
+      <div class="quiz-option" onclick="checkAnswer(this, true, 8)"><div class="opt-letter">B</div> Rekurensi (Relaps sejati)</div>
+      <div class="quiz-option" onclick="checkAnswer(this, false, 8)"><div class="opt-letter">C</div> Reinfeksi</div>
+      <div class="quiz-option" onclick="checkAnswer(this, false, 8)"><div class="opt-letter">D</div> Malaria introduced</div>
+    </div>
+    <div class="quiz-answer" id="ans8">
+      <strong>✅ Jawaban Benar: B — Rekurensi (Relaps sejati)</strong><br><br>
+      <strong>Alasan:</strong> Rekrudensi adalah kambuh dalam <strong>&lt;8 minggu</strong> (sisa parasit eritrositik, pengobatan tidak tuntas). Rekurensi/relaps sejati adalah kambuh <strong>&gt;24 minggu</strong> akibat aktivasi hipnozoit di hati — hanya terjadi pada P. vivax dan P. ovale. Kasus ini (6 bulan = 24+ minggu, tanpa paparan baru) adalah <strong>rekurensi</strong> dari hipnozoit yang aktif kembali. Terapi: tambahkan primaquine 14 hari (dengan cek G6PD terlebih dahulu).
+      <div class="quiz-source">📚 Sumber: Materi Slide 35–36, 52 (Dr. Nelly AA); WHO 2024</div>
+    </div>
+  </div>
+
+  <!-- SOAL 9 -->
+  <div class="quiz-item">
+    <div class="quiz-question">
+      <div class="quiz-num">9</div>
+      <div>Penempatan kandang sapi di antara area perindukan nyamuk dan permukiman manusia merupakan strategi pengendalian vektor yang disebut?</div>
+    </div>
+    <div class="quiz-options">
+      <div class="quiz-option" onclick="checkAnswer(this, false, 9)"><div class="opt-letter">A</div> Larvasidasi biologis</div>
+      <div class="quiz-option" onclick="checkAnswer(this, false, 9)"><div class="opt-letter">B</div> Indoor Residual Spraying (IRS)</div>
+      <div class="quiz-option" onclick="checkAnswer(this, true, 9)"><div class="opt-letter">C</div> Zooprofilaksis (cattle-barrier)</div>
+      <div class="quiz-option" onclick="checkAnswer(this, false, 9)"><div class="opt-letter">D</div> Repellent spasial</div>
+    </div>
+    <div class="quiz-answer" id="ans9">
+      <strong>✅ Jawaban Benar: C — Zooprofilaksis (cattle-barrier)</strong><br><br>
+      <strong>Alasan:</strong> Zooprofilaksis memanfaatkan sifat nyamuk zoofilik (lebih suka menghisap darah hewan) untuk mengalihkan gigitan dari manusia ke hewan ternak. Dengan menempatkan kandang sapi/kerbau di <em>luar rumah namun tidak jauh dari rumah</em>, nyamuk akan lebih banyak menghisap darah ternak daripada manusia. Metode ini murah, berkelanjutan, dan ramah lingkungan — sesuai pendekatan One Health. WHO 2024 juga memperbarui rekomendasi spatial emanators sebagai pelengkap.
+      <div class="quiz-source">📚 Sumber: Materi Slide 30 (Dr. Nelly AA); WHO Malaria Vector Control 2024</div>
+    </div>
+  </div>
+
+  <!-- SOAL 10 -->
+  <div class="quiz-item">
+    <div class="quiz-question">
+      <div class="quiz-num">10</div>
+      <div>Seorang dokter di puskesmas daerah eliminasi menemukan pasien positif malaria. Anamnesis: tidak ada riwayat perjalanan, tidak ada kasus import di sekitarnya, tinggal di daerah tersebut seumur hidup. Klasifikasi yang tepat adalah?</div>
+    </div>
+    <div class="quiz-options">
+      <div class="quiz-option" onclick="checkAnswer(this, true, 10)"><div class="opt-letter">A</div> Malaria Indogenous</div>
+      <div class="quiz-option" onclick="checkAnswer(this, false, 10)"><div class="opt-letter">B</div> Malaria Import</div>
+      <div class="quiz-option" onclick="checkAnswer(this, false, 10)"><div class="opt-letter">C</div> Malaria Introduced</div>
+      <div class="quiz-option" onclick="checkAnswer(this, false, 10)"><div class="opt-letter">D</div> Unclassified</div>
+    </div>
+    <div class="quiz-answer" id="ans10">
+      <strong>✅ Jawaban Benar: A — Malaria Indogenous</strong><br><br>
+      <strong>Alasan:</strong> Malaria indogenous = penularan terjadi di wilayah setempat, tidak ada bukti berhubungan dengan kasus import. Kriteria teknis: tidak ada riwayat ke daerah endemis dalam <strong>4 minggu</strong> sebelum sakit, dan hasil sediaan darah positif malaria. Berbeda dengan <em>introduced</em> yang ada kaitannya dengan kasus import dalam radius tertentu. Kasus indogenous di daerah eliminasi merupakan sinyal penting yang memerlukan investigasi segera untuk mencegah penularan lanjut.
+      <div class="quiz-source">📚 Sumber: Materi Slide 49 (Dr. Nelly AA); Kemenkes RI — Pedoman Surveilans Malaria</div>
+    </div>
+  </div>
+
+  <!-- SOAL 11 -->
+  <div class="quiz-item">
+    <div class="quiz-question">
+      <div class="quiz-num">11</div>
+      <div>Pada pemeriksaan sediaan darah tepi ditemukan eritrosit yang TIDAK membesar, dengan trofozoit berbentuk pita melintang memenuhi lebar sel, dan skizon dengan merozoit tersusun melingkar di sekitar granul pigmen hitam di tengah. Gambaran ini paling sesuai dengan spesies?</div>
+    </div>
+    <div class="quiz-options">
+      <div class="quiz-option" onclick="checkAnswer(this, false, 11)"><div class="opt-letter">A</div> P. falciparum</div>
+      <div class="quiz-option" onclick="checkAnswer(this, false, 11)"><div class="opt-letter">B</div> P. vivax</div>
+      <div class="quiz-option" onclick="checkAnswer(this, true, 11)"><div class="opt-letter">C</div> P. malariae</div>
+      <div class="quiz-option" onclick="checkAnswer(this, false, 11)"><div class="opt-letter">D</div> P. ovale</div>
+    </div>
+    <div class="quiz-answer" id="ans11">
+      <strong>✅ Jawaban Benar: C — P. malariae</strong><br><br>
+      <strong>Alasan:</strong> Dua gambaran patognomonik P. malariae adalah: (1) <strong>Band form</strong> — trofozoit berbentuk pita/selempang yang melintang memenuhi lebar eritrosit, dan (2) <strong>Rosette</strong> — skizon dengan 6–12 merozoit tersusun melingkar di sekitar granul hemozoin (pigmen malaria) di tengah, membentuk pola seperti bunga. Eritrosit TIDAK membesar dan tidak ada stippling/Schüffner's dots. Membedakannya dari P. knowlesi yang morfologinya mirip membutuhkan PCR molekuler.
+      <div class="quiz-source">📚 Sumber: Materi Slide 37 (Dr. Nelly AA); WHO Guidelines Malaria 2024; Atlas Mikroskopi Malaria Kemenkes RI</div>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-top:8px;margin-bottom:32px;">
+    <button onclick="showAllAnswers()" style="background:var(--primary);color:white;border:none;padding:12px 28px;border-radius:50px;font-size:0.95rem;font-weight:600;cursor:pointer;margin-right:10px;">Tampilkan Semua Jawaban</button>
+    <button onclick="resetQuiz()" style="background:white;color:var(--primary);border:2px solid var(--primary);padding:12px 28px;border-radius:50px;font-size:0.95rem;font-weight:600;cursor:pointer;">Reset Kuis</button>
+  </div>
+
+</div><!-- end section-soal -->
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <strong>AI Learner Team · Pelatihan Tatalaksana Malaria 2026</strong><br>
+  Dirangkum oleh: dr. Dwiki · Materi: Dr. dr. Nelly Al Audhah, M.Sc<br>
+  Referensi: WHO Guidelines for Malaria (November 2024) · KMK No. HK.01.07/MENKES/1988/2024 · Kemenkes RI Pedoman Tatalaksana Malaria<br>
+  <em style="font-size:0.75rem;opacity:0.6;">Halaman ini hanya untuk keperluan pembelajaran. Selalu rujuk pedoman resmi untuk keputusan klinis.</em>
+</footer>
+
+<script>
+// Navigation
+function showSection(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('section-' + name).classList.add('active');
+  document.getElementById('nav-' + name).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Quiz
+let answered = {};
+let score = 0;
+
+function checkAnswer(el, isCorrect, qNum) {
+  if (answered[qNum]) return;
+  answered[qNum] = true;
+
+  const options = el.parentElement.querySelectorAll('.quiz-option');
+  options.forEach(opt => {
+    opt.style.pointerEvents = 'none';
+    if (opt === el) {
+      opt.classList.add(isCorrect ? 'correct' : 'wrong');
+    } else if (isCorrect === false) {
+      // Reveal correct answer
+    }
+  });
+
+  // Find and highlight correct
+  options.forEach(opt => {
+    if (opt.onclick.toString().includes('true')) {
+      opt.classList.add('reveal-correct');
+    }
+  });
+
+  if (isCorrect) score++;
+
+  // Show answer
+  document.getElementById('ans' + qNum).classList.add('show');
+
+  // Update score
+  const scoreDisplay = document.getElementById('scoreDisplay');
+  scoreDisplay.classList.add('show');
+  document.getElementById('scoreNum').textContent = score + '/11';
+}
+
+function showAllAnswers() {
+  for (let i = 1; i <= 10; i++) {
+    document.getElementById('ans' + i).classList.add('show');
+  }
+}
+
+function resetQuiz() {
+  answered = {};
+  score = 0;
+  document.querySelectorAll('.quiz-option').forEach(opt => {
+    opt.classList.remove('correct', 'wrong', 'reveal-correct');
+    opt.style.pointerEvents = '';
+  });
+  document.querySelectorAll('.quiz-answer').forEach(a => a.classList.remove('show'));
+  document.getElementById('scoreDisplay').classList.remove('show');
+  document.getElementById('scoreNum').textContent = '0/11';
+}
+</script>
+
+</body>
+</html>
