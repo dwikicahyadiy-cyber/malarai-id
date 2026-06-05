@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pencegahan Malaria · AI Learner Terpadu</title>
+<style>
+:root{
+  --bg:#0b1120;--s1:#111827;--s2:#1e293b;--s3:#334155;
+  --tl:#0d9488;--tl2:#2dd4bf;--tld:rgba(13,148,136,.15);
+  --am:#f59e0b;--gr:#22c55e;--bl:#3b82f6;--pu:#a855f7;
+  --re:#ef4444;--tx:#f1f5f9;--tx2:#94a3b8;--tx3:#475569;
+  --bdr:#1e2d3d;--bdr2:#2d3f55;--rad:14px
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--tx);line-height:1.6}
+
+/* ───── HERO ───── */
+.hero{background:radial-gradient(120% 130% at 50% 0%,rgba(13,148,136,.22),transparent 60%);border-bottom:1px solid var(--bdr);padding:48px 20px 36px;text-align:center}
+.badge{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--tl2);background:var(--tld);border:1px solid var(--bdr2);padding:5px 13px;border-radius:99px;margin-bottom:14px}
+h1{font-size:2rem;font-weight:800;letter-spacing:-1px}
+h1 span{color:var(--tl2)}
+.sub{color:var(--tx2);font-size:.92rem;margin-top:8px;max-width:660px;margin-inline:auto}
+.team-row{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:22px}
+.team-chip{font-size:.72rem;font-weight:700;padding:5px 14px;border-radius:99px;border:1px solid;cursor:pointer;transition:.15s}
+.team-chip:hover{transform:translateY(-2px)}
+.t1{color:#2dd4bf;border-color:#2dd4bf;background:rgba(45,212,191,.1)}
+.t2{color:#fbbf24;border-color:#fbbf24;background:rgba(251,191,36,.1)}
+.t3{color:#a78bfa;border-color:#a78bfa;background:rgba(167,139,250,.1)}
+.t4{color:#34d399;border-color:#34d399;background:rgba(52,211,153,.1)}
+
+/* ───── LAYOUT ───── */
+.wrap{max-width:1060px;margin:0 auto;padding:30px 20px 80px}
+.sec-title{font-size:1.05rem;font-weight:800;margin:40px 0 18px;display:flex;align-items:center;gap:10px;color:var(--tl2)}
+.sec-title small{font-size:.74rem;font-weight:500;color:var(--tx2);background:var(--tld);padding:3px 10px;border-radius:99px}
+
+/* ───── TABS (Tim) ───── */
+.tab-nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:24px;background:var(--s1);border:1px solid var(--bdr);border-radius:12px;padding:8px}
+.tab-btn{flex:1;min-width:140px;padding:10px 14px;background:transparent;border:none;border-radius:9px;color:var(--tx2);font-size:.82rem;font-weight:700;cursor:pointer;transition:.15s;text-align:center}
+.tab-btn.active{background:var(--tl);color:#fff}
+.tab-pane{display:none}
+.tab-pane.active{display:block}
+
+/* ───── CARDS ───── */
+.card{background:linear-gradient(150deg,var(--s1),var(--s2));border:1px solid var(--bdr);border-radius:var(--rad);padding:22px;margin-bottom:16px}
+.card h3{font-size:.98rem;font-weight:800;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.card p,ul,ol{font-size:.86rem;color:var(--tx2);line-height:1.75}
+ul{padding-left:18px}
+li{margin-bottom:4px}
+
+/* ───── CONTENT BLOCKS ───── */
+.topic-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+@media(max-width:720px){.topic-grid{grid-template-columns:1fr}}
+.topic{background:var(--s2);border:1px solid var(--bdr);border-radius:12px;padding:18px}
+.topic h4{font-size:.9rem;font-weight:800;margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.topic p,ul{font-size:.83rem;color:var(--tx2)}
+.hl{color:var(--tl2);font-weight:700}
+.hl-am{color:#fbbf24;font-weight:700}
+.hl-re{color:#f87171;font-weight:700}
+.hl-gr{color:#4ade80;font-weight:700}
+
+/* ───── ALERT BOXES ───── */
+.alert{border-radius:10px;padding:14px 16px;font-size:.83rem;margin:14px 0}
+.alert-tl{background:var(--tld);border-left:4px solid var(--tl);color:var(--tx2)}
+.alert-am{background:rgba(245,158,11,.12);border-left:4px solid var(--am);color:#fde68a}
+.alert-re{background:rgba(239,68,68,.12);border-left:4px solid var(--re);color:#fca5a5}
+.alert-gr{background:rgba(34,197,94,.12);border-left:4px solid var(--gr);color:#86efac}
+
+/* ───── TABLE ───── */
+table{width:100%;border-collapse:collapse;font-size:.82rem;margin:14px 0}
+th{background:var(--tl);color:#fff;padding:10px 12px;text-align:left;font-weight:700}
+td{padding:9px 12px;border-bottom:1px solid var(--bdr);color:var(--tx2)}
+tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+tr:hover td{background:var(--tld)}
+
+/* ───── RANGKUMAN BOX ───── */
+.sum-box{background:linear-gradient(135deg,rgba(13,148,136,.12),rgba(45,212,191,.05));border:1px solid var(--tl);border-radius:14px;padding:20px;margin-bottom:18px}
+.sum-box h3{color:var(--tl2);font-size:.95rem;font-weight:800;margin-bottom:12px}
+.kv{display:flex;flex-direction:column;gap:8px}
+.kv-row{display:flex;gap:10px;align-items:baseline;font-size:.83rem}
+.kv-k{color:var(--tl2);font-weight:700;min-width:160px;flex-shrink:0}
+.kv-v{color:var(--tx2)}
+
+/* ───── MCQ SOAL ───── */
+.q-block{background:var(--s1);border:1px solid var(--bdr);border-radius:12px;padding:18px;margin-bottom:16px}
+.q-num{font-size:.72rem;font-weight:800;color:var(--tl2);background:var(--tld);padding:3px 9px;border-radius:99px;display:inline-block;margin-bottom:8px}
+.q-text{font-size:.88rem;font-weight:600;margin-bottom:14px;line-height:1.6}
+.opts{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.opt{padding:10px 14px;border-radius:9px;border:1px solid var(--bdr2);cursor:pointer;font-size:.83rem;color:var(--tx2);background:var(--s2);transition:.15s;display:flex;gap:9px}
+.opt:hover{border-color:var(--tl);background:var(--tld)}
+.opt.correct{background:rgba(34,197,94,.15);border-color:#22c55e;color:#86efac}
+.opt.wrong{background:rgba(239,68,68,.12);border-color:#ef4444;color:#fca5a5}
+.opt.show-ans{border-color:#22c55e;background:rgba(34,197,94,.1);color:#86efac}
+.opt-key{font-weight:800;min-width:18px}
+.expl{display:none;margin-top:10px;padding:12px 14px;background:var(--tld);border-radius:9px;font-size:.8rem;color:var(--tx2);line-height:1.7}
+.expl.visible{display:block}
+.q-footer{display:flex;justify-content:space-between;align-items:center;flex-wrap:gap;font-size:.78rem;color:var(--tx3)}
+.score-badge{display:inline-block;padding:4px 12px;border-radius:99px;font-weight:700;font-size:.8rem}
+
+/* ───── KASUS DISKUSI ───── */
+.case-box{background:linear-gradient(135deg,rgba(168,85,247,.1),rgba(59,130,246,.08));border:1px solid rgba(168,85,247,.3);border-radius:14px;padding:22px;margin-bottom:20px}
+.case-num{font-size:.68rem;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:#a78bfa;background:rgba(168,85,247,.15);padding:4px 12px;border-radius:99px;display:inline-block;margin-bottom:12px}
+.case-body{font-size:.86rem;color:var(--tx2);line-height:1.75;margin-bottom:16px}
+.case-q{font-size:.85rem;font-weight:700;color:var(--tx);margin-bottom:8px}
+.case-a{font-size:.83rem;color:var(--tx2);background:var(--s2);border-radius:10px;padding:12px 14px;margin-bottom:8px;border-left:3px solid var(--tl)}
+.toggle-ans{background:none;border:1px solid var(--tl);color:var(--tl2);border-radius:8px;padding:8px 16px;font-size:.78rem;font-weight:700;cursor:pointer;margin-top:10px;transition:.15s}
+.toggle-ans:hover{background:var(--tld)}
+.ans-block{display:none;margin-top:14px}
+.ans-block.open{display:block}
+
+/* ───── INOVASI ───── */
+.innov{background:linear-gradient(135deg,rgba(245,158,11,.1),rgba(251,191,36,.05));border:1px solid rgba(245,158,11,.3);border-radius:14px;padding:20px;margin-bottom:16px}
+.innov h3{color:#fbbf24;font-size:.95rem;font-weight:800;margin-bottom:10px}
+.badge-innov{display:inline-block;font-size:.66rem;font-weight:800;padding:3px 10px;border-radius:99px;margin-bottom:8px}
+.bi-easy{background:rgba(34,197,94,.15);color:#4ade80}
+.bi-mid{background:rgba(245,158,11,.15);color:#fbbf24}
+.bi-hard{background:rgba(239,68,68,.12);color:#f87171}
+
+/* ───── SCORE SUMMARY ───── */
+.score-panel{background:var(--s1);border:1px solid var(--bdr);border-radius:14px;padding:20px;text-align:center;margin-bottom:20px}
+.score-big{font-size:3rem;font-weight:900;color:var(--tl2)}
+.score-sub{font-size:.85rem;color:var(--tx2);margin-top:4px}
+.restart-btn{margin-top:14px;padding:10px 28px;background:var(--tl);border:none;color:#fff;border-radius:9px;font-weight:800;font-size:.9rem;cursor:pointer}
+
+/* ───── FOOTER ───── */
+.foot{text-align:center;color:var(--tx3);font-size:.76rem;margin-top:50px;border-top:1px solid var(--bdr);padding-top:20px}
+.back-btn{display:inline-block;margin-top:16px;padding:9px 20px;background:var(--s2);border:1px solid var(--bdr2);border-radius:9px;color:var(--tx2);text-decoration:none;font-size:.82rem;transition:.15s}
+.back-btn:hover{border-color:var(--tl);color:var(--tl2)}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="badge">Modul 5 · AI Learner Terpadu · Bapelkes 2026</div>
+  <h1>Pencegahan <span>Malaria</span></h1>
+  <p class="sub">Materi lengkap upaya pencegahan malaria: pengendalian vektor, kemoprofilaksis, intervensi MMP, dan roadmap eliminasi Indonesia 2030</p>
+  <div class="team-row">
+    <span class="team-chip t1" onclick="switchTab('belajar')">📖 Si Paling Belajar</span>
+    <span class="team-chip t2" onclick="switchTab('rangkum')">📋 Si Paling Merangkum</span>
+    <span class="team-chip t3" onclick="switchTab('inovasi')">💡 Si Paling Inovasi</span>
+    <span class="team-chip t4" onclick="switchTab('soal')">✏️ Si Paling Jago Soal</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- TAB NAV -->
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab('belajar')" id="btn-belajar">📖 Si Paling Belajar</button>
+  <button class="tab-btn" onclick="switchTab('rangkum')" id="btn-rangkum">📋 Si Paling Merangkum</button>
+  <button class="tab-btn" onclick="switchTab('inovasi')" id="btn-inovasi">💡 Si Paling Inovasi</button>
+  <button class="tab-btn" onclick="switchTab('soal')" id="btn-soal">✏️ Latihan Soal</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     TAB 1 — SI PALING BELAJAR
+     ═══════════════════════════════════════════════════════ -->
+<div class="tab-pane active" id="pane-belajar">
+
+  <div class="sec-title">🦟 Latar Belakang & Epidemiologi <small>Si Paling Belajar</small></div>
+
+  <div class="card">
+    <h3>🌍 Mengapa Pencegahan Malaria Penting?</h3>
+    <p>Malaria adalah penyakit menular yang disebabkan parasit <em>Plasmodium</em> dan ditularkan melalui gigitan nyamuk <em>Anopheles</em> betina. Gejalanya meliputi demam, menggigil, berkeringat, sakit kepala, mual, muntah, pucat, hingga kejang dan limpa membesar. <span class="hl">Diagnosis hanya bisa ditegakkan melalui pemeriksaan sediaan darah</span> — tidak bisa hanya dari gejala klinis.</p>
+    <div class="alert alert-tl" style="margin-top:12px">
+      🎯 <b>Target Indonesia:</b> Bebas Malaria 2030 — 412 dari 514 kabupaten/kota sudah menerima sertifikat eliminasi malaria (2025). >95% kasus nasional masih berasal dari Tanah Papua.
+    </div>
+  </div>
+
+  <div class="topic-grid">
+    <div class="topic">
+      <h4>📊 Syarat Eliminasi Malaria</h4>
+      <ul>
+        <li>Tidak ada penularan setempat selama <span class="hl">3 tahun berturut-turut</span></li>
+        <li>API < <span class="hl">1 per 1.000 penduduk</span></li>
+        <li>Positivity Rate < <span class="hl">5%</span></li>
+        <li>Sistem surveilans malaria optimal</li>
+        <li>Manajemen penanggulangan terpadu</li>
+      </ul>
+    </div>
+    <div class="topic">
+      <h4>⏰ Bionomik Nyamuk Anopheles</h4>
+      <ul>
+        <li>Aktif menggigit <span class="hl">jam 18.00–06.00</span></li>
+        <li>Berkembang biak di air bersentuhan tanah, tidak mengalir (rawa, sawah, lagoon, bekas tambang)</li>
+        <li>Siklus hidup: telur (1–2 hr) → larva (8–10 hr) → pupa (1–2 hr) → dewasa</li>
+        <li>Perilaku: eksofagik/endofagik, antropofilik/zoofilik, endofilik/eksofilik</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PENCEGAHAN UTAMA -->
+  <div class="sec-title">🛡️ Upaya Pencegahan Malaria <small>3 Pilar Utama</small></div>
+
+  <!-- PILAR 1 -->
+  <div class="card">
+    <h3>🦟 Pilar 1: Menghindari Gigitan Nyamuk (Perlindungan Pribadi)</h3>
+    <div class="topic-grid">
+      <div class="topic">
+        <h4>🏠 Di Dalam / Sekitar Rumah</h4>
+        <ul>
+          <li>Tidur menggunakan <span class="hl">kelambu anti nyamuk berinsektisida (LLINs)</span></li>
+          <li>Memakai obat nyamuk bakar atau spray</li>
+          <li>Penggunaan <span class="hl">repelan</span> (losion anti nyamuk)</li>
+          <li>Memasang kawat kasa pada lubang angin</li>
+          <li>Menjauhkan kandang ternak dari rumah (zooprofilaksis)</li>
+          <li>Menanam tanaman pengusir nyamuk (zodia, lavender, sereh)</li>
+        </ul>
+      </div>
+      <div class="topic">
+        <h4>🌙 Saat Keluar Malam Hari</h4>
+        <ul>
+          <li>Memakai <span class="hl">pakaian tertutup</span> (baju & celana panjang, sarung)</li>
+          <li>Memakai <span class="hl">losion anti nyamuk</span> pada kulit yang terbuka</li>
+          <li>Hindari berada di luar rumah saat nyamuk paling aktif (18.00–06.00)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="alert alert-tl" style="margin-top:16px">
+      🛏️ <b>Kelambu Anti Nyamuk (LLINs) — Pilihan Utama:</b><br>
+      Lebih murah dari penyemprotan rumah, tidak butuh alat khusus, mencegah penularan penyakit lain (dengue, filariasis), mematikan kutu, kecoa, dan serangga lain yang kontak. Cakupan 100% adalah target utama program.
+    </div>
+  </div>
+
+  <!-- PILAR 2 -->
+  <div class="card">
+    <h3>🏞️ Pilar 2: Pengendalian Vektor (Vector Control)</h3>
+
+    <div class="topic-grid">
+      <div class="topic">
+        <h4>⚙️ A. Metode Fisik</h4>
+        <ul>
+          <li><b>Modifikasi lingkungan</b> (permanen): penimbunan, pengeringan, pembuatan tanggul, pengaliran air, penanaman bakau</li>
+          <li><b>Manipulasi lingkungan</b> (sementara): pembersihan ganggang/lumut di lagoon, pencampuran air tawar-laut, pengaturan irigasi berkala</li>
+          <li>Kegiatan rutin <span class="hl">Jumat Bersih</span> menghilangkan tempat perindukan</li>
+        </ul>
+      </div>
+      <div class="topic">
+        <h4>🐟 B. Metode Biologi</h4>
+        <ul>
+          <li><b>Ikan predator jentik:</b> kepala timah, cupang, nila, mujair, sepat (2–5 ekor/100 m² atau 200–500 ekor/ha)</li>
+          <li><b>Organisme toksin:</b> <em>Bacillus thuringiensis israelensis</em> (BTI), <em>Bacillus sphaericus</em>, virus, jamur, parasit</li>
+          <li><b>Zooprofilaksis:</b> kandang ternak (sapi, kerbau) sebagai barrier antara nyamuk dan manusia</li>
+          <li><b>Tanaman repelan:</b> zodia, lavender, sereh</li>
+        </ul>
+      </div>
+      <div class="topic">
+        <h4>🧪 C. Metode Kimia</h4>
+        <ul>
+          <li><b>IRS (Indoor Residual Spraying):</b> penyemprotan dinding dalam rumah dengan insektisida (deltamethrin, bendiocarb, pirimiphos-methyl); pilihan bila cakupan kelambu tidak 100%</li>
+          <li><b>Larviciding:</b> Altosid (1 briket→10 m²), Pyriproxyfen 0,5G (2 g/10 m²)</li>
+          <li><b>BTI (Bio-larvisida):</b> ramah lingkungan, spesifik terhadap larva Anopheles, Aedes, Culex</li>
+          <li>Digunakan secara <span class="hl">bijaksana & rasional</span>, pilihan terakhir dalam PVT</li>
+        </ul>
+      </div>
+      <div class="topic">
+        <h4>🔄 D. Pengendalian Vektor Terpadu (PVT)</h4>
+        <ul>
+          <li>Kombinasi metode fisik + biologi + kimia</li>
+          <li>Berdasarkan azas <span class="hl">keamanan, rasionalitas, efektifitas</span></li>
+          <li>Mempertimbangkan kelestarian keberhasilan</li>
+          <li>Dilaksanakan di bawah pengawasan tenaga entomologi berkompeten</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- IRS DETAIL -->
+    <div style="margin-top:18px">
+      <h4 style="font-size:.9rem;font-weight:800;margin-bottom:12px;color:var(--tl2)">🏠 Detail IRS (Indoor Residual Spraying)</h4>
+      <table>
+        <tr><th>Aspek</th><th>Keterangan</th></tr>
+        <tr><td>Prinsip</td><td>Menempelkan racun serangga pada permukaan dinding secara merata dengan dosis tertentu</td></tr>
+        <tr><td>Tujuan</td><td>Membunuh nyamuk hinggap di dinding → turunkan populasi nyamuk → putus rantai penularan</td></tr>
+        <tr><td>Sasaran</td><td>Desa endemis tinggi, API > 5/1.000 penduduk, ada bayi positif, daerah potensial KLB</td></tr>
+        <tr><td>Cakupan minimal</td><td><span class="hl">≥80% rumah</span> disemprot (total coverage) agar dampak terukur</td></tr>
+        <tr><td>Insektisida</td><td>Deltamethrin, bendiocarb, pirimiphos-methyl</td></tr>
+        <tr><td>Kapan dipilih</td><td>Bila cakupan kelambu tidak bisa mencapai 100%</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- PILAR 3 -->
+  <div class="card">
+    <h3>💊 Pilar 3: Kemoprofilaksis (Obat Pencegahan)</h3>
+    <div class="alert alert-am">
+      ⚠️ <b>Perhatian:</b> Kemoprofilaksis hanya direkomendasikan jangka pendek (<1 tahun) untuk pendatang/profesional ke daerah endemis tinggi. Bukan untuk penduduk menetap. Tidak ada rejimen yang memberikan perlindungan 100%.
+    </div>
+    <table style="margin-top:14px">
+      <tr><th>Obat</th><th>Dosis & Cara Minum</th><th>Kontraindikasi</th></tr>
+      <tr>
+        <td><b class="hl">Doksisiklin</b><br><small>Kebijakan Indonesia</small></td>
+        <td>100 mg/hari sekali; diminum <b>1 hari sebelum</b> ke daerah endemis, selama di sana, sampai <b>1 bulan setelah</b> kembali. Maksimal 3 bulan.</td>
+        <td>Ibu hamil, ibu menyusui, anak <8 tahun, hipersensitivitas tetrasiklin, disfungsi hati</td>
+      </tr>
+      <tr>
+        <td><b class="hl">Mefloquin</b><br><small>TNI/POLRI</small></td>
+        <td>250 mg, 1× seminggu; mulai <b>1 minggu sebelum</b> berangkat, selama di daerah endemis, hingga <b>4 minggu setelah</b> kembali</td>
+        <td>Efek samping: mimpi buruk, gangguan neuropsikiatri; hati-hati pada riwayat epilepsi/depresi</td>
+      </tr>
+    </table>
+    <div class="alert alert-tl" style="margin-top:12px">
+      💡 Doksisiklin bekerja sebagai profilaksis <b>stadium parasit dalam darah</b> (tidak mencegah infeksi awal, hanya mencegah timbulnya gejala).
+    </div>
+  </div>
+
+  <!-- MMP INTERVENSI -->
+  <div class="sec-title">🌲 Intervensi Paket Hutan – Mobile Migrant Population (MMP)</div>
+
+  <div class="card">
+    <h3>👷 Mengapa MMP Penting?</h3>
+    <p>MMP menyumbang ~<span class="hl">20% kasus malaria nasional</span>, terbesar dari pekerja hutan. Kelompok ini sulit dijangkau layanan faskes konvensional sehingga menghambat eliminasi di daerah endemis rendah.</p>
+    <div class="alert alert-gr" style="margin-top:12px">
+      ✅ <b>Hasil intervensi 3 kab Kaltim (2023):</b> Penurunan insidensi kasus malaria hingga <b>80%</b> dalam 6 bulan pasca-intervensi.
+    </div>
+  </div>
+
+  <div class="topic-grid">
+    <div class="topic">
+      <h4>🔬 Strategi Intervensi MMP</h4>
+      <ul>
+        <li><b>EDPT/AFS:</b> Deteksi dini & pengobatan segera, Active Fever Screening kader</li>
+        <li><b>TDA (Targeted Drug Administration):</b> Pengobatan massal → hilangkan reservoir parasit</li>
+        <li><b>IPTf (Intermittent Preventive Treatment for Forest-goers):</b> Pencegahan dengan pengobatan berkala bagi pekerja hutan</li>
+        <li><b>LLIN/IRS:</b> Membunuh nyamuk Anopheles</li>
+        <li><b>LSM/Larvasida:</b> Membunuh jentik Anopheles</li>
+      </ul>
+    </div>
+    <div class="topic">
+      <h4>💊 Protokol IPTf</h4>
+      <ul>
+        <li>Sasaran: pekerja/penduduk yang akan masuk hutan atau baru pulang, usia 15–60 tahun</li>
+        <li>Regimen: <span class="hl">DHP 3 hari + PQ 1 hari pada hari pertama</span> dengan PMO oleh nakes/kader</li>
+        <li>3 siklus; siklus ke-2 minimal 28 hari setelah siklus-1; siklus ke-3 minimal 28 hari setelah siklus-2</li>
+        <li>Cakupan minimal <span class="hl">90%</span> dari populasi sasaran</li>
+        <li>Dosis: utamakan menurut <span class="hl">berat badan</span>, bila tidak bisa timbang → menurut kelompok umur</li>
+      </ul>
+    </div>
+    <div class="topic">
+      <h4>📋 Tahapan Pelaksanaan MMP</h4>
+      <ul>
+        <li><b>Perencanaan:</b> pembagian peran, identifikasi nakes & kader, pendataan & sensus, pengadaan logistik, sosialisasi, pelatihan</li>
+        <li><b>Pelaksanaan:</b> IPTf, pembagian kelambu, repelan, larvasidasi</li>
+        <li><b>Monev:</b> farmakovigilans, pencatatan & pelaporan</li>
+      </ul>
+    </div>
+    <div class="topic">
+      <h4>🤝 Peran Lintas Sektor</h4>
+      <ul>
+        <li>Mobilisasi masyarakat melalui tokoh adat, agama, kepala desa, koordinator kelompok</li>
+        <li>Edukasi & promosi kesehatan: pesan kunci pencegahan, kepatuhan minum obat, PHBS</li>
+        <li>Gotong-royong kelola tempat perindukan (radius 500 m – 2 km)</li>
+        <li>Monitoring implementasi paket hutan</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- KEBIJAKAN -->
+  <div class="sec-title">📋 Kebijakan & Regulasi Program Malaria</div>
+  <div class="card">
+    <h3>⚖️ Pilar Kebijakan Malaria (Kemenkes RI)</h3>
+    <div class="topic-grid">
+      <div class="topic">
+        <h4>1. Diagnostik</h4>
+        <p>Gold standard: mikroskopis. RDT & PCR pada situasi tertentu. Jejaring pemantapan mutu di setiap level.</p>
+      </div>
+      <div class="topic">
+        <h4>2. Pengobatan</h4>
+        <p>Lini pertama: ACT + Primaquine (tanpa komplikasi). Artesunate injeksi untuk malaria berat. Pengobatan standar berbasis DHP + Primaquine.</p>
+      </div>
+      <div class="topic">
+        <h4>3. Surveilans</h4>
+        <p>Penemuan pasif & aktif, PE, surveilans migrasi, kualitas data & informasi melalui SISMAL.</p>
+      </div>
+      <div class="topic">
+        <h4>4. Pengendalian Vektor</h4>
+        <p>Distribusi kelambu di daerah tinggi & fokus, surveilans vektor, pemetaan reseptifitas.</p>
+      </div>
+      <div class="topic">
+        <h4>5. Promosi Kesehatan</h4>
+        <p>Interpersonal KIE perubahan perilaku, advokasi komitmen pemerintah daerah.</p>
+      </div>
+      <div class="topic">
+        <h4>6. Pembinaan & Pengawasan (Permenkes 22/2022)</h4>
+        <p>Teguran tertulis → 2 tahun penularan kembali di daerah bebas. Pencabutan sertifikat → 3 tahun penularan berulang di fokus aktif yang sama.</p>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /pane-belajar -->
+
+
+<!-- ═══════════════════════════════════════════════════════
+     TAB 2 — SI PALING MERANGKUM
+     ═══════════════════════════════════════════════════════ -->
+<div class="tab-pane" id="pane-rangkum">
+
+  <div class="sec-title">📋 Intisari Pencegahan Malaria <small>Si Paling Merangkum — untuk hafalan & ujian</small></div>
+
+  <div class="sum-box">
+    <h3>🎯 3 Pilar Pencegahan Malaria</h3>
+    <div class="kv">
+      <div class="kv-row"><span class="kv-k">Pilar 1</span><span class="kv-v">Hindari gigitan nyamuk → kelambu LLINs, repelan, pakaian tertutup, kawat kasa, kandang jauh, tanaman pengusir</span></div>
+      <div class="kv-row"><span class="kv-k">Pilar 2</span><span class="kv-v">Pengendalian vektor → fisik (modifikasi/manipulasi lingkungan), biologi (ikan, BTI, zooprofilaksis), kimia (IRS, larviciding), terpadu (PVT)</span></div>
+      <div class="kv-row"><span class="kv-k">Pilar 3</span><span class="kv-v">Kemoprofilaksis → doksisiklin (kebijakan RI, <3 bln), mefloquin (TNI/POLRI); hanya untuk pendatang jangka pendek ke endemis tinggi</span></div>
+    </div>
+  </div>
+
+  <div class="sum-box">
+    <h3>🛏️ Kelambu Anti Nyamuk (LLINs) — Hafalan Kunci</h3>
+    <div class="kv">
+      <div class="kv-row"><span class="kv-k">Keunggulan</span><span class="kv-v">Lebih murah dari IRS, tidak perlu alat khusus, cegah multiple penyakit (malaria, dengue, filariasis), bunuh kutu & kecoa</span></div>
+      <div class="kv-row"><span class="kv-k">Target program</span><span class="kv-v">Cakupan 100% di daerah endemis tinggi = upaya utama</span></div>
+      <div class="kv-row"><span class="kv-k">IRS dipilih bila</span><span class="kv-v">Cakupan kelambu tidak bisa 100%; cakupan minimal IRS ≥80% rumah</span></div>
+    </div>
+  </div>
+
+  <div class="sum-box">
+    <h3>💊 Kemoprofilaksis — Tabel Kilat</h3>
+    <table>
+      <tr><th></th><th>Doksisiklin</th><th>Mefloquin</th></tr>
+      <tr><td>Dosis</td><td>100 mg/hari</td><td>250 mg/minggu</td></tr>
+      <tr><td>Mulai</td><td>1 hari sebelum berangkat</td><td>1 minggu sebelum berangkat</td></tr>
+      <tr><td>Setelah kembali</td><td>1 bulan</td><td>4 minggu</td></tr>
+      <tr><td>Maksimum</td><td>3 bulan (risiko hepatotoksisitas)</td><td>—</td></tr>
+      <tr><td>Kontra indikasi</td><td>Hamil, menyusui, anak <8 th, disfungsi hati</td><td>Epilepsi, gangguan psikiatri</td></tr>
+      <tr><td>Mekanisme</td><td>Profilaksis stadium parasit dalam darah</td><td>Stadium darah</td></tr>
+    </table>
+  </div>
+
+  <div class="sum-box">
+    <h3>🌲 IPTf MMP — Hafalan Cepat</h3>
+    <div class="kv">
+      <div class="kv-row"><span class="kv-k">Sasaran</span><span class="kv-v">Pekerja/penduduk yang akan ke hutan atau baru pulang dari hutan berisiko, usia 15–60 th</span></div>
+      <div class="kv-row"><span class="kv-k">Regimen</span><span class="kv-v">DHP 3 hari + PQ 1 hari hari pertama, dengan PMO</span></div>
+      <div class="kv-row"><span class="kv-k">Siklus</span><span class="kv-v">3 siklus; jarak antar siklus minimal 28 hari</span></div>
+      <div class="kv-row"><span class="kv-k">Cakupan minimal</span><span class="kv-v">90% dari populasi sasaran</span></div>
+      <div class="kv-row"><span class="kv-k">Dosis diprioritaskan</span><span class="kv-v">Berdasarkan berat badan; bila tidak bisa → menurut kelompok umur</span></div>
+      <div class="kv-row"><span class="kv-k">Hasil (Kaltim 2023)</span><span class="kv-v">Penurunan insiden 80% dalam 6 bulan post-intervensi</span></div>
+    </div>
+  </div>
+
+  <div class="sum-box">
+    <h3>🏆 Syarat Eliminasi Malaria — Wajib Hafal!</h3>
+    <div class="kv">
+      <div class="kv-row"><span class="kv-k" style="color:#f87171">1 — Tidak ada penularan</span><span class="kv-v">Tidak ada kasus indigenous selama <b>3 tahun berturut-turut</b></span></div>
+      <div class="kv-row"><span class="kv-k" style="color:#fbbf24">2 — API</span><span class="kv-v">Annual Parasite Incidence < <b>1 per 1.000 penduduk</b></span></div>
+      <div class="kv-row"><span class="kv-k" style="color:#4ade80">3 — PR</span><span class="kv-v">Positivity Rate < <b>5%</b></span></div>
+      <div class="kv-row"><span class="kv-k" style="color:#60a5fa">4 — Surveilans</span><span class="kv-v">Sistem surveilans malaria yang optimal</span></div>
+      <div class="kv-row"><span class="kv-k" style="color:#a78bfa">5 — Manajemen</span><span class="kv-v">Manajemen penanggulangan malaria terpadu</span></div>
+    </div>
+  </div>
+
+  <div class="sum-box">
+    <h3>🐟 Biologi & Fisik Vektor — Poin Hafalan</h3>
+    <div class="kv">
+      <div class="kv-row"><span class="kv-k">Ikan predator jentik</span><span class="kv-v">Kepala timah, mujair, cupang, nila, sepat → dosis 2–5 ekor/100 m² atau 200–500 ekor/ha</span></div>
+      <div class="kv-row"><span class="kv-k">BTI</span><span class="kv-v">Bacillus thuringiensis israelensis; ramah lingkungan; spesifik terhadap larva Anopheles, Aedes, Culex, Mansonia</span></div>
+      <div class="kv-row"><span class="kv-k">Zooprofilaksis</span><span class="kv-v">Kandang ternak (sapi/kerbau) sebagai barrier → alihkan gigitan dari manusia ke hewan</span></div>
+      <div class="kv-row"><span class="kv-k">Larvasida kimia</span><span class="kv-v">Altosid: 1 briket/10 m²; Pyriproxyfen 0,5G: 2 g/10 m²</span></div>
+    </div>
+  </div>
+
+  <div class="alert alert-tl">
+    🗓️ <b>Tema HMS 2026:</b> Global: "Driven to End Malaria: Now We Can. Now We Must." | Nasional: <b>"Akhiri Malaria: Kita Harus, Kita Bisa!"</b>
+  </div>
+
+</div><!-- /pane-rangkum -->
+
+
+<!-- ═══════════════════════════════════════════════════════
+     TAB 3 — SI PALING INOVASI
+     ═══════════════════════════════════════════════════════ -->
+<div class="tab-pane" id="pane-inovasi">
+
+  <div class="sec-title">💡 Inovasi Pencegahan Malaria <small>Si Paling Inovasi</small></div>
+
+  <div class="innov">
+    <span class="badge-innov bi-easy">🟢 Mudah Diimplementasikan Segera</span>
+    <h3>📱 MalarShield — Aplikasi Notifikasi Jam Berisiko Gigitan Nyamuk</h3>
+    <p style="font-size:.84rem;color:var(--tx2);line-height:1.75">Aplikasi mobile sederhana yang mengirim push-notification otomatis saat jam 17.30 setiap hari ("Saatnya pasang kelambu & pakai repelan!") dan menampilkan peta risiko desa berdasarkan data SISMAL real-time. Dapat diintegrasikan ke WhatsApp Bot untuk komunitas di daerah endemis.</p>
+    <div style="margin-top:10px;font-size:.8rem;color:var(--tx2)"><b>Teknologi:</b> Flutter/React Native + Firebase Messaging + API SISMAL | <b>Target:</b> Kepala keluarga di desa endemis | <b>Estimasi implementasi:</b> 3 bulan</div>
+  </div>
+
+  <div class="innov">
+    <span class="badge-innov bi-easy">🟢 Mudah Diimplementasikan Segera</span>
+    <h3>🗺️ MalarMap-AI — Pemetaan Breeding Site Berbasis Citra Satelit & AI</h3>
+    <p style="font-size:.84rem;color:var(--tx2);line-height:1.75">Gunakan citra satelit Sentinel-2 (gratis, resolusi 10 m) + model deep learning untuk mendeteksi otomatis genangan air, rawa, dan bekas tambang yang berpotensi jadi breeding site Anopheles. Petugas Puskesmas dapat akses peta interaktif untuk prioritisasi larviciding tanpa perlu survei manual ke seluruh wilayah.</p>
+    <div style="margin-top:10px;font-size:.8rem;color:var(--tx2)"><b>Teknologi:</b> Google Earth Engine + TensorFlow + Leaflet.js | <b>Data:</b> Copernicus/ESA (gratis) | <b>Estimasi implementasi:</b> 6 bulan</div>
+  </div>
+
+  <div class="innov">
+    <span class="badge-innov bi-mid">🟡 Inovasi Menengah</span>
+    <h3>🧬 Digital MMP Tracker — Surveilans Real-Time Pekerja Hutan</h3>
+    <p style="font-size:.84rem;color:var(--tx2);line-height:1.75">Kartu digital (QR Code) untuk setiap pekerja hutan yang masuk kawasan endemis. Kader scan QR saat pekerja masuk hutan → sistem catat otomatis jadwal IPTf siklus 1/2/3, kirim reminder ke HP pekerja & kader. Dashboard kepala Puskesmas tampilkan cakupan real-time dan alert bila ada yang lewat jadwal.</p>
+    <div style="margin-top:10px;font-size:.8rem;color:var(--tx2)"><b>Teknologi:</b> Progressive Web App + QR + Cloud DB | <b>Integrasi:</b> SISMAL v2 | <b>Dampak:</b> Meningkatkan cakupan IPTf dari rata-rata 70% → target 90%+</div>
+  </div>
+
+  <div class="innov">
+    <span class="badge-innov bi-mid">🟡 Inovasi Menengah</span>
+    <h3>🐟 Biocontrol Station — Stasiun Pembesaran Ikan Pemakan Jentik Berbasis Komunitas</h3>
+    <p style="font-size:.84rem;color:var(--tx2);line-height:1.75">Program pemberdayaan masyarakat di desa endemis: setiap RT memiliki kolam kecil pembesaran ikan cupang/kepala timah yang dikelola PKK, kemudian disebarkan secara berkala ke lagun, mata air, dan sawah. Lebih berkelanjutan dari larviciding kimia, tidak perlu rantai pasok pestisida, dan meningkatkan pendapatan warga (ikan hias).</p>
+    <div style="margin-top:10px;font-size:.8rem;color:var(--tx2)"><b>Model:</b> Dana Desa + Dinas Perikanan + Puskesmas | <b>Target:</b> Desa endemis sedang-tinggi | <b>Dampak ganda:</b> Pengendalian vektor + ekonomi warga</div>
+  </div>
+
+  <div class="innov">
+    <span class="badge-innov bi-hard">🔴 Inovasi Tingkat Lanjut</span>
+    <h3>🤖 AI-Powered IRS Optimizer — Perencanaan Penyemprotan Berbasis AI</h3>
+    <p style="font-size:.84rem;color:var(--tx2);line-height:1.75">Model AI yang mengintegrasikan data cuaca (BMKG), citra satelit (kepadatan vegetasi), data vektor (hasil survei entomologi), dan data kasus SISMAL untuk memprediksi desa mana yang paling berisiko KLB dalam 4 minggu ke depan → rekomendasi prioritas IRS dengan estimasi kebutuhan insektisida dan jadwal optimal. Mengurangi pemborosan insektisida hingga 40% sambil meningkatkan efektivitas intervensi.</p>
+    <div style="margin-top:10px;font-size:.8rem;color:var(--tx2)"><b>Teknologi:</b> XGBoost/LSTM + API BMKG + SISMAL | <b>Mitra:</b> Kemenkes, BMKG, LAPAN | <b>Estimasi implementasi:</b> 12–18 bulan</div>
+  </div>
+
+  <div class="innov">
+    <span class="badge-innov bi-hard">🔴 Inovasi Tingkat Lanjut</span>
+    <h3>🦟 Sterile Insect Technique (SIT) Lokal — Penelitian Kolaboratif</h3>
+    <p style="font-size:.84rem;color:var(--tx2);line-height:1.75">Kolaborasi dengan perguruan tinggi/BRIN untuk penelitian pelepasan nyamuk jantan steril (irradiasi) atau wolbachia-infected <em>Anopheles</em> di daerah percontohan terisolir (pulau kecil / desa terkurung hutan). Mekanisme: nyamuk jantan steril yang kawin dengan betina liar → tidak menghasilkan telur viable → populasi crash. Pendekatan ini berhasil dikembangkan di Afrika untuk beberapa spesies vektor.</p>
+    <div style="margin-top:10px;font-size:.8rem;color:var(--tx2)"><b>Status:</b> Riset tahap awal | <b>Mitra potensial:</b> BRIN, USAID PMI, WHO/TDR | <b>Horizon:</b> 5–10 tahun</div>
+  </div>
+
+  <div class="alert alert-tl">
+    💡 <b>Saran untuk dr. Dwiki:</b> Inovasi MalarMap-AI dan Digital MMP Tracker sangat relevan untuk konteks Kotabaru yang masih memiliki kasus indigenous. Keduanya dapat dimulai sebagai proyek percontohan dengan anggaran minimal menggunakan tools open-source yang tersedia. Jika ingin dikembangkan lebih lanjut, saya siap membantu membuat prototipe lengkapnya.
+  </div>
+
+</div><!-- /pane-inovasi -->
+
+
+<!-- ═══════════════════════════════════════════════════════
+     TAB 4 — LATIHAN SOAL + KASUS DISKUSI
+     ═══════════════════════════════════════════════════════ -->
+<div class="tab-pane" id="pane-soal">
+
+  <div class="sec-title">✏️ Latihan Soal & Kasus Diskusi <small>Si Paling Jago Menjawab Soal</small></div>
+
+  <!-- KASUS DISKUSI -->
+  <div style="margin-bottom:30px">
+    <h3 style="font-size:.95rem;font-weight:800;margin-bottom:16px;color:var(--pu)">🩺 Kasus Diskusi (dari Materi Pelatihan)</h3>
+
+    <div class="case-box">
+      <span class="case-num">KASUS DISKUSI 1</span>
+      <div class="case-body">
+        Seorang petugas kesehatan akan bertugas di daerah endemik malaria selama 3 tahun. Ia sudah berkeluarga; istrinya seorang guru yang sedang hamil trimester 2. Ia berasal dari daerah tanpa transmisi malaria dan saat ini sehat tanpa komorbid.
+      </div>
+      <div class="case-q">Pertanyaan 1: Bolehkah keluarga tersebut bertugas di daerah baru yang endemik malaria?</div>
+      <div class="case-q">Pertanyaan 2: Apa saja persiapan dan tindakan pencegahan yang harus dilakukan?</div>
+      <div class="case-q">Pertanyaan 3: Ia sangat menginginkan pemakaian obat profilaksis — apa yang Anda anjurkan?</div>
+      <button class="toggle-ans" onclick="toggleAns(this)">💡 Tampilkan Jawaban & Pembahasan</button>
+      <div class="ans-block">
+        <div class="case-a">
+          <b>Jawaban 1:</b> <span class="hl-gr">Ya, boleh</span> bertugas. Tidak ada larangan medis absolut untuk tinggal di daerah endemis malaria, namun diperlukan kewaspadaan ekstra terutama untuk istri yang sedang hamil. Ibu hamil termasuk kelompok rentan terhadap malaria berat (risiko anemia, berat badan lahir rendah, kematian ibu/janin).
+        </div>
+        <div class="case-a">
+          <b>Jawaban 2 — Persiapan & Pencegahan:</b><br>
+          • Tidur dengan <b>kelambu berinsektisida (LLINs)</b> setiap malam — wajib terutama untuk istri<br>
+          • Pasang kawat kasa di jendela/ventilasi rumah<br>
+          • Gunakan repelan/losion anti nyamuk saat keluar, terutama jam 18.00–06.00<br>
+          • Pakai baju panjang saat malam hari<br>
+          • Jauhkan kandang ternak dari rumah bila ada<br>
+          • Lakukan ANC rutin + skrining malaria pada istri yang hamil (minimal 1x per trimester atau saat demam)<br>
+          • Kenali gejala malaria dan segera periksa bila demam ke fasilitas terdekat
+        </div>
+        <div class="case-a">
+          <b>Jawaban 3 — Profilaksis:</b><br>
+          Untuk <b>suami (petugas kesehatan)</b>: dapat diberikan <b>doksisiklin 100 mg/hari</b>, dimulai 1 hari sebelum tiba, selama di daerah endemis, sampai 1 bulan setelah kembali. Namun karena ditugaskan 3 tahun, doksisiklin <b>tidak boleh digunakan lebih dari 3 bulan</b> (risiko hepatotoksisitas). Setelah 3 bulan, hentikan profilaksis dan andalkan perlindungan personal (kelambu, repelan) + surveilans aktif.<br><br>
+          Untuk <b>istri (hamil trimester 2)</b>: doksisiklin <span class="hl-re">KONTRAINDIKASI</span> pada ibu hamil. Mefloquin juga tidak direkomendasikan rutin. Penduduk yang menetap tidak termasuk sasaran kemoprofilaksis — lebih ditekankan pada perlindungan personal ketat dan skrining rutin ANC.
+        </div>
+      </div>
+    </div>
+
+    <div class="case-box">
+      <span class="case-num">KASUS DISKUSI 2</span>
+      <div class="case-body">
+        Seorang mahasiswa melakukan kerja praktek di daerah endemik malaria dari luar negeri dan memakai mefloquin untuk pencegahan. Ia datang mengeluh <b>mimpi buruk</b> setelah minum obat tersebut selama 2 minggu.
+      </div>
+      <div class="case-q">Pertanyaan: Apakah mimpi buruk merupakan efek samping mefloquin? Apa solusinya?</div>
+      <button class="toggle-ans" onclick="toggleAns(this)">💡 Tampilkan Jawaban & Pembahasan</button>
+      <div class="ans-block">
+        <div class="case-a">
+          <b>Jawaban:</b> <span class="hl-gr">Ya</span>, mimpi buruk (<em>vivid dreams / nightmares</em>) adalah efek samping neuropsikiatri yang <b>dikenal</b> dari mefloquin. Termasuk dalam spektrum efek samping SSP yang bisa meliputi: insomnia, pusing, gangguan koordinasi, kecemasan, halusinasi, dan dalam kasus berat — psikosis.<br><br>
+          <b>Solusi:</b><br>
+          1. <b>Edukasi pasien</b>: efek ini umum, biasanya ringan dan reversibel<br>
+          2. <b>Evaluasi beratnya gejala:</b> bila hanya mimpi buruk tanpa gangguan fungsional bermakna → dapat dilanjutkan dengan pemantauan ketat<br>
+          3. <b>Bila gejala berat</b> (halusinasi, gangguan psikiatri, tidak dapat beraktivitas) → <b>hentikan mefloquin</b> dan ganti dengan doksisiklin (bila tidak ada kontraindikasi) atau atovaquone-proguanil<br>
+          4. <b>Laporkan</b> sebagai farmakovigilans (efek samping obat)
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MCQ SOAL -->
+  <h3 style="font-size:.95rem;font-weight:800;margin-bottom:16px;color:var(--tl2)">📝 15 Soal Pilihan Ganda</h3>
+  <div class="score-panel" id="score-panel" style="display:none">
+    <div class="score-big" id="score-big">0/15</div>
+    <div class="score-sub" id="score-sub">Selesaikan semua soal dulu</div>
+    <button class="restart-btn" onclick="restartQuiz()">🔄 Ulangi Kuis</button>
+  </div>
+
+  <div id="quiz-container">
+
+  <div class="q-block" data-ans="B">
+    <div class="q-num">No. 1</div>
+    <div class="q-text">Nyamuk <em>Anopheles</em> betina umumnya aktif menggigit pada jam berapa?</div>
+    <div class="opts">
+      <div class="opt" onclick="answer(this,'A')"><span class="opt-key">A</span> 06.00–12.00 (pagi–siang)</div>
+      <div class="opt" onclick="answer(this,'B')"><span class="opt-key">B</span> 18.00–06.00 (sore–pagi)</div>
+      <div class="opt" onclick="answer(this,'C')"><span class="opt-key">C</span> 12.00–18.00 (siang–sore)</div>
+      <div class="opt" onclick="answer(this,'D')"><span class="opt-key">D</span> Sepanjang waktu, tidak ada pola khusus</div>
+    </div>
+    <div class="expl">✅ <b>B. 18.00–06.00.</b> Nyamuk <em>Anopheles</em> bersifat nokturnal — aktif mencari darah pada waktu malam hari, dari sekitar pukul 18.00 (sore) hingga 06.00 (pagi). Ini menjadi dasar penggunaan kelambu saat tidur malam sebagai intervensi utama.</div>
+  </div>
+
+  <div class="q-block" data-ans="C">
+    <div class="q-num">No. 2</div>
+    <div class="q-text">Kebijakan kemoprofilaksis malaria Indonesia menggunakan doksisiklin dengan dosis dan durasi yang benar adalah:</div>
+    <div class="opts">
+      <div class="opt" onclick="answer(this,'A')"><span class="opt-key">A</span> 200 mg/hari, dimulai 3 hari sebelum berangkat, hingga 2 minggu setelah kembali</div>
+      <div class="opt" onclick="answer(this,'B')"><span class="opt-key">B</span> 100 mg/hari, dimulai 1 minggu sebelum berangkat, hingga 6 bulan setelah kembali</div>
+      <div class="opt" onclick="answer(this,'C')"><span class="opt-key">C</span> 100 mg/hari, dimulai 1 hari sebelum berangkat, selama di endemis, hingga 1 bulan setelah kembali (maksimal 3 bulan)</div>
+      <div class="opt" onclick="answer(this,'D')"><span class="opt-key">D</span> 100 mg/hari, dimulai 1 hari sebelum berangkat, selama di endemis, hingga 6 bulan setelah kembali</div>
+    </div>
+    <div class="expl">✅ <b>C.</b> Doksisiklin 100 mg/hari, mulai 1 hari sebelum ke daerah endemis, selama berada di sana, dan dilanjutkan hingga 1 bulan setelah kembali. Penggunaan dibatasi maksimal 3 bulan karena dapat mengganggu fungsi hati (hepatotoksisitas).</div>
+  </div>
+
+  <div class="q-block" data-ans="A">
+    <div class="q-num">No. 3</div>
+    <div class="q-text">Kemoprofilaksis malaria dengan doksisiklin merupakan KONTRAINDIKASI pada kelompok berikut, KECUALI:</div>
+    <div class="opts">
+      <div class="opt" onclick="answer(this,'A')"><span class="opt-key">A</span> Laki-laki dewasa sehat usia 30 tahun tanpa komorbid</div>
+      <div class="opt" onclick="answer(this,'B')"><span class="opt-key">B</span> Ibu hamil trimester 1</div>
+      <div class="opt" onclick="answer(this,'C')"><span class="opt-key">C</span> Anak usia 6 tahun</div>
+      <div class="opt" onclick="answer(this,'D')"><span class="opt-key">D</span> Pasien dengan sirosis hepatis</div>
+    </div>
+    <div class="expl">✅ <b>A.</b> Doksisiklin kontraindikasi pada: ibu hamil (teratogenik, pewarnaan gigi janin), ibu menyusui, anak <8 tahun (pewarnaan gigi permanen, gangguan tulang), dan disfungsi hati. Laki-laki dewasa sehat adalah sasaran yang tepat untuk kemoprofilaksis ini.</div>
+  </div>
+
+  <div class="q-block" data-ans="B">
+    <div class="q-num">No. 4</div>
+    <div class="q-text">Efek samping neuropsikiatri yang dikenal dari mefloquin (digunakan TNI/POLRI) antara lain:</div>
+    <div class="opts">
+      <div class="opt" onclick="answer(this,'A')"><span class="opt-key">A</span> Gagal ginjal akut dan hipertensi</div>
+      <div class="opt" onclick="answer(this,'B')"><span class="opt-key">B</span> Mimpi buruk, insomnia, halusinasi, gangguan koordinasi</div>
+      <div class="opt" onclick="answer(this,'C')"><span class="opt-key">C</span> Hepatotoksisitas dan ikterus</div>
+      <div class="opt" onclick="answer(this,'D')"><span class="opt-key">D</span> Pewarnaan gigi dan gangguan pertumbuhan tulang</div>
+    </div>
+    <div class="expl">✅ <b>B.</b> Mefloquin memiliki efek samping neuropsikiatri yang terkenal: mimpi buruk/vivid dreams, insomnia, pusing, kecemasan, gangguan koordinasi, dan pada kasus berat dapat menyebabkan halusinasi dan psikosis. Efek ini biasanya reversibel setelah obat dihentikan.</div>
+  </div>
+
+  <div class="q-block" data-ans="D">
+    <div class="q-num">No. 5</div>
+    <div class="q-text">Salah satu <b>keunggulan utama</b> kelambu berinsektisida (LLINs) dibandingkan IRS (Indoor Residual Spraying) adalah:</div>
+    <div class="opts">
+      <div class="opt" onclick="answer(this,'A')"><span class="opt-key">A</span> Membunuh nyamuk yang sudah masuk ke dalam ruangan lebih efektif</div>
+      <div class="opt" onclick="answer(this,'B')"><span class="opt-key">B</span> Memerlukan tenaga entomologi terlatih untuk aplikasinya</div>
+      <div class="opt" onclick="answer(this,'C')"><span class="opt-key">C</span> Efek residunya berlangsung lebih singkat sehingga lebih aman</div>
+      <div class="opt" onclick="answer(this,'D')"><span class="opt-key">D</span> Lebih murah dan tidak memerlukan peralatan khusus, serta mencegah penularan penyakit lain (dengue, filariasis)</div>
+    </div>
+    <div class="expl">✅ <b>D.</b> Keunggulan LLINs: (1) lebih murah dari IRS, (2) tidak perlu peralatan khusus, (3) mencegah penyakit lain yang ditularkan nyamuk (dengue, filariasis, chikungunya), (4) juga mematikan kutu, kecoa, dan serangga lain yang kontak. IRS dipilih ketika cakupan kelambu tidak bisa mencapai 100%.</div>
+  </div>
+
+  <div class="q-block" data-ans="C">
+    <div class="q-num">No. 6</div>
+    <div class="q-text">Syarat wilayah untuk mendapatkan sertifikat eliminasi malaria mencakup semua berikut, KECUALI:</div>
+    <div class="opts">
+      <div class="opt" onclick="answer(this,'A')"><span class="opt-key">A</span> Tidak ada penularan setempat selama 3 tahun berturut-turut</div>
+      <div class="opt" onclick="answer(this,'B')"><span class="opt-key">B</span> API < 1 per 1.000 penduduk</div>
+      <div class="opt" onclick="answer(this,'C')"><span class="opt-key">C</span> Positivity Rate < 10%</div>
+      <div class="opt" onclick="answer(this,'D')"><span class="opt-key">D</span> Sistem surveilans malaria yang optimal</div>
+    </div>
+    <div class="expl">✅ <b>C.</b> Syarat eliminasi malaria adalah Positivity Rate <b><5%</b> (bukan <10%). Ketiga syarat utama: tidak ada penularan setempat 3 tahun berturut, API <1/1.000 penduduk, dan PR <5%. Ditambah sistem surveilans optimal dan manajemen penanggulangan terpadu.</div>
+  </div>
+
+  <div class="q-block" data-ans="A">
+    <div class="q-num">No. 7</div>
+    <div class="q-text">Zooprofilaksis dalam program pengendalian vektor malaria adalah:</div>
+    <div class="opts">
+      <div class="opt" onclick="answer(this,'A')"><span class="opt-key">A</span> Pemanfaatan hewan ternak (sapi, kerbau) sebagai umpan untuk mengalihkan gigitan nyamuk dari manusia ke hewan</div>
+      <div class="opt" onclick="answer(this,'B')"><span class="opt-key">B</span> Penggunaan racun yang berasal dari hewan untuk membunuh jentik nyamuk</div>
+      <div class="opt" onclick="answer(this,'C')"><span class="opt-key">C</span> Vaksinasi ternak untuk mencegah penularan malaria antar spesies</div>
+      <div class="opt" onclick="answer(this,'D')"><span class="opt-key">D</span> Penyemprotan kandang ternak dengan insektisida untuk mencegah perkembangbiakan nyamuk</div>
+    </div>
+    <div class="expl">✅ <b>A.</b> Zooprofilaksis adalah pemanfaatan hewan ternak sebagai "cattle-barrier" — kandang ternak ditempatkan antara nyamuk dan pemukiman manusia sehingga nyamuk zoofilik lebih memilih menggigit hewan daripada manusia. Contoh: kandang sapi/kerbau di pinggir desa.</div>
+  </div>
+
+  <div class="q-block" data-ans="B">
+    <div class="q-num">No. 8</div>
+    <div class="q-text">Ikan yang digunakan sebagai predator biologis jentik nyamuk Anopheles digunakan dengan dosis:</div>
+    <div class="opts">
+      <div class="opt" onclick="answer(this,'A')"><span class="opt-key">A</span> 10–20 ekor per 100 m² luas permukaan air</div>
+      <div class="opt" onclick="answer(this,'B')"><span class="opt-key">B</span> 2–5 ekor per 100 m² atau 200–500 ekor per hektar</div>
+      <div class="opt" onclick="answer(this,'C')"><span class="opt-key">C</span> 50 ekor per 100 m² atau 1.000 ekor per hektar</div>
+      <div class="opt" onclick="answer(this,'D')"><span class="opt-key">D</span> 1 ekor per 10 m²</div>
+    </div>
+    <div class="expl">✅ <b>B.</b> Dosis standar ikan pemakan jentik (kepala timah, mujair, nila, cupang) adalah 2–5 ekor per 100 m² luas permukaan air, atau setara 200–500 ekor per hektar. Jenis ikan yang digunakan: ikan kepala timah, mujair, cupang, nila, sepat.</div>
+  </div>
+
+  <div class="q-block" data-ans="D">
+    <div class="q-num">No. 9</div>
+    <div class="q-text">Cakupan minimal IRS (Indoor Residual Spraying) yang diperlukan agar dampaknya terhadap penularan malaria dapat terukur adalah:</div>
+    <div class="opts">
+      <div class="opt" onclick="answer(this,'A')"><span class="opt-key">A</span> ≥50% rumah di wilayah sasaran</div>
+      <div class="opt" onclick="answer(this,'B')"><span class="opt-key">B</span> ≥60% rumah di wilayah sasaran</div>
+      <div class="opt" onclick="answer(this,'C')"><span class="opt-key">C</span> ≥70% rumah di wilayah sasaran</div>
+      <div class="opt" onclick="answer(this,'D')"><span class="opt-key">D</span> ≥80% rumah di wilayah sasaran</div>
+    </div>
+    <div class="expl">✅ <b>D.</b> Untuk dapat mengukur dampak IRS terhadap penularan malaria, harus dilakukan secara massal (total coverage) dengan cakupan minimal <b>80%</b> rumah di wilayah sasaran. Cakupan di bawah ini tidak cukup untuk mengganggu siklus penularan.</div>
+  </div>
+
+  <div class="q-block" data-ans="C">
+    <div class="q-num">No. 10</div>
+    <div class="q-text">IPTf (Intermittent Preventive Treatment for Forest-goers) dalam program MMP dilaksanakan dalam berapa siklus dengan jarak minimal antar siklus berapa hari?</div>
+    <div class="opts">
+      <div class="opt" onclick="answer(this,'A')"><span class="opt-key">A</span> 2 siklus; jarak minimal 14 hari</div>
+      <div class="opt" onclick="answer(this,'B')"><span class="opt-key">B</span> 4 siklus; jarak minimal 21 hari</div>
+      <div class="opt" onclick="answer(this,'C')"><span class="opt-key">C</span> 3 siklus; jarak minimal 28 hari</div>
+      <div class="opt" onclick="answer(this,'D')"><span class="opt-key">D</span> 3 siklus; jarak minimal 14 hari</div>
+    </div>
+    <div class="expl">✅ <b>C.</b> IPTf dilaksanakan 3 siklus. Siklus ke-2 dilakukan minimal 28 hari setelah siklus pertama selesai; siklus ke-3 dilakukan minimal 28 hari setelah siklus ke-2 selesai (atau pada tanggal yang sama di bulan berikutnya).</div>
+  </div>
+
+  <div class="q-block" data-ans="A">
+    <div class="q-num">No. 11</div>
+    <div class="q-text">Regimen IPTf yang diberikan kepada pekerja hutan dalam program MMP adalah:</div>
+    <div class="opts">
+      <div class="opt" onclick="answer(this,'A')"><span class="opt-key">A</span> DHP 3 hari + Primaquine 1 hari pada hari pertama, dengan pendamping minum obat (PMO)</div>
+      <div class="opt" onclick="answer(this,'B')"><span class="opt-key">B</span> Doksisiklin 100 mg/hari selama 7 hari tanpa PMO</div>
+      <div class="opt" onclick="answer(this,'C')"><span class="opt-key">C</span> Klorokuin 4 tablet dosis tunggal tiap bulan</div>
+      <div class="opt" onclick="answer(this,'D')"><span class="opt-key">D</span> Artesunate + amodiaquine selama 3 hari tiap 2 minggu</div>
+    </div>
+    <div class="expl">✅ <b>A.</b> Regimen IPTf sesuai panduan Kemenkes: DHP (Dihydroartemisinin-Piperaquine) selama 3 hari ditambah Primaquine 1 hari pada hari pertama, dengan pendamping minum obat (PMO) oleh tenaga kesehatan atau kader untuk memastikan kepatuhan.</div>
+  </div>
+
+  <div class="q-block" data-ans="B">
+    <div class="q-num">No. 12</div>
+    <div class="q-text">BTI (Bacillus thuringiensis israelensis) sebagai bio-larvisida bekerja secara:</div>
+    <div class="opts">
+      <div class="opt" onclick="answer(this,'A')"><span class="opt-key">A</span> Insektisida kontak yang membunuh nyamuk dewasa yang hinggap di permukaan air</div>
+      <div class="opt" onclick="answer(this,'B')"><span class="opt-key">B</span> Toksin spesifik yang mematikan larva nyamuk (Anopheles, Aedes, Culex, Mansonia) dan larva lalat Simulium</div>
+      <div class="opt" onclick="answer(this,'C')"><span class="opt-key">C</span> Menghambat reproduksi nyamuk betina melalui interferensi hormonal</div>
+      <div class="opt" onclick="answer(this,'D')"><span class="opt-key">D</span> Mengubah pH air sehingga tidak cocok untuk perkembangan jentik</div>
+    </div>
+    <div class="expl">✅ <b>B.</b> BTI menghasilkan protein toksin (cry protein) yang spesifik terhadap larva nyamuk dan lalat Simulium (vektor onchocerciasis di Afrika). BTI tidak berbahaya bagi manusia, hewan, tanaman, dan lingkungan — menjadikannya pilihan larvasida ramah lingkungan.</div>
+  </div>
+
+  <div class="q-block" data-ans="D">
+    <div class="q-num">No. 13</div>
+    <div class="q-text">Pernyataan yang BENAR tentang MMP (Mobile Migrant Population) dalam program malaria Indonesia adalah:</div>
+    <div class="opts">
+      <div class="opt" onclick="answer(this,'A')"><span class="opt-key">A</span> MMP menyumbang kurang dari 5% kasus malaria nasional</div>
+      <div class="opt" onclick="answer(this,'B')"><span class="opt-key">B</span> MMP hanya terdapat di Papua dan Papua Barat</div>
+      <div class="opt" onclick="answer(this,'C')"><span class="opt-key">C</span> MMP adalah penduduk tetap daerah endemis yang termasuk sasaran kemoprofilaksis rutin</div>
+      <div class="opt" onclick="answer(this,'D')"><span class="opt-key">D</span> MMP menyumbang ~20% kasus nasional dan menghambat eliminasi di daerah endemis rendah</div>
+    </div>
+    <div class="expl">✅ <b>D.</b> MMP menyumbang ~20% dari total kasus malaria nasional, dan merupakan hambatan signifikan proses eliminasi terutama di kabupaten/kota dengan endemisitas rendah. MMP terbesar adalah pekerja hutan di Kalimantan, Sulawesi, dan Sumatra.</div>
+  </div>
+
+  <div class="q-block" data-ans="A">
+    <div class="q-num">No. 14</div>
+    <div class="q-text">Manakah yang BUKAN merupakan metode modifikasi lingkungan dalam pengendalian vektor malaria secara fisik?</div>
+    <div class="opts">
+      <div class="opt" onclick="answer(this,'A')"><span class="opt-key">A</span> Pemberian BTI (Bacillus thuringiensis israelensis) ke lagun</div>
+      <div class="opt" onclick="answer(this,'B')"><span class="opt-key">B</span> Penimbunan genangan air bekas galian tambang</div>
+      <div class="opt" onclick="answer(this,'C')"><span class="opt-key">C</span> Pembuatan tanggul dan pengaliran air</div>
+      <div class="opt" onclick="answer(this,'D')"><span class="opt-key">D</span> Penanaman kembali pohon bakau di wilayah pesisir</div>
+    </div>
+    <div class="expl">✅ <b>A.</b> Pemberian BTI adalah metode <b>biologi</b> (bukan fisik). Metode fisik dibagi dua: (1) Modifikasi lingkungan (permanen): penimbunan, pengeringan, tanggul, pengaliran air, penanaman bakau; (2) Manipulasi lingkungan (sementara): pembersihan ganggang/lumut, pencampuran air, pengaturan irigasi berkala.</div>
+  </div>
+
+  <div class="q-block" data-ans="C">
+    <div class="q-num">No. 15</div>
+    <div class="q-text">Berdasarkan data 2025, berapa persen kabupaten/kota di Indonesia yang telah menerima sertifikat eliminasi malaria?</div>
+    <div class="opts">
+      <div class="opt" onclick="answer(this,'A')"><span class="opt-key">A</span> Sekitar 50% (±257 dari 514 kab/kota)</div>
+      <div class="opt" onclick="answer(this,'B')"><span class="opt-key">B</span> Sekitar 70% (±360 dari 514 kab/kota)</div>
+      <div class="opt" onclick="answer(this,'C')"><span class="opt-key">C</span> Sekitar 80% (412 dari 514 kab/kota)</div>
+      <div class="opt" onclick="answer(this,'D')"><span class="opt-key">D</span> Sekitar 95% (488 dari 514 kab/kota)</div>
+    </div>
+    <div class="expl">✅ <b>C.</b> Per 2025, sebanyak 412 dari 514 kabupaten/kota (±80%) telah menerima sertifikat eliminasi malaria. Tantangan utama: >95% kasus nasional berasal dari Tanah Papua; KLB malaria dilaporkan di daerah yang sudah bebas; MMP menyumbang 20% kasus dan menghambat eliminasi.</div>
+  </div>
+
+  </div><!-- /quiz-container -->
+
+  <div class="score-panel" id="score-panel-bottom" style="display:none;margin-top:20px">
+    <div class="score-big" id="score-big-bottom">0/15</div>
+    <div class="score-sub" id="score-sub-bottom">Selesaikan semua soal dulu</div>
+    <button class="restart-btn" onclick="restartQuiz()">🔄 Ulangi Kuis</button>
+  </div>
+
+</div><!-- /pane-soal -->
+
+<!-- FOOTER -->
+<div class="foot">
+  <a href="index.html" class="back-btn">← Kembali ke Portal MalarAI-ID</a>
+  <p style="margin-top:14px">Modul 5: Pencegahan Malaria · AI Learner Terpadu · Bapelkes 2026</p>
+  <p style="margin-top:6px">Sumber: Materi Pelatihan Tatalaksana Malaria Bagi Tenaga Medis (Evi Liani, SKM, MPH) · Kemenkes RI · WHO World Malaria Report 2024 · Permenkes No. 22 Tahun 2022 · Pedoman Tatalaksana Kasus Malaria Kemenkes RI</p>
+</div>
+
+</div><!-- /wrap -->
+
+<script>
+// ──────────────── TAB SWITCHING ────────────────
+function switchTab(name){
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('pane-'+name).classList.add('active');
+  document.getElementById('btn-'+name).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ──────────────── KASUS TOGGLE ────────────────
+function toggleAns(btn){
+  const block = btn.nextElementSibling;
+  block.classList.toggle('open');
+  btn.textContent = block.classList.contains('open') ? '🔼 Sembunyikan Jawaban' : '💡 Tampilkan Jawaban & Pembahasan';
+}
+
+// ──────────────── MCQ QUIZ ────────────────
+let answered=0, correct=0;
+const total=15;
+
+function answer(optEl, chosen){
+  const block = optEl.closest('.q-block');
+  if(block.dataset.done) return;
+  block.dataset.done='1';
+  const ans = block.dataset.ans;
+  const opts = block.querySelectorAll('.opt');
+  opts.forEach(o=>{
+    o.style.pointerEvents='none';
+    const key=o.querySelector('.opt-key').textContent;
+    if(key===ans) o.classList.add('show-ans');
+  });
+  if(chosen===ans){
+    optEl.classList.add('correct');
+    correct++;
+  } else {
+    optEl.classList.add('wrong');
+  }
+  block.querySelector('.expl').classList.add('visible');
+  answered++;
+  if(answered===total) showScore();
+}
+
+function showScore(){
+  const pct=Math.round(correct/total*100);
+  let msg='';
+  if(pct>=85) msg='🏆 Luar biasa! Penguasaan materi sangat baik.';
+  else if(pct>=70) msg='✅ Bagus! Ulangi poin yang terlewat.';
+  else if(pct>=50) msg='📚 Cukup. Perlu pendalaman materi lebih lanjut.';
+  else msg='💪 Perlu belajar lebih giat. Review ulang materi.';
+  ['score-panel','score-panel-bottom'].forEach(id=>{
+    document.getElementById(id).style.display='block';
+  });
+  ['score-big','score-big-bottom'].forEach(id=>{
+    document.getElementById(id).textContent=correct+'/'+total+' ('+pct+'%)';
+  });
+  ['score-sub','score-sub-bottom'].forEach(id=>{
+    document.getElementById(id).textContent=msg;
+  });
+}
+
+function restartQuiz(){
+  answered=0; correct=0;
+  document.querySelectorAll('.q-block').forEach(b=>{
+    delete b.dataset.done;
+    b.querySelectorAll('.opt').forEach(o=>{
+      o.style.pointerEvents='';
+      o.classList.remove('correct','wrong','show-ans');
+    });
+    b.querySelector('.expl').classList.remove('visible');
+  });
+  ['score-panel','score-panel-bottom'].forEach(id=>{
+    document.getElementById(id).style.display='none';
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
