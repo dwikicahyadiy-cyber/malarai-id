@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MalarAI-ID | Blueprint Inovasi Deteksi Malaria Berbasis AI</title>
+<style>
+  :root {
+    --primary: #1a3a5c;
+    --accent: #e63946;
+    --accent2: #2ec4b6;
+    --accent3: #f4a261;
+    --bg: #f0f4f8;
+    --card: #ffffff;
+    --text: #1d2d44;
+    --muted: #6b7a8d;
+    --gradient: linear-gradient(135deg, #1a3a5c 0%, #2ec4b6 100%);
+    --shadow: 0 4px 24px rgba(26,58,92,0.10);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+
+  /* NAV */
+  nav { background: var(--primary); position: sticky; top: 0; z-index: 100; padding: 0 2rem; }
+  .nav-inner { max-width: 1200px; margin: auto; display: flex; align-items: center; justify-content: space-between; height: 60px; }
+  .nav-logo { color: #fff; font-weight: 800; font-size: 1.2rem; letter-spacing: 1px; }
+  .nav-logo span { color: var(--accent2); }
+  .nav-links { display: flex; gap: 1.5rem; }
+  .nav-links a { color: rgba(255,255,255,0.8); text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--accent2); }
+
+  /* HERO */
+  .hero { background: var(--gradient); color: white; padding: 5rem 2rem 4rem; text-align: center; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
+  .hero-badge { display: inline-block; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); border-radius: 50px; padding: 0.4rem 1.2rem; font-size: 0.8rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1.5rem; }
+  .hero h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900; line-height: 1.1; margin-bottom: 1rem; }
+  .hero h1 span { color: #ffd166; }
+  .hero-sub { font-size: 1.15rem; opacity: 0.9; max-width: 700px; margin: 0 auto 2rem; }
+  .hero-stats { display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap; margin-top: 2.5rem; }
+  .hero-stat { text-align: center; }
+  .hero-stat .num { font-size: 2.2rem; font-weight: 900; color: #ffd166; }
+  .hero-stat .label { font-size: 0.8rem; opacity: 0.8; }
+
+  /* SECTION */
+  section { max-width: 1200px; margin: 0 auto; padding: 4rem 2rem; }
+  .section-tag { display: inline-block; background: var(--accent2); color: white; font-size: 0.72rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; border-radius: 4px; padding: 0.25rem 0.75rem; margin-bottom: 0.75rem; }
+  .section-title { font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 800; color: var(--primary); margin-bottom: 0.5rem; }
+  .section-sub { color: var(--muted); font-size: 1rem; max-width: 700px; margin-bottom: 2.5rem; }
+
+  /* CARDS */
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 1.5rem; }
+  .card { background: var(--card); border-radius: 16px; padding: 1.75rem; box-shadow: var(--shadow); transition: transform 0.2s, box-shadow 0.2s; border: 1px solid rgba(0,0,0,0.05); }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(26,58,92,0.15); }
+  .card-icon { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1rem; }
+  .card h3 { font-size: 1.1rem; font-weight: 700; color: var(--primary); margin-bottom: 0.5rem; }
+  .card p { color: var(--muted); font-size: 0.9rem; line-height: 1.6; }
+
+  /* SPECIES TABLE */
+  .species-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+  .species-card { background: var(--card); border-radius: 12px; padding: 1.25rem; box-shadow: var(--shadow); border-top: 4px solid var(--accent); }
+  .species-card.vivax { border-color: #2ec4b6; }
+  .species-card.malariae { border-color: #f4a261; }
+  .species-card.ovale { border-color: #8338ec; }
+  .species-card.knowlesi { border-color: #e63946; }
+  .species-card.falciparum { border-color: #3a86ff; }
+  .species-name { font-weight: 800; font-size: 0.95rem; color: var(--primary); margin-bottom: 0.25rem; }
+  .species-latin { font-style: italic; font-size: 0.8rem; color: var(--muted); margin-bottom: 0.75rem; }
+  .species-features li { font-size: 0.82rem; color: var(--text); padding: 0.15rem 0; padding-left: 1rem; position: relative; }
+  .species-features li::before { content: '→'; position: absolute; left: 0; color: var(--accent2); }
+  .species-badge { display: inline-block; font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 20px; margin-top: 0.5rem; }
+  .badge-danger { background: #fee2e2; color: #dc2626; }
+  .badge-warn { background: #fef3c7; color: #d97706; }
+  .badge-ok { background: #d1fae5; color: #059669; }
+
+  /* ARCH DIAGRAM */
+  .arch-box { background: var(--primary); color: white; border-radius: 16px; padding: 2rem; }
+  .arch-flow { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem; }
+  .arch-step { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; padding: 0.75rem 1rem; text-align: center; min-width: 130px; }
+  .arch-step .step-icon { font-size: 1.5rem; margin-bottom: 0.25rem; }
+  .arch-step .step-label { font-size: 0.78rem; font-weight: 600; color: rgba(255,255,255,0.9); }
+  .arch-step .step-sub { font-size: 0.68rem; color: rgba(255,255,255,0.55); margin-top: 0.15rem; }
+  .arch-arrow { color: var(--accent2); font-size: 1.4rem; font-weight: 900; }
+
+  /* PIPELINE */
+  .pipeline { display: flex; flex-direction: column; gap: 0; }
+  .pipe-step { display: flex; gap: 1rem; align-items: flex-start; padding: 1.25rem; background: var(--card); border-radius: 12px; margin-bottom: 0.5rem; box-shadow: var(--shadow); }
+  .pipe-num { width: 36px; height: 36px; border-radius: 50%; background: var(--gradient); color: white; font-weight: 800; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .pipe-content h4 { font-weight: 700; color: var(--primary); font-size: 0.95rem; }
+  .pipe-content p { color: var(--muted); font-size: 0.85rem; margin-top: 0.2rem; }
+  .pipe-tech { font-size: 0.72rem; background: #e0f2fe; color: #0369a1; padding: 0.2rem 0.6rem; border-radius: 4px; font-weight: 600; margin-top: 0.4rem; display: inline-block; }
+
+  /* FEATURES */
+  .feature-item { display: flex; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid #e5e7eb; }
+  .feature-item:last-child { border-bottom: none; }
+  .feature-icon-wrap { font-size: 1.6rem; min-width: 40px; text-align: center; }
+  .feature-text h4 { font-weight: 700; color: var(--primary); font-size: 0.95rem; }
+  .feature-text p { color: var(--muted); font-size: 0.85rem; }
+
+  /* ROADMAP */
+  .roadmap { position: relative; }
+  .roadmap::before { content: ''; position: absolute; left: 2rem; top: 0; bottom: 0; width: 3px; background: var(--gradient); border-radius: 2px; }
+  .rm-item { display: flex; gap: 1.5rem; align-items: flex-start; margin-bottom: 2rem; position: relative; }
+  .rm-dot { width: 44px; height: 44px; border-radius: 50%; background: white; border: 3px solid var(--accent2); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.85rem; color: var(--primary); flex-shrink: 0; position: relative; z-index: 1; box-shadow: var(--shadow); }
+  .rm-dot.active { background: var(--accent2); color: white; }
+  .rm-content { background: var(--card); border-radius: 12px; padding: 1.25rem 1.5rem; box-shadow: var(--shadow); flex: 1; }
+  .rm-phase { font-size: 0.72rem; font-weight: 700; color: var(--accent2); text-transform: uppercase; letter-spacing: 1px; }
+  .rm-title { font-weight: 800; color: var(--primary); font-size: 1rem; margin: 0.2rem 0; }
+  .rm-duration { font-size: 0.8rem; color: var(--muted); margin-bottom: 0.75rem; }
+  .rm-tasks { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .rm-task { font-size: 0.75rem; background: var(--bg); color: var(--text); padding: 0.25rem 0.6rem; border-radius: 6px; border: 1px solid #e5e7eb; }
+
+  /* MODEL COMPARISON */
+  .model-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  .model-table th { background: var(--primary); color: white; padding: 0.75rem 1rem; text-align: left; font-weight: 700; }
+  .model-table th:first-child { border-radius: 8px 0 0 0; }
+  .model-table th:last-child { border-radius: 0 8px 0 0; }
+  .model-table td { padding: 0.7rem 1rem; border-bottom: 1px solid #e5e7eb; }
+  .model-table tr:nth-child(even) td { background: #f8fafc; }
+  .model-table tr:last-child td:first-child { border-radius: 0 0 0 8px; }
+  .model-table tr:last-child td:last-child { border-radius: 0 0 8px 0; }
+  .rec-badge { background: #d1fae5; color: #059669; font-size: 0.7rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 4px; }
+
+  /* DATASET */
+  .dataset-card { background: var(--card); border-radius: 12px; padding: 1.5rem; box-shadow: var(--shadow); border-left: 4px solid var(--accent2); margin-bottom: 1rem; }
+  .dataset-title { font-weight: 700; color: var(--primary); font-size: 0.95rem; }
+  .dataset-meta { display: flex; gap: 1rem; flex-wrap: wrap; margin: 0.5rem 0; }
+  .dataset-tag { font-size: 0.72rem; background: #f0f4f8; color: var(--muted); padding: 0.2rem 0.6rem; border-radius: 4px; }
+  .dataset-desc { font-size: 0.85rem; color: var(--muted); }
+
+  /* VALIDATION */
+  .validation-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
+  .val-card { background: var(--card); border-radius: 12px; padding: 1.5rem; box-shadow: var(--shadow); }
+  .val-icon { font-size: 2rem; margin-bottom: 0.75rem; }
+  .val-title { font-weight: 800; color: var(--primary); font-size: 0.95rem; margin-bottom: 0.5rem; }
+  .val-list li { font-size: 0.83rem; color: var(--muted); padding: 0.2rem 0 0.2rem 1rem; position: relative; }
+  .val-list li::before { content: '✓'; position: absolute; left: 0; color: #059669; font-weight: 700; }
+
+  /* KPI */
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; }
+  .kpi-card { background: var(--card); border-radius: 12px; padding: 1.25rem; box-shadow: var(--shadow); text-align: center; border-top: 3px solid var(--accent2); }
+  .kpi-val { font-size: 2rem; font-weight: 900; color: var(--primary); }
+  .kpi-label { font-size: 0.8rem; color: var(--muted); margin-top: 0.25rem; }
+
+  /* DIVIDER */
+  .divider { height: 1px; background: linear-gradient(to right, transparent, #e5e7eb, transparent); margin: 0; }
+  .section-alt { background: linear-gradient(135deg, #1a3a5c08 0%, #2ec4b608 100%); }
+
+  /* REFS */
+  .ref-list { list-style: none; counter-reset: ref; }
+  .ref-list li { counter-increment: ref; padding: 0.6rem 0 0.6rem 2.5rem; position: relative; border-bottom: 1px solid #f0f4f8; font-size: 0.85rem; color: var(--muted); }
+  .ref-list li::before { content: '[' counter(ref) ']'; position: absolute; left: 0; font-weight: 700; color: var(--accent2); }
+
+  /* FOOTER */
+  footer { background: var(--primary); color: rgba(255,255,255,0.7); text-align: center; padding: 2rem; font-size: 0.85rem; }
+  footer strong { color: white; }
+
+  /* HIGHLIGHT BOX */
+  .highlight-box { background: linear-gradient(135deg, #1a3a5c, #2ec4b6); color: white; border-radius: 16px; padding: 2rem; margin: 1.5rem 0; }
+  .highlight-box h3 { font-size: 1.2rem; margin-bottom: 0.75rem; }
+  .highlight-box p { opacity: 0.9; font-size: 0.9rem; }
+
+  /* ALERT */
+  .alert { background: #fff7ed; border: 1px solid #fed7aa; border-radius: 10px; padding: 1rem 1.25rem; margin-bottom: 1rem; }
+  .alert-title { font-weight: 700; color: #c2410c; font-size: 0.9rem; }
+  .alert-text { font-size: 0.85rem; color: #9a3412; margin-top: 0.25rem; }
+  .alert.success { background: #f0fdf4; border-color: #bbf7d0; }
+  .alert.success .alert-title { color: #15803d; }
+  .alert.success .alert-text { color: #166534; }
+
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .hero-stats { gap: 1.5rem; }
+    .arch-flow { flex-direction: column; }
+    .arch-arrow { transform: rotate(90deg); }
+    .roadmap::before { left: 1.25rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">Malar<span>AI</span>-ID</div>
+    <div class="nav-links">
+      <a href="#konsep">Konsep</a>
+      <a href="#spesies">Spesies</a>
+      <a href="#arsitektur">Arsitektur AI</a>
+      <a href="#fitur">Fitur Aplikasi</a>
+      <a href="#roadmap">Roadmap</a>
+      <a href="#validasi">Validasi</a>
+      <a href="#referensi">Referensi</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">🧬 Tim Inovasi · Pelatihan Malaria 2026</div>
+  <h1>MalarAI-ID<br><span>Deteksi Malaria via Kamera & AI</span></h1>
+  <p class="hero-sub">Blueprint aplikasi smartphone berbasis deep learning untuk mendeteksi dan mengklasifikasi spesies <em>Plasmodium</em> dari foto sediaan darah — adaptasi khusus Indonesia termasuk <em>P. knowlesi</em></p>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="num">5</div><div class="label">Spesies Plasmodium</div></div>
+    <div class="hero-stat"><div class="num">>95%</div><div class="label">Target Sensitivitas</div></div>
+    <div class="hero-stat"><div class="num">&lt;60 dtk</div><div class="label">Waktu Analisis</div></div>
+    <div class="hero-stat"><div class="num">Offline</div><div class="label">Tanpa Internet</div></div>
+  </div>
+</div>
+
+<!-- SECTION 1: LATAR BELAKANG -->
+<section id="konsep">
+  <div class="section-tag">Problem Statement</div>
+  <h2 class="section-title">Mengapa Inovasi Ini Mendesak?</h2>
+  <p class="section-sub">Indonesia adalah endemis malaria dengan tantangan geografis ekstrem — ribuan pulau, daerah terpencil, dan kekurangan tenaga mikroskopik terlatih.</p>
+
+  <div class="grid-3">
+    <div class="card">
+      <div class="card-icon" style="background:#fee2e2;">🦟</div>
+      <h3>Beban Malaria Indonesia</h3>
+      <p>Sebaran malaria masih tinggi di Papua, NTT, Maluku, dan Kalimantan. Diagnosis tepat waktu menyelamatkan nyawa namun terkendala akses laboratorium.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon" style="background:#fef3c7;">🔬</div>
+      <h3>Kekurangan Tenaga Terlatih</h3>
+      <p>Pemeriksaan mikroskopik gold-standard membutuhkan analis terlatih yang langka di puskesmas terpencil. RDT memiliki keterbatasan sensitivitas dan tidak bisa membedakan spesies secara akurat.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon" style="background:#d1fae5;">📱</div>
+      <h3>Penetrasi Smartphone Tinggi</h3>
+      <p>Penetrasi smartphone di Indonesia >70% dan terus meningkat. Kamera modern (50+ MP) mampu menangkap detail morfologi parasit dengan adaptor makro sederhana.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon" style="background:#e0e7ff;">⚠️</div>
+      <h3>Risiko P. knowlesi</h3>
+      <p>P. knowlesi — zoonosis dari kera — endemis di Kalimantan dan secara morfologi mirip P. malariae. Kesalahan identifikasi berakibat fatal karena siklus hidup 24 jam dan potensi hiperparasitemia.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon" style="background:#fce7f3;">🌐</div>
+      <h3>Prototipe Global Sudah Ada</h3>
+      <p>CellScope Malaria, DeepMalaria, WHO-validated AI tools (Peek.ai, mScope) sudah terbukti, namun belum ada yang dioptimalkan untuk spesies lokal Indonesia dan standar Kemenkes RI.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon" style="background:#e0f2fe;">🎯</div>
+      <h3>Gap yang Harus Diisi</h3>
+      <p>Dibutuhkan model AI yang dilatih pada dataset sediaan darah tebal dan tipis dari pasien Indonesia, dengan output sesuai format pelaporan Kemenkes dan integrasi SISMAL.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SECTION 2: SPESIES TARGET -->
+<section id="spesies" class="section-alt">
+  <div class="section-tag">Target Klasifikasi</div>
+  <h2 class="section-title">5 Spesies Plasmodium di Indonesia</h2>
+  <p class="section-sub">Model AI harus mampu membedakan semua spesies berikut pada sediaan darah tebal (thick smear) dan tipis (thin smear), termasuk stadium parasit.</p>
+
+  <div class="species-grid">
+    <div class="species-card falciparum">
+      <div class="species-name">🔵 P. falciparum</div>
+      <div class="species-latin">Plasmodium falciparum</div>
+      <ul class="species-features">
+        <li>Ring form sangat kecil, halus</li>
+        <li>Multiple infection per eritrosit</li>
+        <li>Accolé (appliqué) form</li>
+        <li>Eritrosit tidak membesar</li>
+        <li>Gametosit berbentuk pisang (crescents)</li>
+      </ul>
+      <span class="species-badge badge-danger">⚠ Paling Mematikan</span>
+    </div>
+    <div class="species-card vivax">
+      <div class="species-name">🟢 P. vivax</div>
+      <div class="species-latin">Plasmodium vivax</div>
+      <ul class="species-features">
+        <li>Eritrosit membesar</li>
+        <li>Stippling Schüffner's dots</li>
+        <li>Trophozoit ameboid</li>
+        <li>Skizon bunga</li>
+        <li>Gametosit bulat besar</li>
+      </ul>
+      <span class="species-badge badge-warn">Relaps Mungkin</span>
+    </div>
+    <div class="species-card malariae">
+      <div class="species-name">🟠 P. malariae</div>
+      <div class="species-latin">Plasmodium malariae</div>
+      <ul class="species-features">
+        <li>Eritrosit normal/mengecil</li>
+        <li>Band form (pita melintang)</li>
+        <li>Skizon rosette (8 merozoit)</li>
+        <li>Ziemann's stippling</li>
+        <li>Siklus 72 jam</li>
+      </ul>
+      <span class="species-badge badge-ok">Jarang Berat</span>
+    </div>
+    <div class="species-card ovale">
+      <div class="species-name">🟣 P. ovale</div>
+      <div class="species-latin">Plasmodium ovale</div>
+      <ul class="species-features">
+        <li>Eritrosit membesar, lonjong/fimbriated</li>
+        <li>James's dots (coarser)</li>
+        <li>Skizon kompak (8 merozoit)</li>
+        <li>Jarang di Indonesia</li>
+        <li>Mirip P. vivax — sulit dibeda</li>
+      </ul>
+      <span class="species-badge badge-ok">Jarang di Indonesia</span>
+    </div>
+    <div class="species-card knowlesi">
+      <div class="species-name">🔴 P. knowlesi</div>
+      <div class="species-latin">Plasmodium knowlesi</div>
+      <ul class="species-features">
+        <li><strong>Mirip P. malariae secara morfologi!</strong></li>
+        <li>Siklus 24 jam (quotidian)</li>
+        <li>Zoonosis dari <em>Macaca</em> spp.</li>
+        <li>Endemis Kalimantan, Sulawesi</li>
+        <li>Konfirmasi butuh PCR/AI khusus</li>
+      </ul>
+      <span class="species-badge badge-danger">⚠ Kunci Indonesia</span>
+    </div>
+  </div>
+
+  <div class="alert" style="margin-top:1.5rem;">
+    <div class="alert-title">🔑 Tantangan Kritis: P. knowlesi vs P. malariae</div>
+    <div class="alert-text">Secara morfologi, P. knowlesi sangat mirip dengan P. malariae sehingga sering salah diagnosis dengan mikroskop konvensional. AI dengan fitur morfometri eritrosit terinfeksi, analisis tekstur band form, dan penghitungan kepadatan parasit per μL dapat membantu diferensiasi ini. Konfirmasi PCR tetap disarankan di daerah endemis Kalimantan.</div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SECTION 3: ARSITEKTUR AI -->
+<section id="arsitektur">
+  <div class="section-tag">Deep Learning Architecture</div>
+  <h2 class="section-title">Arsitektur Model AI</h2>
+  <p class="section-sub">Menggunakan Convolutional Neural Network (CNN) yang dioptimalkan untuk inferensi di perangkat mobile (on-device) tanpa ketergantungan koneksi internet.</p>
+
+  <div class="arch-box" style="margin-bottom:2rem;">
+    <h3 style="color:white;margin-bottom:0.5rem;">📐 Pipeline Inferensi End-to-End</h3>
+    <p style="opacity:0.7;font-size:0.85rem;margin-bottom:1.5rem;">Dari foto kamera hingga laporan hasil dalam &lt;60 detik</p>
+    <div class="arch-flow">
+      <div class="arch-step">
+        <div class="step-icon">📸</div>
+        <div class="step-label">Kamera</div>
+        <div class="step-sub">+Adaptor Makro</div>
+      </div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-step">
+        <div class="step-icon">⚙️</div>
+        <div class="step-label">Pre-processing</div>
+        <div class="step-sub">Normalisasi, CLAHE</div>
+      </div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-step">
+        <div class="step-icon">🎯</div>
+        <div class="step-label">Deteksi Sel</div>
+        <div class="step-sub">YOLOv8 / DETR</div>
+      </div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-step">
+        <div class="step-icon">🧠</div>
+        <div class="step-label">Klasifikasi</div>
+        <div class="step-sub">EfficientNet-B3</div>
+      </div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-step">
+        <div class="step-icon">📊</div>
+        <div class="step-label">Hitung Parasitemia</div>
+        <div class="step-sub">Density/μL</div>
+      </div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-step">
+        <div class="step-icon">📋</div>
+        <div class="step-label">Laporan</div>
+        <div class="step-sub">Spesies + Stadium</div>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="font-weight:800;color:var(--primary);margin-bottom:1rem;">Perbandingan Model CNN untuk Deployment Mobile</h3>
+  <div style="overflow-x:auto;border-radius:12px;box-shadow:var(--shadow);margin-bottom:2rem;">
+    <table class="model-table">
+      <thead>
+        <tr>
+          <th>Model</th>
+          <th>Akurasi Malaria</th>
+          <th>Ukuran Model</th>
+          <th>Kecepatan (mobile)</th>
+          <th>Kelebihan</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>EfficientNet-B3</strong></td>
+          <td>96-98%</td>
+          <td>~12 MB</td>
+          <td>~150ms/gambar</td>
+          <td>Terbaik akurasi/ukuran</td>
+          <td><span class="rec-badge">✅ Rekomendasi</span></td>
+        </tr>
+        <tr>
+          <td>MobileNetV3-Large</td>
+          <td>92-95%</td>
+          <td>~5 MB</td>
+          <td>~80ms/gambar</td>
+          <td>Tercepat, terkecil</td>
+          <td>Opsi low-end device</td>
+        </tr>
+        <tr>
+          <td>ResNet-50</td>
+          <td>94-96%</td>
+          <td>~25 MB</td>
+          <td>~280ms/gambar</td>
+          <td>Stabil, banyak referensi</td>
+          <td>Terlalu besar</td>
+        </tr>
+        <tr>
+          <td>YOLOv8-nano</td>
+          <td>—</td>
+          <td>~6 MB</td>
+          <td>~50ms/gambar</td>
+          <td>Deteksi sel real-time</td>
+          <td>Untuk deteksi bounding box</td>
+        </tr>
+        <tr>
+          <td>Vision Transformer (ViT-Tiny)</td>
+          <td>95-97%</td>
+          <td>~23 MB</td>
+          <td>~400ms/gambar</td>
+          <td>Baik utk P. knowlesi</td>
+          <td>Fase 2 (pengembangan)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <h3 style="font-weight:800;color:var(--primary);margin-bottom:1rem;">🔬 Pipeline Training Model</h3>
+      <div class="pipeline">
+        <div class="pipe-step">
+          <div class="pipe-num">1</div>
+          <div class="pipe-content">
+            <h4>Pengumpulan Dataset</h4>
+            <p>Kurasi dataset publik + akuisisi sediaan darah dari RS/Puskesmas mitra di Papua, Kalimantan, NTT</p>
+            <span class="pipe-tech">NIH Malaria Dataset · MP-IDB · Lokal Indonesia</span>
+          </div>
+        </div>
+        <div class="pipe-step">
+          <div class="pipe-num">2</div>
+          <div class="pipe-content">
+            <h4>Anotasi & Labeling</h4>
+            <p>Anotasi oleh minimal 2 dokter spesialis + 1 analis senior. Konsensus 3 ahli untuk kasus sulit.</p>
+            <span class="pipe-tech">Label Studio · CVAT · Inter-rater Agreement ≥0.85</span>
+          </div>
+        </div>
+        <div class="pipe-step">
+          <div class="pipe-num">3</div>
+          <div class="pipe-content">
+            <h4>Pre-processing & Augmentasi</h4>
+            <p>Normalisasi warna (stain normalization Macenko), augmentasi rotasi, flip, brightness, gaussian noise</p>
+            <span class="pipe-tech">OpenCV · Albumentations · Macenko Normalization</span>
+          </div>
+        </div>
+        <div class="pipe-step">
+          <div class="pipe-num">4</div>
+          <div class="pipe-content">
+            <h4>Training & Fine-tuning</h4>
+            <p>Transfer learning dari ImageNet, fine-tune pada dataset malaria. 5-fold cross-validation.</p>
+            <span class="pipe-tech">PyTorch · TensorFlow · Google Colab / AWS</span>
+          </div>
+        </div>
+        <div class="pipe-step">
+          <div class="pipe-num">5</div>
+          <div class="pipe-content">
+            <h4>Optimasi Mobile</h4>
+            <p>Quantization (INT8), pruning, konversi ke TensorFlow Lite / Core ML untuk iOS dan Android</p>
+            <span class="pipe-tech">TFLite · Core ML · ONNX Runtime</span>
+          </div>
+        </div>
+        <div class="pipe-step">
+          <div class="pipe-num">6</div>
+          <div class="pipe-content">
+            <h4>Evaluasi & Validasi Klinis</h4>
+            <p>Uji sensitivitas/spesifisitas vs gold standard (expert mikroskopist + PCR konfirmasi)</p>
+            <span class="pipe-tech">ROC-AUC · Confusion Matrix · WHO Criteria</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h3 style="font-weight:800;color:var(--primary);margin-bottom:1rem;">📦 Sumber Dataset Pelatihan</h3>
+      <div class="dataset-card">
+        <div class="dataset-title">NIH Malaria Cell Images Dataset</div>
+        <div class="dataset-meta">
+          <span class="dataset-tag">27,558 gambar sel</span>
+          <span class="dataset-tag">P. falciparum</span>
+          <span class="dataset-tag">Open Access</span>
+        </div>
+        <div class="dataset-desc">Dataset standar dari National Institutes of Health AS. Labeled oleh ahli. Digunakan luas untuk benchmark model CNN.</div>
+      </div>
+      <div class="dataset-card">
+        <div class="dataset-title">MP-IDB (Malaria Parasite Image Database)</div>
+        <div class="dataset-meta">
+          <span class="dataset-tag">1,320 gambar</span>
+          <span class="dataset-tag">4 spesies</span>
+          <span class="dataset-tag">University of Sassari</span>
+        </div>
+        <div class="dataset-desc">Mencakup 4 spesies utama dengan berbagai stadium parasit. Berguna untuk multi-class classification.</div>
+      </div>
+      <div class="dataset-card" style="border-color:#e63946;">
+        <div class="dataset-title">🇮🇩 Dataset Lokal Indonesia (PERLU DIBUAT)</div>
+        <div class="dataset-meta">
+          <span class="dataset-tag">Target: ≥10,000 gambar</span>
+          <span class="dataset-tag">5 spesies termasuk P. knowlesi</span>
+          <span class="dataset-tag">Multi-site</span>
+        </div>
+        <div class="dataset-desc"><strong>Kunci keberhasilan adaptasi Indonesia.</strong> Kolaborasi dengan RSUD Papua, RSAL Sorong, RSPI Sulianti Saroso, RS Sanglah Bali, dan Puskesmas mitra Kalimantan untuk akuisisi sediaan darah terwakili.</div>
+      </div>
+      <div class="dataset-card">
+        <div class="dataset-title">Kaggle Malaria Cell Images</div>
+        <div class="dataset-meta">
+          <span class="dataset-tag">Public</span>
+          <span class="dataset-tag">CNN Benchmark</span>
+        </div>
+        <div class="dataset-desc">Dataset augmentasi tambahan untuk meningkatkan variabilitas data pelatihan.</div>
+      </div>
+
+      <div class="highlight-box" style="margin-top:1rem;">
+        <h3>🎯 Target Performa Model</h3>
+        <div class="kpi-grid" style="grid-template-columns:1fr 1fr;gap:0.75rem;margin-top:0.75rem;">
+          <div style="background:rgba(255,255,255,0.15);border-radius:8px;padding:0.75rem;text-align:center;">
+            <div style="font-size:1.5rem;font-weight:900;color:#ffd166;">≥95%</div>
+            <div style="font-size:0.75rem;opacity:0.8;">Sensitivitas</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.15);border-radius:8px;padding:0.75rem;text-align:center;">
+            <div style="font-size:1.5rem;font-weight:900;color:#ffd166;">≥90%</div>
+            <div style="font-size:0.75rem;opacity:0.8;">Spesifisitas</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.15);border-radius:8px;padding:0.75rem;text-align:center;">
+            <div style="font-size:1.5rem;font-weight:900;color:#ffd166;">≥0.92</div>
+            <div style="font-size:0.75rem;opacity:0.8;">AUC-ROC</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.15);border-radius:8px;padding:0.75rem;text-align:center;">
+            <div style="font-size:1.5rem;font-weight:900;color:#ffd166;">±10%</div>
+            <div style="font-size:0.75rem;opacity:0.8;">Error Parasitemia</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SECTION 4: FITUR APLIKASI -->
+<section id="fitur" class="section-alt">
+  <div class="section-tag">Product Design</div>
+  <h2 class="section-title">Fitur Aplikasi MalarAI-ID</h2>
+  <p class="section-sub">Dirancang untuk tenaga kesehatan di puskesmas terpencil — antarmuka sederhana, dukungan offline penuh, dan output klinis yang actionable.</p>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3>📸 Modul Akuisisi Gambar</h3>
+      <div>
+        <div class="feature-item">
+          <div class="feature-icon-wrap">🔭</div>
+          <div class="feature-text">
+            <h4>Panduan Mikroskop Adaptor</h4>
+            <p>Instruksi langkah-demi-langkah pemasangan adaptor makro/okular smartphone ke mikroskop lapangan (misalnya: CellScope, adaptor 3D print open-source)</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon-wrap">🎯</div>
+          <div class="feature-text">
+            <h4>Auto-Focus & Stabilisasi</h4>
+            <p>Deteksi otomatis bidang fokus terbaik dengan umpan balik real-time (kualitas gambar score). Mencegah foto blur yang menyebabkan false result.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon-wrap">🌈</div>
+          <div class="feature-text">
+            <h4>Koreksi Warna Otomatis</h4>
+            <p>Normalisasi stain Giemsa/Wright secara algoritmik untuk mengatasi variasi pewarnaan antar laboratorium (Macenko normalization)</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon-wrap">📐</div>
+          <div class="feature-text">
+            <h4>Multi-Field Scanning</h4>
+            <p>Panduan scan minimal 200 lapang pandang (sesuai standar WHO) dengan tracker progres dan sampling otomatis</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🧠 Modul Analisis AI</h3>
+      <div>
+        <div class="feature-item">
+          <div class="feature-icon-wrap">🔍</div>
+          <div class="feature-text">
+            <h4>Deteksi & Klasifikasi Spesies</h4>
+            <p>Identifikasi otomatis 5 spesies Plasmodium beserta stadium (ring, trophozoit, skizon, gametosit) dengan confidence score per sel</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon-wrap">🩸</div>
+          <div class="feature-text">
+            <h4>Hitung Parasitemia</h4>
+            <p>Kalkulasi otomatis kepadatan parasit per μL darah dan persentase eritrosit terinfeksi — kritis untuk triase malaria berat</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon-wrap">⚡</div>
+          <div class="feature-text">
+            <h4>Explainable AI (XAI)</h4>
+            <p>Grad-CAM visualization: tampilkan area sel yang menjadi dasar keputusan AI, membangun kepercayaan tenaga kesehatan dan memfasilitasi pembelajaran</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon-wrap">🤔</div>
+          <div class="feature-text">
+            <h4>Uncertainty Quantification</h4>
+            <p>Tandai kasus dengan confidence rendah sebagai "Perlu Konfirmasi" — mengurangi false-negative pada kasus sulit seperti P. knowlesi</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>📋 Modul Pelaporan Klinis</h3>
+      <div>
+        <div class="feature-item">
+          <div class="feature-icon-wrap">📄</div>
+          <div class="feature-text">
+            <h4>Laporan Format Kemenkes RI</h4>
+            <p>Output sesuai formulir pelaporan malaria Kemenkes (Form Malaria 1 & 2), siap cetak/kirim digital</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon-wrap">🔗</div>
+          <div class="feature-text">
+            <h4>Integrasi SISMAL</h4>
+            <p>Kirim data langsung ke Sistem Informasi Surveilans Malaria (SISMAL) Kemenkes saat ada koneksi internet</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon-wrap">🚨</div>
+          <div class="feature-text">
+            <h4>Triase Otomatis & Alert</h4>
+            <p>Notifikasi "Malaria Berat" otomatis berdasarkan parasitemia >5% atau deteksi P. falciparum/P. knowlesi stadium lanjut</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon-wrap">💬</div>
+          <div class="feature-text">
+            <h4>Telemedicine Second Opinion</h4>
+            <p>Kirim foto + hasil AI ke dokter spesialis via encrypted chat untuk konfirmasi kasus sulit (integrasi dengan platform Telemedicine Kemenkes)</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🌐 Fitur Offline & Remote-First</h3>
+      <div>
+        <div class="feature-item">
+          <div class="feature-icon-wrap">📵</div>
+          <div class="feature-text">
+            <h4>Full Offline Mode</h4>
+            <p>Model AI berjalan 100% di perangkat. Tidak butuh koneksi internet untuk analisis. Data tersimpan lokal dan disinkronkan saat online.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon-wrap">🗃️</div>
+          <div class="feature-text">
+            <h4>Manajemen Kasus</h4>
+            <p>Database pasien lokal dengan histori pemeriksaan, monitoring follow-up, dan alert parasitemia yang belum sembuh</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon-wrap">🌏</div>
+          <div class="feature-text">
+            <h4>Multi-bahasa Lokal</h4>
+            <p>Interface dalam Bahasa Indonesia + dukungan bahasa daerah utama (Papua, NTT, Kalimantan) untuk nakes non-Bahasa Indonesia</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon-wrap">🔋</div>
+          <div class="feature-text">
+            <h4>Low-Power Mode</h4>
+            <p>Optimasi konsumsi baterai untuk operasi di daerah dengan akses listrik terbatas. Inferensi hemat daya dengan MobileNet mode.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hardware Adaptasi -->
+  <div style="margin-top:2rem;">
+    <h3 style="font-weight:800;color:var(--primary);margin-bottom:1rem;">🔧 Komponen Hardware yang Direkomendasikan</h3>
+    <div class="grid-3">
+      <div class="card" style="border-top:3px solid var(--accent2);">
+        <div class="card-icon" style="background:#e0f2fe;">🔭</div>
+        <h3>Adaptor Mikroskop</h3>
+        <p><strong>Opsi 1:</strong> CellScope Adaptor ($20-50, cetak 3D open-source)<br><strong>Opsi 2:</strong> Universal Smartphone Microscope Adaptor (pasar lokal)<br><strong>Opsi 3:</strong> Adaptor khusus per model mikroskop Puskesmas (Olympus CX23)</p>
+      </div>
+      <div class="card" style="border-top:3px solid var(--accent3);">
+        <div class="card-icon" style="background:#fef3c7;">📱</div>
+        <h3>Spesifikasi Smartphone Minimum</h3>
+        <p>RAM: 4 GB | Kamera: ≥12 MP | OS: Android 10+ / iOS 14+ | Storage: 2 GB kosong | Prosesor: Snapdragon 665 atau setara</p>
+      </div>
+      <div class="card" style="border-top:3px solid var(--accent);">
+        <div class="card-icon" style="background:#fee2e2;">💡</div>
+        <h3>Pencahayaan Standar</h3>
+        <p>Panduan penggunaan lampu LED Köhler terintegrasi mikroskop. Untuk lapangan: adaptor LED ring light portabel agar pencahayaan konsisten dan mengurangi variasi gambar.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SECTION 5: ROADMAP -->
+<section id="roadmap">
+  <div class="section-tag">Implementation Plan</div>
+  <h2 class="section-title">Roadmap Implementasi 36 Bulan</h2>
+  <p class="section-sub">Rencana bertahap dari pengembangan hingga deployment nasional, sesuai regulasi Kemenkes dan standar WHO.</p>
+
+  <div class="roadmap">
+    <div class="rm-item">
+      <div class="rm-dot active">1</div>
+      <div class="rm-content">
+        <div class="rm-phase">Fase 1 · Bulan 1–6</div>
+        <div class="rm-title">Fondasi: Dataset & Prototipe</div>
+        <div class="rm-duration">⏱ 6 bulan · Tim: AI Engineer, Spesialis Penyakit Dalam, Analis Lab</div>
+        <div class="rm-tasks">
+          <span class="rm-task">Kurasi & lisensi dataset publik</span>
+          <span class="rm-task">MoU dengan 5 RS/Puskesmas mitra</span>
+          <span class="rm-task">Protokol akuisisi sediaan darah</span>
+          <span class="rm-task">Training model baseline EfficientNet</span>
+          <span class="rm-task">Prototipe UI Android</span>
+          <span class="rm-task">Uji internal akurasi awal</span>
+        </div>
+      </div>
+    </div>
+    <div class="rm-item">
+      <div class="rm-dot">2</div>
+      <div class="rm-content">
+        <div class="rm-phase">Fase 2 · Bulan 7–12</div>
+        <div class="rm-title">Dataset Lokal & Refinement Model</div>
+        <div class="rm-duration">⏱ 6 bulan · Tim: + Data Annotators, Ahli P. knowlesi</div>
+        <div class="rm-tasks">
+          <span class="rm-task">Akuisisi 10.000+ sediaan Indonesia</span>
+          <span class="rm-task">Anotasi multi-expert + QC</span>
+          <span class="rm-task">Fine-tuning model untuk P. knowlesi</span>
+          <span class="rm-task">Implementasi Explainable AI (Grad-CAM)</span>
+          <span class="rm-task">Uji alpha internal 3 puskesmas</span>
+          <span class="rm-task">Pengajuan izin penelitian KEPPKN</span>
+        </div>
+      </div>
+    </div>
+    <div class="rm-item">
+      <div class="rm-dot">3</div>
+      <div class="rm-content">
+        <div class="rm-phase">Fase 3 · Bulan 13–24</div>
+        <div class="rm-title">Uji Klinis & Validasi</div>
+        <div class="rm-duration">⏱ 12 bulan · Tim: + Clinical Research Team, Biostatistician</div>
+        <div class="rm-tasks">
+          <span class="rm-task">Uji klinis multicenter (Papua, NTT, Kalimantan)</span>
+          <span class="rm-task">Validasi vs expert microscopist + PCR</span>
+          <span class="rm-task">Hitung sensitivitas/spesifisitas per spesies</span>
+          <span class="rm-task">Finalisasi integrasi SISMAL</span>
+          <span class="rm-task">User acceptance testing (nakes puskesmas)</span>
+          <span class="rm-task">Publikasi hasil di jurnal internasional</span>
+        </div>
+      </div>
+    </div>
+    <div class="rm-item">
+      <div class="rm-dot">4</div>
+      <div class="rm-content">
+        <div class="rm-phase">Fase 4 · Bulan 25–30</div>
+        <div class="rm-title">Registrasi & Izin Kemenkes</div>
+        <div class="rm-duration">⏱ 6 bulan · Tim: + Regulatory Affairs, Legal</div>
+        <div class="rm-tasks">
+          <span class="rm-task">Pengajuan izin edar alat kesehatan (PKRT)</span>
+          <span class="rm-task">Registrasi BPFK (sekarang: BPOM alat kesehatan)</span>
+          <span class="rm-task">Pemenuhan standar IEC 62304 (software medis)</span>
+          <span class="rm-task">ISO 13485 (quality management)</span>
+          <span class="rm-task">Penetapan pedoman penggunaan Kemenkes</span>
+        </div>
+      </div>
+    </div>
+    <div class="rm-item">
+      <div class="rm-dot">5</div>
+      <div class="rm-content">
+        <div class="rm-phase">Fase 5 · Bulan 31–36</div>
+        <div class="rm-title">Deployment Nasional & Scale-up</div>
+        <div class="rm-duration">⏱ 6 bulan · Tim: + Trainer, Distributor, IT Ops</div>
+        <div class="rm-tasks">
+          <span class="rm-task">Distribusi ke 500 puskesmas endemis prioritas</span>
+          <span class="rm-task">Pelatihan nakes (TOT model)</span>
+          <span class="rm-task">Sistem monitoring kualitas prediksi real-time</span>
+          <span class="rm-task">Federated learning untuk update model</span>
+          <span class="rm-task">Integrasi dashboard surveilans malaria nasional</span>
+          <span class="rm-task">Evaluasi dampak & publikasi outcome</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SECTION 6: VALIDASI -->
+<section id="validasi" class="section-alt">
+  <div class="section-tag">Quality & Regulation</div>
+  <h2 class="section-title">Validasi Klinis & Regulasi</h2>
+  <p class="section-sub">Kepatuhan terhadap standar WHO, Kemenkes RI, dan regulasi alat kesehatan berbasis AI internasional adalah syarat mutlak sebelum deployment.</p>
+
+  <div class="validation-grid">
+    <div class="val-card">
+      <div class="val-icon">🌍</div>
+      <div class="val-title">Standar WHO</div>
+      <ul class="val-list">
+        <li>WHO Malaria Microscopy Quality Assurance Manual v2</li>
+        <li>Sensitivitas ≥95% untuk parasitemia ≥200/μL</li>
+        <li>Spesifisitas ≥90% untuk negative smear</li>
+        <li>Blind external validation oleh WHO collaborating center</li>
+        <li>Uji pada slide panel WHO standard</li>
+      </ul>
+    </div>
+    <div class="val-card">
+      <div class="val-icon">🇮🇩</div>
+      <div class="val-title">Regulasi Kemenkes RI</div>
+      <ul class="val-list">
+        <li>Permenkes No. 62/2016 tentang Penyelenggaraan Malaria</li>
+        <li>Perizinan Alat Kesehatan (UU No. 36/2009)</li>
+        <li>Registrasi SAS BPOM untuk alat diagnostik in vitro</li>
+        <li>Persetujuan etik KEPPKN (Komite Etik Penelitian)</li>
+        <li>Standar SIKNAS (Sistem Informasi Kesehatan Nasional)</li>
+      </ul>
+    </div>
+    <div class="val-card">
+      <div class="val-icon">🏥</div>
+      <div class="val-title">Uji Klinis Multicenter</div>
+      <ul class="val-list">
+        <li>Site 1: RSUP Dr. Wahidin (Makassar) — faskes rujukan</li>
+        <li>Site 2: RSUD Jayapura (Papua) — endemis tinggi</li>
+        <li>Site 3: Puskesmas Kalimantan Utara — P. knowlesi</li>
+        <li>Site 4: RSUD Prof. Dr. W.Z. Johannes (Kupang, NTT)</li>
+        <li>Kontrol: 3 analis malaria WHO level 1</li>
+      </ul>
+    </div>
+    <div class="val-card">
+      <div class="val-icon">🤖</div>
+      <div class="val-title">Standar AI Medis</div>
+      <ul class="val-list">
+        <li>IEC 62304: Software lifecycle medical devices</li>
+        <li>ISO 13485: Quality management medical devices</li>
+        <li>FDA 21 CFR Part 820 (referensi internasional)</li>
+        <li>EU MDR 2017/745 Annex I (bila ekspor)</li>
+        <li>Bias monitoring: fairness across gender, etnis, usia</li>
+      </ul>
+    </div>
+    <div class="val-card">
+      <div class="val-icon">🔒</div>
+      <div class="val-title">Keamanan & Privasi Data</div>
+      <ul class="val-list">
+        <li>Enkripsi end-to-end data pasien (AES-256)</li>
+        <li>Compliance UU PDP Indonesia (No. 27/2022)</li>
+        <li>Anonimisasi data sebelum upload cloud</li>
+        <li>Federated learning: model update tanpa sharing raw data</li>
+        <li>Audit trail untuk semua akses data</li>
+      </ul>
+    </div>
+    <div class="val-card">
+      <div class="val-icon">📊</div>
+      <div class="val-title">Continuous Quality Monitoring</div>
+      <ul class="val-list">
+        <li>Dashboard kualitas prediksi real-time per faskes</li>
+        <li>Alert otomatis bila akurasi turun &lt;90%</li>
+        <li>Federated learning bulanan untuk update model</li>
+        <li>Sampling 5% kasus untuk audit manual oleh ahli</li>
+        <li>Laporan performa tahunan ke Kemenkes</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SECTION 7: EKOSISTEM & KOLABORASI -->
+<section>
+  <div class="section-tag">Ecosystem</div>
+  <h2 class="section-title">Ekosistem Kolaborasi yang Diperlukan</h2>
+  <p class="section-sub">Keberhasilan MalarAI-ID membutuhkan sinergi lintas sektor — pemerintah, akademisi, industri, dan komunitas.</p>
+
+  <div class="grid-3">
+    <div class="card" style="border-left:4px solid var(--primary);">
+      <div class="card-icon" style="background:#e0e7ff;">🏛️</div>
+      <h3>Kementerian Kesehatan RI</h3>
+      <p>Direktur Pencegahan & Pengendalian Penyakit Menular, Dit. Malaria. Dukungan kebijakan, akses SISMAL, dan distribusi ke puskesmas melalui program P2M.</p>
+    </div>
+    <div class="card" style="border-left:4px solid var(--accent2);">
+      <div class="card-icon" style="background:#d1fae5;">🎓</div>
+      <h3>Perguruan Tinggi</h3>
+      <p>UI, ITB, UGM, ITS untuk pengembangan algoritma. FKUI/FK Unair untuk uji klinis. Kolaborasi WHO Collaborating Centre for Malaria.</p>
+    </div>
+    <div class="card" style="border-left:4px solid var(--accent3);">
+      <div class="card-icon" style="background:#fef3c7;">🏭</div>
+      <h3>Industri Teknologi</h3>
+      <p>Google (TensorFlow Lite/Health AI), Microsoft (Azure AI for Health), startup AI kesehatan Indonesia (Alodokter, KALCare, SehatQ) untuk infrastruktur dan distribusi.</p>
+    </div>
+    <div class="card" style="border-left:4px solid var(--accent);">
+      <div class="card-icon" style="background:#fee2e2;">🤝</div>
+      <h3>Mitra Internasional</h3>
+      <p>WHO, PATH, Malaria Consortium, Bill & Melinda Gates Foundation untuk pendanaan, validasi, dan scaling ke negara endemis ASEAN lainnya.</p>
+    </div>
+    <div class="card" style="border-left:4px solid #8338ec;">
+      <div class="card-icon" style="background:#f3e8ff;">🏥</div>
+      <h3>Jaringan Faskes</h3>
+      <p>RSUD kabupaten endemis, Puskesmas Rawat Inap Papua/NTT/Kalimantan, Labkesda provinsi sebagai anchor sites untuk akuisisi data dan deployment awal.</p>
+    </div>
+    <div class="card" style="border-left:4px solid #f4a261;">
+      <div class="card-icon" style="background:#fef3c7;">💰</div>
+      <h3>Sumber Pendanaan</h3>
+      <p>BRIN (Riset Nasional), LPDP, WHO/Global Fund, hibah bilateral Indonesia-Australia (DFAT), Kedutaan Besar negara maju, impact investing health tech.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SECTION 8: DAMPAK YANG DIHARAPKAN -->
+<section class="section-alt">
+  <div class="section-tag">Expected Impact</div>
+  <h2 class="section-title">Dampak yang Diharapkan</h2>
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-val">500+</div>
+      <div class="kpi-label">Puskesmas terpencil yang terjangkau (Tahun 3)</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-val">30%</div>
+      <div class="kpi-label">Estimasi penurunan kematian malaria berat akibat deteksi dini</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-val">&lt;24 jam</div>
+      <div class="kpi-label">Waktu diagnosis di daerah tanpa mikroskopist terlatih</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-val">100%</div>
+      <div class="kpi-label">Pelaporan real-time ke SISMAL dari lokasi terpencil</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-val">P. knowlesi</div>
+      <div class="kpi-label">Pertama terdeteksi akurat tanpa PCR di Indonesia</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-val">ASEAN</div>
+      <div class="kpi-label">Potensi ekspansi ke negara tetangga (Filipina, Malaysia, PNG)</div>
+    </div>
+  </div>
+
+  <div class="alert success" style="margin-top:1.5rem;">
+    <div class="alert-title">✅ Keunggulan Kompetitif MalarAI-ID vs Solusi Global</div>
+    <div class="alert-text">Sementara CellScope dan solusi global lainnya tidak memiliki data training P. knowlesi yang cukup dan tidak terintegrasi dengan sistem pelaporan Indonesia (SISMAL), MalarAI-ID dirancang dari awal dengan konteks Indonesia: spesies lokal, standar Kemenkes, bahasa lokal, dan infrastruktur offline-first untuk daerah 3T.</div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SECTION 9: REFERENSI -->
+<section id="referensi">
+  <div class="section-tag">Evidence Base</div>
+  <h2 class="section-title">Referensi Ilmiah</h2>
+  <p class="section-sub">Seluruh arsitektur teknis dan klinis didasarkan pada bukti ilmiah peer-reviewed dan pedoman resmi internasional.</p>
+
+  <ol class="ref-list">
+    <li>WHO. <em>Malaria Microscopy Quality Assurance Manual – Version 2.</em> Geneva: World Health Organization; 2016. ISBN 978-92-4-154965-9.</li>
+    <li>Rajaraman S, et al. Pre-trained convolutional neural networks as feature extractors toward improved malaria parasite detection in thin blood smear images. <em>PeerJ.</em> 2018;6:e4568. doi:10.7717/peerj.4568</li>
+    <li>Liang Z, et al. CNN-based image analysis for malaria diagnosis. <em>2016 IEEE International Conference on Bioinformatics and Biomedicine (BIBM).</em> 2016;493-496.</li>
+    <li>Quinn JA, et al. Deep convolutional neural networks for microscopy-based point of care diagnostics. <em>PMLR.</em> 2016;56:271-281.</li>
+    <li>Poostchi M, et al. Image analysis and machine learning for detecting malaria. <em>Translational Research.</em> 2018;194:36-55.</li>
+    <li>Kemenkes RI. <em>Pedoman Tatalaksana Malaria di Indonesia.</em> Jakarta: Direktorat Jenderal P2P; 2022.</li>
+    <li>Cox-Singh J, et al. Plasmodium knowlesi malaria in humans is widely distributed and potentially life threatening. <em>Clinical Infectious Diseases.</em> 2008;46(2):165-171.</li>
+    <li>Daneshvar C, et al. Clinical and laboratory features of human Plasmodium knowlesi infection. <em>Clinical Infectious Diseases.</em> 2009;49(6):852-860.</li>
+    <li>Horning MP, et al. Performance of a fully-automated system on a WHO malaria microscopy evaluation slide set. <em>Malaria Journal.</em> 2021;20(1):110.</li>
+    <li>Kassim YM, et al. Clustering-based dual deep learning architecture for detecting red blood cells in malaria diagnostic smears. <em>IEEE Journal of Biomedical and Health Informatics.</em> 2021;25(5):1735-1746.</li>
+    <li>Shorten C, Khoshgoftaar TM. A survey on Image Data Augmentation for Deep Learning. <em>Journal of Big Data.</em> 2019;6:60.</li>
+    <li>Selvaraju RR, et al. Grad-CAM: Visual Explanations from Deep Networks via Gradient-based Localization. <em>ICCV 2017.</em> doi:10.1109/ICCV.2017.74</li>
+    <li>PATH/WHO. <em>Malaria Rapid Diagnostic Test Performance — Results of WHO product testing of malaria RDTs: Round 8 (2016–2018).</em> Geneva: WHO; 2018.</li>
+    <li>Kemenkes RI. <em>Profil Kesehatan Indonesia 2023.</em> Jakarta: Kementerian Kesehatan RI; 2024.</li>
+    <li>Global Fund. <em>Malaria Key Facts: Indonesia Country Profile 2024.</em> Geneva: The Global Fund; 2024.</li>
+    <li>Abdurahman S, et al. Automatic detection and species identification of malaria parasites using deep learning. <em>International Journal of Advanced Computer Science and Applications.</em> 2021;12(3).</li>
+    <li>Islam MZ, et al. Brain tumor detection in MR image using superpixels, principal component analysis and template based K-means clustering algorithm. <em>Machine Learning with Applications.</em> 2021;5:100044. [methodology reference for cell segmentation]</li>
+    <li>Tan M, Le QV. EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks. <em>ICML 2019.</em> arXiv:1905.11946</li>
+  </ol>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <strong>MalarAI-ID</strong> · Blueprint Inovasi Teknologi Deteksi Malaria Berbasis AI<br>
+  Disusun oleh <strong>Tim Si Paling Inovasi</strong> · Pelatihan Malaria 2026<br>
+  <span style="font-size:0.75rem;opacity:0.6;margin-top:0.5rem;display:block;">Dokumen ini bersifat blueprint teknis-klinis untuk perencanaan. Implementasi memerlukan persetujuan etik, validasi klinis, dan regulasi Kemenkes RI yang berlaku.</span>
+</footer>
+
+</body>
+</html>
