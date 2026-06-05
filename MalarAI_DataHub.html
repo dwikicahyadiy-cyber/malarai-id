@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MalarAI-ID · Pusat Data WHO & Analitik AI</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{--bg:#0b1120;--s1:#111827;--s2:#1e293b;--s3:#334155;--tl:#0d9488;--tl2:#2dd4bf;--tld:rgba(13,148,136,.15);--re:#ef4444;--am:#f59e0b;--gr:#22c55e;--bl:#3b82f6;--pu:#a855f7;--tx:#f1f5f9;--tx2:#94a3b8;--tx3:#475569;--bdr:#1e2d3d;--bdr2:#2d3f55;--rad:12px;--shd:0 4px 20px rgba(0,0,0,.4)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--tx);line-height:1.5;min-height:100vh}
+a{color:var(--tl2)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 18px 60px}
+/* Header */
+.hdr{position:sticky;top:0;z-index:50;background:rgba(11,17,32,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--bdr);padding:14px 18px;margin-bottom:18px}
+.hdr-in{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.logo{font-size:1.25rem;font-weight:800;letter-spacing:-.5px}
+.logo span{color:var(--tl2)}
+.logo-sub{font-size:.7rem;color:var(--tx2);font-weight:500}
+.conn{margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;font-weight:600;padding:5px 11px;border-radius:99px;border:1px solid var(--bdr2);background:var(--s1)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--tx3)}
+.dot.on{background:var(--gr);box-shadow:0 0 8px var(--gr)}
+.dot.off{background:var(--am)}
+/* Tabs */
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:20px;border-bottom:1px solid var(--bdr)}
+.tab{flex:0 0 auto;padding:10px 16px;font-size:.85rem;font-weight:600;color:var(--tx2);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;transition:.15s}
+.tab:hover{color:var(--tx)}
+.tab.on{color:var(--tl2);border-bottom-color:var(--tl2)}
+.view{display:none;animation:fade .3s}
+.view.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+/* Cards & grid */
+.grid{display:grid;gap:14px}
+.g4{grid-template-columns:repeat(4,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g2{grid-template-columns:repeat(2,1fr)}
+@media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr)}.g3,.g2{grid-template-columns:1fr}}
+.card{background:var(--s1);border:1px solid var(--bdr);border-radius:var(--rad);padding:18px}
+.kpi{background:linear-gradient(135deg,var(--s1),var(--s2));border:1px solid var(--bdr);border-radius:var(--rad);padding:16px;position:relative;overflow:hidden}
+.kpi-lbl{font-size:.72rem;color:var(--tx2);font-weight:600;text-transform:uppercase;letter-spacing:.3px}
+.kpi-val{font-size:1.7rem;font-weight:800;margin:6px 0 2px;letter-spacing:-1px}
+.kpi-sub{font-size:.72rem;color:var(--tx3)}
+.kpi-ic{position:absolute;top:14px;right:14px;font-size:1.4rem;opacity:.5}
+.sec-title{font-size:1.05rem;font-weight:700;margin:26px 0 12px;display:flex;align-items:center;gap:8px}
+.sec-title:first-child{margin-top:4px}
+.muted{color:var(--tx2);font-size:.85rem}
+.small{font-size:.75rem;color:var(--tx3)}
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:7px;font-family:inherit;font-size:.83rem;font-weight:600;padding:9px 16px;border-radius:9px;border:1px solid var(--bdr2);background:var(--s2);color:var(--tx);cursor:pointer;transition:.15s}
+.btn:hover{border-color:var(--tl);background:var(--s3)}
+.btn-primary{background:var(--tl);border-color:var(--tl);color:#fff}
+.btn-primary:hover{background:var(--tl2);border-color:var(--tl2);color:#04211e}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:6px 0 4px}
+/* Table */
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+th,td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--bdr)}
+th{color:var(--tx2);font-weight:600;font-size:.72rem;text-transform:uppercase;letter-spacing:.3px;position:sticky;top:0;background:var(--s1)}
+tbody tr:hover{background:var(--tld)}
+.tbl-wrap{max-height:440px;overflow:auto;border:1px solid var(--bdr);border-radius:var(--rad)}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+/* Badges */
+.bdg{display:inline-block;font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:99px}
+.bdg.gr{background:rgba(34,197,94,.15);color:#4ade80}
+.bdg.am{background:rgba(245,158,11,.15);color:#fbbf24}
+.bdg.re{background:rgba(239,68,68,.15);color:#f87171}
+.bdg.bl{background:rgba(59,130,246,.15);color:#60a5fa}
+.bdg.tl{background:var(--tld);color:var(--tl2)}
+/* Inputs */
+input,select,textarea{font-family:inherit;font-size:.83rem;padding:8px 11px;border-radius:8px;border:1px solid var(--bdr2);background:var(--bg);color:var(--tx);width:100%}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--tl)}
+label{font-size:.74rem;color:var(--tx2);font-weight:600;display:block;margin-bottom:4px}
+.field{margin-bottom:12px}
+/* AI report */
+.ai-card{background:linear-gradient(135deg,rgba(13,148,136,.12),rgba(168,85,247,.08));border:1px solid var(--bdr2)}
+.finding{display:flex;gap:12px;padding:13px 0;border-bottom:1px solid var(--bdr)}
+.finding:last-child{border-bottom:none}
+.finding-ic{flex:0 0 36px;height:36px;border-radius:9px;display:grid;place-items:center;font-size:1.1rem;background:var(--s2)}
+.finding-bd{flex:1}
+.finding-t{font-weight:700;font-size:.9rem}
+.finding-d{font-size:.8rem;color:var(--tx2);margin-top:3px}
+.gauge{position:relative;width:150px;height:150px;margin:0 auto}
+.bar{height:8px;border-radius:99px;background:var(--s3);overflow:hidden;margin-top:5px}
+.bar>span{display:block;height:100%;border-radius:99px}
+.chartbox{position:relative;height:300px}
+.chartbox.sm{height:230px}
+.ref{font-size:.74rem;color:var(--tx2);padding:7px 0;border-bottom:1px solid var(--bdr)}
+.ref:last-child{border:none}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--s2);border:1px solid var(--tl);color:var(--tx);padding:12px 20px;border-radius:10px;font-size:.85rem;font-weight:600;box-shadow:var(--shd);z-index:200;opacity:0;transition:.3s;pointer-events:none}
+.toast.show{opacity:1;bottom:34px}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.note{font-size:.75rem;color:var(--tx2);background:var(--tld);border-left:3px solid var(--tl);padding:9px 12px;border-radius:0 8px 8px 0;margin:10px 0}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-in">
+    <div>
+      <div class="logo">Malar<span>AI</span>-ID · Pusat Data</div>
+      <div class="logo-sub">Database WHO + Analitik AI · Eliminasi Malaria 2030</div>
+    </div>
+    <div class="conn">
+      <span class="pill"><span class="dot" id="dot-net"></span><span id="net-lbl">Cek koneksi…</span></span>
+      <span class="pill"><span class="dot on"></span>localStorage tersambung</span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="tabs" id="tabs">
+    <button class="tab on" data-v="dash">📊 Ringkasan</button>
+    <button class="tab" data-v="who">🌍 Data WHO</button>
+    <button class="tab" data-v="local">🏥 Data Kasus Lokal</button>
+    <button class="tab" data-v="ai">🤖 Analitik AI</button>
+    <button class="tab" data-v="update">🔄 Update Database</button>
+    <button class="tab" data-v="ref">📚 Referensi</button>
+  </div>
+
+  <!-- ================= DASHBOARD ================= -->
+  <div class="view on" id="v-dash">
+    <div class="grid g4" id="kpis"></div>
+
+    <div class="sec-title">📈 Tren Estimasi Kasus Malaria Indonesia (WHO, 2000–2024)</div>
+    <div class="card"><div class="chartbox"><canvas id="chTrend"></canvas></div></div>
+
+    <div class="grid g2" style="margin-top:16px">
+      <div class="card">
+        <div class="sec-title" style="margin-top:0">🌐 Beban Global (World Malaria Report 2024)</div>
+        <div class="chartbox sm"><canvas id="chGlobal"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="sec-title" style="margin-top:0">🇮🇩 Kemajuan Eliminasi Kab/Kota</div>
+        <div class="chartbox sm"><canvas id="chElim"></canvas></div>
+        <div class="note" id="elim-note"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= DATA WHO ================= -->
+  <div class="view" id="v-who">
+    <div class="card">
+      <div class="btn-row">
+        <span class="muted">Sumber: WHO Global Health Observatory (GHO) OData API.</span>
+        <button class="btn btn-primary" id="btn-who-refresh" onclick="refreshWHO()">🔄 Tarik Data Online</button>
+        <span class="small" id="who-status"></span>
+      </div>
+      <div class="field" style="max-width:340px;margin-top:10px">
+        <label>Indikator WHO (Indonesia)</label>
+        <select id="who-ind" onchange="renderWhoTable()">
+          <option value="MALARIA_EST_CASES">Estimasi jumlah kasus malaria</option>
+          <option value="MALARIA_EST_DEATHS">Estimasi jumlah kematian malaria</option>
+          <option value="MALARIA_CONF_CASES">Jumlah kasus terkonfirmasi</option>
+          <option value="SDGMALARIA">Insidensi malaria (per 1.000 penduduk berisiko)</option>
+        </select>
+      </div>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <div class="chartbox"><canvas id="chWho"></canvas></div>
+    </div>
+    <div class="sec-title">Tabel Data (Indonesia)</div>
+    <div class="tbl-wrap">
+      <table id="who-table"><thead><tr><th>Tahun</th><th class="num">Nilai</th><th class="num">Estimasi Bawah</th><th class="num">Estimasi Atas</th></tr></thead><tbody></tbody></table>
+    </div>
+  </div>
+
+  <!-- ================= DATA LOKAL ================= -->
+  <div class="view" id="v-local">
+    <div class="grid g4" id="local-kpis"></div>
+    <div class="grid g2" style="margin-top:16px">
+      <div class="card"><div class="sec-title" style="margin-top:0">🦠 Distribusi Spesies (AI)</div><div class="chartbox sm"><canvas id="chSpecies"></canvas></div></div>
+      <div class="card"><div class="sec-title" style="margin-top:0">🎯 Konkordansi AI vs Expert</div><div class="chartbox sm"><canvas id="chConcord"></canvas></div><div class="note" id="concord-note"></div></div>
+    </div>
+    <div class="sec-title">Daftar Kasus Terbaru</div>
+    <div class="tbl-wrap">
+      <table id="local-table"><thead><tr><th>Waktu</th><th>Pasien</th><th>Faskes</th><th>Dx AI</th><th class="num">Conf.</th><th class="num">Paras.</th><th>Status</th><th>Validasi Expert</th></tr></thead><tbody></tbody></table>
+    </div>
+  </div>
+
+  <!-- ================= ANALITIK AI ================= -->
+  <div class="view" id="v-ai">
+    <div class="card ai-card">
+      <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+        <div style="flex:1;min-width:200px">
+          <div class="sec-title" style="margin-top:0">🤖 Mesin Analitik AI</div>
+          <div class="muted">Menganalisis gabungan database WHO + data kasus lokal, lalu menghasilkan temuan epidemiologis, proyeksi eliminasi 2030, dan rekomendasi terprioritas berbasis pedoman.</div>
+        </div>
+        <button class="btn btn-primary" onclick="runAnalysis()">⚡ Jalankan Analisis</button>
+      </div>
+    </div>
+    <div id="ai-output" style="margin-top:16px"></div>
+  </div>
+
+  <!-- ================= UPDATE DB ================= -->
+  <div class="view" id="v-update">
+    <div class="grid g2">
+      <div class="card">
+        <div class="sec-title" style="margin-top:0">🌐 Tarik Data Online (WHO GHO)</div>
+        <div class="muted">Memerlukan internet. Mengambil seri waktu terbaru Indonesia untuk seluruh indikator malaria & menyimpannya ke perangkat (localStorage).</div>
+        <div class="btn-row" style="margin-top:12px">
+          <button class="btn btn-primary" id="btn-pull" onclick="pullAll()">⬇️ Tarik & Simpan Semua</button>
+        </div>
+        <div class="small" id="pull-log" style="margin-top:8px;white-space:pre-line"></div>
+      </div>
+      <div class="card">
+        <div class="sec-title" style="margin-top:0">✍️ Tambah / Edit Data Manual</div>
+        <div class="field"><label>Indikator</label>
+          <select id="m-ind">
+            <option value="MALARIA_EST_CASES">Estimasi kasus (Indonesia)</option>
+            <option value="MALARIA_EST_DEATHS">Estimasi kematian (Indonesia)</option>
+            <option value="MALARIA_CONF_CASES">Kasus terkonfirmasi (Indonesia)</option>
+            <option value="SDGMALARIA">Insidensi /1.000 berisiko</option>
+            <option value="NAT_REPORTED">Kasus dilaporkan nasional (Kemenkes)</option>
+            <option value="NAT_API">API nasional (/1.000)</option>
+          </select>
+        </div>
+        <div class="grid g2" style="gap:10px">
+          <div class="field"><label>Tahun</label><input id="m-year" type="number" placeholder="2025"></div>
+          <div class="field"><label>Nilai</label><input id="m-val" type="number" step="any" placeholder="contoh: 540000"></div>
+        </div>
+        <button class="btn btn-primary" onclick="addManual()">💾 Simpan Data Poin</button>
+      </div>
+    </div>
+    <div class="grid g2" style="margin-top:14px">
+      <div class="card">
+        <div class="sec-title" style="margin-top:0">📤 Impor / Ekspor Database</div>
+        <div class="btn-row">
+          <button class="btn" onclick="exportDB()">⬇️ Ekspor JSON</button>
+          <label class="btn" style="cursor:pointer">⬆️ Impor JSON<input type="file" accept=".json" style="display:none" onchange="importDB(event)"></label>
+          <button class="btn" onclick="resetDB()" style="border-color:var(--re);color:#f87171">↺ Reset ke Baseline</button>
+        </div>
+        <div class="small" style="margin-top:8px">Ekspor menghasilkan satu file berisi seluruh database WHO + datapoin manual Anda, untuk cadangan atau dibagikan ke perangkat lain.</div>
+      </div>
+      <div class="card">
+        <div class="sec-title" style="margin-top:0">ℹ️ Status Database</div>
+        <table><tbody id="db-meta"></tbody></table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= REFERENSI ================= -->
+  <div class="view" id="v-ref">
+    <div class="card">
+      <div class="sec-title" style="margin-top:0">📚 Sumber Referensi Resmi</div>
+      <div id="ref-list"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =================================================================
+   MalarAI-ID Data Hub — engine
+   Data terintegrasi: WHO GHO API + baseline tertanam + kasus lokal
+   ================================================================= */
+const GHO = 'https://ghoapi.azureedge.net/api/';
+const LS_DB = 'malarai_who_db';
+const LS_CASES = 'malarai_cases';
+
+/* ---- BASELINE (tertanam, agar berfungsi 100% offline) ----
+   Seri Indonesia diambil dari WHO GHO (data year 2000-2024). */
+const BASELINE = {
+  meta:{ source:'WHO Global Health Observatory + World Malaria Report 2024 + Kemenkes RI',
+         version:'baseline-2024', lastUpdated:'2025-12-19 (snapshot WHO GHO)', mode:'embedded' },
+  global:{ year:2023, cases:263000000, deaths:597000, afrShareCases:0.95, afrShareDeaths:0.95,
+           deathRate2023:13.7, deathRate2000:28.5, casesAverted:2.2e9, deathsAverted:12.7e6, certifiedFree:45 },
+  indonesia:{
+    papuaShare:0.90, target:'Eliminasi nasional 2030',
+    elimination:{ totalDistricts:514, eliminated:398, asOf:'Mei 2024', target2024:405,
+                  provincesEliminated:['Bali','DKI Jakarta','Banten','Jawa Barat','Jawa Timur'] }
+  },
+  series:{
+    MALARIA_EST_CASES:{ label:'Estimasi kasus', unit:'kasus', data:{
+      2000:1141729,2001:1157687,2002:1173489,2003:1189126,2004:1087185,2005:1187260,2006:1385963,
+      2007:1252609,2008:1268965,2009:1285145,2010:1991459,2011:1811566,2012:1797022,2013:1529542,
+      2014:1163077,2015:1039394,2016:1087349,2017:744237,2018:662497,2019:533736,2020:530261,
+      2021:430908,2022:555037,2023:510209,2024:631231 } },
+    MALARIA_EST_DEATHS:{ label:'Estimasi kematian', unit:'kematian', data:{} },
+    MALARIA_CONF_CASES:{ label:'Kasus terkonfirmasi', unit:'kasus', data:{} },
+    SDGMALARIA:{ label:'Insidensi /1.000 berisiko', unit:'/1.000', data:{} },
+    NAT_REPORTED:{ label:'Kasus dilaporkan nasional (Kemenkes)', unit:'kasus', data:{ 2024:533965 } },
+    NAT_API:{ label:'API nasional Kemenkes', unit:'/1.000', data:{ 2021:1.12, 2024:1.93 } }
+  }
+};
+const INDICATOR_GHO = ['MALARIA_EST_CASES','MALARIA_EST_DEATHS','MALARIA_CONF_CASES','SDGMALARIA'];
+
+const REFS = [
+  ['World Malaria Report 2024 — WHO','https://www.who.int/teams/global-malaria-programme/reports/world-malaria-report-2024'],
+  ['Malaria 2024 — Indonesia country profile (WHO)','https://www.who.int/publications/m/item/malaria-2024-idn-country-profile'],
+  ['WHO Global Health Observatory (GHO) OData API','https://www.who.int/data/gho/info/gho-odata-api'],
+  ['Fact sheet about malaria — WHO','https://www.who.int/news-room/fact-sheets/detail/malaria'],
+  ['Dashboard Kasus Malaria — Kemenkes RI','https://malaria.kemkes.go.id/case'],
+  ['Factsheet Situasi Malaria 2024 — Kemenkes RI','https://malaria.kemkes.go.id/sites/default/files/2025-05/Factsheet%202024.pdf'],
+  ['KMK HK.01.07/MENKES/1988/2024 — Peta Jalan Eliminasi Malaria 2025–2045','https://malaria.kemkes.go.id/sites/default/files/2025-03/20250219100417KMK%20No%20HK%2001%2007%20MENKES%201988%202024%20ttg%20Peta%20Jalan%20Eliminasi%20Malaria%20dan%20Pencegahan%20Penularan%20Kembali%20di%20Indonesia%20Th%202025%202045%20signed.pdf'],
+  ['Jumlah Kab/Kota Mencapai Eliminasi Malaria — BPS','https://www.bps.go.id/en/statistics-table/2/MTc2NCMy/jumlah-kabupaten-kota-yang-mencapai-eliminasi-malaria.html'],
+  ['WHO Guidelines for malaria (terkini)','https://www.who.int/publications/i/item/guidelines-for-malaria']
+];
+
+/* ---------- state ---------- */
+let DB = loadDB();
+let charts = {};
+
+function loadDB(){
+  try{ const s=localStorage.getItem(LS_DB); if(s) return JSON.parse(s); }catch(e){}
+  return JSON.parse(JSON.stringify(BASELINE));
+}
+function saveDB(){ DB.meta.savedAt=new Date().toISOString(); localStorage.setItem(LS_DB,JSON.stringify(DB)); }
+function getCases(){ try{ return JSON.parse(localStorage.getItem(LS_CASES)||'[]'); }catch(e){ return []; } }
+
+/* ---------- helpers ---------- */
+const fmt=n=>{ if(n==null||isNaN(n))return '—'; if(n>=1e9)return (n/1e9).toFixed(2)+' M'; if(n>=1e6)return (n/1e6).toFixed(2)+' jt'; if(n>=1e3)return Math.round(n).toLocaleString('id-ID'); return (Math.round(n*100)/100).toLocaleString('id-ID'); };
+const fmtFull=n=>n==null||isNaN(n)?'—':Math.round(n).toLocaleString('id-ID');
+function toast(m){ const t=document.getElementById('toast'); t.textContent=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2600); }
+function seriesPts(key){ const d=DB.series[key]?.data||{}; return Object.keys(d).map(y=>({year:+y,value:d[y]})).filter(p=>p.value!=null).sort((a,b)=>a.year-b.year); }
+function lastVal(key){ const p=seriesPts(key); return p.length?p[p.length-1]:null; }
+/* linear regression -> {slope, intercept, predict(x)} */
+function linreg(pts){ const n=pts.length; if(n<2)return null; let sx=0,sy=0,sxy=0,sxx=0; pts.forEach(p=>{sx+=p.year;sy+=p.value;sxy+=p.year*p.value;sxx+=p.year*p.year;}); const slope=(n*sxy-sx*sy)/(n*sxx-sx*sx); const intc=(sy-slope*sx)/n; return {slope,intc,predict:x=>slope*x+intc}; }
+
+/* ---------- tabs ---------- */
+document.getElementById('tabs').addEventListener('click',e=>{
+  const b=e.target.closest('.tab'); if(!b)return;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
+  b.classList.add('on'); document.getElementById('v-'+b.dataset.v).classList.add('on');
+  if(b.dataset.v==='who') renderWhoTable();
+  if(b.dataset.v==='local') renderLocal();
+});
+
+/* ---------- connectivity ---------- */
+async function checkNet(){
+  const dot=document.getElementById('dot-net'), lbl=document.getElementById('net-lbl');
+  if(!navigator.onLine){ dot.className='dot off'; lbl.textContent='Offline — data tertanam'; return false; }
+  try{ const c=new AbortController(); setTimeout(()=>c.abort(),4000);
+    await fetch(GHO+'Dimension',{signal:c.signal,cache:'no-store'});
+    dot.className='dot on'; lbl.textContent='Online — WHO GHO terjangkau'; return true;
+  }catch(e){ dot.className='dot off'; lbl.textContent='Offline — data tertanam'; return false; }
+}
+window.addEventListener('online',checkNet); window.addEventListener('offline',checkNet);
+
+/* ---------- WHO fetch ---------- */
+async function fetchGHO(indicator,spatial='IDN'){
+  const url=GHO+indicator+"?$filter=SpatialDim eq '"+spatial+"'";
+  const r=await fetch(url,{cache:'no-store'}); if(!r.ok)throw new Error('HTTP '+r.status);
+  const j=await r.json();
+  return (j.value||[]).filter(d=>d.TimeDim).map(d=>({year:+d.TimeDim,value:d.NumericValue,low:d.Low,high:d.High}));
+}
+function mergeSeries(key,rows){
+  if(!DB.series[key])DB.series[key]={label:key,unit:'',data:{}};
+  rows.forEach(r=>{ if(r.value!=null) DB.series[key].data[r.year]=r.value; });
+  if(!DB.series[key].ci)DB.series[key].ci={};
+  rows.forEach(r=>{ if(r.low!=null)DB.series[key].ci[r.year]={low:r.low,high:r.high}; });
+}
+
+async function refreshWHO(){
+  const btn=document.getElementById('btn-who-refresh'), st=document.getElementById('who-status');
+  const ind=document.getElementById('who-ind').value;
+  btn.disabled=true; btn.innerHTML='<span class="spin"></span> Menarik…'; st.textContent='';
+  try{ const rows=await fetchGHO(ind); mergeSeries(ind,rows); DB.meta.mode='live'; DB.meta.lastUpdated=new Date().toLocaleString('id-ID'); saveDB();
+    st.textContent='✅ '+rows.length+' tahun diperbarui'; toast('Data WHO diperbarui'); renderWhoTable(); renderDash();
+  }catch(e){ st.textContent='⚠️ Gagal: '+e.message+' (pakai data tertanam)'; }
+  btn.disabled=false; btn.innerHTML='🔄 Tarik Data Online';
+}
+
+async function pullAll(){
+  const btn=document.getElementById('btn-pull'), log=document.getElementById('pull-log');
+  btn.disabled=true; btn.innerHTML='<span class="spin"></span> Menarik…'; log.textContent='';
+  let ok=0; const lines=[];
+  for(const ind of INDICATOR_GHO){
+    try{ const rows=await fetchGHO(ind); mergeSeries(ind,rows); ok++; lines.push('✅ '+ind+' — '+rows.length+' tahun'); }
+    catch(e){ lines.push('⚠️ '+ind+' — gagal ('+e.message+')'); }
+    log.textContent=lines.join('\n');
+  }
+  if(ok){ DB.meta.mode='live'; DB.meta.lastUpdated=new Date().toLocaleString('id-ID'); saveDB(); renderAll(); toast(ok+' indikator diperbarui'); }
+  btn.disabled=false; btn.innerHTML='⬇️ Tarik & Simpan Semua';
+  renderDbMeta();
+}
+
+/* ---------- DASHBOARD ---------- */
+function renderDash(){
+  const g=DB.global, est=lastVal('MALARIA_EST_CASES'), inc=lastVal('SDGMALARIA');
+  const el=DB.indonesia.elimination;
+  const kpis=[
+    {l:'Estimasi Kasus Indonesia',v:fmt(est?.value),s:'WHO GHO · '+(est?.year||'—'),ic:'🇮🇩'},
+    {l:'Kasus Global',v:fmt(g.cases),s:'WHO WMR · '+g.year,ic:'🌍'},
+    {l:'Kematian Global',v:fmt(g.deaths),s:'WHO WMR · '+g.year,ic:'⚠️'},
+    {l:'Kab/Kota Eliminasi',v:el.eliminated+'/'+el.totalDistricts,s:'Kemenkes · '+el.asOf,ic:'✅'}
+  ];
+  document.getElementById('kpis').innerHTML=kpis.map(k=>`<div class="kpi"><div class="kpi-ic">${k.ic}</div><div class="kpi-lbl">${k.l}</div><div class="kpi-val">${k.v}</div><div class="kpi-sub">${k.s}</div></div>`).join('');
+
+  // trend chart
+  const pts=seriesPts('MALARIA_EST_CASES');
+  mkChart('chTrend','line',{
+    labels:pts.map(p=>p.year),
+    datasets:[{label:'Estimasi kasus (WHO)',data:pts.map(p=>p.value),borderColor:'#2dd4bf',backgroundColor:'rgba(45,212,191,.12)',fill:true,tension:.3,pointRadius:2}]
+  });
+  // global doughnut
+  mkChart('chGlobal','doughnut',{
+    labels:['Region Afrika (95%)','Region lain (5%)'],
+    datasets:[{data:[g.afrShareCases*100,(1-g.afrShareCases)*100],backgroundColor:['#ef4444','#334155'],borderWidth:0}]
+  },{plugins:{legend:{position:'bottom',labels:{color:'#94a3b8',font:{size:11}}}},cutout:'62%'});
+  // elimination
+  mkChart('chElim','doughnut',{
+    labels:['Tereliminasi','Belum'],
+    datasets:[{data:[el.eliminated,el.totalDistricts-el.eliminated],backgroundColor:['#22c55e','#334155'],borderWidth:0}]
+  },{plugins:{legend:{position:'bottom',labels:{color:'#94a3b8',font:{size:11}}}},cutout:'62%'});
+  document.getElementById('elim-note').innerHTML=`${el.eliminated} dari ${el.totalDistricts} kab/kota berstatus bebas malaria (${Math.round(el.eliminated/el.totalDistricts*100)}%). Sisa <b>${el.totalDistricts-el.eliminated}</b> kab/kota menuju target nasional 2030. Provinsi tereliminasi: ${el.provincesEliminated.join(', ')}.`;
+}
+
+/* ---------- WHO TABLE/CHART ---------- */
+function renderWhoTable(){
+  const key=document.getElementById('who-ind').value;
+  const pts=seriesPts(key); const ci=DB.series[key]?.ci||{};
+  const tb=document.querySelector('#who-table tbody');
+  tb.innerHTML = pts.length ? pts.slice().reverse().map(p=>`<tr><td>${p.year}</td><td class="num">${fmtFull(p.value)}</td><td class="num">${ci[p.year]?fmtFull(ci[p.year].low):'—'}</td><td class="num">${ci[p.year]?fmtFull(ci[p.year].high):'—'}</td></tr>`).join('')
+    : `<tr><td colspan="4" class="muted" style="padding:18px">Belum ada data tertanam untuk indikator ini. Tekan “Tarik Data Online”.</td></tr>`;
+  mkChart('chWho','bar',{labels:pts.map(p=>p.year),datasets:[{label:DB.series[key]?.label||key,data:pts.map(p=>p.value),backgroundColor:'#0d9488'}]});
+}
+
+/* ---------- LOCAL CASES ---------- */
+function renderLocal(){
+  const cs=getCases();
+  const positive=cs.filter(c=>c.ai&&c.ai.species&&c.ai.species!=='Negatif');
+  const validated=cs.filter(c=>c.expertValidation);
+  const severe=positive.filter(c=>c.ai.isSevere);
+  const avgConf=positive.length?(positive.reduce((s,c)=>s+(c.ai.confidence||0),0)/positive.length):0;
+  const kpis=[
+    {l:'Total Pemeriksaan',v:cs.length,s:'dari aplikasi nakes',ic:'🔬'},
+    {l:'Positif Malaria',v:positive.length,s:cs.length?Math.round(positive.length/cs.length*100)+'% dari total':'—',ic:'🦠'},
+    {l:'Malaria Berat',v:severe.length,s:'parasitemia > 5%',ic:'🚨'},
+    {l:'Tervalidasi Expert',v:validated.length,s:'rerata AI '+avgConf.toFixed(1)+'%',ic:'✅'}
+  ];
+  document.getElementById('local-kpis').innerHTML=kpis.map(k=>`<div class="kpi"><div class="kpi-ic">${k.ic}</div><div class="kpi-lbl">${k.l}</div><div class="kpi-val">${k.v}</div><div class="kpi-sub">${k.s}</div></div>`).join('');
+
+  // species distribution
+  const sp={}; positive.forEach(c=>{const s=c.ai.species;sp[s]=(sp[s]||0)+1;});
+  const spL=Object.keys(sp), spD=spL.map(k=>sp[k]);
+  mkChart('chSpecies','doughnut',{labels:spL.length?spL:['Belum ada data'],datasets:[{data:spD.length?spD:[1],backgroundColor:['#ef4444','#f59e0b','#3b82f6','#a855f7','#22c55e','#64748b'],borderWidth:0}]},{plugins:{legend:{position:'bottom',labels:{color:'#94a3b8',font:{size:11}}}}});
+
+  // concordance
+  let agree=0,disagree=0;
+  validated.forEach(c=>{ const a=c.ai?.species, e=c.expertValidation.confirmedSpecies; if(a&&e){ (a===e?agree++:disagree++);} });
+  mkChart('chConcord','doughnut',{labels:['AI = Expert','AI ≠ Expert'],datasets:[{data:[agree,disagree||(agree?0:1)],backgroundColor:['#22c55e','#ef4444'],borderWidth:0}]},{plugins:{legend:{position:'bottom',labels:{color:'#94a3b8',font:{size:11}}}},cutout:'60%'});
+  const tot=agree+disagree;
+  document.getElementById('concord-note').innerHTML = tot? `Akurasi AI vs expert: <b>${Math.round(agree/tot*100)}%</b> (${agree}/${tot} sesuai). Konkordansi rendah → perlu kalibrasi ulang model & pelatihan mikroskopis.` : 'Belum ada kasus tervalidasi expert untuk dihitung.';
+
+  // table
+  const tb=document.querySelector('#local-table tbody');
+  tb.innerHTML = cs.length ? cs.slice().reverse().slice(0,40).map(c=>{
+    const ev=c.expertValidation; const evt = ev? (ev.validationStatus==='confirmed'?`<span class="bdg gr">✓ ${ev.confirmedSpecies}</span>`:`<span class="bdg am">✏ ${ev.confirmedSpecies}</span>`) : '<span class="bdg bl">menunggu</span>';
+    return `<tr><td>${new Date(c.createdAt).toLocaleDateString('id-ID')}</td><td>${c.patient?.name||'—'}</td><td>${c.facility?.faskes||c.facility?.facilityName||'—'}</td><td>${c.ai?.species||'—'}</td><td class="num">${c.ai?.confidence!=null?c.ai.confidence+'%':'—'}</td><td class="num">${c.ai?.parasitemia!=null?c.ai.parasitemia+'%':'—'}</td><td>${c.ai?.isSevere?'<span class="bdg re">berat</span>':'<span class="bdg tl">rutin</span>'}</td><td>${evt}</td></tr>`;
+  }).join('') : `<tr><td colspan="8" class="muted" style="padding:18px">Belum ada kasus. Data akan muncul otomatis dari aplikasi nakes (MalarAI Mobile) di perangkat/browser yang sama.</td></tr>`;
+}
+
+/* ---------- AI ANALYSIS ENGINE ---------- */
+function runAnalysis(){
+  const out=document.getElementById('ai-output'); out.innerHTML='<div class="card"><span class="spin"></span> Menganalisis database…</div>';
+  setTimeout(()=>{ out.innerHTML=buildAnalysis(); renderAnalysisCharts(); },500);
+}
+function buildAnalysis(){
+  const findings=[]; const recs=[];
+  // 1. national trend
+  const pts=seriesPts('MALARIA_EST_CASES');
+  const recent=pts.filter(p=>p.year>=2019);
+  const reg=linreg(recent.length>=2?recent:pts);
+  const last=pts[pts.length-1];
+  let trendTxt='Data tren tidak cukup.', trendIc='📉', trajectory='—';
+  if(reg&&last){
+    const proj2030=Math.max(0,reg.predict(2030));
+    const yoy = recent.length>=2 ? ((recent[recent.length-1].value-recent[recent.length-2].value)/recent[recent.length-2].value*100):0;
+    const dir = reg.slope>0?'meningkat':'menurun';
+    trendIc = reg.slope>0?'📈':'📉';
+    trajectory = proj2030;
+    trendTxt = `Estimasi kasus ${dir} (~${fmt(Math.abs(reg.slope))}/tahun). Perubahan tahun terakhir ${yoy>=0?'+':''}${yoy.toFixed(1)}%. Proyeksi linear 2030 ≈ <b>${fmt(proj2030)}</b> kasus. Target eliminasi (0 kasus indigenous) ${proj2030>1000?'<b style="color:#f87171">tidak akan tercapai</b> dengan laju saat ini':'<b style="color:#4ade80">berpotensi tercapai</b>'}.`;
+    if(reg.slope>0) recs.push(['🚑','Hentikan tren kenaikan','Estimasi kasus nasional sedang naik (terutama beban Papua ~90%). Perkuat surveilans migrasi, distribusi kelambu (ITN), dan tes-obati-lacak di wilayah endemis tinggi sesuai Peta Jalan Eliminasi 2025–2045.']);
+  }
+  findings.push(['Tren & Proyeksi Nasional 2030',trendTxt,trendIc]);
+
+  // 2. global context
+  const g=DB.global;
+  findings.push(['Konteks Beban Global','🌍',null]);
+  findings[findings.length-1]=['Konteks Beban Global',`Global ${g.year}: ${fmt(g.cases)} kasus, ${fmt(g.deaths)} kematian; Region Afrika menanggung 95%. Sejak 2000, ${fmt(g.casesAverted)} kasus & ${fmt(g.deathsAverted)} kematian berhasil dicegah. Indonesia (Region Pasifik Barat) berkontribusi besar di kawasannya — penurunan kasus Indonesia berdampak regional.`,'🌍'];
+
+  // 3. elimination gap
+  const el=DB.indonesia.elimination; const remain=el.totalDistricts-el.eliminated;
+  findings.push(['Kesenjangan Eliminasi Kab/Kota',`${el.eliminated}/${el.totalDistricts} kab/kota bebas malaria (${Math.round(el.eliminated/el.totalDistricts*100)}%). Tersisa <b>${remain}</b> kab/kota, mayoritas di Papua, Papua Barat, Maluku, Maluku Utara & NTT. Untuk 2030, perlu mengeliminasi rata-rata ≈${Math.ceil(remain/(2030-2025))} kab/kota per tahun (2025–2030).`,'🗺️']);
+  recs.push(['🎯','Percepat kab/kota endemis rendah','~'+remain+' kab/kota tersisa. Prioritaskan yang sudah mendekati kriteria (API<1) untuk sertifikasi cepat, sambil intensifkan intervensi di Tanah Papua.']);
+
+  // 4. local data
+  const cs=getCases();
+  const positive=cs.filter(c=>c.ai&&c.ai.species&&c.ai.species!=='Negatif');
+  const validated=cs.filter(c=>c.expertValidation);
+  let localTxt, localIc='🏥';
+  if(cs.length){
+    const sp={}; positive.forEach(c=>{sp[c.ai.species]=(sp[c.ai.species]||0)+1;});
+    const top=Object.entries(sp).sort((a,b)=>b[1]-a[1])[0];
+    const severe=positive.filter(c=>c.ai.isSevere).length;
+    let agree=0,dis=0; validated.forEach(c=>{const a=c.ai?.species,e=c.expertValidation.confirmedSpecies;if(a&&e)(a===e?agree++:dis++);});
+    const acc=(agree+dis)?Math.round(agree/(agree+dis)*100):null;
+    localTxt=`${cs.length} pemeriksaan, ${positive.length} positif (${cs.length?Math.round(positive.length/cs.length*100):0}%). Spesies dominan: <b>${top?top[0]:'—'}</b>${top?' ('+top[1]+' kasus)':''}. Kasus berat: ${severe}. ${acc!=null?'Akurasi AI vs expert: <b>'+acc+'%</b> ('+agree+'/'+(agree+dis)+').':'Belum ada validasi expert.'}`;
+    if(acc!=null&&acc<85) recs.push(['🔬','Kalibrasi model AI','Akurasi AI vs expert '+acc+'% (<85%). Tinjau kasus diskordan, tambah data latih sediaan asli, dan wajibkan konfirmasi mikroskopis untuk kasus low-confidence.']);
+    if(severe>0) recs.push(['🚨','Siapkan rujukan malaria berat',severe+' kasus berat terdeteksi. Pastikan ketersediaan artesunat IV & jalur rujukan sesuai pedoman tatalaksana malaria berat.']);
+  } else {
+    localTxt='Belum ada data kasus lokal. Setelah aplikasi nakes (MalarAI Mobile) merekam pemeriksaan di perangkat/browser yang sama, analitik akan menggabungkannya otomatis dengan data WHO.';
+  }
+  findings.push(['Analisis Data Kasus Lokal',localTxt,localIc]);
+
+  // readiness score (heuristik 0-100)
+  let score=50;
+  if(reg){ score += reg.slope<0?20:-15; }
+  score += (el.eliminated/el.totalDistricts-0.5)*40; // proporsi eliminasi
+  if(validated.length){ let a=0,d=0; validated.forEach(c=>{const x=c.ai?.species,y=c.expertValidation.confirmedSpecies;if(x&&y)(x===y?a++:d++);}); if(a+d)score+=((a/(a+d))-0.8)*30; }
+  score=Math.max(5,Math.min(98,Math.round(score)));
+  const scoreColor = score>=70?'#22c55e':score>=45?'#f59e0b':'#ef4444';
+  const scoreLbl = score>=70?'Sesuai jalur':score>=45?'Perlu akselerasi':'Berisiko gagal target';
+
+  if(!recs.length) recs.push(['✅','Pertahankan momentum','Indikator dalam kondisi baik. Lanjutkan surveilans rutin & jaga cakupan intervensi.']);
+
+  // build HTML
+  const findingHtml=findings.map(f=>`<div class="finding"><div class="finding-ic">${f[2]||'•'}</div><div class="finding-bd"><div class="finding-t">${f[0]}</div><div class="finding-d">${f[1]}</div></div></div>`).join('');
+  const recHtml=recs.map((r,i)=>`<div class="finding"><div class="finding-ic">${r[0]}</div><div class="finding-bd"><div class="finding-t">${i+1}. ${r[1]}</div><div class="finding-d">${r[2]}</div></div></div>`).join('');
+
+  return `
+  <div class="grid g2">
+    <div class="card" style="text-align:center">
+      <div class="sec-title" style="justify-content:center;margin-top:0">Indeks Kesiapan Eliminasi 2030</div>
+      <div class="gauge"><canvas id="chScore"></canvas><div style="position:absolute;inset:0;display:grid;place-items:center"><div><div style="font-size:2.2rem;font-weight:800;color:${scoreColor}">${score}</div><div class="small">/ 100</div></div></div></div>
+      <div style="margin-top:10px;font-weight:700;color:${scoreColor}">${scoreLbl}</div>
+      <div class="small" style="margin-top:6px">Skor heuristik gabungan: tren kasus + proporsi eliminasi + akurasi AI.</div>
+    </div>
+    <div class="card">
+      <div class="sec-title" style="margin-top:0">🔎 Temuan Utama</div>
+      ${findingHtml}
+    </div>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <div class="sec-title" style="margin-top:0">📋 Rekomendasi Terprioritas (berbasis pedoman)</div>
+    ${recHtml}
+    <div class="note">Rekomendasi mengacu pada Peta Jalan Eliminasi Malaria Indonesia 2025–2045 (KMK 1988/2024), WHO Guidelines for malaria, dan World Malaria Report 2024.</div>
+  </div>
+  <div class="small" style="margin-top:10px;text-align:center">Dihasilkan ${new Date().toLocaleString('id-ID')} · mesin deterministik (input sama → hasil sama). Bukan pengganti penilaian ahli.</div>`;
+}
+function renderAnalysisCharts(){
+  // score gauge derived again quickly is complex; re-read DOM score
+  const cv=document.getElementById('chScore'); if(!cv)return;
+  const scoreEl=cv.parentElement.querySelector('div[style*="font-size:2.2rem"]');
+  const score=scoreEl?parseInt(scoreEl.textContent):50;
+  const col=score>=70?'#22c55e':score>=45?'#f59e0b':'#ef4444';
+  mkChart('chScore','doughnut',{labels:['',''],datasets:[{data:[score,100-score],backgroundColor:[col,'#1e293b'],borderWidth:0}]},{cutout:'78%',plugins:{legend:{display:false},tooltip:{enabled:false}}});
+}
+
+/* ---------- chart helper ---------- */
+function mkChart(id,type,data,extra){
+  const cv=document.getElementById(id); if(!cv)return;
+  if(charts[id])charts[id].destroy();
+  charts[id]=new Chart(cv,{type,data,options:Object.assign({responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:type!=='line'&&type!=='bar'?true:false,labels:{color:'#94a3b8'}}},
+    scales:(type==='line'||type==='bar')?{x:{ticks:{color:'#64748b',font:{size:10}},grid:{color:'#1e2d3d'}},y:{ticks:{color:'#64748b',font:{size:10}},grid:{color:'#1e2d3d'}}}:{}
+  },extra||{})});
+}
+
+/* ---------- UPDATE: manual / import / export ---------- */
+function addManual(){
+  const ind=document.getElementById('m-ind').value, y=parseInt(document.getElementById('m-year').value), v=parseFloat(document.getElementById('m-val').value);
+  if(!y||isNaN(v)){ toast('Isi tahun & nilai'); return; }
+  if(!DB.series[ind])DB.series[ind]={label:ind,unit:'',data:{}};
+  DB.series[ind].data[y]=v; DB.meta.lastUpdated=new Date().toLocaleString('id-ID'); saveDB();
+  toast('Data '+y+' disimpan'); document.getElementById('m-val').value=''; renderAll();
+}
+function exportDB(){
+  const blob=new Blob([JSON.stringify(DB,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='malarai_who_db_'+new Date().toISOString().slice(0,10)+'.json'; a.click();
+  toast('Database diekspor');
+}
+function importDB(e){
+  const f=e.target.files[0]; if(!f)return; const r=new FileReader();
+  r.onload=()=>{ try{ const o=JSON.parse(r.result); if(!o.series)throw new Error('format'); DB=o; saveDB(); renderAll(); toast('Database diimpor'); }catch(err){ toast('File tidak valid'); } };
+  r.readAsText(f);
+}
+function resetDB(){ if(confirm('Reset database ke baseline tertanam? Data manual & tarikan online akan hilang.')){ DB=JSON.parse(JSON.stringify(BASELINE)); saveDB(); renderAll(); toast('Direset ke baseline'); } }
+function renderDbMeta(){
+  const m=DB.meta; const nKeys=Object.keys(DB.series).length;
+  let pts=0; Object.values(DB.series).forEach(s=>pts+=Object.keys(s.data||{}).length);
+  document.getElementById('db-meta').innerHTML=`
+    <tr><td>Mode</td><td><span class="bdg ${m.mode==='live'?'gr':'am'}">${m.mode==='live'?'Live (online)':'Tertanam (offline)'}</span></td></tr>
+    <tr><td>Pembaruan terakhir</td><td>${m.lastUpdated||'—'}</td></tr>
+    <tr><td>Versi</td><td>${m.version||'—'}</td></tr>
+    <tr><td>Jumlah indikator</td><td class="num">${nKeys}</td></tr>
+    <tr><td>Total titik data</td><td class="num">${pts}</td></tr>
+    <tr><td>Sumber</td><td style="font-size:.75rem">${m.source||'—'}</td></tr>`;
+}
+
+/* ---------- references ---------- */
+document.getElementById('ref-list').innerHTML=REFS.map(r=>`<div class="ref">🔗 <a href="${r[1]}" target="_blank" rel="noopener">${r[0]}</a></div>`).join('')+`<div class="note" style="margin-top:14px">Seluruh data epidemiologis bersumber dari WHO & Kemenkes RI. Data tertanam adalah snapshot resmi; gunakan “Tarik Data Online” untuk angka terbaru dari WHO GHO. Aplikasi ini alat bantu surveilans/edukasi, bukan pengganti keputusan klinis atau kebijakan resmi.</div>`;
+
+/* ---------- init ---------- */
+function renderAll(){ renderDash(); renderWhoTable(); renderLocal(); renderDbMeta(); }
+renderAll(); checkNet();
+</script>
+</body>
+</html>
