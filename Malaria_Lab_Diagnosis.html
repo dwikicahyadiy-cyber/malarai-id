@@ -1,0 +1,2486 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pelatihan Malaria – AI Learner Terpadu</title>
+<style>
+  :root {
+    --red: #C0392B; --red-light: #E74C3C; --red-pale: #FDEDEC;
+    --blue: #1A5276; --blue-mid: #2980B9; --blue-light: #D6EAF8;
+    --green: #1E8449; --green-light: #D5F5E3;
+    --orange: #D35400; --orange-light: #FDEBD0;
+    --purple: #6C3483; --purple-light: #F4ECF7;
+    --gold: #B7950B; --gold-light: #FEF9E7;
+    --gray: #2C3E50; --gray-mid: #566573; --gray-light: #F2F3F4;
+    --white: #ffffff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #F0F3F7; color: var(--gray); line-height: 1.7; }
+
+  /* HEADER */
+  .site-header {
+    background: linear-gradient(135deg, var(--blue) 0%, #0D3B6E 60%, #1A1A2E 100%);
+    color: white; padding: 0; position: sticky; top: 0; z-index: 1000;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  }
+  .header-top { display: flex; align-items: center; padding: 14px 32px; gap: 18px; }
+  .header-icon { font-size: 2.2rem; }
+  .header-title { flex: 1; }
+  .header-title h1 { font-size: 1.4rem; font-weight: 800; letter-spacing: 0.5px; }
+  .header-title p { font-size: 0.78rem; opacity: 0.75; margin-top: 2px; }
+  .badge { background: var(--red-light); color: white; border-radius: 20px; padding: 3px 12px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.5px; }
+
+  /* NAV TABS */
+  .nav-tabs { display: flex; overflow-x: auto; background: rgba(0,0,0,0.25); }
+  .nav-tab { padding: 12px 22px; cursor: pointer; font-size: 0.82rem; font-weight: 600;
+    color: rgba(255,255,255,0.65); border-bottom: 3px solid transparent; white-space: nowrap;
+    transition: all 0.2s; user-select: none; }
+  .nav-tab:hover { color: white; background: rgba(255,255,255,0.08); }
+  .nav-tab.active { color: white; border-bottom-color: #F39C12; background: rgba(255,255,255,0.12); }
+
+  /* SECTIONS */
+  .section { display: none; padding: 28px 24px; max-width: 1100px; margin: 0 auto; }
+  .section.active { display: block; }
+
+  /* CARDS */
+  .card { background: white; border-radius: 14px; padding: 24px; margin-bottom: 22px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07); border-left: 5px solid var(--blue-mid); }
+  .card.red   { border-left-color: var(--red-light); }
+  .card.green { border-left-color: var(--green); }
+  .card.orange{ border-left-color: var(--orange); }
+  .card.purple{ border-left-color: var(--purple); }
+  .card.gold  { border-left-color: var(--gold); }
+  .card h2 { font-size: 1.15rem; font-weight: 800; margin-bottom: 10px; color: var(--blue); }
+  .card.red h2 { color: var(--red); }
+  .card.green h2 { color: var(--green); }
+  .card.orange h2 { color: var(--orange); }
+  .card.purple h2 { color: var(--purple); }
+  .card.gold h2 { color: var(--gold); }
+  .card h3 { font-size: 0.98rem; font-weight: 700; margin: 14px 0 6px; color: var(--gray); }
+  .card p, .card li { font-size: 0.9rem; color: #444; margin-bottom: 5px; }
+  .card ul, .card ol { padding-left: 20px; }
+  .card li { margin-bottom: 4px; }
+
+  /* SECTION HEADER */
+  .section-hero { border-radius: 14px; padding: 24px 28px; margin-bottom: 24px;
+    display: flex; align-items: center; gap: 18px; color: white; }
+  .section-hero.blue   { background: linear-gradient(135deg, var(--blue), var(--blue-mid)); }
+  .section-hero.red    { background: linear-gradient(135deg, var(--red), #E74C3C); }
+  .section-hero.green  { background: linear-gradient(135deg, var(--green), #27AE60); }
+  .section-hero.orange { background: linear-gradient(135deg, var(--orange), #E67E22); }
+  .section-hero.purple { background: linear-gradient(135deg, var(--purple), #8E44AD); }
+  .section-hero .hero-icon { font-size: 3rem; }
+  .section-hero h2 { font-size: 1.5rem; font-weight: 800; }
+  .section-hero p { font-size: 0.85rem; opacity: 0.85; margin-top: 4px; }
+
+  /* GRID */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  @media(max-width:700px){ .grid-2,.grid-3 { grid-template-columns:1fr; } }
+
+  /* TABLE */
+  .tbl { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-top: 10px; }
+  .tbl th { background: var(--blue); color: white; padding: 9px 12px; text-align: left; font-size: 0.8rem; }
+  .tbl td { padding: 8px 12px; border-bottom: 1px solid #E8E8E8; vertical-align: top; }
+  .tbl tr:nth-child(even) td { background: #F8F9FA; }
+  .tbl tr:hover td { background: var(--blue-light); }
+
+  /* CHIPS / BADGES */
+  .chip { display: inline-block; border-radius: 20px; padding: 3px 12px; font-size: 0.75rem;
+    font-weight: 700; margin: 3px 3px 3px 0; }
+  .chip.blue   { background: var(--blue-light); color: var(--blue); }
+  .chip.green  { background: var(--green-light); color: var(--green); }
+  .chip.red    { background: var(--red-pale); color: var(--red); }
+  .chip.orange { background: var(--orange-light); color: var(--orange); }
+  .chip.purple { background: var(--purple-light); color: var(--purple); }
+  .chip.gold   { background: var(--gold-light); color: var(--gold); }
+
+  /* QUIZ */
+  .quiz-q { background: white; border-radius: 12px; padding: 20px; margin-bottom: 18px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.07); border-top: 4px solid var(--blue-mid); }
+  .quiz-q .qnum { background: var(--blue); color: white; border-radius: 50%; width: 28px;
+    height: 28px; display: inline-flex; align-items: center; justify-content: center;
+    font-size: 0.78rem; font-weight: 800; margin-right: 10px; flex-shrink: 0; }
+  .quiz-q .qtitle { font-size: 0.92rem; font-weight: 700; color: var(--gray); display: flex; align-items: flex-start; gap: 8px; margin-bottom: 12px; }
+  .quiz-opt { padding: 8px 14px; border-radius: 8px; margin: 5px 0; font-size: 0.85rem;
+    cursor: pointer; border: 2px solid #E0E0E0; transition: all 0.2s; color: #333; background: #FAFAFA; }
+  .quiz-opt:hover { border-color: var(--blue-mid); background: var(--blue-light); }
+  .quiz-opt.correct { background: var(--green-light); border-color: var(--green); color: var(--green); font-weight: 700; }
+  .quiz-opt.wrong   { background: var(--red-pale); border-color: var(--red-light); color: var(--red); }
+  .quiz-explain { background: var(--gold-light); border-left: 4px solid var(--gold);
+    border-radius: 8px; padding: 12px 16px; margin-top: 12px; font-size: 0.83rem;
+    display: none; color: #555; }
+  .quiz-explain.show { display: block; }
+  .quiz-explain strong { color: var(--gold); }
+
+  /* ASSIGNMENT */
+  .assign-q { background: white; border-radius: 12px; padding: 20px; margin-bottom: 18px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06); border-left: 5px solid var(--purple); }
+  .assign-q .aq-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .assign-q .aq-num { background: var(--purple); color: white; border-radius: 50%;
+    width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 0.8rem; flex-shrink: 0; }
+  .assign-q .aq-question { font-size: 0.92rem; font-weight: 700; color: var(--gray); }
+  .assign-q .aq-answer { font-size: 0.87rem; color: #444; background: var(--purple-light);
+    border-radius: 8px; padding: 12px 16px; line-height: 1.75; }
+  .assign-q .aq-ref { font-size: 0.75rem; color: var(--purple); margin-top: 8px; font-style: italic; }
+
+  /* SUMMARY BOXES */
+  .summary-box { border-radius: 12px; padding: 18px 20px; margin-bottom: 14px; }
+  .summary-box.blue   { background: var(--blue-light); border: 1px solid #AED6F1; }
+  .summary-box.green  { background: var(--green-light); border: 1px solid #A9DFBF; }
+  .summary-box.red    { background: var(--red-pale); border: 1px solid #F1948A; }
+  .summary-box.orange { background: var(--orange-light); border: 1px solid #F0B27A; }
+  .summary-box h4 { font-size: 0.9rem; font-weight: 800; margin-bottom: 8px; }
+
+  /* INNOV CARD */
+  .innov-card { background: white; border-radius: 14px; padding: 20px; box-shadow: 0 3px 14px rgba(0,0,0,0.08);
+    border-top: 4px solid var(--green); }
+  .innov-card .ic-icon { font-size: 2rem; margin-bottom: 8px; }
+  .innov-card h3 { font-size: 0.95rem; font-weight: 800; color: var(--green); margin-bottom: 8px; }
+  .innov-card p { font-size: 0.84rem; color: #555; }
+
+  /* FORMULA */
+  .formula { background: #1A1A2E; color: #00D2FF; font-family: monospace;
+    border-radius: 10px; padding: 16px 20px; margin: 12px 0; font-size: 1rem;
+    text-align: center; letter-spacing: 0.5px; }
+
+  /* SPECIES CARD */
+  .species-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; }
+  @media(max-width:700px){ .species-grid { grid-template-columns:1fr; } }
+  .species-card { border-radius: 12px; padding: 16px; border: 2px solid; }
+  .sp-pf { border-color: #E74C3C; background: #FEF9F9; }
+  .sp-pv { border-color: #2980B9; background: #F0F8FF; }
+  .sp-pm { border-color: #6C3483; background: #F9F3FF; }
+  .sp-po { border-color: #1E8449; background: #F0FFF4; }
+  .sp-pk { border-color: #D35400; background: #FFF5EC; }
+  .species-card h4 { font-weight: 800; font-size: 0.95rem; margin-bottom: 8px; }
+  .sp-pf h4 { color: #C0392B; }
+  .sp-pv h4 { color: #1A5276; }
+  .sp-pm h4 { color: #5B2C6F; }
+  .sp-po h4 { color: #1D6A39; }
+  .sp-pk h4 { color: #A04000; }
+  .species-card li { font-size: 0.82rem; color: #444; margin-bottom: 3px; }
+
+  /* IMAGE GALLERY */
+  .morph-tabs { display: flex; gap: 0; margin-bottom: 0; flex-wrap: wrap; }
+  .morph-tab { padding: 7px 14px; cursor: pointer; font-size: 0.78rem; font-weight: 700;
+    border-radius: 8px 8px 0 0; background: #E8E8E8; color: #666; border: 1px solid #ddd;
+    border-bottom: none; transition: all 0.2s; user-select: none; margin-right: 3px; }
+  .morph-tab.active { background: white; color: var(--blue); border-color: #bbb; }
+  .morph-panel { display: none; border: 1px solid #ddd; border-radius: 0 8px 8px 8px;
+    background: white; padding: 14px; }
+  .morph-panel.active { display: block; }
+  .img-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  @media(max-width:600px){ .img-grid { grid-template-columns: 1fr; } }
+  .img-item { position: relative; background: #F9F9F9; border-radius: 10px;
+    overflow: hidden; border: 2px solid #E8E8E8; transition: border-color 0.2s, box-shadow 0.2s; }
+  .img-item:hover { border-color: var(--blue-mid); box-shadow: 0 4px 16px rgba(41,128,185,0.2); }
+  .img-item img { width: 100%; height: auto; display: block; cursor: zoom-in;
+    transition: transform 0.25s; image-rendering: -webkit-optimize-contrast; }
+  .img-item img:hover { transform: scale(1.03); }
+  .img-item .img-cap { font-size: 0.72rem; color: #555; text-align: center;
+    padding: 6px 8px 8px; line-height: 1.4; background: white; border-top: 1px solid #EEE; }
+  /* Bench Aid — 1 per row, full width, with max-height cap */
+  .bench-wrap { margin-bottom: 18px; }
+  .bench-wrap img { width: 100%; height: auto; border-radius: 10px;
+    border: 2px solid #ddd; cursor: zoom-in; display: block;
+    transition: box-shadow 0.2s; image-rendering: -webkit-optimize-contrast; }
+  .bench-wrap img:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.18); }
+  .bench-wrap .bench-label { font-size: 0.8rem; font-weight: 700; text-align: center;
+    margin-top: 6px; padding: 4px 0; }
+  /* Lightbox */
+  .lb-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92);
+    z-index: 9999; align-items: center; justify-content: center; flex-direction: column;
+    cursor: zoom-out; }
+  .lb-overlay.open { display: flex; }
+  .lb-img-wrap { max-width: 94vw; max-height: 88vh; overflow: auto; }
+  .lb-overlay img { max-width: 94vw; max-height: 88vh; width: auto; height: auto;
+    border-radius: 10px; box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+    image-rendering: -webkit-optimize-contrast; }
+  .lb-caption { color: #DDD; margin-top: 10px; font-size: 0.85rem; text-align: center; }
+  .lb-close { position: absolute; top: 16px; right: 22px; color: white; font-size: 2.2rem;
+    cursor: pointer; line-height: 1; z-index: 10000; background: rgba(0,0,0,0.5);
+    border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
+
+  /* PROGRESS BAR */
+  .prog-bar { background: #E0E0E0; border-radius: 20px; height: 8px; margin: 6px 0 12px; overflow: hidden; }
+  .prog-fill { height: 100%; border-radius: 20px; }
+
+  /* SENSITIVITY VISUAL */
+  .sens-row { display: flex; align-items: center; gap: 12px; margin: 8px 0; }
+  .sens-label { font-size: 0.82rem; font-weight: 700; width: 110px; flex-shrink: 0; color: var(--gray); }
+  .sens-bar { flex: 1; background: #E8E8E8; border-radius: 10px; height: 18px; overflow: hidden; }
+  .sens-fill { height: 100%; border-radius: 10px; display: flex; align-items: center;
+    justify-content: flex-end; padding-right: 8px; font-size: 0.7rem; font-weight: 700; color: white; }
+
+  /* FOOTER */
+  footer { text-align: center; padding: 24px; color: #999; font-size: 0.78rem; margin-top: 10px; }
+  .ref-list { font-size: 0.78rem; color: #666; padding-left: 16px; }
+  .ref-list li { margin-bottom: 4px; }
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="header-top">
+    <div class="header-icon">🦟</div>
+    <div class="header-title">
+      <h1>AI LEARNER — PELATIHAN MALARIA</h1>
+      <p>Diagnosis Laboratorium · Morfologi Parasit · Kepadatan Parasit</p>
+    </div>
+    <span class="badge">BARU</span>
+  </div>
+  <nav class="nav-tabs">
+    <div class="nav-tab active" onclick="showTab('materi')">📚 Tim 1 – Materi</div>
+    <div class="nav-tab" onclick="showTab('rangkuman')">📋 Tim 2 – Rangkuman</div>
+    <div class="nav-tab" onclick="showTab('inovasi')">💡 Tim 3 – Inovasi</div>
+    <div class="nav-tab" onclick="showTab('penugasan')">📝 Tim 4 – Penugasan</div>
+    <div class="nav-tab" onclick="showTab('latihan')">🧪 Tim 4 – Latihan Soal</div>
+    <div class="nav-tab" onclick="showTab('referensi')">📖 Referensi</div>
+  </nav>
+</header>
+
+<!-- ===== TAB 1: MATERI ===== -->
+<section class="section active" id="tab-materi">
+  <div class="section-hero blue">
+    <div class="hero-icon">📚</div>
+    <div>
+      <h2>Tim 1 — Si Paling Belajar</h2>
+      <p>Membaca &amp; memahami seluruh materi · Dibandingkan dengan pedoman Kemenkes RI &amp; WHO</p>
+    </div>
+  </div>
+
+  <!-- PENDAHULUAN -->
+  <div class="card">
+    <h2>🌍 Situasi Malaria Indonesia 2025</h2>
+    <div class="grid-2">
+      <div>
+        <h3>Capaian Nasional</h3>
+        <ul>
+          <li>Target 2025: <strong>8,3 juta pemeriksaan</strong>, menemukan ~947 ribu kasus</li>
+          <li>&gt;93% kasus nasional berasal dari <strong>Papua</strong></li>
+          <li>Deteksi kasus baru ~54% dari estimasi</li>
+          <li>&gt;20% kasus dari populasi <strong>mobile migrant (MMP)</strong></li>
+        </ul>
+        <h3>4 Tantangan Eliminasi</h3>
+        <ol>
+          <li>Lebih dari 93% kasus dari Papua, deteksi rendah</li>
+          <li>Populasi migran mobile sulit dilacak</li>
+          <li>KLB (wabah) masih terjadi</li>
+          <li>Implementasi pendekatan One Health belum optimal</li>
+        </ol>
+      </div>
+      <div>
+        <h3>Situasi Kalimantan 2025</h3>
+        <p style="font-size:0.83rem;color:#555;margin-bottom:8px;">Total kasus: <strong>1.746</strong></p>
+        <div class="chip blue">Pv 60%</div><div class="chip red">Pf 24%</div>
+        <div class="chip orange">Mix 12%</div><div class="chip purple">Pm 3%</div>
+        <div class="chip green">Po 0%</div><div class="chip gold">Prob. Pk 1%</div>
+        <br><br>
+        <h3>Vektor di Indonesia</h3>
+        <p style="font-size:0.83rem;color:#555;">&gt;70 spesies Anopheles; 12 spesies vektor penting termasuk <em>An. sundaicus, An. subpictus, An. maculatus, An. barbirostris, An. farauti, An. leucosphyrus</em></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIKLUS HIDUP -->
+  <div class="card">
+    <h2>🔄 Siklus Hidup Plasmodium</h2>
+    <div class="grid-2">
+      <div>
+        <h3>Pada Nyamuk (sporogoni)</h3>
+        <ul>
+          <li>Gamet ♂ + ♀ → zigot → ookinet → ookista → <strong>sporozoit</strong></li>
+          <li>Sporozoit masuk ke kelenjar saliva nyamuk</li>
+        </ul>
+        <h3>Pada Manusia — Fase Hati (eksoeritrositik)</h3>
+        <ul>
+          <li>Sporozoit masuk → sel hati → skizon hati → <strong>merozoit hati</strong></li>
+          <li>P. vivax &amp; P. ovale: bisa membentuk <strong>hipnozoit</strong> (relaps)</li>
+        </ul>
+        <h3>Pada Manusia — Fase Eritrosit (eritrositik)</h3>
+        <ul>
+          <li>Merozoit → masuk eritrosit → trofozoit muda (cincin)</li>
+          <li>Trofozoit dewasa → skizon → merozoit → <strong>pecah: DEMAM</strong></li>
+          <li>Sebagian → <strong>gametosit</strong> (infeksius bagi nyamuk)</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Pola Demam sesuai Spesies</h3>
+        <table class="tbl">
+          <tr><th>Spesies</th><th>Siklus</th><th>Pola Demam</th></tr>
+          <tr><td><em>P. falciparum</em></td><td>48 jam</td><td>Tertiana (irreguler)</td></tr>
+          <tr><td><em>P. vivax</em></td><td>48 jam</td><td>Tertiana</td></tr>
+          <tr><td><em>P. malariae</em></td><td>72 jam</td><td>Kuartana</td></tr>
+          <tr><td><em>P. ovale</em></td><td>48 jam</td><td>Tertiana</td></tr>
+          <tr><td><em>P. knowlesi</em></td><td>24 jam</td><td>Quotidiana (harian)</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- METODE DIAGNOSIS -->
+  <div class="card">
+    <h2>🔬 Metode Diagnosis Malaria</h2>
+    <h3>Sensitivitas Diagnostik</h3>
+    <div class="sens-row"><div class="sens-label">PCR</div><div class="sens-bar"><div class="sens-fill" style="width:100%;background:var(--green);">1–10/µl</div></div></div>
+    <div class="sens-row"><div class="sens-label">Mikroskopi (Expert)</div><div class="sens-bar"><div class="sens-fill" style="width:68%;background:var(--blue-mid);">5–200/µl</div></div></div>
+    <div class="sens-row"><div class="sens-label">RDT</div><div class="sens-bar"><div class="sens-fill" style="width:50%;background:var(--orange);">~100/µl</div></div></div>
+    <br>
+    <table class="tbl">
+      <tr><th>Parameter</th><th>Mikroskopi</th><th>RDT</th><th>PCR</th></tr>
+      <tr><td>Sensitivitas</td><td>50–200/µl (expert: 5–20)</td><td>~100/µl</td><td>1–10/µl</td></tr>
+      <tr><td>Identifikasi Spesies</td><td>✅ 5 spesies</td><td>⚠️ Terbatas</td><td>✅ Sangat akurat</td></tr>
+      <tr><td>Hitung Parasit</td><td>✅</td><td>❌</td><td>❌ (semi-kuantitatif)</td></tr>
+      <tr><td>Evaluasi Pengobatan</td><td>✅</td><td>❌</td><td>✅</td></tr>
+      <tr><td>Biaya</td><td>Murah</td><td>Sedang</td><td>Mahal</td></tr>
+      <tr><td>Waktu</td><td>60–90 mnt</td><td>10–20 mnt</td><td>3–5 hari</td></tr>
+      <tr><td>Gold Standard</td><td>✅</td><td>—</td><td>Konfirmasi Pk</td></tr>
+    </table>
+    <p style="font-size:0.78rem;color:#888;margin-top:8px;">⚠️ Kebijakan Kemenkes RI: <em>Semua kasus malaria harus terkonfirmasi mikroskopis ATAU RDT sebelum diobati.</em></p>
+  </div>
+
+  <!-- MIKROSKOPI DETAIL -->
+  <div class="card">
+    <h2>🧫 Teknik Pemeriksaan Mikroskopi</h2>
+    <div class="grid-2">
+      <div>
+        <h3>Sediaan Darah Tebal (SDT)</h3>
+        <ul>
+          <li>Volume: <strong>6 µl</strong> (3 tetes), diameter ±1 cm</li>
+          <li>Eritrosit lisis → konsentrasi parasit tinggi</li>
+          <li>20–40× lebih sensitif dari darah tipis untuk <em>screening</em></li>
+          <li>Ketebalan baik: leukosit 15–20/LPB</li>
+          <li>Ideal: 100 LPB = 3.000–4.000 leukosit untuk nyatakan negatif</li>
+        </ul>
+        <h3>Sediaan Darah Tipis (SDTipis)</h3>
+        <ul>
+          <li>Volume: <strong>2 µl</strong> (1 tetes)</li>
+          <li>Eritrosit utuh → morfologi jelas</li>
+          <li>Identifikasi spesies lebih mudah</li>
+          <li>Fiksasi dengan <strong>methanol</strong></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Pewarnaan Giemsa (3%)</h3>
+        <ul>
+          <li>Giemsa 3%: 0,3 ml stok + 9,7 ml buffer pH 7,2</li>
+          <li>Waktu: <strong>45–60 menit</strong></li>
+          <li>Warna baik: inti parasit <span style="color:red">merah</span>, sitoplasma <span style="color:blue">biru</span>, inti leukosit <span style="color:purple">ungu</span></li>
+          <li>Buffer asam (pH &lt;7,2): semua jadi merah</li>
+          <li>Buffer basa (pH &gt;7,2): semua jadi biru</li>
+        </ul>
+        <h3>Uji Reagen Giemsa (mingguan)</h3>
+        <ul>
+          <li>Teteskan 1:2 stok:methanol pada kertas Whatman no.2</li>
+          <li>Baik: terdapat zona biru + ungu + <span style="color:red">merah di tepi luar</span></li>
+        </ul>
+        <h3>Pengambilan Darah</h3>
+        <ul>
+          <li>Ujung jari, ujung tumit (bayi), vena, plasenta, tali pusat</li>
+          <li>Darah dengan antikoagulan: proses &lt;1 jam</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- MORFOLOGI SPESIES -->
+  <!-- LIGHTBOX -->
+  <div class="lb-overlay" id="lightbox" onclick="closeLB()">
+    <span class="lb-close" onclick="closeLB()">✕</span>
+    <div class="lb-img-wrap" onclick="event.stopPropagation()">
+      <img id="lb-img" src="" alt="">
+    </div>
+    <div class="lb-caption" id="lb-cap"></div>
+  </div>
+
+  <div class="card">
+    <h2>🔍 Morfologi Plasmodium — 5 Spesies + Gambar Mikroskopik</h2>
+    <p style="font-size:0.8rem;color:#888;margin-bottom:14px;">📸 Gambar mikroskopik nyata dari <strong>CDC DPDx</strong> (public domain) — klik gambar untuk memperbesar</p>
+
+    <!-- BENCH AIDS RINGKASAN -->
+    <h3 style="margin-bottom:6px;">📋 Bench Aid Perbandingan Spesies (CDC DPDx)</h3>
+    <p style="font-size:0.78rem;color:#888;margin-bottom:14px;">Klik gambar untuk memperbesar ke resolusi penuh</p>
+    <div class="bench-wrap">
+      <img src="https://www.cdc.gov/dpdx/images/resources/pdf/benchAids/malaria/Pfalciparum_benchaidV2.jpg"
+        alt="P. falciparum bench aid" onclick="openLB(this.src,'P. falciparum — Bench Aid (CDC DPDx)')">
+      <div class="bench-label" style="color:#C0392B;">🔴 P. falciparum — Bench Aid</div>
+    </div>
+    <div class="bench-wrap">
+      <img src="https://www.cdc.gov/dpdx/images/resources/pdf/benchAids/malaria/Pvivax_benchaidV2.jpg"
+        alt="P. vivax bench aid" onclick="openLB(this.src,'P. vivax — Bench Aid (CDC DPDx)')">
+      <div class="bench-label" style="color:#1A5276;">🔵 P. vivax — Bench Aid</div>
+    </div>
+    <div class="bench-wrap">
+      <img src="https://www.cdc.gov/dpdx/images/resources/pdf/benchAids/malaria/Pmalariae_benchaidV2.jpg"
+        alt="P. malariae bench aid" onclick="openLB(this.src,'P. malariae — Bench Aid (CDC DPDx)')">
+      <div class="bench-label" style="color:#5B2C6F;">🟣 P. malariae — Bench Aid</div>
+    </div>
+    <div class="bench-wrap">
+      <img src="https://www.cdc.gov/dpdx/images/resources/pdf/benchAids/malaria/Povale_benchaidV2.jpg"
+        alt="P. ovale bench aid" onclick="openLB(this.src,'P. ovale — Bench Aid (CDC DPDx)')">
+      <div class="bench-label" style="color:#1D6A39;">🟢 P. ovale — Bench Aid</div>
+    </div>
+    <hr style="border:none;border-top:2px solid #E8E8E8;margin:20px 0;">
+
+    <!-- PER SPECIES TABS -->
+    <div style="margin-bottom:24px;">
+
+      <!-- P. FALCIPARUM -->
+      <div class="species-card sp-pf" style="margin-bottom:18px;padding:18px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+          <h4 style="margin:0;">🔴 Plasmodium falciparum</h4>
+          <span style="font-size:0.75rem;background:#E74C3C;color:white;border-radius:10px;padding:2px 10px;font-weight:700;">Paling Mematikan</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
+          <ul style="font-size:0.82rem;color:#444;">
+            <li>Eritrosit <strong>normal/tidak membesar</strong></li>
+            <li>Bintik <strong>Maurer</strong> (kasar, bisa dihitung)</li>
+            <li>Trofozoit: <strong>cincin kecil</strong>, appliqué, double chromatin dot</li>
+            <li>Skizon: jarang di darah tepi (sequestration)</li>
+            <li>Gametosit: <strong>bentuk pisang/bulan sabit</strong> — KHAS!</li>
+            <li>Pigmen: kuning kecoklatan (hemozoin)</li>
+          </ul>
+          <div style="background:#FFF0F0;border-radius:8px;padding:10px;font-size:0.78rem;color:#555;">
+            <strong style="color:#C0392B;">⚠️ Ciri Khas Pf:</strong><br>
+            • Appliqué position (menempel di tepi eritrosit)<br>
+            • Double chromatin dot pada trofozoit muda<br>
+            • Gametosit pisang = <em>satu-satunya spesies!</em><br>
+            • Bisa multiple infection dalam 1 eritrosit
+          </div>
+        </div>
+        <div class="morph-tabs">
+          <div class="morph-tab active" onclick="switchTab(this,'pf-rings')">Cincin/Trofozoit</div>
+          <div class="morph-tab" onclick="switchTab(this,'pf-maurer')">Maurer's Clefts</div>
+          <div class="morph-tab" onclick="switchTab(this,'pf-schizont')">Skizon</div>
+          <div class="morph-tab" onclick="switchTab(this,'pf-gamet')">Gametosit 🍌</div>
+        </div>
+        <div class="morph-panel active" id="pf-rings">
+          <div class="img-grid">
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/1/Pf_rings_thinA.jpg" alt="Pf rings thin A" onclick="openLB(this.src,'Pf — Cincin (darah tipis) A · CDC DPDx')">
+              <div class="img-cap">Cincin Pf — darah tipis A<br><em>Perhatikan ukuran kecil & cincin ganda</em></div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/1/Pf_rings_thinB.jpg" alt="Pf rings thin B" onclick="openLB(this.src,'Pf — Cincin (darah tipis) B · CDC DPDx')">
+              <div class="img-cap">Cincin Pf — darah tipis B<br><em>Double chromatin dot</em></div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/1/Pf_rings_thinC.jpg" alt="Pf rings thin C" onclick="openLB(this.src,'Pf — Cincin (darah tipis) C · CDC DPDx')">
+              <div class="img-cap">Cincin Pf — darah tipis C<br><em>Appliqué/Accolé</em></div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/1/Pf_rings_thickA.jpg" alt="Pf rings thick" onclick="openLB(this.src,'Pf — Cincin (darah tebal) A · CDC DPDx')">
+              <div class="img-cap">Cincin Pf — darah tebal A</div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/1/Pf_rings_thickB.jpg" alt="Pf rings thick B" onclick="openLB(this.src,'Pf — Cincin (darah tebal) B · CDC DPDx')">
+              <div class="img-cap">Cincin Pf — darah tebal B</div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/3/Pf_troph_thinA.jpg" alt="Pf troph thin" onclick="openLB(this.src,'Pf — Trofozoit (darah tipis) · CDC DPDx')">
+              <div class="img-cap">Trofozoit Pf — darah tipis</div>
+            </div>
+          </div>
+        </div>
+        <div class="morph-panel" id="pf-maurer">
+          <div class="img-grid">
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/2/Pf_MaurersA.jpg" alt="Pf Maurers A" onclick="openLB(this.src,'Pf — Maurer\'s Clefts A · CDC DPDx')">
+              <div class="img-cap">Maurer's Clefts A<br><em>Bintik kasar khas Pf</em></div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/2/Pf_MaurersB.jpg" alt="Pf Maurers B" onclick="openLB(this.src,'Pf — Maurer\'s Clefts B · CDC DPDx')">
+              <div class="img-cap">Maurer's Clefts B</div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/2/Pf_MaurersC.jpg" alt="Pf Maurers C" onclick="openLB(this.src,'Pf — Maurer\'s Clefts C · CDC DPDx')">
+              <div class="img-cap">Maurer's Clefts C</div>
+            </div>
+          </div>
+        </div>
+        <div class="morph-panel" id="pf-schizont">
+          <div class="img-grid">
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/5/Pf_schizont_thinA.jpg" alt="Pf schizont A" onclick="openLB(this.src,'Pf — Skizon A · CDC DPDx')">
+              <div class="img-cap">Skizon Pf A<br><em>Jarang di darah tepi</em></div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/5/Pf_schizont_thinB.jpg" alt="Pf schizont B" onclick="openLB(this.src,'Pf — Skizon B · CDC DPDx')">
+              <div class="img-cap">Skizon Pf B</div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/5/Pf_schizont_thinC.jpg" alt="Pf schizont C" onclick="openLB(this.src,'Pf — Skizon C · CDC DPDx')">
+              <div class="img-cap">Skizon Pf C</div>
+            </div>
+          </div>
+        </div>
+        <div class="morph-panel" id="pf-gamet">
+          <div class="img-grid">
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/4/Pf_gametocyte_thinA.jpg" alt="Pf gametocyte A" onclick="openLB(this.src,'Pf — Gametosit PISANG A · CDC DPDx')">
+              <div class="img-cap">Gametosit Pf A<br><em>🍌 Bentuk pisang/bulan sabit — KHAS!</em></div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/4/Pf_gametocyte_thinB.jpg" alt="Pf gametocyte B" onclick="openLB(this.src,'Pf — Gametosit PISANG B · CDC DPDx')">
+              <div class="img-cap">Gametosit Pf B</div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/4/Pf_gametocyte_thinC.jpg" alt="Pf gametocyte C" onclick="openLB(this.src,'Pf — Gametosit PISANG C · CDC DPDx')">
+              <div class="img-cap">Gametosit Pf C</div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/4/Pf_gametocyte_thickA.jpg" alt="Pf gametocyte thick" onclick="openLB(this.src,'Pf — Gametosit darah tebal · CDC DPDx')">
+              <div class="img-cap">Gametosit Pf — darah tebal</div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/4/Pf_gametocyte_thinD.jpg" alt="Pf gametocyte D" onclick="openLB(this.src,'Pf — Gametosit D · CDC DPDx')">
+              <div class="img-cap">Gametosit Pf D</div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/4/Pf_gametocyte_thinE.jpg" alt="Pf gametocyte E" onclick="openLB(this.src,'Pf — Gametosit E · CDC DPDx')">
+              <div class="img-cap">Gametosit Pf E</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- P. VIVAX -->
+      <div class="species-card sp-pv" style="margin-bottom:18px;padding:18px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+          <h4 style="margin:0;">🔵 Plasmodium vivax</h4>
+          <span style="font-size:0.75rem;background:#2980B9;color:white;border-radius:10px;padding:2px 10px;font-weight:700;">Terbanyak di Kalimantan (60%)</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
+          <ul style="font-size:0.82rem;color:#444;">
+            <li>Eritrosit <strong>membesar 1,5–2× normal</strong></li>
+            <li>Bintik <strong>Schüffner</strong> (halus, seluruh permukaan)</li>
+            <li>Trofozoit: <strong>amuboid</strong>, sitoplasma tidak teratur</li>
+            <li>Skizon: 12–24 merozoit, roset besar</li>
+            <li>Gametosit: bulat besar, memenuhi eritrosit</li>
+          </ul>
+          <div style="background:#EBF5FB;border-radius:8px;padding:10px;font-size:0.78rem;color:#555;">
+            <strong style="color:#1A5276;">⚠️ Ciri Khas Pv:</strong><br>
+            • Eritrosit paling BESAR dari semua spesies<br>
+            • Sitoplasma trofozoit sangat amuboid/tidak beraturan<br>
+            • Bisa <em>hipnozoit</em> → relaps berminggu/bulan kemudian<br>
+            • Schüffner dots muncul sejak trofozoit muda
+          </div>
+        </div>
+        <div class="morph-tabs">
+          <div class="morph-tab active" onclick="switchTab(this,'pv-rings')">Cincin</div>
+          <div class="morph-tab" onclick="switchTab(this,'pv-troph')">Trofozoit</div>
+          <div class="morph-tab" onclick="switchTab(this,'pv-schizont')">Skizon</div>
+          <div class="morph-tab" onclick="switchTab(this,'pv-gamet')">Gametosit</div>
+        </div>
+        <div class="morph-panel active" id="pv-rings">
+          <div class="img-grid">
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/20/Pv_rings_thinA.jpg" alt="Pv rings A" onclick="openLB(this.src,'Pv — Cincin A · CDC DPDx')">
+              <div class="img-cap">Cincin Pv A<br><em>Eritrosit mulai membesar</em></div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/20/Pv_rings_thinB.jpg" alt="Pv rings B" onclick="openLB(this.src,'Pv — Cincin B · CDC DPDx')">
+              <div class="img-cap">Cincin Pv B</div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/20/Pv_rings_thickA.jpg" alt="Pv rings thick" onclick="openLB(this.src,'Pv — Cincin darah tebal · CDC DPDx')">
+              <div class="img-cap">Cincin Pv — darah tebal</div>
+            </div>
+          </div>
+        </div>
+        <div class="morph-panel" id="pv-troph">
+          <div class="img-grid">
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/21/Pv_troph_thinA.jpg" alt="Pv troph A" onclick="openLB(this.src,'Pv — Trofozoit Amuboid A · CDC DPDx')">
+              <div class="img-cap">Trofozoit Pv A<br><em>Amuboid khas Pv</em></div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/21/Pv_troph_thinB.jpg" alt="Pv troph B" onclick="openLB(this.src,'Pv — Trofozoit Amuboid B · CDC DPDx')">
+              <div class="img-cap">Trofozoit Pv B<br><em>Schüffner dots halus</em></div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/21/Pv_troph_thinC.jpg" alt="Pv troph C" onclick="openLB(this.src,'Pv — Trofozoit C · CDC DPDx')">
+              <div class="img-cap">Trofozoit Pv C</div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/21/Pv_troph_thinD.jpg" alt="Pv troph D" onclick="openLB(this.src,'Pv — Trofozoit D · CDC DPDx')">
+              <div class="img-cap">Trofozoit Pv D</div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/21/Pv_troph_thickA.jpg" alt="Pv troph thick" onclick="openLB(this.src,'Pv — Trofozoit darah tebal · CDC DPDx')">
+              <div class="img-cap">Trofozoit Pv — darah tebal</div>
+            </div>
+          </div>
+        </div>
+        <div class="morph-panel" id="pv-schizont">
+          <div class="img-grid">
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/24/Pv_schizont_thinA.jpg" alt="Pv schizont A" onclick="openLB(this.src,'Pv — Skizon A · CDC DPDx')">
+              <div class="img-cap">Skizon Pv A<br><em>12–24 merozoit</em></div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/24/Pv_schizont_thinB.jpg" alt="Pv schizont B" onclick="openLB(this.src,'Pv — Skizon B · CDC DPDx')">
+              <div class="img-cap">Skizon Pv B</div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/24/Pv_schizont_thickA.jpg" alt="Pv schizont thick" onclick="openLB(this.src,'Pv — Skizon darah tebal · CDC DPDx')">
+              <div class="img-cap">Skizon Pv — darah tebal</div>
+            </div>
+          </div>
+        </div>
+        <div class="morph-panel" id="pv-gamet">
+          <div class="img-grid">
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/22/Pv_gametocyte_thinA.jpg" alt="Pv gamet A" onclick="openLB(this.src,'Pv — Gametosit A · CDC DPDx')">
+              <div class="img-cap">Gametosit Pv A<br><em>Bulat besar, memenuhi eritrosit</em></div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/22/Pv_gametocyte_thinB.jpg" alt="Pv gamet B" onclick="openLB(this.src,'Pv — Gametosit B · CDC DPDx')">
+              <div class="img-cap">Gametosit Pv B</div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/22/Pv_gametocyte_thickA.jpg" alt="Pv gamet thick" onclick="openLB(this.src,'Pv — Gametosit darah tebal · CDC DPDx')">
+              <div class="img-cap">Gametosit Pv — darah tebal</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- P. MALARIAE -->
+      <div class="species-card sp-pm" style="margin-bottom:18px;padding:18px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+          <h4 style="margin:0;">🟣 Plasmodium malariae</h4>
+          <span style="font-size:0.75rem;background:#6C3483;color:white;border-radius:10px;padding:2px 10px;font-weight:700;">Siklus 72 jam · Kuartana</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
+          <ul style="font-size:0.82rem;color:#444;">
+            <li>Eritrosit <strong>normal/mengecil</strong></li>
+            <li><strong>Tidak ada bintik</strong> stippling</li>
+            <li>Trofozoit: <strong>band form</strong> (pita melintang) — KHAS!</li>
+            <li>Skizon: <strong>rosette/daisy head</strong> 6–12 merozoit</li>
+            <li>Pigmen: gelap, kasar</li>
+          </ul>
+          <div style="background:#F4ECF7;border-radius:8px;padding:10px;font-size:0.78rem;color:#555;">
+            <strong style="color:#5B2C6F;">⚠️ Ciri Khas Pm:</strong><br>
+            • Band form = trofozoit melintang di tengah eritrosit<br>
+            • Skizon rosette mirip bunga/daisy head<br>
+            • Bisa dormant: MALARIAE RECRUDESCENCE (bertahun-tahun)<br>
+            • Eritrosit TIDAK membesar
+          </div>
+        </div>
+        <div class="morph-tabs">
+          <div class="morph-tab active" onclick="switchTab(this,'pm-rings')">Cincin</div>
+          <div class="morph-tab" onclick="switchTab(this,'pm-band')">Band Form 🎗️</div>
+          <div class="morph-tab" onclick="switchTab(this,'pm-schizont')">Skizon Rosette</div>
+          <div class="morph-tab" onclick="switchTab(this,'pm-gamet')">Gametosit</div>
+        </div>
+        <div class="morph-panel active" id="pm-rings">
+          <div class="img-grid">
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/10/Pm_ring_thinA.jpg" alt="Pm ring A" onclick="openLB(this.src,'Pm — Cincin A · CDC DPDx')">
+              <div class="img-cap">Cincin Pm A<br><em>Eritrosit tidak membesar</em></div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/10/Pm_ring_thinB.jpg" alt="Pm ring B" onclick="openLB(this.src,'Pm — Cincin B · CDC DPDx')">
+              <div class="img-cap">Cincin Pm B</div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/10/Pm_ring_thickA.jpg" alt="Pm ring thick" onclick="openLB(this.src,'Pm — Cincin darah tebal · CDC DPDx')">
+              <div class="img-cap">Cincin Pm — darah tebal</div>
+            </div>
+          </div>
+        </div>
+        <div class="morph-panel" id="pm-band">
+          <div class="img-grid">
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/12/Pm_bandA.jpg" alt="Pm band A" onclick="openLB(this.src,'Pm — Band Form A · CDC DPDx')">
+              <div class="img-cap">Band Form Pm A<br><em>🎗️ Pita melintang — KHAS Pm!</em></div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/12/Pm_bandB.jpg" alt="Pm band B" onclick="openLB(this.src,'Pm — Band Form B · CDC DPDx')">
+              <div class="img-cap">Band Form Pm B</div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/12/Pm_bandC.jpg" alt="Pm band C" onclick="openLB(this.src,'Pm — Band Form C · CDC DPDx')">
+              <div class="img-cap">Band Form Pm C</div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/12/Pm_bandD.jpg" alt="Pm band D" onclick="openLB(this.src,'Pm — Band Form D · CDC DPDx')">
+              <div class="img-cap">Band Form Pm D</div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/12/Pm_bandE.jpg" alt="Pm band E" onclick="openLB(this.src,'Pm — Band Form E · CDC DPDx')">
+              <div class="img-cap">Band Form Pm E</div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/11/Pm_troph_thickA.jpg" alt="Pm troph thick" onclick="openLB(this.src,'Pm — Trofozoit darah tebal · CDC DPDx')">
+              <div class="img-cap">Trofozoit Pm — darah tebal</div>
+            </div>
+          </div>
+        </div>
+        <div class="morph-panel" id="pm-schizont">
+          <div class="img-grid">
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/15/Pm_schizont_thinA.jpg" alt="Pm schizont A" onclick="openLB(this.src,'Pm — Skizon Rosette A · CDC DPDx')">
+              <div class="img-cap">Skizon Pm A<br><em>🌼 Rosette/Daisy head</em></div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/15/Pm_schizont_thinB.jpg" alt="Pm schizont B" onclick="openLB(this.src,'Pm — Skizon Rosette B · CDC DPDx')">
+              <div class="img-cap">Skizon Pm B</div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/13/Pm_basketA.jpg" alt="Pm basket A" onclick="openLB(this.src,'Pm — Basket Form A · CDC DPDx')">
+              <div class="img-cap">Basket form Pm A</div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/15/Pm_schizont_thickA.jpg" alt="Pm schizont thick" onclick="openLB(this.src,'Pm — Skizon darah tebal · CDC DPDx')">
+              <div class="img-cap">Skizon Pm — darah tebal</div>
+            </div>
+          </div>
+        </div>
+        <div class="morph-panel" id="pm-gamet">
+          <div class="img-grid">
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/14/Pm_gametocyte_thinA.jpg" alt="Pm gamet A" onclick="openLB(this.src,'Pm — Gametosit A · CDC DPDx')">
+              <div class="img-cap">Gametosit Pm A</div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/14/Pm_gametocyte_thinB.jpg" alt="Pm gamet B" onclick="openLB(this.src,'Pm — Gametosit B · CDC DPDx')">
+              <div class="img-cap">Gametosit Pm B</div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/14/Pm_gametocyte_thickA.jpg" alt="Pm gamet thick" onclick="openLB(this.src,'Pm — Gametosit darah tebal · CDC DPDx')">
+              <div class="img-cap">Gametosit Pm — darah tebal</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- P. OVALE -->
+      <div class="species-card sp-po" style="margin-bottom:18px;padding:18px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+          <h4 style="margin:0;">🟢 Plasmodium ovale</h4>
+          <span style="font-size:0.75rem;background:#1E8449;color:white;border-radius:10px;padding:2px 10px;font-weight:700;">Siklus 48 jam · Tertiana</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
+          <ul style="font-size:0.82rem;color:#444;">
+            <li>Eritrosit <strong>sedikit membesar 1,25×, oval, tepi bergerigi (fimbriated)</strong></li>
+            <li>Bintik <strong>James</strong> (kasar, seluruh permukaan)</li>
+            <li>Trofozoit: kompak, amuboid ringan</li>
+            <li>Skizon: 8–12 merozoit</li>
+          </ul>
+          <div style="background:#EAFAF1;border-radius:8px;padding:10px;font-size:0.78rem;color:#555;">
+            <strong style="color:#1D6A39;">⚠️ Ciri Khas Po:</strong><br>
+            • Eritrosit OVAL dengan tepi bergerigi (fimbriated)<br>
+            • James dots = kasar (bedakan dari Schüffner yang halus)<br>
+            • Bisa hipnozoit seperti Pv → relaps<br>
+            • Morfologi paling mirip Pv tapi eritrosit oval
+          </div>
+        </div>
+        <div class="morph-tabs">
+          <div class="morph-tab active" onclick="switchTab(this,'po-rings')">Cincin</div>
+          <div class="morph-tab" onclick="switchTab(this,'po-troph')">Trofozoit</div>
+          <div class="morph-tab" onclick="switchTab(this,'po-schizont')">Skizon</div>
+          <div class="morph-tab" onclick="switchTab(this,'po-gamet')">Gametosit</div>
+        </div>
+        <div class="morph-panel active" id="po-rings">
+          <div class="img-grid">
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/16/Po_rings_thinA.jpg" alt="Po rings A" onclick="openLB(this.src,'Po — Cincin A · CDC DPDx')">
+              <div class="img-cap">Cincin Po A<br><em>Eritrosit oval mulai tampak</em></div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/16/Po_rings_thinB.jpg" alt="Po rings B" onclick="openLB(this.src,'Po — Cincin B · CDC DPDx')">
+              <div class="img-cap">Cincin Po B</div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/16/Po_rings_thickA.jpg" alt="Po rings thick" onclick="openLB(this.src,'Po — Cincin darah tebal · CDC DPDx')">
+              <div class="img-cap">Cincin Po — darah tebal</div>
+            </div>
+          </div>
+        </div>
+        <div class="morph-panel" id="po-troph">
+          <div class="img-grid">
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/17/Po_troph_thinA.jpg" alt="Po troph A" onclick="openLB(this.src,'Po — Trofozoit A · CDC DPDx')">
+              <div class="img-cap">Trofozoit Po A<br><em>Eritrosit oval bergerigi</em></div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/17/Po_troph_thinB.jpg" alt="Po troph B" onclick="openLB(this.src,'Po — Trofozoit B · CDC DPDx')">
+              <div class="img-cap">Trofozoit Po B<br><em>James dots kasar</em></div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/17/Po_troph_thinC.jpg" alt="Po troph C" onclick="openLB(this.src,'Po — Trofozoit C · CDC DPDx')">
+              <div class="img-cap">Trofozoit Po C</div>
+            </div>
+          </div>
+        </div>
+        <div class="morph-panel" id="po-schizont">
+          <div class="img-grid">
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/19/Po_schizont_thinA.jpg" alt="Po schizont A" onclick="openLB(this.src,'Po — Skizon A · CDC DPDx')">
+              <div class="img-cap">Skizon Po A<br><em>8–12 merozoit</em></div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/19/Po_schizont_thinB.jpg" alt="Po schizont B" onclick="openLB(this.src,'Po — Skizon B · CDC DPDx')">
+              <div class="img-cap">Skizon Po B</div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/19/Po_schizont_thickA.jpg" alt="Po schizont thick" onclick="openLB(this.src,'Po — Skizon darah tebal · CDC DPDx')">
+              <div class="img-cap">Skizon Po — darah tebal</div>
+            </div>
+          </div>
+        </div>
+        <div class="morph-panel" id="po-gamet">
+          <div class="img-grid">
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/18/Po_gametocyte_thinA.jpg" alt="Po gamet A" onclick="openLB(this.src,'Po — Gametosit A · CDC DPDx')">
+              <div class="img-cap">Gametosit Po A</div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/18/Po_gametocyte_thinB.jpg" alt="Po gamet B" onclick="openLB(this.src,'Po — Gametosit B · CDC DPDx')">
+              <div class="img-cap">Gametosit Po B</div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/18/Po_gametocyte_thickA.jpg" alt="Po gamet thick" onclick="openLB(this.src,'Po — Gametosit darah tebal · CDC DPDx')">
+              <div class="img-cap">Gametosit Po — darah tebal</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- P. KNOWLESI -->
+      <div class="species-card sp-pk" style="padding:18px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap;">
+          <h4 style="margin:0;">🟠 Plasmodium knowlesi</h4>
+          <span style="font-size:0.75rem;background:#D35400;color:white;border-radius:10px;padding:2px 10px;font-weight:700;">⚠️ Zoonosis · Siklus 24 jam</span>
+          <span style="font-size:0.75rem;background:#C0392B;color:white;border-radius:10px;padding:2px 10px;font-weight:700;">Wajib Konfirmasi PCR!</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
+          <ul style="font-size:0.82rem;color:#444;">
+            <li>Eritrosit <strong>ukuran normal</strong></li>
+            <li>Trofozoit muda mirip <em>Pf</em> (cincin kecil)</li>
+            <li>Trofozoit dewasa mirip <em>Pv</em> (amuboid)</li>
+            <li>Skizon mirip <em>Pm</em> (rosette)</li>
+            <li>Inti padat, sitoplasma tidak beraturan</li>
+            <li>Pigmen kuning kehitaman</li>
+            <li>Faktor risiko: hutan, kontak monyet Macaca spp.</li>
+          </ul>
+          <div style="background:#FFF0E6;border-radius:8px;padding:10px;font-size:0.78rem;color:#555;">
+            <strong style="color:#A04000;">⚠️ BAHAYA Pk:</strong><br>
+            • Siklus 24 jam → parasitemia naik CEPAT<br>
+            • Pada darah tebal: tidak ada zona → sulit dibedakan<br>
+            • Tidak ada RDT spesifik → bisa terdeteksi sebagai Pf/Pm<br>
+            • <strong>Wajib PCR</strong> untuk konfirmasi definitif<br>
+            • Reservoir: Macaca fascicularis &amp; M. nemestrina<br>
+            • Vektor: An. leucosphyrus group
+          </div>
+        </div>
+        <div class="morph-tabs">
+          <div class="morph-tab active" onclick="switchTab(this,'pk-rings')">Cincin</div>
+          <div class="morph-tab" onclick="switchTab(this,'pk-troph')">Trofozoit</div>
+          <div class="morph-tab" onclick="switchTab(this,'pk-schizont')">Skizon</div>
+          <div class="morph-tab" onclick="switchTab(this,'pk-gamet')">Gametosit</div>
+        </div>
+        <div class="morph-panel active" id="pk-rings">
+          <div class="img-grid">
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/6/Pk_rings_thin_NY1.jpg" alt="Pk rings 1" onclick="openLB(this.src,'Pk — Cincin 1 · CDC DPDx')">
+              <div class="img-cap">Cincin Pk 1<br><em>Mirip Pf — eritrosit normal</em></div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/6/Pk_rings_thin_NY2.jpg" alt="Pk rings 2" onclick="openLB(this.src,'Pk — Cincin 2 · CDC DPDx')">
+              <div class="img-cap">Cincin Pk 2</div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/6/Pk_rings_thin_NY3.jpg" alt="Pk rings 3" onclick="openLB(this.src,'Pk — Cincin 3 · CDC DPDx')">
+              <div class="img-cap">Cincin Pk 3</div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/6/Pk_rings_thin_NY4.jpg" alt="Pk rings 4" onclick="openLB(this.src,'Pk — Cincin 4 · CDC DPDx')">
+              <div class="img-cap">Cincin Pk 4</div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/6/Pk_rings_thin_NY5.jpg" alt="Pk rings 5" onclick="openLB(this.src,'Pk — Cincin 5 · CDC DPDx')">
+              <div class="img-cap">Cincin Pk 5</div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/6/Pk_rings_thin_NY6.jpg" alt="Pk rings 6" onclick="openLB(this.src,'Pk — Cincin 6 · CDC DPDx')">
+              <div class="img-cap">Cincin Pk 6</div>
+            </div>
+          </div>
+        </div>
+        <div class="morph-panel" id="pk-troph">
+          <div class="img-grid">
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/7/Pk_troph_thin_NY1.jpg" alt="Pk troph 1" onclick="openLB(this.src,'Pk — Trofozoit 1 · CDC DPDx')">
+              <div class="img-cap">Trofozoit Pk 1<br><em>Mirip Pv namun eritrosit normal</em></div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/7/Pk_troph_thin_NY2.jpg" alt="Pk troph 2" onclick="openLB(this.src,'Pk — Trofozoit 2 · CDC DPDx')">
+              <div class="img-cap">Trofozoit Pk 2</div>
+            </div>
+          </div>
+        </div>
+        <div class="morph-panel" id="pk-schizont">
+          <div class="img-grid">
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/9/Pk_schizont_thin_NY1.jpg" alt="Pk schizont 1" onclick="openLB(this.src,'Pk — Skizon 1 · CDC DPDx')">
+              <div class="img-cap">Skizon Pk 1<br><em>Mirip Pm — roset kecil</em></div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/9/Pk_schizont_thin_NY2.jpg" alt="Pk schizont 2" onclick="openLB(this.src,'Pk — Skizon 2 · CDC DPDx')">
+              <div class="img-cap">Skizon Pk 2</div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/9/Pk_schizont_thin_NY3.jpg" alt="Pk schizont 3" onclick="openLB(this.src,'Pk — Skizon 3 · CDC DPDx')">
+              <div class="img-cap">Skizon Pk 3</div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/9/Pk_schizont_thin_NY4.jpg" alt="Pk schizont 4" onclick="openLB(this.src,'Pk — Skizon 4 · CDC DPDx')">
+              <div class="img-cap">Skizon Pk 4</div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/9/Pk_schizont_thin_NY5.jpg" alt="Pk schizont 5" onclick="openLB(this.src,'Pk — Skizon 5 · CDC DPDx')">
+              <div class="img-cap">Skizon Pk 5</div>
+            </div>
+          </div>
+        </div>
+        <div class="morph-panel" id="pk-gamet">
+          <div class="img-grid">
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/8/Pk_gametocyte_thin_NY1.jpg" alt="Pk gamet 1" onclick="openLB(this.src,'Pk — Gametosit 1 · CDC DPDx')">
+              <div class="img-cap">Gametosit Pk 1</div>
+            </div>
+            <div class="img-item">
+              <img src="https://www.cdc.gov/dpdx/malaria/images/8/Pk_gametocyte_thin_NY2.jpg" alt="Pk gamet 2" onclick="openLB(this.src,'Pk — Gametosit 2 · CDC DPDx')">
+              <div class="img-cap">Gametosit Pk 2</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end species -->
+    <p style="font-size:0.72rem;color:#999;margin-top:8px;">📸 Sumber gambar: CDC DPDx — Division of Parasitic Diseases and Malaria, Public Domain. <a href="https://www.cdc.gov/dpdx/malaria" style="color:var(--blue-mid);">cdc.gov/dpdx/malaria</a></p>
+  </div>
+
+  <!-- HITUNG PARASIT -->
+  <div class="card">
+    <h2>📊 Hitung Parasit (Parasite Count)</h2>
+    <div class="grid-2">
+      <div>
+        <h3>Metode Darah Tebal</h3>
+        <ol>
+          <li>Siapkan 2 tally counter (parasit &amp; leukosit)</li>
+          <li>Hitung bersamaan hingga <strong>200 leukosit</strong></li>
+          <li>Jika parasit &lt;100 saat 200 leukosit → lanjut hingga <strong>500 leukosit</strong></li>
+        </ol>
+        <div class="formula">Parasit/µl = (Jml Parasit × 8.000) / Jml Leukosit</div>
+        <p style="font-size:0.82rem;color:#555;">Contoh: 241 parasit / 205 leukosit × 8.000 = <strong>9.405 parasit/µl</strong></p>
+        <p style="font-size:0.8rem;color:#888;margin-top:6px;">8.000 = estimasi leukosit rata-rata per µl darah</p>
+      </div>
+      <div>
+        <h3>Metode Darah Tipis (% Parasitemia)</h3>
+        <ol>
+          <li>Pilih LP eritrosit satu lapis rata</li>
+          <li>Hitung eritrosit terinfeksi dari <strong>1.000–2.000 eritrosit</strong></li>
+        </ol>
+        <div class="formula">Parasit/µl = (Parasit / 1.000) × 5.000.000</div>
+        <p style="font-size:0.8rem;color:#888;margin-top:6px;">5.000.000 = estimasi eritrosit per µl</p>
+        <h3 style="margin-top:16px;">Interpretasi Kepadatan</h3>
+        <table class="tbl">
+          <tr><th>Kepadatan</th><th>Interpretasi</th></tr>
+          <tr><td>100–&lt;10.000/µl</td><td>Malaria tanpa komplikasi</td></tr>
+          <tr><td>&gt;100.000/µl</td><td>Malaria berat/komplikasi</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <h3 style="margin-top:16px;">Cara Pelaporan Hasil</h3>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;">
+      <div class="chip blue">Neg/(-) = Negatif</div>
+      <div class="chip red">Pf = P. falciparum trofozoit</div>
+      <div class="chip red">Pf+g = Pf + gametosit</div>
+      <div class="chip red">Pfg = gametosit saja</div>
+      <div class="chip blue">Pv = P. vivax</div>
+      <div class="chip purple">Pm = P. malariae</div>
+      <div class="chip green">Po = P. ovale</div>
+      <div class="chip orange">Mix (Pf+Pv) = Infeksi campuran</div>
+    </div>
+  </div>
+
+  <!-- RDT -->
+  <div class="card">
+    <h2>🩺 Rapid Diagnostic Test (RDT)</h2>
+    <div class="grid-2">
+      <div>
+        <h3>Prinsip Kerja</h3>
+        <p style="font-size:0.87rem;">Imunokromatografi lateral flow — mendeteksi <strong>antigen Plasmodium</strong> dalam darah menggunakan antibodi berlabel warna.</p>
+        <h3>Antigen yang Dideteksi</h3>
+        <ul>
+          <li><strong>HRP-2</strong> (Histidine-rich protein 2): spesifik <em>P. falciparum</em></li>
+          <li><strong>pLDH pan</strong> (lactate dehydrogenase): semua spesies</li>
+          <li><strong>Pan Aldolase</strong>: semua spesies</li>
+        </ul>
+        <p style="font-size:0.82rem;color:#888;margin-top:8px;">Hasil terbaca: <strong>10–20 menit</strong></p>
+      </div>
+      <div>
+        <h3>Keterbatasan RDT</h3>
+        <ul>
+          <li>❌ Tidak bisa hitung parasit</li>
+          <li>❌ Tidak bisa evaluasi pengobatan (HRP-2 bertahan beberapa minggu setelah parasit bersih)</li>
+          <li>❌ False negative jika ada <em>hrp-2 gene deletion</em> (Pf)</li>
+          <li>❌ Belum ada RDT spesifik P. knowlesi</li>
+          <li>❌ Tidak menggantikan mikroskopi</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TAB 2: RANGKUMAN ===== -->
+<section class="section" id="tab-rangkuman">
+  <div class="section-hero red">
+    <div class="hero-icon">📋</div>
+    <div>
+      <h2>Tim 2 — Si Paling Merangkum</h2>
+      <p>Intisari padat · Mudah dibaca, dihafalkan, dan diingat kembali</p>
+    </div>
+  </div>
+
+  <!-- MNEMONIK -->
+  <div class="card red">
+    <h2>🧠 Mnemonik Cepat — 5 Spesies Plasmodium</h2>
+    <div class="grid-2" style="gap:12px;">
+      <div class="summary-box blue">
+        <h4>🔴 Pf — "FALCI = CINCIN PISANG"</h4>
+        <p style="font-size:0.85rem;">Cincin kecil · Appliqué · Maurer dots · Gametosit <strong>PISANG</strong> · Eritrosit NORMAL</p>
+      </div>
+      <div class="summary-box blue">
+        <h4>🔵 Pv — "VIVAX = BESAR AMUBA SCHÜFFNER"</h4>
+        <p style="font-size:0.85rem;">Eritrosit <strong>BESAR 1,5–2×</strong> · Schüffner dots halus · Trofozoit <strong>AMUBOID</strong></p>
+      </div>
+      <div class="summary-box blue">
+        <h4>🟣 Pm — "MALARIA = BAND + ROSETTE"</h4>
+        <p style="font-size:0.85rem;">Eritrosit normal/kecil · <strong>Band form</strong> · <strong>Rosette schizont</strong> · NO stippling</p>
+      </div>
+      <div class="summary-box blue">
+        <h4>🟢 Po — "OVALE = OVAL BERGERIGI JAMES"</h4>
+        <p style="font-size:0.85rem;">Eritrosit <strong>OVAL bergerigi</strong> · James dots · Membesar 1,25×</p>
+      </div>
+    </div>
+    <div class="summary-box orange" style="margin-top:12px;">
+      <h4>🟠 Pk — "KNOWLESI = KAMUFLASE + PCR"</h4>
+      <p style="font-size:0.85rem;">Mirip Pf (muda) / Pv (dewasa) / Pm (skizon) · Eritrosit NORMAL · Siklus 24 jam · <strong>Wajib PCR konfirmasi</strong></p>
+    </div>
+  </div>
+
+  <!-- RINGKASAN DIAGNOSTIK -->
+  <div class="card">
+    <h2>⚡ Ringkasan Diagnostik — 3 Metode</h2>
+    <table class="tbl">
+      <tr><th>Aspek</th><th>🔬 Mikroskopi</th><th>🩺 RDT</th><th>🧬 PCR</th></tr>
+      <tr><td><strong>Gold Standard</strong></td><td>✅ Ya</td><td>❌</td><td>Konfirmasi Pk</td></tr>
+      <tr><td><strong>Sensitivitas</strong></td><td>50–200/µl</td><td>~100/µl</td><td>1–10/µl</td></tr>
+      <tr><td><strong>Spesies</strong></td><td>5 spesies + stadium</td><td>Terbatas</td><td>Semua + submikroskopik</td></tr>
+      <tr><td><strong>Hitung Parasit</strong></td><td>✅</td><td>❌</td><td>❌</td></tr>
+      <tr><td><strong>Evaluasi Obat</strong></td><td>✅</td><td>❌ (HRP-2 persisten)</td><td>✅</td></tr>
+      <tr><td><strong>Waktu</strong></td><td>60–90 mnt</td><td>10–20 mnt</td><td>3–5 hari</td></tr>
+      <tr><td><strong>Daerah Terpencil</strong></td><td>Butuh listrik/mikros</td><td>✅ Ideal</td><td>❌</td></tr>
+    </table>
+  </div>
+
+  <!-- RINGKASAN TEKNIS -->
+  <div class="grid-2">
+    <div class="card green">
+      <h2>📐 Rumus Hitung Parasit</h2>
+      <div class="formula" style="font-size:0.85rem;">Tebal: (P × 8.000) / L = /µl</div>
+      <div class="formula" style="font-size:0.85rem;">Tipis: (P / 1.000) × 5.000.000 = /µl</div>
+      <p style="font-size:0.82rem;color:#555;margin-top:6px;">P = jumlah parasit · L = jumlah leukosit</p>
+      <p style="font-size:0.82rem;color:#555;">Hitung sd 200 WBC; jika &lt;100 parasit → lanjut 500 WBC</p>
+    </div>
+    <div class="card orange">
+      <h2>🎨 Pewarnaan Giemsa — Ingat!</h2>
+      <ul>
+        <li><strong>Konsentrasi:</strong> 3% (0,3 ml stok + 9,7 ml buffer)</li>
+        <li><strong>Durasi:</strong> 45–60 menit</li>
+        <li><strong>pH buffer:</strong> 7,2 (netral, WAJIB)</li>
+        <li><strong>Warna baik:</strong> Inti parasit 🔴 merah · Sitoplasma 🔵 biru · Inti leukosit 🟣 ungu</li>
+        <li><strong>Uji giemsa:</strong> Mingguan / setiap batch baru</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- POIN KRITIS -->
+  <div class="card purple">
+    <h2>🚨 Poin Kritis yang Sering Diuji</h2>
+    <div class="grid-2">
+      <div>
+        <h3>Jangan Tertukar:</h3>
+        <ul>
+          <li>Schüffner = Pv (halus) | James = Po (kasar) | Maurer = Pf (kasar)</li>
+          <li>Gametosit pisang = <strong>hanya Pf</strong></li>
+          <li>Band form = <strong>hanya Pm</strong></li>
+          <li>Eritrosit paling besar = <strong>Pv</strong></li>
+          <li>HRP-2 positif ≠ masih ada parasit (bisa sisa antigen)</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Kebijakan Kemenkes RI:</h3>
+        <ul>
+          <li>✅ Semua kasus <strong>harus</strong> dikonfirmasi lab sebelum diobati</li>
+          <li>✅ Darah tipis + tebal pada <strong>1 slide yang sama</strong></li>
+          <li>✅ Negatif = tidak ada parasit dalam <strong>100 LP</strong> (darah tebal)</li>
+          <li>✅ Ulangi jika pertama negatif tapi klinis curiga</li>
+          <li>✅ Pk harus dikonfirmasi PCR</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLASHCARD -->
+  <div class="card gold">
+    <h2>🃏 Flashcard Kilat</h2>
+    <div class="grid-3" style="gap:10px;">
+      <div style="background:var(--blue-light);border-radius:10px;padding:12px;font-size:0.82rem;">
+        <strong>Q: Darah tebal vs tipis — mana untuk apa?</strong><br>
+        A: Tebal = <strong>skrining</strong> (sensitif); Tipis = <strong>identifikasi spesies</strong>
+      </div>
+      <div style="background:var(--green-light);border-radius:10px;padding:12px;font-size:0.82rem;">
+        <strong>Q: Kenapa tidak perlu tunggu demam?</strong><br>
+        A: Parasit ada sepanjang waktu di darah; demam bukan prasyarat pengambilan sampel
+      </div>
+      <div style="background:var(--red-pale);border-radius:10px;padding:12px;font-size:0.82rem;">
+        <strong>Q: RDT bisa untuk evaluasi pengobatan?</strong><br>
+        A: ❌ Tidak — HRP-2 bertahan berminggu-minggu setelah parasit bersih
+      </div>
+      <div style="background:var(--orange-light);border-radius:10px;padding:12px;font-size:0.82rem;">
+        <strong>Q: Siklus terpendek Plasmodium?</strong><br>
+        A: <strong>P. knowlesi</strong> — 24 jam (quotidiana), paling cepat berat
+      </div>
+      <div style="background:var(--purple-light);border-radius:10px;padding:12px;font-size:0.82rem;">
+        <strong>Q: Sensitivitas tertinggi?</strong><br>
+        A: <strong>PCR</strong> (1–10/µl) &gt; Mikroskopi expert &gt; RDT
+      </div>
+      <div style="background:var(--gold-light);border-radius:10px;padding:12px;font-size:0.82rem;">
+        <strong>Q: Berapa LP untuk nyatakan negatif?</strong><br>
+        A: <strong>100 lapang pandang</strong> pada sediaan darah tebal (pembesaran 1000×)
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TAB 3: INOVASI ===== -->
+<section class="section" id="tab-inovasi">
+  <div class="section-hero green">
+    <div class="hero-icon">💡</div>
+    <div>
+      <h2>Tim 3 — Si Paling Inovasi</h2>
+      <p>Inovasi aplikatif berbasis pembelajaran untuk penguatan program eliminasi malaria</p>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:18px;">
+    <div class="innov-card">
+      <div class="ic-icon">📱</div>
+      <h3>1. Aplikasi Mobile AI-Assisted Microscopy</h3>
+      <p>Kembangkan aplikasi smartphone yang menggunakan kamera dan AI (deep learning/CNN) untuk mendeteksi dan mengklasifikasi spesies Plasmodium dari foto sediaan darah. Solusi untuk daerah terpencil yang kekurangan tenaga mikroskopis terlatih. Sudah ada prototipe global (e.g., CellScope Malaria, WHO-validated AI tools); Indonesia perlu adaptasi untuk spesies lokal termasuk P. knowlesi.</p>
+    </div>
+    <div class="innov-card">
+      <div class="ic-icon">🗺️</div>
+      <h3>2. Sistem Pemetaan Real-Time (GIS-Integrated Lab)</h3>
+      <p>Integrasi hasil pemeriksaan lab (mikroskopi/RDT) langsung ke sistem GIS real-time. Setiap hasil positif otomatis terlokasi pada peta endemisitas. Memungkinkan respons cepat KLB, pemantauan distribusi spesies (khususnya Pk di Kalimantan), dan pengambilan keputusan berbasis data oleh Dinas Kesehatan.</p>
+    </div>
+    <div class="innov-card">
+      <div class="ic-icon">🧬</div>
+      <h3>3. Panel RDT Multi-Antigen + Pk Spesifik</h3>
+      <p>Mendorong pengembangan atau pengadaan RDT yang mampu mendeteksi HRP-2, pLDH pan, dan antigen P. knowlesi spesifik dalam satu strip. Saat ini belum ada RDT Pk yang divalidasi WHO — kolaborasi riset dengan Universiti Malaysia Sarawak (UNIMAS) yang telah memimpin penelitian Pk sangat relevan untuk Kalimantan.</p>
+    </div>
+    <div class="innov-card">
+      <div class="ic-icon">🎓</div>
+      <h3>4. E-Learning Kompetensi Mikroskopik Berkelanjutan</h3>
+      <p>Platform digital untuk pelatihan dan uji kompetensi tenaga mikroskopis malaria dengan modul gambar slide interaktif, kuis adaptif, dan sertifikasi berkala. Mengatasi masalah degradasi kompetensi di daerah low-endemic di mana petugas jarang bertemu kasus nyata. Terintegrasi dengan sistem External Competency Assessment (ECA) yang sudah ada.</p>
+    </div>
+    <div class="innov-card">
+      <div class="ic-icon">🩸</div>
+      <h3>5. Dried Blood Spot (DBS) untuk Surveilans MMP</h3>
+      <p>Systematic use of Dried Blood Spot (kertas Whatman) pada populasi migran mobile (MMP) sebagai sampel surveilans. DBS stabil pada suhu kamar, mudah dikirim ke lab regional, dan dapat diproses PCR untuk deteksi submikroskopik. Menutupi gap 20% kasus dari MMP yang sering lolos deteksi rutin.</p>
+    </div>
+    <div class="innov-card">
+      <div class="ic-icon">🤝</div>
+      <h3>6. One Health Surveillance — Satu Data Malaria-Satwa</h3>
+      <p>Untuk P. knowlesi, integrasikan surveilans kesehatan manusia dengan data populasi Macaca fascicularis dan M. nemestrina di sekitar hutan Kalimantan. Kolaborasi Kemenkes–KLHK–Universitas untuk pemetaan risiko zoonosis berbasis ekologi. Identifikasi hotspot transmisi Pk sebelum terjadi klaster kasus manusia.</p>
+    </div>
+  </div>
+
+  <div class="card green">
+    <h2>🎯 Prioritas Inovasi untuk Program Eliminasi</h2>
+    <table class="tbl">
+      <tr><th>Inovasi</th><th>Dampak</th><th>Feasibilitas</th><th>Prioritas</th></tr>
+      <tr><td>AI Microscopy App</td><td>⭐⭐⭐⭐⭐</td><td>Sedang (butuh data training lokal)</td><td>🔴 Tinggi</td></tr>
+      <tr><td>GIS Real-Time Lab</td><td>⭐⭐⭐⭐</td><td>Tinggi (sistem sudah ada, perlu integrasi)</td><td>🔴 Tinggi</td></tr>
+      <tr><td>E-Learning ECA</td><td>⭐⭐⭐⭐</td><td>Tinggi (platform mudah dibangun)</td><td>🔴 Tinggi</td></tr>
+      <tr><td>DBS untuk MMP</td><td>⭐⭐⭐⭐</td><td>Tinggi (metode sudah ada)</td><td>🟡 Sedang</td></tr>
+      <tr><td>RDT Pk Spesifik</td><td>⭐⭐⭐⭐⭐</td><td>Rendah (butuh R&amp;D global)</td><td>🟡 Jangka Panjang</td></tr>
+      <tr><td>One Health Surveillance</td><td>⭐⭐⭐⭐</td><td>Sedang (koordinasi lintas sektor)</td><td>🟡 Sedang</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ===== TAB 4: PENUGASAN ===== -->
+<section class="section" id="tab-penugasan">
+  <div class="section-hero purple">
+    <div class="hero-icon">📝</div>
+    <div>
+      <h2>Tim 4 — Penugasan Kelompok</h2>
+      <p>Lembar Penugasan Pelatihan Inti 1 · Pembelajaran 3: Diagnosis Laboratorium · 10 Soal Esai</p>
+    </div>
+  </div>
+
+  <div class="assign-q">
+    <div class="aq-head"><div class="aq-num">1</div><div class="aq-question">Apa keuntungan melakukan diagnosis laboratorium malaria?</div></div>
+    <div class="aq-answer">
+      Diagnosis laboratorium malaria memberikan keuntungan ganda: klinis dan programatik.<br><br>
+      <strong>Dari sisi klinis:</strong> (1) Konfirmasi pasti adanya infeksi Plasmodium, menghindari overdiagnosis berdasarkan gejala saja yang tidak spesifik; (2) Identifikasi spesies Plasmodium — penting untuk pemilihan obat yang tepat (P. falciparum memerlukan ACT, P. vivax/ovale memerlukan primakuin tambahan untuk cegah relaps); (3) Mengetahui stadium parasit dan kepadatan parasit untuk menilai keparahan penyakit; (4) Memantau respons pengobatan secara objektif.<br><br>
+      <strong>Dari sisi program:</strong> (5) Mencegah pemberian obat antimalaria yang tidak perlu (mencegah resistensi); (6) Mendukung surveilans epidemiologi; (7) Sesuai kebijakan Kemenkes RI: <em>semua kasus harus dikonfirmasi laboratorium sebelum diobati</em>.
+    </div>
+    <div class="aq-ref">📚 Ref: Kemenkes RI Pedoman Tatalaksana Malaria 2022; WHO Guidelines for the Treatment of Malaria 3rd Ed. 2015</div>
+  </div>
+
+  <div class="assign-q">
+    <div class="aq-head"><div class="aq-num">2</div><div class="aq-question">Sebutkan tes laboratorium rutin untuk malaria di Indonesia</div></div>
+    <div class="aq-answer">
+      Terdapat 2 pemeriksaan laboratorium rutin (standar program) untuk malaria di Indonesia:<br><br>
+      <strong>1. Pemeriksaan Mikroskopis</strong> — sediaan darah tebal dan tipis dengan pewarnaan Giemsa. Merupakan <em>gold standard</em>. Dilakukan di semua fasilitas kesehatan yang memiliki tenaga mikroskopis terlatih dan mikroskop.<br><br>
+      <strong>2. Rapid Diagnostic Test (RDT)</strong> — mendeteksi antigen Plasmodium (HRP-2, pLDH, pan aldolase) menggunakan prinsip imunokromatografi. Digunakan terutama di daerah terpencil yang tidak memiliki tenaga atau alat mikroskopi.<br><br>
+      PCR <em>bukan</em> pemeriksaan rutin — digunakan untuk konfirmasi spesies (terutama P. knowlesi), surveilans, dan penelitian.
+    </div>
+    <div class="aq-ref">📚 Ref: Kemenkes RI 2022; WHO Malaria Microscopy Quality Assurance Manual 2016</div>
+  </div>
+
+  <div class="assign-q">
+    <div class="aq-head"><div class="aq-num">3</div><div class="aq-question">Jelaskan kelebihan dan kekurangan dari tes rutin tersebut</div></div>
+    <div class="aq-answer">
+      <strong>🔬 Mikroskopi:</strong><br>
+      <em>Kelebihan:</em> Biaya relatif murah; dapat membedakan 5 spesies Plasmodium; mengidentifikasi semua stadium; mendeteksi infeksi campuran; menghitung kepadatan parasit; gold standard; dapat evaluasi respons pengobatan; sensitivitas tinggi di tangan expert (5–20/µl).<br>
+      <em>Kekurangan:</em> Sangat bergantung pada keahlian pemeriksa dan kualitas sediaan; memerlukan pelatihan intensif dan manajemen kualitas SDM berkelanjutan; memerlukan listrik dan mikroskop; waktu lebih lama (60–90 menit); artefak dapat menyebabkan false positive.<br><br>
+      <strong>🩺 RDT:</strong><br>
+      <em>Kelebihan:</em> Cepat (10–20 menit); mudah digunakan tanpa keahlian khusus; tidak memerlukan listrik/mikroskop; cocok untuk daerah terpencil dan kondisi darurat.<br>
+      <em>Kekurangan:</em> Tidak bisa hitung parasit; tidak bisa evaluasi pengobatan (HRP-2 persisten berminggu-minggu); false negative akibat <em>hrp-2 gene deletion</em> pada Pf; belum ada RDT spesifik P. knowlesi; sensitivitas lebih rendah dari mikroskopi expert; tidak membedakan stadium parasit.
+    </div>
+    <div class="aq-ref">📚 Ref: WHO Malaria RDT Product Testing 2024; Kemenkes RI 2022</div>
+  </div>
+
+  <div class="assign-q">
+    <div class="aq-head"><div class="aq-num">4</div><div class="aq-question">Jelaskan sampel darah apa saja yang dapat dipakai untuk pemeriksaan rutin laboratorium malaria</div></div>
+    <div class="aq-answer">
+      Sampel yang dapat digunakan untuk pemeriksaan rutin:<br><br>
+      <strong>Darah kapiler (darah langsung — diutamakan):</strong> ujung jari tangan (dewasa), ujung tumit (bayi). Idealnya tanpa antikoagulan, langsung dibuat sediaan darah.<br><br>
+      <strong>Darah vena (EDTA):</strong> dapat digunakan, namun harus diproses dalam <strong>&lt;1 jam</strong> setelah pengambilan karena antikoagulan dapat menyebabkan perubahan morfologi parasit dan artefak yang mengganggu identifikasi.<br><br>
+      <strong>Sampel khusus:</strong> darah plasenta dan tali pusat bayi (untuk mendeteksi malaria kongenital).<br><br>
+      <em>Catatan:</em> Untuk PCR, selain darah segar, dapat digunakan Dried Blood Spot (DBS) pada kertas Whatman #3 dan slide sediaan darah (diameter 1–2 cm).
+    </div>
+    <div class="aq-ref">📚 Ref: WHO Malaria Microscopy Manual 2010; Kemenkes RI 2022</div>
+  </div>
+
+  <div class="assign-q">
+    <div class="aq-head"><div class="aq-num">5</div><div class="aq-question">Mengapa pengambilan sampel darah tidak perlu menunggu pasien demam?</div></div>
+    <div class="aq-answer">
+      Pengambilan darah <strong>tidak perlu menunggu demam</strong> karena beberapa alasan ilmiah:<br><br>
+      <strong>1. Parasit ada di darah sepanjang siklus:</strong> Seluruh stadium aseksual (trofozoit muda → dewasa → skizon) dan gametosit berada di sirkulasi darah secara kontinyu, tidak hanya saat demam terjadi.<br><br>
+      <strong>2. Demam hanya penanda pecahnya skizon:</strong> Demam muncul saat skizon pecah dan merozoit + produk metabolik dilepaskan ke sirkulasi → mengaktifkan respons imun (sitokin). Ini hanya satu titik dalam siklus, bukan syarat adanya parasit.<br><br>
+      <strong>3. Menunggu menunda diagnosis:</strong> Penundaan meningkatkan risiko progresi ke malaria berat, terutama pada P. falciparum dan P. knowlesi yang dapat memburuk dalam 24 jam.<br><br>
+      <strong>4. Parasit stadium lain tetap terdeteksi:</strong> Pada P. falciparum, trofozoit muda (cincin) dan gametosit selalu ada di darah perifer meski skizon matang bersekuestrasi di kapiler organ dalam.
+    </div>
+    <div class="aq-ref">📚 Ref: WHO Guidelines for Treatment of Malaria 3rd Ed. 2015; Warrell & Gilles, Essential Malariology 2002</div>
+  </div>
+
+  <div class="assign-q">
+    <div class="aq-head"><div class="aq-num">6</div><div class="aq-question">Mengapa kita harus mengulang pemeriksaan darah bila hasil pertama tidak ditemukan Plasmodium pada pasien suspek malaria?</div></div>
+    <div class="aq-answer">
+      Pemeriksaan harus diulang karena beberapa kondisi yang dapat menyebabkan hasil negatif palsu (false negative):<br><br>
+      <strong>1. Kepadatan parasit di bawah ambang deteksi:</strong> Pada infeksi awal atau pasien yang pernah mendapat pengobatan parsial, kepadatan parasit bisa &lt;50/µl — di bawah sensitivitas mikroskopi standar.<br><br>
+      <strong>2. Sekuestrasi parasit (P. falciparum):</strong> Eritrosit terinfeksi stadium lanjut menempel di endotel kapiler organ dalam (otak, paru, ginjal) melalui cytoadherence, sehingga tidak tampak di darah perifer saat pemeriksaan.<br><br>
+      <strong>3. Pengaruh obat antipiretik/antibiotik:</strong> Dapat sementara menekan parasitemia sehingga pemeriksaan pertama negatif.<br><br>
+      <strong>4. Variasi siklus parasit:</strong> Densitas parasit berfluktuasi mengikuti siklus aseksual; pemeriksaan di "titik rendah" bisa miss.<br><br>
+      <strong>Rekomendasi:</strong> WHO menyarankan pengulangan pemeriksaan setiap <strong>12–24 jam</strong> selama 2–3 hari jika klinis sangat mencurigai malaria namun hasil pertama negatif.
+    </div>
+    <div class="aq-ref">📚 Ref: WHO Malaria Microscopy Manual 2010; Trampuz et al., Mayo Clin Proc 2003</div>
+  </div>
+
+  <div class="assign-q">
+    <div class="aq-head"><div class="aq-num">7</div><div class="aq-question">Jelaskan cara hitung parasit malaria pada sediaan darah tebal dan tipis</div></div>
+    <div class="aq-answer">
+      <strong>🔬 Sediaan Darah Tebal:</strong><br>
+      1. Siapkan 2 tally counter — satu untuk parasit, satu untuk leukosit<br>
+      2. Baca slide secara zigzag mulai dari lapang pandang yang mengandung parasit dengan leukosit 10–15/LPB<br>
+      3. Hitung parasit dan leukosit secara bersamaan hingga mencapai <strong>200 leukosit</strong><br>
+      4. Jika jumlah parasit &lt;100 saat 200 leukosit → lanjutkan hingga <strong>500 leukosit</strong><br>
+      5. Rumus: <strong>Parasit/µl = (Jumlah Parasit × 8.000) / Jumlah Leukosit</strong><br>
+      &nbsp;&nbsp;&nbsp;(8.000 = estimasi rata-rata leukosit/µl darah normal)<br>
+      Contoh: 241 parasit / 205 leukosit × 8.000 = <strong>9.405 parasit/µl</strong><br><br>
+      <strong>🔬 Sediaan Darah Tipis (% parasitemia):</strong><br>
+      1. Pilih lapang pandang (LP) di mana eritrosit berada satu lapis rata<br>
+      2. Hitung eritrosit terinfeksi dari total <strong>1.000–2.000 eritrosit</strong><br>
+      3. Cara praktis: hitung 250 eritrosit per LP × 4 LP = 1.000 eritrosit<br>
+      4. Rumus: <strong>Parasit/µl = (Jumlah Parasit / 1.000) × 5.000.000</strong><br>
+      &nbsp;&nbsp;&nbsp;(5.000.000 = estimasi eritrosit/µl darah normal)<br>
+      5. Metode ini digunakan jika kepadatan sangat tinggi sehingga sulit dihitung di darah tebal
+    </div>
+    <div class="aq-ref">📚 Ref: WHO Malaria Parasite Counting Manual; Kemenkes RI 2022</div>
+  </div>
+
+  <div class="assign-q">
+    <div class="aq-head"><div class="aq-num">8</div><div class="aq-question">Jelaskan mekanisme kerja RDT malaria</div></div>
+    <div class="aq-answer">
+      RDT malaria bekerja berdasarkan prinsip <strong>imunokromatografi lateral flow</strong>:<br><br>
+      <strong>Langkah kerja:</strong><br>
+      1. Darah pasien (1–5 µl) + larutan buffer diteteskan pada <strong>pad sampel</strong> di ujung strip<br>
+      2. Campuran mengalir secara kapiler sepanjang membran nitroselulosa<br>
+      3. Di zona konjugat, <strong>antibodi berlabel koloid emas/berwarna</strong> mengikat antigen Plasmodium (HRP-2, pLDH, atau aldolase) yang ada dalam sampel<br>
+      4. Kompleks antigen–antibodi berlanjut mengalir ke <strong>garis tes (T)</strong> yang mengandung antibodi penangkap spesifik<br>
+      5. Kompleks tertangkap → membentuk garis berwarna yang <strong>terlihat secara visual</strong><br>
+      6. Kelebihan reagen berlanjut ke <strong>garis kontrol (C)</strong> — garis ini harus selalu muncul untuk validasi tes berjalan baik<br>
+      7. Hasil dibaca pada <strong>10–20 menit</strong>: C saja = negatif; C+T = positif; T saja tanpa C = hasil tidak valid
+    </div>
+    <div class="aq-ref">📚 Ref: WHO Malaria RDT Manual 2015; Murray et al., Clin Microbiol Rev 2008</div>
+  </div>
+
+  <div class="assign-q">
+    <div class="aq-head"><div class="aq-num">9</div><div class="aq-question">Sebutkan antigen malaria yang digunakan dalam RDT dan jelaskan alasan RDT tidak dapat dipakai untuk evaluasi pengobatan</div></div>
+    <div class="aq-answer">
+      <strong>Antigen yang dideteksi RDT:</strong><br>
+      • <strong>HRP-2</strong> (Histidine-rich protein 2): antigen spesifik <em>P. falciparum</em>, diproduksi oleh trofozoit dan gametosit<br>
+      • <strong>pLDH pan</strong> (pan lactate dehydrogenase): enzim glikolisis yang ada pada semua 4 spesies Plasmodium<br>
+      • <strong>Pan Aldolase</strong>: enzim yang ada pada semua spesies Plasmodium<br><br>
+      <strong>Mengapa RDT tidak bisa untuk evaluasi pengobatan:</strong><br>
+      Utamanya karena sifat <strong>HRP-2</strong>: protein ini memiliki <em>waktu paruh yang sangat panjang</em> di sirkulasi (dapat terdeteksi 2–6 minggu setelah parasit sudah bersih dari darah). Akibatnya, RDT tetap memberikan hasil <strong>positif palsu</strong> meskipun pengobatan sudah berhasil dan tidak ada lagi parasit yang hidup.<br><br>
+      pLDH lebih cepat menghilang (~2 minggu) namun masih terlalu lama untuk evaluasi klinis bermakna. Hanya <strong>mikroskopi</strong> (gold standard) dan <strong>PCR</strong> yang dapat membuktikan clearance parasit secara akurat.
+    </div>
+    <div class="aq-ref">📚 Ref: WHO RDT Manual 2015; Jonkman et al., Lancet Infect Dis 2017; Kemenkes RI 2022</div>
+  </div>
+
+  <div class="assign-q">
+    <div class="aq-head"><div class="aq-num">10</div><div class="aq-question">Sebutkan kegunaan pemeriksaan PCR pada malaria</div></div>
+    <div class="aq-answer">
+      PCR (Polymerase Chain Reaction) memiliki beberapa kegunaan penting dalam diagnosis dan program malaria:<br><br>
+      <strong>1. Deteksi submikroskopik:</strong> Mendeteksi parasitemia sangat rendah (1–10/µl) yang berada di bawah ambang deteksi mikroskopi — penting untuk surveilans daerah mendekati eliminasi<br>
+      <strong>2. Konfirmasi dan identifikasi spesies:</strong> Terutama untuk P. knowlesi yang morfologinya mirip spesies lain dan tidak bisa dikonfirmasi hanya dengan mikroskopi<br>
+      <strong>3. Deteksi infeksi campuran kriptik:</strong> Infeksi campuran yang tidak terdeteksi mikroskopi (mis. Pf+Pm dengan Pm densitas rendah)<br>
+      <strong>4. Penelitian resistensi obat:</strong> Deteksi mutasi gen resistensi (pfkelch13, pfcrt, pfdhfr, pfdhps dll)<br>
+      <strong>5. Surveilans epidemiologi:</strong> Mengetahui beban infeksi sebenarnya di populasi, termasuk reservoir tanpa gejala<br>
+      <strong>6. Evaluasi pengobatan:</strong> Membuktikan clearance parasit secara definitif<br>
+      <strong>7. Screening donor darah:</strong> Di daerah endemik untuk mencegah malaria transfusi<br>
+      <strong>8. Investigasi KLB:</strong> Identifikasi sumber transmisi dan genotip parasit
+    </div>
+    <div class="aq-ref">📚 Ref: WHO 2015; Kemenkes RI 2022; Cox-Singh et al., Clin Infect Dis 2008</div>
+  </div>
+</section>
+
+<!-- ===== TAB 5: LATIHAN SOAL ===== -->
+<section class="section" id="tab-latihan">
+  <div class="section-hero orange">
+    <div class="hero-icon">🧪</div>
+    <div>
+      <h2>Tim 4 — Latihan Soal Pilihan Ganda</h2>
+      <p>15 soal · Klik pilihan untuk melihat jawaban &amp; penjelasan berbasis referensi</p>
+    </div>
+  </div>
+
+  <div class="quiz-q">
+    <div class="qtitle"><span class="qnum">1</span>Metode pemeriksaan malaria yang ditetapkan sebagai <em>gold standard</em> dan wajib dilakukan sebelum pemberian obat antimalaria menurut kebijakan Kemenkes RI adalah…</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">A. Rapid Diagnostic Test (RDT)</div>
+    <div class="quiz-opt" onclick="answer(this,'correct')">B. Pemeriksaan mikroskopis sediaan darah dengan pewarnaan Giemsa</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">C. PCR (Polymerase Chain Reaction)</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">D. Serologi ELISA</div>
+    <div class="quiz-explain"><strong>✅ Jawaban: B.</strong> Mikroskopi dengan pewarnaan Giemsa adalah gold standard diagnosis malaria. Kebijakan Kemenkes RI mewajibkan konfirmasi laboratorium (mikroskopi ATAU RDT) sebelum pengobatan. PCR bukan pemeriksaan rutin. ELISA untuk surveilans/penelitian. <em>(Kemenkes RI 2022; WHO 2015)</em></div>
+  </div>
+
+  <div class="quiz-q">
+    <div class="qtitle"><span class="qnum">2</span>Seorang pasien suspek malaria diperiksa sediaan darah tebal. Ditemukan 185 parasit saat menghitung 200 leukosit. Berapakah kepadatan parasit per µl darah?</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">A. 5.400 parasit/µl</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">B. 6.200 parasit/µl</div>
+    <div class="quiz-opt" onclick="answer(this,'correct')">C. 7.400 parasit/µl</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">D. 9.250 parasit/µl</div>
+    <div class="quiz-explain"><strong>✅ Jawaban: C.</strong> Rumus: (Parasit × 8.000) / Leukosit = (185 × 8.000) / 200 = 1.480.000 / 200 = <strong>7.400 parasit/µl</strong>. Angka 8.000 adalah estimasi leukosit normal per µl darah. <em>(WHO Parasite Counting Manual)</em></div>
+  </div>
+
+  <div class="quiz-q">
+    <div class="qtitle"><span class="qnum">3</span>Ciri morfologi yang <strong>paling khas</strong> untuk membedakan P. falciparum dari spesies lain pada sediaan darah tipis adalah…</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">A. Eritrosit membesar dengan bintik Schüffner</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">B. Trofozoit berbentuk band (pita melintang)</div>
+    <div class="quiz-opt" onclick="answer(this,'correct')">C. Gametosit berbentuk bulan sabit/pisang</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">D. Skizon dengan roset 6–12 merozoit</div>
+    <div class="quiz-explain"><strong>✅ Jawaban: C.</strong> Gametosit berbentuk bulan sabit (crescent/banana-shaped) adalah ciri <em>patognomonik</em> P. falciparum — tidak ditemukan pada spesies lain. Band form = Pm; Schüffner + eritrosit besar = Pv; Rosette skizon = Pm. <em>(WHO Atlas of Malaria-Infected RBCs)</em></div>
+  </div>
+
+  <div class="quiz-q">
+    <div class="qtitle"><span class="qnum">4</span>Pada pewarnaan Giemsa yang optimal dengan buffer pH 7,2, warna yang benar adalah…</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">A. Inti parasit biru, sitoplasma merah, inti leukosit ungu</div>
+    <div class="quiz-opt" onclick="answer(this,'correct')">B. Inti parasit merah, sitoplasma biru, inti leukosit ungu</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">C. Inti parasit ungu, sitoplasma merah, inti leukosit biru</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">D. Semua elemen berwarna biru karena buffer basa</div>
+    <div class="quiz-explain"><strong>✅ Jawaban: B.</strong> Pewarnaan Giemsa optimal (pH 7,2): inti parasit = <strong>merah</strong> (eosinofilik), sitoplasma = <strong>biru</strong> (basofilik), inti leukosit = <strong>ungu</strong>. Jika terlalu asam → semua merah; terlalu basa → semua biru. <em>(Kemenkes RI; WHO Microscopy Manual)</em></div>
+  </div>
+
+  <div class="quiz-q">
+    <div class="qtitle"><span class="qnum">5</span>Alasan utama RDT <strong>tidak dapat</strong> digunakan untuk evaluasi respons pengobatan malaria falciparum adalah…</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">A. RDT tidak cukup sensitif untuk mendeteksi parasit residual</div>
+    <div class="quiz-opt" onclick="answer(this,'correct')">B. Antigen HRP-2 tetap terdeteksi 2–6 minggu setelah parasit bersih</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">C. RDT tidak dapat membedakan stadium gametosit</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">D. RDT hanya mendeteksi P. falciparum sehingga tidak valid untuk semua spesies</div>
+    <div class="quiz-explain"><strong>✅ Jawaban: B.</strong> HRP-2 adalah protein dengan waktu paruh panjang di sirkulasi. Setelah parasit bersih secara mikroskopis, HRP-2 masih beredar 2–6 minggu → RDT positif palsu. Hanya mikroskopi dan PCR yang valid untuk evaluasi pengobatan. <em>(Jonkman et al., Lancet Infect Dis 2017)</em></div>
+  </div>
+
+  <div class="quiz-q">
+    <div class="qtitle"><span class="qnum">6</span>P. knowlesi disebut sebagai parasit "kamuflase" karena pada pemeriksaan darah tebal morfologinya menyerupai…</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">A. Trofozoit Pf, skizon Pv, gametosit Pm</div>
+    <div class="quiz-opt" onclick="answer(this,'correct')">B. Trofozoit muda menyerupai Pf, trofozoit tua menyerupai Pv, skizon menyerupai Pm</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">C. Seluruh stadium menyerupai Po dengan eritrosit oval</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">D. Gametosit menyerupai Pf berbentuk pisang, skizon menyerupai Pv</div>
+    <div class="quiz-explain"><strong>✅ Jawaban: B.</strong> P. knowlesi sangat sulit dibedakan secara morfologi: trofozoit muda mirip Pf (cincin kecil), trofozoit dewasa mirip Pv (amuboid, eritrosit normal), skizon mirip Pm (roset). Konfirmasi wajib dengan PCR. <em>(Cox-Singh et al., Clin Infect Dis 2008)</em></div>
+  </div>
+
+  <div class="quiz-q">
+    <div class="qtitle"><span class="qnum">7</span>Sediaan darah dinyatakan <strong>negatif</strong> secara mikroskopis bila…</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">A. Tidak ditemukan parasit pada 50 lapang pandang pembesaran 400×</div>
+    <div class="quiz-opt" onclick="answer(this,'correct')">B. Tidak ditemukan parasit pada 100 lapang pandang sediaan darah tebal pembesaran 1000×</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">C. RDT negatif dan mikroskopi tidak ditemukan parasit pada 20 lapang pandang</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">D. Tidak ditemukan parasit pada 200 leukosit saat hitung parasit</div>
+    <div class="quiz-explain"><strong>✅ Jawaban: B.</strong> Standar WHO dan Kemenkes RI: sediaan darah tebal dinyatakan negatif jika tidak ditemukan parasit setelah memeriksa <strong>100 lapang pandang</strong> pada pembesaran 1000× (imersi). 100 LP setara ±3.000–4.000 leukosit. <em>(WHO Microscopy Manual 2010)</em></div>
+  </div>
+
+  <div class="quiz-q">
+    <div class="qtitle"><span class="qnum">8</span>Spesies Plasmodium dengan siklus eritrositik terpendek (24 jam) yang berpotensi paling cepat menyebabkan malaria berat adalah…</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">A. P. falciparum</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">B. P. vivax</div>
+    <div class="quiz-opt" onclick="answer(this,'correct')">C. P. knowlesi</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">D. P. malariae</div>
+    <div class="quiz-explain"><strong>✅ Jawaban: C.</strong> P. knowlesi memiliki siklus eritrositik <strong>24 jam (quotidiana)</strong> — terpendek dari semua spesies. Parasitemia dapat meningkat sangat cepat sehingga kasus ringan bisa menjadi berat dalam hitungan hari. Pf 48 jam, Pv 48 jam, Pm 72 jam. <em>(White et al., Lancet 2011)</em></div>
+  </div>
+
+  <div class="quiz-q">
+    <div class="qtitle"><span class="qnum">9</span>Perbedaan utama antara sediaan darah tebal dan tipis dalam pemeriksaan mikroskopi malaria adalah…</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">A. Darah tebal untuk identifikasi spesies, darah tipis untuk skrining positif/negatif</div>
+    <div class="quiz-opt" onclick="answer(this,'correct')">B. Darah tebal 20–40× lebih sensitif untuk skrining; darah tipis lebih baik untuk identifikasi spesies karena eritrosit utuh</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">C. Darah tebal menggunakan pewarnaan Field, darah tipis menggunakan Giemsa</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">D. Keduanya identik — perbedaan hanya pada volume darah yang digunakan</div>
+    <div class="quiz-explain"><strong>✅ Jawaban: B.</strong> Darah tebal (6 µl, eritrosit lisis): konsentrasi tinggi → <strong>20–40× lebih sensitif</strong>, ideal untuk skrining POS/NEG. Darah tipis (2 µl, eritrosit utuh): morfologi jelas → identifikasi spesies dan stadium lebih akurat. Keduanya dibuat pada <strong>1 kaca obyek yang sama</strong>. <em>(WHO Manual; Kemenkes 2022)</em></div>
+  </div>
+
+  <div class="quiz-q">
+    <div class="qtitle"><span class="qnum">10</span>Antigen yang dideteksi oleh RDT dan <strong>spesifik hanya</strong> untuk P. falciparum adalah…</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">A. pLDH pan (pan lactate dehydrogenase)</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">B. Pan Aldolase</div>
+    <div class="quiz-opt" onclick="answer(this,'correct')">C. HRP-2 (Histidine-rich protein 2)</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">D. PLDH spesifik Pv</div>
+    <div class="quiz-explain"><strong>✅ Jawaban: C.</strong> HRP-2 adalah protein yang <em>unik</em> untuk P. falciparum — diproduksi oleh gen <em>hrp-2</em> yang tidak ada pada spesies lain. pLDH pan dan pan aldolase mendeteksi semua spesies Plasmodium. Saat ini dikembangkan pLDH spesifik Pv namun belum untuk Pk. <em>(WHO RDT Product Testing 2024)</em></div>
+  </div>
+
+  <div class="quiz-q">
+    <div class="qtitle"><span class="qnum">11</span>Seorang petugas membuat sediaan Giemsa 3% untuk mewarnai 3 slide. Buffer yang digunakan memiliki pH 6,5 (terlalu asam). Hasil pewarnaan yang paling mungkin adalah…</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">A. Semua elemen berwarna biru tua</div>
+    <div class="quiz-opt" onclick="answer(this,'correct')">B. Semua elemen cenderung berwarna merah/oranye</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">C. Inti parasit merah, sitoplasma biru, inti leukosit ungu (normal)</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">D. Sediaan pucat tanpa warna yang jelas</div>
+    <div class="quiz-explain"><strong>✅ Jawaban: B.</strong> Buffer terlalu <strong>asam (pH &lt;7,2)</strong> menyebabkan semua elemen cenderung <strong>merah/eosinofilik</strong>. Buffer terlalu basa → semua biru. Ideal: pH 7,2. Ini adalah penyebab umum kesalahan pewarnaan di lapangan. <em>(Kemenkes RI; WHO Microscopy Manual)</em></div>
+  </div>
+
+  <div class="quiz-q">
+    <div class="qtitle"><span class="qnum">12</span>Darah vena dengan antikoagulan EDTA yang akan digunakan untuk sediaan malaria harus diproses dalam waktu…</div>
+    <div class="quiz-opt" onclick="answer(this,'correct')">A. &lt;1 jam setelah pengambilan</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">B. &lt;4 jam setelah pengambilan</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">C. &lt;8 jam jika disimpan di kulkas</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">D. Kapan saja asalkan dibekukan segera</div>
+    <div class="quiz-explain"><strong>✅ Jawaban: A.</strong> Darah dengan antikoagulan harus diproses <strong>&lt;1 jam</strong> karena EDTA dapat menyebabkan perubahan morfologi parasit (degenerasi trofozoit, perubahan bentuk eritrosit terinfeksi) yang mempersulit identifikasi spesies. Darah kapiler langsung tanpa antikoagulan adalah pilihan utama. <em>(WHO Microscopy Manual 2010)</em></div>
+  </div>
+
+  <div class="quiz-q">
+    <div class="qtitle"><span class="qnum">13</span>Bintik Schüffner (Schüffner's dots) yang halus di seluruh permukaan eritrosit yang membesar adalah ciri khas spesies…</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">A. P. falciparum</div>
+    <div class="quiz-opt" onclick="answer(this,'correct')">B. P. vivax</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">C. P. malariae</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">D. P. ovale</div>
+    <div class="quiz-explain"><strong>✅ Jawaban: B.</strong> Bintik Schüffner (halus, merata di seluruh eritrosit) = P. vivax. Bintik James (kasar) = P. ovale. Bintik Maurer (kasar, bisa dihitung) = P. falciparum. P. malariae: <em>tidak ada</em> bintik/stippling. <em>(WHO Atlas; Kemenkes RI)</em></div>
+  </div>
+
+  <div class="quiz-q">
+    <div class="qtitle"><span class="qnum">14</span>Sensitivitas pemeriksaan PCR dalam mendeteksi parasit malaria adalah…</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">A. 50–200 parasit/µl</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">B. ~100 parasit/µl</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">C. 20–50 parasit/µl</div>
+    <div class="quiz-opt" onclick="answer(this,'correct')">D. 1–10 parasit/µl</div>
+    <div class="quiz-explain"><strong>✅ Jawaban: D.</strong> PCR adalah metode paling sensitif: <strong>1–10 parasit/µl</strong> (WHO). Ini memungkinkan deteksi infeksi submikroskopik yang tidak terdeteksi oleh mikroskopi (50–200/µl) maupun RDT (~100/µl). Sangat berguna untuk surveilans daerah mendekati eliminasi. <em>(WHO 2015; Kemenkes RI 2022)</em></div>
+  </div>
+
+  <div class="quiz-q">
+    <div class="qtitle"><span class="qnum">15</span>Faktor risiko utama infeksi P. knowlesi pada manusia di Kalimantan meliputi semua hal berikut, KECUALI…</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">A. Tinggal atau bekerja di sekitar hutan</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">B. Riwayat kontak dengan atau melihat monyet ekor panjang (Macaca fascicularis)</div>
+    <div class="quiz-opt" onclick="answer(this,'correct')">C. Berenang di sungai yang tercemar kotoran monyet</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">D. Bermalam di dalam atau di tepi hutan</div>
+    <div class="quiz-explain"><strong>✅ Jawaban: C.</strong> P. knowlesi ditransmisikan melalui gigitan nyamuk <em>Anopheles leucosphyrus</em> group yang hidup di hutan — bukan melalui air/kotoran. Faktor risiko yang valid: tinggal/kerja/bermalam di sekitar hutan, kontak dengan Macaca spp. (reservoir), daerah kasus malaria rendah/eliminasi di Kalimantan. <em>(Cox-Singh et al.; Kemenkes RI)</em></div>
+  </div>
+
+  <div style="background:var(--blue-light);border-radius:12px;padding:16px 20px;text-align:center;margin-top:10px;">
+    <p style="font-size:0.85rem;color:var(--blue);font-weight:700;">💡 Klik setiap pilihan untuk melihat jawaban dan penjelasan berbasis referensi ilmiah</p>
+  </div>
+</section>
+
+<!-- ===== TAB 6: REFERENSI ===== -->
+<section class="section" id="tab-referensi">
+  <div class="section-hero blue">
+    <div class="hero-icon">📖</div>
+    <div>
+      <h2>Referensi Ilmiah</h2>
+      <p>Pedoman nasional &amp; internasional yang digunakan dalam penyusunan modul ini</p>
+    </div>
+  </div>
+  <div class="card">
+    <h2>📋 Pedoman Nasional (Indonesia)</h2>
+    <ol class="ref-list">
+      <li>Kementerian Kesehatan RI. <em>Pedoman Tatalaksana Malaria</em>. Jakarta: Kemenkes RI; 2022.</li>
+      <li>Kementerian Kesehatan RI. <em>Pedoman Teknis Pemeriksaan Parasit Malaria</em>. Jakarta: Kemenkes RI; 2017.</li>
+      <li>Kementerian Kesehatan RI. <em>Permenkes No. 5 Tahun 2013 tentang Pedoman Tatalaksana Malaria</em>. Jakarta; 2013.</li>
+      <li>Balai Besar Laboratorium Kesehatan Masyarakat Banjarbaru. <em>Materi Pelatihan Diagnosis Laboratorium Malaria</em>. 2026.</li>
+    </ol>
+    <h2 style="margin-top:18px;">🌍 Pedoman Internasional (WHO)</h2>
+    <ol class="ref-list">
+      <li>World Health Organization. <em>Guidelines for the Treatment of Malaria</em>, 3rd Edition. Geneva: WHO; 2015.</li>
+      <li>World Health Organization. <em>Malaria Microscopy Quality Assurance Manual</em>, Version 2. Geneva: WHO; 2016.</li>
+      <li>World Health Organization. <em>Basic Malaria Microscopy</em>, 2nd Edition. Geneva: WHO; 2010.</li>
+      <li>World Health Organization. <em>Malaria RDT Product Testing</em>. Geneva: WHO; 2024.</li>
+      <li>World Health Organization. <em>WHO Atlas of Malaria-Infected Red Blood Cells</em>. Geneva: WHO; 2017.</li>
+      <li>World Health Organization. <em>World Malaria Report 2024</em>. Geneva: WHO; 2024.</li>
+    </ol>
+    <h2 style="margin-top:18px;">📚 Jurnal & Literatur Ilmiah</h2>
+    <ol class="ref-list">
+      <li>Cox-Singh J, Davis TME, Lee KS, et al. Plasmodium knowlesi malaria in humans is widely distributed and potentially life threatening. <em>Clin Infect Dis.</em> 2008;46(2):165–171.</li>
+      <li>White NJ, Pukrittayakamee S, Hien TT, et al. Malaria. <em>Lancet.</em> 2014;383(9918):723–735.</li>
+      <li>Jonkman A, Chibwe RA, Khoromana CO, et al. Evaluating malaria RDT performance. <em>Lancet Infect Dis.</em> 2017.</li>
+      <li>Trampuz A, Jereb M, Muzlovic I, Prabhu RM. Clinical review: severe malaria. <em>Crit Care.</em> 2003;7(4):315–323.</li>
+      <li>Murray CK, Gasser RA, Magill AJ, Miller RS. Update on rapid diagnostic testing for malaria. <em>Clin Microbiol Rev.</em> 2008;21(1):97–110.</li>
+      <li>Warrell DA, Gilles HM. <em>Essential Malariology</em>, 4th Edition. London: Arnold; 2002.</li>
+    </ol>
+    <h2 style="margin-top:18px;">🌐 Sumber Online Terpercaya</h2>
+    <ol class="ref-list">
+      <li>CDC Division of Parasitic Diseases and Malaria. <em>Malaria Diagnosis</em>. <a href="https://www.cdc.gov/dpdx/malaria" style="color:var(--blue-mid);">cdc.gov/dpdx/malaria</a></li>
+      <li>WHO Malaria Programme. <a href="https://www.who.int/teams/global-malaria-programme" style="color:var(--blue-mid);">who.int/malaria</a></li>
+      <li>Asia Pacific Malaria Elimination Network (APMEN). <a href="https://www.apmen.org" style="color:var(--blue-mid);">apmen.org</a></li>
+    </ol>
+  </div>
+  <div class="card green">
+    <h2>💡 Saran untuk Melengkapi Pembelajaran</h2>
+    <ul>
+      <li><strong>Praktikum langsung:</strong> Latihan membuat sediaan darah tebal &amp; tipis + pewarnaan Giemsa dengan kontrol kualitas</li>
+      <li><strong>Bank gambar morfologi:</strong> Studi foto parasit dari WHO Atlas dan CDC DPDx untuk memperkuat identifikasi spesies</li>
+      <li><strong>Simulasi hitung parasit:</strong> Latihan soal hitung parasit dengan berbagai skenario kepadatan</li>
+      <li><strong>Studi kasus P. knowlesi:</strong> Review kasus terkonfirmasi dari Kalimantan — morfologi, klinis, dan alur konfirmasi PCR</li>
+      <li><strong>External Competency Assessment (ECA):</strong> Ikuti program ECAMM (External Competency Assessment Malaria Microscopy) WHO/BBTKL untuk sertifikasi kompetensi resmi</li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <p>AI Learner Pelatihan Malaria · Dibuat untuk dr. Dwiki · Sumber: BBKL Banjarbaru 2026 + Pedoman WHO &amp; Kemenkes RI · Untuk keperluan pendidikan</p>
+</footer>
+
+<!-- ===== FLOATING SHARE BUTTON ===== -->
+<style>
+  #share-fab {
+    position: fixed; bottom: 28px; right: 28px; z-index: 8000;
+    background: linear-gradient(135deg,#1E8449,#27AE60);
+    color: white; border: none; border-radius: 50px;
+    padding: 14px 22px; font-size: 0.9rem; font-weight: 800;
+    cursor: pointer; box-shadow: 0 6px 24px rgba(30,132,73,0.45);
+    display: flex; align-items: center; gap: 8px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    font-family: 'Segoe UI', Arial, sans-serif;
+  }
+  #share-fab:hover { transform: translateY(-3px); box-shadow: 0 10px 32px rgba(30,132,73,0.55); }
+
+  #share-modal {
+    display: none; position: fixed; inset: 0; z-index: 9000;
+    background: rgba(0,0,0,0.6); align-items: center; justify-content: center;
+  }
+  #share-modal.open { display: flex; }
+  #share-box {
+    background: white; border-radius: 20px; padding: 32px 28px;
+    max-width: 480px; width: 94vw; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    font-family: 'Segoe UI', Arial, sans-serif; position: relative;
+  }
+  #share-box h2 { font-size: 1.2rem; font-weight: 800; color: #1A5276; margin-bottom: 6px; }
+  #share-box p  { font-size: 0.83rem; color: #666; margin-bottom: 20px; }
+  .share-step   { background: #F8F9FA; border-radius: 12px; padding: 16px; margin-bottom: 14px; }
+  .share-step label { font-size: 0.78rem; font-weight: 700; color: #888; display: block; margin-bottom: 6px; }
+  .token-input  { width: 100%; border: 2px solid #E0E0E0; border-radius: 8px;
+    padding: 10px 12px; font-size: 0.82rem; font-family: monospace;
+    box-sizing: border-box; transition: border-color 0.2s; }
+  .token-input:focus { outline: none; border-color: #2980B9; }
+  .deploy-btn   { width: 100%; padding: 14px; background: linear-gradient(135deg,#1A5276,#2980B9);
+    color: white; border: none; border-radius: 10px; font-size: 0.95rem;
+    font-weight: 800; cursor: pointer; margin-top: 6px; transition: opacity 0.2s; }
+  .deploy-btn:hover { opacity: 0.9; }
+  .deploy-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  #deploy-status { margin-top: 14px; font-size: 0.83rem; color: #555; min-height: 20px; text-align: center; }
+  #link-result  { display: none; margin-top: 18px; }
+  #link-result .link-box {
+    background: #EAF4FB; border: 2px solid #2980B9; border-radius: 10px;
+    padding: 14px 16px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  }
+  #link-result .link-url {
+    flex: 1; font-size: 0.85rem; font-weight: 700; color: #1A5276;
+    word-break: break-all; min-width: 0;
+  }
+  .copy-btn { background: #2980B9; color: white; border: none; border-radius: 8px;
+    padding: 8px 16px; font-size: 0.8rem; font-weight: 700; cursor: pointer;
+    white-space: nowrap; transition: background 0.2s; }
+  .copy-btn:hover { background: #1A5276; }
+  .copy-btn.copied { background: #1E8449; }
+  #qr-wrap { margin-top: 14px; text-align: center; }
+  #qr-wrap canvas { border-radius: 10px; border: 3px solid #2980B9; }
+  #qr-wrap p { font-size: 0.75rem; color: #888; margin-top: 6px; }
+  .modal-close { position: absolute; top: 14px; right: 18px;
+    background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #999; }
+  .progress-log { background: #1A1A2E; color: #00D2FF; border-radius: 8px;
+    padding: 10px 14px; font-family: monospace; font-size: 0.75rem;
+    max-height: 120px; overflow-y: auto; display: none; margin-top: 10px; text-align: left; }
+  .how-link { font-size: 0.75rem; color: #2980B9; cursor: pointer; text-decoration: underline; }
+</style>
+
+<!-- Floating Button -->
+<button id="share-fab" onclick="openShareModal()">
+  🔗 Bagikan Materi
+</button>
+
+<!-- Share Modal -->
+<div id="share-modal">
+  <div id="share-box">
+    <button class="modal-close" onclick="closeShareModal()">✕</button>
+    <h2>🔗 Bagikan Materi Malaria</h2>
+    <p>Deploy sekali → link permanen aktif selamanya, bisa dibuka dari HP, tablet, atau PC manapun.</p>
+
+    <div id="panel-input">
+      <div class="share-step">
+        <label>GitHub Personal Access Token</label>
+        <input class="token-input" id="gh-token" type="password"
+          placeholder="github_pat_... atau ghp_...">
+        <div style="margin-top:6px;">
+          <span class="how-link" onclick="document.getElementById('how-token').style.display=document.getElementById('how-token').style.display==='none'?'block':'none'">
+            Cara membuat token ▼
+          </span>
+          <div id="how-token" style="display:none;font-size:0.75rem;color:#555;margin-top:8px;line-height:1.7;">
+            1. Buka <strong>github.com</strong> → Login<br>
+            2. Foto profil → <strong>Settings</strong> → <strong>Developer settings</strong><br>
+            3. <strong>Personal access tokens → Tokens (classic) → Generate new token</strong><br>
+            4. Centang: ✅ <strong>repo</strong> dan ✅ <strong>pages</strong><br>
+            5. Generate → Copy token → Paste di sini
+          </div>
+        </div>
+      </div>
+
+      <button class="deploy-btn" id="deploy-btn" onclick="deployToGitHub()">
+        🚀 Deploy & Buat Link
+      </button>
+      <div id="deploy-status"></div>
+      <div class="progress-log" id="prog-log"></div>
+    </div>
+
+    <div id="link-result">
+      <div class="link-box">
+        <span class="link-url" id="final-url-text"></span>
+        <button class="copy-btn" id="copy-btn" onclick="copyLink()">📋 Salin Link</button>
+      </div>
+      <div id="qr-wrap">
+        <canvas id="qr-canvas"></canvas>
+        <p>📱 Scan QR Code untuk buka di HP</p>
+      </div>
+      <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
+        <button onclick="shareWA()" style="flex:1;padding:10px;background:#25D366;color:white;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:0.82rem;">
+          📱 Bagikan via WhatsApp
+        </button>
+        <button onclick="copyLink()" style="flex:1;padding:10px;background:#2980B9;color:white;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:0.82rem;">
+          📋 Salin Link
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── QR Code generator (lightweight, no library needed) ──────────────
+// Uses Google Charts API for QR rendering
+function renderQR(url) {
+  const img = document.createElement('img');
+  img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=' + encodeURIComponent(url);
+  img.style = 'border-radius:10px;border:3px solid #2980B9;width:180px;height:180px;';
+  img.alt = 'QR Code';
+  const wrap = document.getElementById('qr-wrap');
+  wrap.innerHTML = '';
+  wrap.appendChild(img);
+  const p = document.createElement('p');
+  p.textContent = '📱 Scan QR Code untuk buka di HP';
+  p.style = 'font-size:0.75rem;color:#888;margin-top:6px;';
+  wrap.appendChild(p);
+}
+
+function openShareModal()  { document.getElementById('share-modal').classList.add('open'); }
+function closeShareModal() { document.getElementById('share-modal').classList.remove('open'); }
+
+function log(msg) {
+  const el = document.getElementById('prog-log');
+  el.style.display = 'block';
+  el.innerHTML += msg + '<br>';
+  el.scrollTop = el.scrollHeight;
+}
+
+function setStatus(msg, color) {
+  const el = document.getElementById('deploy-status');
+  el.innerHTML = '<span style="color:' + (color||'#555') + ';">' + msg + '</span>';
+}
+
+async function deployToGitHub() {
+  const token = document.getElementById('gh-token').value.trim();
+  if (!token) { setStatus('⚠️ Masukkan GitHub token terlebih dahulu.', '#C0392B'); return; }
+
+  const btn = document.getElementById('deploy-btn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Sedang deploy...';
+  document.getElementById('prog-log').innerHTML = '';
+  document.getElementById('link-result').style.display = 'none';
+
+  const REPO = 'malaria-ai-learner';
+  const headers = {
+    'Authorization': 'Bearer ' + token,
+    'Accept': 'application/vnd.github+json',
+    'X-GitHub-Api-Version': '2022-11-28',
+    'Content-Type': 'application/json'
+  };
+
+  try {
+    // 1. Get username
+    log('🔐 Verifikasi token...');
+    setStatus('🔐 Memverifikasi akun GitHub...');
+    const userRes = await fetch('https://api.github.com/user', { headers });
+    if (!userRes.ok) throw new Error('Token tidak valid (HTTP ' + userRes.status + ')');
+    const user = await userRes.json();
+    const username = user.login;
+    log('✅ Login: ' + username);
+
+    // 2. Create or check repo
+    log('📁 Menyiapkan repository...');
+    setStatus('📁 Membuat repository...');
+    let repoExists = false;
+    const checkRepo = await fetch('https://api.github.com/repos/' + username + '/' + REPO, { headers });
+    if (checkRepo.ok) {
+      repoExists = true;
+      log('ℹ️ Repository sudah ada, akan diperbarui.');
+    } else {
+      const createRes = await fetch('https://api.github.com/user/repos', {
+        method: 'POST', headers,
+        body: JSON.stringify({ name: REPO, description: 'Malaria AI Learner — Pelatihan Lab', private: false, auto_init: true })
+      });
+      if (!createRes.ok) throw new Error('Gagal buat repo: ' + (await createRes.text()).substring(0,100));
+      log('✅ Repository baru dibuat: ' + REPO);
+      await new Promise(r => setTimeout(r, 3000)); // wait for init
+    }
+
+    // 3. Encode HTML and upload
+    log('📤 Mengupload file HTML...');
+    setStatus('📤 Mengupload halaman materi...');
+    const htmlContent = document.documentElement.outerHTML;
+    const b64 = btoa(unescape(encodeURIComponent(htmlContent)));
+
+    let sha = null;
+    const checkFile = await fetch('https://api.github.com/repos/' + username + '/' + REPO + '/contents/index.html', { headers });
+    if (checkFile.ok) { sha = (await checkFile.json()).sha; log('ℹ️ File lama ditemukan, akan diperbarui.'); }
+
+    const uploadBody = {
+      message: 'Update: Malaria AI Learner ' + new Date().toLocaleDateString('id-ID'),
+      content: b64, branch: 'main'
+    };
+    if (sha) uploadBody.sha = sha;
+
+    const uploadRes = await fetch('https://api.github.com/repos/' + username + '/' + REPO + '/contents/index.html', {
+      method: 'PUT', headers, body: JSON.stringify(uploadBody)
+    });
+    if (!uploadRes.ok) throw new Error('Gagal upload: ' + (await uploadRes.text()).substring(0,100));
+    log('✅ File berhasil diupload!');
+
+    // 4. Enable Pages
+    log('🌐 Mengaktifkan GitHub Pages...');
+    setStatus('🌐 Mengaktifkan GitHub Pages...');
+    const pagesBody = JSON.stringify({ source: { branch: 'main', path: '/' } });
+    await fetch('https://api.github.com/repos/' + username + '/' + REPO + '/pages', { method: 'POST', headers, body: pagesBody });
+    await fetch('https://api.github.com/repos/' + username + '/' + REPO + '/pages', { method: 'PUT', headers, body: pagesBody });
+    log('✅ GitHub Pages diaktifkan!');
+
+    // 5. Save token for future use
+    try { localStorage.setItem('gh_deploy_token', token); } catch(e) {}
+
+    // 6. Show final URL
+    const finalUrl = 'https://' + username + '.github.io/' + REPO;
+    log('🎉 SELESAI! Link: ' + finalUrl);
+    setStatus('');
+
+    document.getElementById('final-url-text').textContent = finalUrl;
+    document.getElementById('link-result').style.display = 'block';
+    document.getElementById('panel-input').style.display = 'none';
+    renderQR(finalUrl);
+
+    // Update FAB
+    document.getElementById('share-fab').innerHTML = '✅ Link Siap — Klik Bagikan';
+    document.getElementById('share-fab').style.background = 'linear-gradient(135deg,#1A5276,#2980B9)';
+
+  } catch(err) {
+    log('❌ Error: ' + err.message);
+    setStatus('❌ ' + err.message, '#C0392B');
+    btn.disabled = false;
+    btn.textContent = '🚀 Deploy & Buat Link';
+  }
+}
+
+function copyLink() {
+  const url = document.getElementById('final-url-text').textContent;
+  navigator.clipboard.writeText(url).then(() => {
+    const btn = document.getElementById('copy-btn');
+    btn.textContent = '✅ Tersalin!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = '📋 Salin Link'; btn.classList.remove('copied'); }, 2500);
+  });
+}
+
+function shareWA() {
+  const url = document.getElementById('final-url-text').textContent;
+  const msg = '📚 Materi Pelatihan Malaria — AI Learner Lengkap:\n' + url;
+  window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+}
+
+// Load saved token if exists
+window.addEventListener('load', () => {
+  try {
+    const saved = localStorage.getItem('gh_deploy_token');
+    if (saved) document.getElementById('gh-token').value = saved;
+  } catch(e) {}
+});
+
+// Close modal on backdrop click
+document.getElementById('share-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeShareModal();
+});
+</script>
+
+<script>
+function switchTab(tabEl, panelId) {
+  const parent = tabEl.closest('.species-card');
+  parent.querySelectorAll('.morph-tab').forEach(t => t.classList.remove('active'));
+  parent.querySelectorAll('.morph-panel').forEach(p => p.classList.remove('active'));
+  tabEl.classList.add('active');
+  document.getElementById(panelId).classList.add('active');
+}
+
+function openLB(src, caption) {
+  document.getElementById('lb-img').src = src;
+  document.getElementById('lb-cap').textContent = caption;
+  document.getElementById('lightbox').classList.add('open');
+}
+
+function closeLB() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.getElementById('lb-img').src = '';
+}
+
+function showTab(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function answer(el, result) {
+  const q = el.closest('.quiz-q');
+  if (q.dataset.answered) return;
+  q.dataset.answered = true;
+  q.querySelectorAll('.quiz-opt').forEach(opt => {
+    opt.style.pointerEvents = 'none';
+    if (opt.dataset.isCorrect === 'true' || opt.textContent === el.textContent) {
+      // mark correct option always
+    }
+  });
+  el.classList.add(result);
+  // also highlight correct answer if wrong was clicked
+  if (result === 'wrong') {
+    q.querySelectorAll('.quiz-opt').forEach(opt => {
+      if (opt.getAttribute('onclick') && opt.getAttribute('onclick').includes("'correct'")) {
+        opt.classList.add('correct');
+      }
+    });
+  }
+  const explain = q.querySelector('.quiz-explain');
+  if (explain) explain.classList.add('show');
+}
+</script>
+</body>
+</html>
+
+    <div class="innov-card">
+      <div class="ic-icon">🤝</div>
+      <h3>6. One Health Surveillance — Satu Data Malaria-Satwa</h3>
+      <p>Untuk P. knowlesi, integrasikan surveilans kesehatan manusia dengan data populasi Macaca fascicularis dan M. nemestrina di sekitar hutan Kalimantan. Kolaborasi Kemenkes–KLHK–Universitas untuk pemetaan risiko zoonosis berbasis ekologi. Identifikasi hotspot transmisi Pk sebelum terjadi klaster kasus manusia.</p>
+    </div>
+  </div>
+
+  <div class="card green">
+    <h2>🎯 Prioritas Inovasi untuk Program Eliminasi</h2>
+    <table class="tbl">
+      <tr><th>Inovasi</th><th>Dampak</th><th>Feasibilitas</th><th>Prioritas</th></tr>
+      <tr><td>AI Microscopy App</td><td>⭐⭐⭐⭐⭐</td><td>Sedang (butuh data training lokal)</td><td>🔴 Tinggi</td></tr>
+      <tr><td>GIS Real-Time Lab</td><td>⭐⭐⭐⭐</td><td>Tinggi (sistem sudah ada, perlu integrasi)</td><td>🔴 Tinggi</td></tr>
+      <tr><td>E-Learning ECA</td><td>⭐⭐⭐⭐</td><td>Tinggi (platform mudah dibangun)</td><td>🔴 Tinggi</td></tr>
+      <tr><td>DBS untuk MMP</td><td>⭐⭐⭐⭐</td><td>Tinggi (metode sudah ada)</td><td>🟡 Sedang</td></tr>
+      <tr><td>RDT Pk Spesifik</td><td>⭐⭐⭐⭐⭐</td><td>Rendah (butuh R&amp;D global)</td><td>🟡 Jangka Panjang</td></tr>
+      <tr><td>One Health Surveillance</td><td>⭐⭐⭐⭐</td><td>Sedang (koordinasi lintas sektor)</td><td>🟡 Sedang</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ===== TAB 4: PENUGASAN ===== -->
+<section class="section" id="tab-penugasan">
+  <div class="section-hero purple">
+    <div class="hero-icon">📝</div>
+    <div>
+      <h2>Tim 4 — Penugasan Kelompok</h2>
+      <p>Lembar Penugasan Pelatihan Inti 1 · Pembelajaran 3: Diagnosis Laboratorium · 10 Soal Esai</p>
+    </div>
+  </div>
+
+  <div class="assign-q">
+    <div class="aq-head"><div class="aq-num">1</div><div class="aq-question">Apa keuntungan melakukan diagnosis laboratorium malaria?</div></div>
+    <div class="aq-answer">Diagnosis laboratorium memberikan keuntungan <strong>klinis</strong>: konfirmasi pasti spesies Plasmodium (menentukan terapi yang tepat), identifikasi stadium dan kepadatan parasit (menilai keparahan), memantau respons pengobatan secara objektif.<br><br>
+    Keuntungan <strong>programatik</strong>: mencegah pengobatan empiris yang tidak perlu (mencegah resistensi), mendukung surveilans epidemiologi, dan sesuai kebijakan Kemenkes RI: <em>"Semua kasus harus dikonfirmasi laboratorium sebelum diobati."</em></div>
+    <div class="aq-ref">📚 Ref: Kemenkes RI 2022; WHO Guidelines for Treatment of Malaria 3rd Ed. 2015</div>
+  </div>
+
+  <div class="assign-q">
+    <div class="aq-head"><div class="aq-num">2</div><div class="aq-question">Sebutkan tes laboratorium rutin untuk malaria di Indonesia</div></div>
+    <div class="aq-answer"><strong>1. Pemeriksaan Mikroskopis</strong> — sediaan darah tebal dan tipis dengan pewarnaan Giemsa. Gold standard, dilakukan di seluruh fasilitas kesehatan yang memiliki tenaga terlatih.<br><br>
+    <strong>2. Rapid Diagnostic Test (RDT)</strong> — mendeteksi antigen Plasmodium (HRP-2, pLDH, aldolase). Digunakan di daerah terpencil tanpa akses mikroskopi.<br><br>
+    PCR bukan pemeriksaan rutin — digunakan untuk konfirmasi spesies (terutama P. knowlesi) dan surveilans.</div>
+    <div class="aq-ref">📚 Ref: Kemenkes RI 2022; WHO Malaria Microscopy QA Manual 2016</div>
+  </div>
+
+  <div class="assign-q">
+    <div class="aq-head"><div class="aq-num">3</div><div class="aq-question">Jelaskan kelebihan dan kekurangan dari tes rutin tersebut</div></div>
+    <div class="aq-answer"><strong>🔬 Mikroskopi — Kelebihan:</strong> biaya murah, gold standard, bedakan 5 spesies + semua stadium, deteksi infeksi campuran, hitung parasit, evaluasi pengobatan, sensitivitas tinggi di tangan expert (5–20/µl).<br>
+    <strong>Kekurangan:</strong> sangat tergantung keahlian pemeriksa, butuh pelatihan intensif dan manajemen kualitas berkelanjutan, butuh listrik/mikroskop, waktu 60–90 menit, artefak bisa sebabkan false positive.<br><br>
+    <strong>🩺 RDT — Kelebihan:</strong> cepat (10–20 menit), mudah, tanpa listrik/mikroskop, ideal daerah terpencil.<br>
+    <strong>Kekurangan:</strong> tidak bisa hitung parasit, tidak bisa evaluasi pengobatan (HRP-2 persisten berminggu-minggu), false negative jika ada hrp-2 gene deletion, belum ada RDT spesifik Pk, tidak bedakan stadium.</div>
+    <div class="aq-ref">📚 Ref: WHO Malaria RDT Product Testing 2024; Kemenkes RI 2022</div>
+  </div>
+
+  <div class="assign-q">
+    <div class="aq-head"><div class="aq-num">4</div><div class="aq-question">Jelaskan sampel darah apa saja yang dapat dipakai untuk pemeriksaan rutin laboratorium malaria</div></div>
+    <div class="aq-answer"><strong>Darah kapiler (diutamakan):</strong> ujung jari tangan (dewasa), ujung tumit (bayi) — idealnya langsung tanpa antikoagulan.<br><br>
+    <strong>Darah vena (EDTA):</strong> dapat digunakan, namun <strong>harus diproses dalam &lt;1 jam</strong> karena antikoagulan menyebabkan perubahan morfologi parasit.<br><br>
+    <strong>Sampel khusus:</strong> darah plasenta dan tali pusat bayi (untuk deteksi malaria kongenital).<br><br>
+    Untuk PCR: dapat digunakan Dried Blood Spot (DBS) pada kertas Whatman #3 dan slide sediaan darah.</div>
+    <div class="aq-ref">📚 Ref: WHO Microscopy Manual 2010; Kemenkes RI 2022</div>
+  </div>
+
+  <div class="assign-q">
+    <div class="aq-head"><div class="aq-num">5</div><div class="aq-question">Mengapa pengambilan sampel darah tidak perlu menunggu pasien demam?</div></div>
+    <div class="aq-answer">Karena <strong>parasit ada di darah sepanjang siklus infeksi</strong>, tidak hanya saat demam. Demam muncul saat skizon pecah (hemolisis + pelepasan pirogen), tapi ini hanya satu titik dalam siklus — trofozoit muda, trofozoit dewasa, dan gametosit terus beredar di darah perifer setiap saat.<br><br>
+    <strong>Alasan klinis:</strong> Menunggu demam menunda diagnosis dan meningkatkan risiko progresi ke malaria berat (terutama Pf dan Pk yang bisa memburuk dalam 24 jam).<br><br>
+    <strong>Khusus Pf:</strong> skizon matang bersekuestrasi di kapiler organ dalam, tapi trofozoit muda (cincin) dan gametosit selalu ada di darah tepi.</div>
+    <div class="aq-ref">📚 Ref: WHO Guidelines 2015; Warrell &amp; Gilles, Essential Malariology 2002</div>
+  </div>
+
+  <div class="assign-q">
+    <div class="aq-head"><div class="aq-num">6</div><div class="aq-question">Mengapa kita harus mengulang pemeriksaan darah bila hasil pertama tidak ditemukan Plasmodium pada pasien suspek malaria?</div></div>
+    <div class="aq-answer"><strong>1. Parasitemia di bawah ambang deteksi:</strong> Pada infeksi awal atau setelah pengobatan parsial, kepadatan &lt;50/µl — di bawah sensitivitas mikroskopi standar.<br><br>
+    <strong>2. Sekuestrasi (Pf):</strong> Eritrosit terinfeksi stadium lanjut menempel di endotel kapiler organ dalam melalui cytoadherence — tidak tampak di darah perifer.<br><br>
+    <strong>3. Pengaruh antipiretik/antibiotik:</strong> Sementara menekan parasitemia.<br><br>
+    <strong>4. Variasi siklus:</strong> Densitas berfluktuasi, pemeriksaan di "titik rendah" bisa miss.<br><br>
+    <strong>Rekomendasi WHO:</strong> Ulangi setiap 12–24 jam selama 2–3 hari jika klinis sangat mencurigai malaria.</div>
+    <div class="aq-ref">📚 Ref: WHO Microscopy Manual 2010; Trampuz et al., Crit Care 2003</div>
+  </div>
+
+  <div class="assign-q">
+    <div class="aq-head"><div class="aq-num">7</div><div class="aq-question">Jelaskan cara hitung parasit malaria pada sediaan darah tebal dan tipis</div></div>
+    <div class="aq-answer"><strong>🔬 Darah Tebal:</strong><br>
+    1. Siapkan 2 tally counter (parasit &amp; leukosit) · 2. Baca zigzag, hitung keduanya bersamaan · 3. Hitung hingga 200 leukosit; jika parasit &lt;100 → lanjut 500 leukosit<br>
+    <div class="formula" style="font-size:0.85rem;margin:8px 0;">Parasit/µl = (Jml Parasit × 8.000) / Jml Leukosit</div>
+    Contoh: 241 parasit / 205 leukosit × 8.000 = <strong>9.405/µl</strong><br><br>
+    <strong>🔬 Darah Tipis (% parasitemia):</strong><br>
+    1. Pilih LP eritrosit satu lapis rata · 2. Hitung eritrosit terinfeksi dari 1.000–2.000 eritrosit total<br>
+    <div class="formula" style="font-size:0.85rem;margin:8px 0;">Parasit/µl = (Jml Parasit / 1.000) × 5.000.000</div></div>
+    <div class="aq-ref">📚 Ref: WHO Parasite Counting Manual; Kemenkes RI 2022</div>
+  </div>
+
+  <div class="assign-q">
+    <div class="aq-head"><div class="aq-num">8</div><div class="aq-question">Jelaskan mekanisme kerja RDT malaria</div></div>
+    <div class="aq-answer">RDT bekerja berdasarkan prinsip <strong>imunokromatografi lateral flow</strong>:<br><br>
+    1. Darah (1–5 µl) + buffer diteteskan pada pad sampel di ujung strip<br>
+    2. Campuran mengalir secara kapiler sepanjang membran nitroselulosa<br>
+    3. Di zona konjugat, <strong>antibodi berlabel koloid emas</strong> mengikat antigen Plasmodium (HRP-2/pLDH/aldolase)<br>
+    4. Kompleks antigen–antibodi mengalir ke <strong>garis tes (T)</strong> berisi antibodi penangkap → membentuk garis berwarna<br>
+    5. Kelebihan reagen berlanjut ke <strong>garis kontrol (C)</strong> — harus selalu muncul untuk validasi<br>
+    6. Baca hasil <strong>10–20 menit</strong>: C saja = negatif; C+T = positif; T tanpa C = tidak valid</div>
+    <div class="aq-ref">📚 Ref: WHO RDT Manual 2015; Murray et al., Clin Microbiol Rev 2008</div>
+  </div>
+
+  <div class="assign-q">
+    <div class="aq-head"><div class="aq-num">9</div><div class="aq-question">Sebutkan antigen malaria dalam RDT dan jelaskan alasan RDT tidak dapat dipakai untuk evaluasi pengobatan</div></div>
+    <div class="aq-answer"><strong>Antigen yang dideteksi:</strong><br>
+    • <strong>HRP-2</strong> (Histidine-rich protein 2): spesifik P. falciparum<br>
+    • <strong>pLDH pan</strong> (lactate dehydrogenase): semua spesies<br>
+    • <strong>Pan Aldolase</strong>: semua spesies<br><br>
+    <strong>Mengapa tidak bisa evaluasi pengobatan:</strong> HRP-2 memiliki waktu paruh sangat panjang — dapat terdeteksi <strong>2–6 minggu setelah parasit sudah bersih</strong> dari darah. Akibatnya RDT tetap positif palsu meski pengobatan berhasil. Hanya <strong>mikroskopi dan PCR</strong> yang dapat membuktikan clearance parasit secara akurat.</div>
+    <div class="aq-ref">📚 Ref: Jonkman et al., Lancet Infect Dis 2017; WHO RDT Manual 2015</div>
+  </div>
+
+  <div class="assign-q">
+    <div class="aq-head"><div class="aq-num">10</div><div class="aq-question">Sebutkan kegunaan pemeriksaan PCR pada malaria</div></div>
+    <div class="aq-answer">
+    <strong>1.</strong> Deteksi parasitemia submikroskopik (&lt;50/µl, di bawah ambang deteksi mikroskopi)<br>
+    <strong>2.</strong> Konfirmasi dan identifikasi spesies — terutama <em>P. knowlesi</em> yang mirip spesies lain<br>
+    <strong>3.</strong> Deteksi infeksi campuran kriptik yang tidak terdeteksi mikroskopi<br>
+    <strong>4.</strong> Penelitian mutasi gen resistensi obat (pfkelch13, pfcrt, pfdhfr, dll)<br>
+    <strong>5.</strong> Surveilans epidemiologi — mengetahui beban infeksi asimtomatik sebenarnya<br>
+    <strong>6.</strong> Evaluasi pengobatan — membuktikan clearance parasit definitif<br>
+    <strong>7.</strong> Screening donor darah di daerah endemik<br>
+    <strong>8.</strong> Investigasi KLB dan genotipik parasit</div>
+    <div class="aq-ref">📚 Ref: WHO 2015; Cox-Singh et al., Clin Infect Dis 2008; Kemenkes RI 2022</div>
+  </div>
+</section>
+
+<!-- ===== TAB 5: LATIHAN SOAL ===== -->
+<section class="section" id="tab-latihan">
+  <div class="section-hero orange">
+    <div class="hero-icon">🧪</div>
+    <div>
+      <h2>Tim 4 — Latihan Soal Pilihan Ganda</h2>
+      <p>15 soal · Klik pilihan untuk melihat jawaban &amp; penjelasan berbasis referensi</p>
+    </div>
+  </div>
+
+  <div class="quiz-q">
+    <div class="qtitle"><span class="qnum">1</span>Metode pemeriksaan malaria yang ditetapkan sebagai gold standard dan wajib dilakukan sebelum pemberian obat antimalaria menurut Kemenkes RI adalah…</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">A. Rapid Diagnostic Test (RDT)</div>
+    <div class="quiz-opt" onclick="answer(this,'correct')">B. Pemeriksaan mikroskopis sediaan darah dengan pewarnaan Giemsa</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">C. PCR (Polymerase Chain Reaction)</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">D. Serologi ELISA</div>
+    <div class="quiz-explain"><strong>✅ B.</strong> Mikroskopi Giemsa adalah gold standard. Kebijakan Kemenkes RI mewajibkan konfirmasi lab (mikroskopi ATAU RDT) sebelum pengobatan. PCR bukan rutin. <em>(Kemenkes 2022; WHO 2015)</em></div>
+  </div>
+
+  <div class="quiz-q">
+    <div class="qtitle"><span class="qnum">2</span>Ditemukan 185 parasit saat 200 leukosit pada sediaan darah tebal. Kepadatan parasit/µl adalah…</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">A. 5.400/µl</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">B. 6.200/µl</div>
+    <div class="quiz-opt" onclick="answer(this,'correct')">C. 7.400/µl</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">D. 9.250/µl</div>
+    <div class="quiz-explain"><strong>✅ C.</strong> (185 × 8.000) / 200 = <strong>7.400/µl</strong>. Angka 8.000 = estimasi leukosit normal per µl. <em>(WHO Parasite Counting Manual)</em></div>
+  </div>
+
+  <div class="quiz-q">
+    <div class="qtitle"><span class="qnum">3</span>Ciri morfologi paling khas P. falciparum pada sediaan darah tipis adalah…</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">A. Eritrosit membesar dengan bintik Schüffner</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">B. Trofozoit band form (pita melintang)</div>
+    <div class="quiz-opt" onclick="answer(this,'correct')">C. Gametosit berbentuk bulan sabit/pisang</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">D. Skizon rosette 6–12 merozoit</div>
+    <div class="quiz-explain"><strong>✅ C.</strong> Gametosit bulan sabit adalah ciri <em>patognomonik</em> Pf — tidak ada pada spesies lain. Band form=Pm; Schüffner+eritrosit besar=Pv; Rosette=Pm. <em>(WHO Atlas)</em></div>
+  </div>
+
+  <div class="quiz-q">
+    <div class="qtitle"><span class="qnum">4</span>Pewarnaan Giemsa optimal pH 7,2 menghasilkan warna…</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">A. Inti parasit biru, sitoplasma merah, inti leukosit ungu</div>
+    <div class="quiz-opt" onclick="answer(this,'correct')">B. Inti parasit merah, sitoplasma biru, inti leukosit ungu</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">C. Inti parasit ungu, sitoplasma merah, inti leukosit biru</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">D. Semua elemen berwarna biru</div>
+    <div class="quiz-explain"><strong>✅ B.</strong> pH 7,2 optimal: inti parasit=merah, sitoplasma=biru, inti leukosit=ungu. Terlalu asam → semua merah. Terlalu basa → semua biru. <em>(WHO Manual)</em></div>
+  </div>
+
+  <div class="quiz-q">
+    <div class="qtitle"><span class="qnum">5</span>Alasan utama RDT tidak dapat digunakan untuk evaluasi respons pengobatan malaria falciparum adalah…</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">A. RDT tidak cukup sensitif mendeteksi parasit residual</div>
+    <div class="quiz-opt" onclick="answer(this,'correct')">B. Antigen HRP-2 tetap terdeteksi 2–6 minggu setelah parasit bersih</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">C. RDT tidak dapat membedakan stadium gametosit</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">D. RDT hanya mendeteksi Pf</div>
+    <div class="quiz-explain"><strong>✅ B.</strong> HRP-2 memiliki waktu paruh panjang, beredar 2–6 minggu setelah parasit bersih → false positive. Hanya mikroskopi &amp; PCR valid untuk evaluasi. <em>(Jonkman et al., LID 2017)</em></div>
+  </div>
+
+  <div class="quiz-q">
+    <div class="qtitle"><span class="qnum">6</span>P. knowlesi disebut "kamuflase" karena morfologinya menyerupai…</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">A. Trofozoit Pf, skizon Pv, gametosit Pm</div>
+    <div class="quiz-opt" onclick="answer(this,'correct')">B. Trofozoit muda seperti Pf, trofozoit tua seperti Pv, skizon seperti Pm</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">C. Seluruh stadium menyerupai Po</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">D. Gametosit pisang seperti Pf</div>
+    <div class="quiz-explain"><strong>✅ B.</strong> Pk sangat sulit dibedakan: cincin muda mirip Pf, trofozoit dewasa mirip Pv, skizon mirip Pm. Konfirmasi wajib PCR. <em>(Cox-Singh et al., CID 2008)</em></div>
+  </div>
+
+  <div class="quiz-q">
+    <div class="qtitle"><span class="qnum">7</span>Sediaan darah dinyatakan negatif secara mikroskopis bila…</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">A. Tidak ditemukan parasit pada 50 LP pembesaran 400×</div>
+    <div class="quiz-opt" onclick="answer(this,'correct')">B. Tidak ditemukan parasit pada 100 LP sediaan tebal pembesaran 1000×</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">C. RDT negatif dan mikroskopi negatif 20 LP</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">D. Tidak ada parasit dalam 200 leukosit</div>
+    <div class="quiz-explain"><strong>✅ B.</strong> Standar WHO &amp; Kemenkes: <strong>100 lapang pandang</strong> pada pembesaran 1000× (imersi) = ±3.000–4.000 leukosit. <em>(WHO Microscopy Manual 2010)</em></div>
+  </div>
+
+  <div class="quiz-q">
+    <div class="qtitle"><span class="qnum">8</span>Spesies Plasmodium dengan siklus eritrositik 24 jam yang berpotensi paling cepat menyebabkan malaria berat adalah…</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">A. P. falciparum</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">B. P. vivax</div>
+    <div class="quiz-opt" onclick="answer(this,'correct')">C. P. knowlesi</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">D. P. malariae</div>
+    <div class="quiz-explain"><strong>✅ C.</strong> Pk siklus <strong>24 jam (quotidiana)</strong> — terpendek. Parasitemia bisa naik sangat cepat → berat dalam hitungan hari. Pf/Pv=48j, Pm=72j. <em>(White et al., Lancet 2011)</em></div>
+  </div>
+
+  <div class="quiz-q">
+    <div class="qtitle"><span class="qnum">9</span>Perbedaan utama sediaan darah tebal vs tipis adalah…</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">A. Tebal untuk identifikasi spesies, tipis untuk skrining</div>
+    <div class="quiz-opt" onclick="answer(this,'correct')">B. Tebal 20–40× lebih sensitif untuk skrining; tipis lebih baik untuk identifikasi spesies karena eritrosit utuh</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">C. Tebal pakai pewarnaan Field, tipis pakai Giemsa</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">D. Keduanya identik, hanya beda volume darah</div>
+    <div class="quiz-explain"><strong>✅ B.</strong> Tebal (6 µl, eritrosit lisis): 20–40× lebih sensitif, untuk skrining POS/NEG. Tipis (2 µl, eritrosit utuh): morfologi jelas → identifikasi spesies. Keduanya dibuat pada <strong>1 kaca obyek yang sama</strong>. <em>(WHO Manual)</em></div>
+  </div>
+
+  <div class="quiz-q">
+    <div class="qtitle"><span class="qnum">10</span>Antigen yang spesifik hanya untuk P. falciparum dalam RDT adalah…</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">A. pLDH pan</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">B. Pan Aldolase</div>
+    <div class="quiz-opt" onclick="answer(this,'correct')">C. HRP-2 (Histidine-rich protein 2)</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">D. pLDH spesifik Pv</div>
+    <div class="quiz-explain"><strong>✅ C.</strong> HRP-2 unik untuk Pf — dikode gen hrp-2 yang tidak ada pada spesies lain. pLDH pan &amp; aldolase mendeteksi semua spesies. <em>(WHO RDT Testing 2024)</em></div>
+  </div>
+
+  <div class="quiz-q">
+    <div class="qtitle"><span class="qnum">11</span>Buffer pH 6,5 (terlalu asam) digunakan untuk pewarnaan Giemsa. Hasilnya adalah…</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">A. Semua elemen berwarna biru tua</div>
+    <div class="quiz-opt" onclick="answer(this,'correct')">B. Semua elemen cenderung merah/oranye</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">C. Warna normal (merah-biru-ungu)</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">D. Sediaan pucat tanpa warna</div>
+    <div class="quiz-explain"><strong>✅ B.</strong> Buffer terlalu asam (pH &lt;7,2) → semua elemen eosinofilik (merah/oranye). Buffer basa → semua basofil (biru). Ideal: pH 7,2. <em>(Kemenkes RI; WHO Manual)</em></div>
+  </div>
+
+  <div class="quiz-q">
+    <div class="qtitle"><span class="qnum">12</span>Darah vena dengan antikoagulan EDTA untuk sediaan malaria harus diproses dalam…</div>
+    <div class="quiz-opt" onclick="answer(this,'correct')">A. &lt;1 jam setelah pengambilan</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">B. &lt;4 jam setelah pengambilan</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">C. &lt;8 jam jika disimpan di kulkas</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">D. Kapan saja asal segera dibekukan</div>
+    <div class="quiz-explain"><strong>✅ A.</strong> EDTA dapat menyebabkan perubahan morfologi parasit (degenerasi trofozoit) dalam &lt;1 jam. Darah kapiler langsung tanpa antikoagulan adalah pilihan utama. <em>(WHO Microscopy Manual 2010)</em></div>
+  </div>
+
+  <div class="quiz-q">
+    <div class="qtitle"><span class="qnum">13</span>Bintik Schüffner yang halus di seluruh permukaan eritrosit membesar adalah ciri…</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">A. P. falciparum</div>
+    <div class="quiz-opt" onclick="answer(this,'correct')">B. P. vivax</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">C. P. malariae</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">D. P. ovale</div>
+    <div class="quiz-explain"><strong>✅ B.</strong> Schüffner (halus, merata) = Pv. James (kasar) = Po. Maurer (kasar, bisa dihitung) = Pf. Pm: <em>tidak ada</em> stippling. <em>(WHO Atlas)</em></div>
+  </div>
+
+  <div class="quiz-q">
+    <div class="qtitle"><span class="qnum">14</span>Sensitivitas pemeriksaan PCR dalam mendeteksi parasit malaria adalah…</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">A. 50–200 parasit/µl</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">B. ~100 parasit/µl</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">C. 20–50 parasit/µl</div>
+    <div class="quiz-opt" onclick="answer(this,'correct')">D. 1–10 parasit/µl</div>
+    <div class="quiz-explain"><strong>✅ D.</strong> PCR paling sensitif: <strong>1–10/µl</strong> (WHO). Deteksi infeksi submikroskopik yang tidak terdeteksi mikroskopi (50–200/µl) maupun RDT (~100/µl). <em>(WHO 2015)</em></div>
+  </div>
+
+  <div class="quiz-q">
+    <div class="qtitle"><span class="qnum">15</span>Faktor risiko infeksi P. knowlesi di Kalimantan meliputi semua berikut, KECUALI…</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">A. Tinggal/bekerja di sekitar hutan</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">B. Kontak dengan monyet ekor panjang (Macaca fascicularis)</div>
+    <div class="quiz-opt" onclick="answer(this,'correct')">C. Berenang di sungai yang tercemar kotoran monyet</div>
+    <div class="quiz-opt" onclick="answer(this,'wrong')">D. Bermalam di dalam atau tepi hutan</div>
+    <div class="quiz-explain"><strong>✅ C.</strong> Pk ditransmisikan melalui <strong>gigitan nyamuk</strong> Anopheles leucosphyrus group — bukan melalui air/kotoran. Faktor risiko valid: hutan, kontak Macaca spp., bermalam di hutan. <em>(Cox-Singh et al.; Kemenkes RI)</em></div>
+  </div>
+</section>
+
+<!-- ===== TAB 6: REFERENSI ===== -->
+<section class="section" id="tab-referensi">
+  <div class="section-hero blue">
+    <div class="hero-icon">📖</div>
+    <div>
+      <h2>Referensi Ilmiah</h2>
+      <p>Pedoman nasional &amp; internasional yang digunakan dalam penyusunan modul ini</p>
+    </div>
+  </div>
+  <div class="card">
+    <h2>📋 Pedoman Nasional (Indonesia)</h2>
+    <ol class="ref-list">
+      <li>Kementerian Kesehatan RI. <em>Pedoman Tatalaksana Malaria</em>. Jakarta: Kemenkes RI; 2022.</li>
+      <li>Kementerian Kesehatan RI. <em>Pedoman Teknis Pemeriksaan Parasit Malaria</em>. Jakarta: Kemenkes RI; 2017.</li>
+      <li>Balai Besar Laboratorium Kesehatan Masyarakat Banjarbaru. <em>Materi Pelatihan Diagnosis Lab Malaria</em>. 2026.</li>
+    </ol>
+    <h2 style="margin-top:18px;">🌍 Pedoman WHO</h2>
+    <ol class="ref-list">
+      <li>WHO. <em>Guidelines for the Treatment of Malaria</em>, 3rd Ed. Geneva: WHO; 2015.</li>
+      <li>WHO. <em>Malaria Microscopy Quality Assurance Manual</em> v2. Geneva: WHO; 2016.</li>
+      <li>WHO. <em>Basic Malaria Microscopy</em>, 2nd Ed. Geneva: WHO; 2010.</li>
+      <li>WHO. <em>Malaria RDT Product Testing</em>. Geneva: WHO; 2024.</li>
+      <li>WHO. <em>World Malaria Report 2024</em>. Geneva: WHO; 2024.</li>
+    </ol>
+    <h2 style="margin-top:18px;">📚 Jurnal Ilmiah</h2>
+    <ol class="ref-list">
+      <li>Cox-Singh J et al. P. knowlesi malaria in humans. <em>Clin Infect Dis.</em> 2008;46:165–171.</li>
+      <li>White NJ et al. Malaria. <em>Lancet.</em> 2014;383:723–735.</li>
+      <li>Jonkman A et al. Evaluating malaria RDT. <em>Lancet Infect Dis.</em> 2017.</li>
+      <li>Murray CK et al. Rapid diagnostic testing for malaria. <em>Clin Microbiol Rev.</em> 2008;21:97–110.</li>
+    </ol>
+  </div>
+  <div class="card green">
+    <h2>💡 Saran Melengkapi Pembelajaran</h2>
+    <ul>
+      <li><strong>Praktikum:</strong> Latihan buat sediaan darah + pewarnaan Giemsa dengan QC</li>
+      <li><strong>Bank gambar:</strong> Studi foto parasit dari WHO Atlas dan CDC DPDx</li>
+      <li><strong>Simulasi hitung:</strong> Latihan soal hitung parasit berbagai skenario</li>
+      <li><strong>Studi kasus Pk:</strong> Review kasus terkonfirmasi PCR dari Kalimantan</li>
+      <li><strong>ECAMM:</strong> Ikuti External Competency Assessment Malaria Microscopy WHO</li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <p>AI Learner Pelatihan Malaria · Dibuat untuk dr. Dwiki · BBKL Banjarbaru 2026 + WHO &amp; Kemenkes RI · Untuk keperluan pendidikan</p>
+</footer>
+
+<!-- ===== FLOATING SHARE BUTTON ===== -->
+<style>
+  #share-fab {
+    position: fixed; bottom: 28px; right: 28px; z-index: 8000;
+    background: linear-gradient(135deg,#1E8449,#27AE60);
+    color: white; border: none; border-radius: 50px;
+    padding: 14px 22px; font-size: 0.9rem; font-weight: 800;
+    cursor: pointer; box-shadow: 0 6px 24px rgba(30,132,73,0.45);
+    display: flex; align-items: center; gap: 8px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    font-family: 'Segoe UI', Arial, sans-serif;
+  }
+  #share-fab:hover { transform: translateY(-3px); box-shadow: 0 10px 32px rgba(30,132,73,0.55); }
+  #share-modal { display: none; position: fixed; inset: 0; z-index: 9000;
+    background: rgba(0,0,0,0.6); align-items: center; justify-content: center; }
+  #share-modal.open { display: flex; }
+  #share-box { background: white; border-radius: 20px; padding: 32px 28px;
+    max-width: 480px; width: 94vw; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    font-family: 'Segoe UI', Arial, sans-serif; position: relative; max-height: 90vh; overflow-y: auto; }
+  #share-box h2 { font-size: 1.2rem; font-weight: 800; color: #1A5276; margin-bottom: 6px; }
+  #share-box p  { font-size: 0.83rem; color: #666; margin-bottom: 20px; }
+  .share-step   { background: #F8F9FA; border-radius: 12px; padding: 16px; margin-bottom: 14px; }
+  .share-step label { font-size: 0.78rem; font-weight: 700; color: #888; display: block; margin-bottom: 6px; }
+  .token-input  { width: 100%; border: 2px solid #E0E0E0; border-radius: 8px;
+    padding: 10px 12px; font-size: 0.82rem; font-family: monospace; box-sizing: border-box; }
+  .token-input:focus { outline: none; border-color: #2980B9; }
+  .deploy-btn   { width: 100%; padding: 14px; background: linear-gradient(135deg,#1A5276,#2980B9);
+    color: white; border: none; border-radius: 10px; font-size: 0.95rem;
+    font-weight: 800; cursor: pointer; margin-top: 6px; }
+  .deploy-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  #deploy-status { margin-top: 12px; font-size: 0.83rem; color: #555; text-align: center; min-height: 20px; }
+  #link-result  { display: none; margin-top: 18px; }
+  .link-box     { background: #EAF4FB; border: 2px solid #2980B9; border-radius: 10px;
+    padding: 14px 16px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .link-url     { flex: 1; font-size: 0.85rem; font-weight: 700; color: #1A5276; word-break: break-all; }
+  .copy-btn     { background: #2980B9; color: white; border: none; border-radius: 8px;
+    padding: 8px 16px; font-size: 0.8rem; font-weight: 700; cursor: pointer; white-space: nowrap; }
+  .copy-btn.copied { background: #1E8449; }
+  #qr-wrap      { margin-top: 14px; text-align: center; }
+  #qr-wrap p    { font-size: 0.75rem; color: #888; margin-top: 6px; }
+  .modal-close  { position: absolute; top: 14px; right: 18px;
+    background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #999; }
+  .prog-log     { background: #1A1A2E; color: #00D2FF; border-radius: 8px;
+    padding: 10px 14px; font-family: monospace; font-size: 0.73rem;
+    max-height: 100px; overflow-y: auto; display: none; margin-top: 10px; text-align: left; }
+  .how-link     { font-size: 0.75rem; color: #2980B9; cursor: pointer; text-decoration: underline; }
+</style>
+
+<button id="share-fab" onclick="openShareModal()">🔗 Bagikan Materi</button>
+
+<div id="share-modal">
+  <div id="share-box">
+    <button class="modal-close" onclick="closeShareModal()">✕</button>
+    <h2>🔗 Bagikan Materi Malaria</h2>
+    <p>Deploy sekali → link permanen aktif, bisa dibuka dari HP, tablet, atau PC manapun.</p>
+    <div id="panel-input">
+      <div class="share-step">
+        <label>GitHub Personal Access Token</label>
+        <input class="token-input" id="gh-token" type="password"
+          placeholder="github_pat_... atau ghp_...">
+        <div style="margin-top:6px;">
+          <span class="how-link" onclick="var h=document.getElementById('how-token');h.style.display=h.style.display==='none'?'block':'none'">Cara membuat token ▼</span>
+          <div id="how-token" style="display:none;font-size:0.75rem;color:#555;margin-top:8px;line-height:1.7;">
+            1. Buka <strong>github.com</strong> → Login<br>
+            2. Foto profil → <strong>Settings → Developer settings</strong><br>
+            3. <strong>Personal access tokens → Tokens (classic) → Generate new token</strong><br>
+            4. Centang: ✅ <strong>repo</strong> dan ✅ <strong>pages</strong><br>
+            5. Generate → Copy → Paste di sini
+          </div>
+        </div>
+      </div>
+      <button class="deploy-btn" id="deploy-btn" onclick="deployToGitHub()">🚀 Deploy & Buat Link</button>
+      <div id="deploy-status"></div>
+      <div class="prog-log" id="prog-log"></div>
+    </div>
+    <div id="link-result">
+      <div class="link-box">
+        <span class="link-url" id="final-url-text"></span>
+        <button class="copy-btn" id="copy-btn" onclick="copyLink()">📋 Salin</button>
+      </div>
+      <div id="qr-wrap"></div>
+      <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
+        <button onclick="shareWA()" style="flex:1;padding:10px;background:#25D366;color:white;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:0.82rem;">📱 WhatsApp</button>
+        <button onclick="copyLink()" style="flex:1;padding:10px;background:#2980B9;color:white;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:0.82rem;">📋 Salin Link</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function switchTab(tabEl, panelId) {
+  const parent = tabEl.closest('.species-card');
+  parent.querySelectorAll('.morph-tab').forEach(t => t.classList.remove('active'));
+  parent.querySelectorAll('.morph-panel').forEach(p => p.classList.remove('active'));
+  tabEl.classList.add('active');
+  document.getElementById(panelId).classList.add('active');
+}
+function openLB(src, caption) {
+  document.getElementById('lb-img').src = src;
+  document.getElementById('lb-cap').textContent = caption;
+  document.getElementById('lightbox').classList.add('open');
+}
+function closeLB() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.getElementById('lb-img').src = '';
+}
+function showTab(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+function answer(el, result) {
+  const q = el.closest('.quiz-q');
+  if (q.dataset.answered) return;
+  q.dataset.answered = true;
+  q.querySelectorAll('.quiz-opt').forEach(opt => opt.style.pointerEvents = 'none');
+  el.classList.add(result);
+  if (result === 'wrong') {
+    q.querySelectorAll('.quiz-opt').forEach(opt => {
+      if (opt.getAttribute('onclick') && opt.getAttribute('onclick').includes("'correct'")) opt.classList.add('correct');
+    });
+  }
+  const ex = q.querySelector('.quiz-explain');
+  if (ex) ex.classList.add('show');
+}
+function openShareModal()  { document.getElementById('share-modal').classList.add('open'); }
+function closeShareModal() { document.getElementById('share-modal').classList.remove('open'); }
+function logDeploy(msg) {
+  const el = document.getElementById('prog-log');
+  el.style.display = 'block'; el.innerHTML += msg + '<br>'; el.scrollTop = el.scrollHeight;
+}
+function setStatus(msg, color) {
+  document.getElementById('deploy-status').innerHTML = '<span style="color:'+(color||'#555')+';">'+msg+'</span>';
+}
+async function deployToGitHub() {
+  const token = document.getElementById('gh-token').value.trim();
+  if (!token) { setStatus('⚠️ Masukkan GitHub token.', '#C0392B'); return; }
+  const btn = document.getElementById('deploy-btn');
+  btn.disabled = true; btn.textContent = '⏳ Sedang deploy...';
+  document.getElementById('prog-log').innerHTML = '';
+  document.getElementById('link-result').style.display = 'none';
+  const REPO = 'malaria-ai-learner';
+  const headers = {
+    'Authorization': 'Bearer ' + token,
+    'Accept': 'application/vnd.github+json',
+    'X-GitHub-Api-Version': '2022-11-28',
+    'Content-Type': 'application/json'
+  };
+  try {
+    logDeploy('🔐 Verifikasi token...'); setStatus('🔐 Verifikasi akun GitHub...');
+    const userRes = await fetch('https://api.github.com/user', { headers });
+    if (!userRes.ok) throw new Error('Token tidak valid (HTTP ' + userRes.status + ')');
+    const user = await userRes.json();
+    const username = user.login;
+    logDeploy('✅ Login: ' + username);
+
+    logDeploy('📁 Menyiapkan repository...'); setStatus('📁 Membuat repository...');
+    const checkRepo = await fetch('https://api.github.com/repos/' + username + '/' + REPO, { headers });
+    if (!checkRepo.ok) {
+      const cr = await fetch('https://api.github.com/user/repos', {
+        method: 'POST', headers,
+        body: JSON.stringify({ name: REPO, description: 'Malaria AI Learner', private: false, auto_init: true })
+      });
+      if (!cr.ok) throw new Error('Gagal buat repo');
+      logDeploy('✅ Repository dibuat: ' + REPO);
+      await new Promise(r => setTimeout(r, 3000));
+    } else { logDeploy('ℹ️ Repository sudah ada, diperbarui.'); }
+
+    logDeploy('📤 Mengupload HTML...'); setStatus('📤 Mengupload halaman...');
+    const b64 = btoa(unescape(encodeURIComponent(document.documentElement.outerHTML)));
+    let sha = null;
+    const cf = await fetch('https://api.github.com/repos/' + username + '/' + REPO + '/contents/index.html', { headers });
+    if (cf.ok) { sha = (await cf.json()).sha; }
+    const ub = { message: 'Update Malaria AI Learner ' + new Date().toLocaleDateString('id-ID'), content: b64, branch: 'main' };
+    if (sha) ub.sha = sha;
+    const up = await fetch('https://api.github.com/repos/' + username + '/' + REPO + '/contents/index.html', {
+      method: 'PUT', headers, body: JSON.stringify(ub)
+    });
+    if (!up.ok) throw new Error('Gagal upload: ' + (await up.text()).substring(0,80));
+    logDeploy('✅ File diupload!');
+
+    logDeploy('🌐 Aktifkan GitHub Pages...'); setStatus('🌐 Mengaktifkan Pages...');
+    const pb = JSON.stringify({ source: { branch: 'main', path: '/' } });
+    await fetch('https://api.github.com/repos/' + username + '/' + REPO + '/pages', { method: 'POST', headers, body: pb });
+    await fetch('https://api.github.com/repos/' + username + '/' + REPO + '/pages', { method: 'PUT', headers, body: pb });
+    logDeploy('✅ GitHub Pages aktif!');
+
+    const finalUrl = 'https://' + username + '.github.io/' + REPO;
+    logDeploy('🎉 Link: ' + finalUrl);
+    setStatus('');
+    document.getElementById('final-url-text').textContent = finalUrl;
+    document.getElementById('link-result').style.display = 'block';
+    document.getElementById('panel-input').style.display = 'none';
+    const img = document.createElement('img');
+    img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=' + encodeURIComponent(finalUrl);
+    img.style = 'border-radius:10px;border:3px solid #2980B9;width:180px;height:180px;';
+    const qw = document.getElementById('qr-wrap');
+    qw.innerHTML = '';
+    qw.appendChild(img);
+    const qp = document.createElement('p');
+    qp.textContent = '📱 Scan QR Code untuk buka di HP';
+    qp.style = 'font-size:0.75rem;color:#888;margin-top:6px;';
+    qw.appendChild(qp);
+    document.getElementById('share-fab').innerHTML = '✅ Link Aktif — Klik Bagikan';
+    document.getElementById('share-fab').style.background = 'linear-gradient(135deg,#1A5276,#2980B9)';
+    try { localStorage.setItem('gh_token_malaria', token); } catch(e) {}
+  } catch(err) {
+    logDeploy('❌ ' + err.message);
+    setStatus('❌ ' + err.message, '#C0392B');
+    btn.disabled = false; btn.textContent = '🚀 Deploy & Buat Link';
+  }
+}
+function copyLink() {
+  const url = document.getElementById('final-url-text').textContent;
+  navigator.clipboard.writeText(url).then(() => {
+    const btn = document.getElementById('copy-btn');
+    btn.textContent = '✅ Tersalin!'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = '📋 Salin'; btn.classList.remove('copied'); }, 2500);
+  });
+}
+function shareWA() {
+  const url = document.getElementById('final-url-text').textContent;
+  window.open('https://wa.me/?text=' + encodeURIComponent('📚 Materi Pelatihan Malaria — AI Learner:\n' + url), '_blank');
+}
+window.addEventListener('load', () => {
+  try { const s = localStorage.getItem('gh_token_malaria'); if (s) document.getElementById('gh-token').value = s; } catch(e) {}
+});
+document.getElementById('share-modal').addEventListener('click', function(e) { if (e.target===this) closeShareModal(); });
+</script>
+</body>
+</html>
