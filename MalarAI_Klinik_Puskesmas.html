@@ -181,7 +181,7 @@ a{color:var(--blue)}
   <div class="tiles">
     <button class="tile" onclick="go('dosis')">
       <div class="ic g">💊</div><div class="t">Kalkulator Dosis</div>
-      <div class="d">DHP + Primakuin otomatis per kg BB. Vivaks 14 hari ± G6PD. Lini 2.</div>
+      <div class="d">DHP + Primakuin otomatis per kg BB. Vivaks 14 hari ± G6PD. + ACT alternatif AL/ASPY.</div>
     </button>
     <button class="tile" onclick="go('berat')">
       <div class="ic r">🚨</div><div class="t">Malaria Berat</div>
@@ -251,9 +251,9 @@ a{color:var(--blue)}
   </div>
 
   <div class="card">
-    <h2>🔁 Terapi Lini 2</h2>
-    <p class="lead">Untuk <b>kegagalan terapi</b> lini 1 (gejala menetap/memburuk + parasit aseksual tidak berkurang). Memakai berat badan, umur & kondisi di atas.</p>
-    <button class="btn sec" id="l2btn" onclick="toggleLini2()">Tampilkan dosis lini 2 ▼</button>
+    <h2>🔁 Obat Malaria Alternatif</h2>
+    <p class="lead">Bila <b>DHP kosong (stock out)</b> atau kegagalan terapi. ACT alternatif: <b>AL</b> (Artemeter+Lumefantrine) atau <b>ASPY</b> (Artesunat+Pyronaridine). <b>Kina tidak lagi dipakai sebagai lini ke-2.</b> Memakai berat badan & spesies di atas.</p>
+    <button class="btn sec" id="l2btn" onclick="toggleLini2()">Tampilkan dosis alternatif ▼</button>
     <div class="result" id="lini2Result"></div>
   </div>
 </section>
@@ -471,47 +471,57 @@ function calcDose(){
   if(lini2open)calcLini2();
 }
 
-/* ================= LINI 2 ================= */
+/* ================= ACT ALTERNATIF (AL / ASPY) ================= */
 let lini2open=false;
-function toggleLini2(){lini2open=!lini2open;document.getElementById('l2btn').textContent=lini2open?'Sembunyikan lini 2 ▲':'Tampilkan dosis lini 2 ▼';calcLini2();}
+function toggleLini2(){lini2open=!lini2open;document.getElementById('l2btn').textContent=lini2open?'Sembunyikan dosis alternatif ▲':'Tampilkan dosis alternatif ▼';calcLini2();}
+function alDose(bb){
+  if(bb<5)return null;
+  if(bb<15)return '2 × 1 tablet';
+  if(bb<25)return '2 × 2 tablet';
+  if(bb<35)return '2 × 3 tablet';
+  return '2 × 4 tablet (AL 20/120) atau 2 × 1 tablet (AL 80/480)';
+}
+function aspyDose(bb){
+  if(bb<5)return null;
+  if(bb<8)return['sachet 20/60 mg','1 sachet'];
+  if(bb<15)return['sachet 20/60 mg','2 sachet'];
+  if(bb<20)return['sachet 20/60 mg','3 sachet'];
+  if(bb<24)return['tablet 60/180 mg','1 tablet'];
+  if(bb<45)return['tablet 60/180 mg','2 tablet'];
+  if(bb<65)return['tablet 60/180 mg','3 tablet'];
+  return['tablet 60/180 mg','4 tablet'];
+}
 function calcLini2(){
   if(!lini2open){const b=document.getElementById('lini2Result');b.classList.remove('show');b.innerHTML='';return;}
   const bb=parseFloat(document.getElementById('bb').value);
   const sp=document.getElementById('spesies').value;
   const box=document.getElementById('lini2Result');
-  if(!bb||bb<=0||bb>150){box.innerHTML='<div class="alert warn"><span class="i">⚖️</span><div>Isi berat badan di kalkulator lini 1 dulu untuk menghitung lini 2.</div></div>';box.classList.add('show');return;}
-  const isFal=(sp==='fal'||sp==='mix');
+  if(!bb||bb<=0||bb>150){box.innerHTML='<div class="alert warn"><span class="i">⚖️</span><div>Isi berat badan di kalkulator lini 1 dulu.</div></div>';box.classList.add('show');return;}
   let h='';
-  const kinaDose=Math.round(10*bb);
-  h+=`<div class="rx"><div class="name">💊 Kina <span class="tag">tablet 200 mg</span></div>
-    <div class="dose">${kinaDose} mg × 3/hari</div>
-    <div class="meta">10 mg/kgBB/kali, 3× sehari, selama 7 hari (sesudah makan). Maks dewasa 2.000 mg/hari.</div></div>`;
-  if(isFal){
-    if(flags.hamil || umur==='bayi' || umur==='anak' || bb<25){
-      const clinda=Math.round(10*bb);
-      h+=`<div class="rx amber"><div class="name">💊 Klindamisin <span class="tag">anak &lt;8 th / hamil</span></div>
-        <div class="dose">${clinda} mg × 2/hari</div>
-        <div class="meta">10 mg/kgBB/kali, 2× sehari, 7 hari. Pengganti doksisiklin/tetrasiklin yang kontraindikasi pada anak &lt;8 th & ibu hamil.</div></div>`;
-    } else {
-      const doxiDose=Math.round(3.5*bb/2);
-      h+=`<div class="rx blue"><div class="name">💊 Doksisiklin <span class="tag">≥15 th</span></div>
-        <div class="dose">${doxiDose} mg × 2/hari</div>
-        <div class="meta">3,5 mg/kgBB/hari dibagi 2 dosis, 7 hari. (Usia 8–14 th: 2,2 mg/kgBB/hari → ${Math.round(2.2*bb/2)} mg × 2/hari.) Alternatif: Tetrasiklin ${Math.round(4*bb)} mg × 4/hari.</div></div>`;
-    }
+  const al=alDose(bb), aspy=aspyDose(bb);
+  if(!al){
+    h+='<div class="alert warn"><span class="i">⚖️</span><div>Tabel AL/ASPY mulai dari 5 kg. Untuk &lt;5 kg gunakan DHP atau konsultasikan.</div></div>';
+  } else {
+    h+=`<div class="rx blue"><div class="name">💊 Artemeter + Lumefantrine (AL) <span class="tag">Updated</span></div>
+      <div class="dose">${al}</div>
+      <div class="meta">2× sehari (jarak ≥8 jam), selama 3 hari, sesudah makan. (Format “2 × N” = 2 kali sehari, N tablet/kali.)</div></div>`;
+    h+=`<div class="rx"><div class="name">💊 Artesunat + Pyronaridine (ASPY) <span class="tag">Updated</span></div>
+      <div class="dose">${aspy[1]} / pemberian</div>
+      <div class="meta">1× sehari selama 3 hari · sediaan ${aspy[0]}.</div></div>`;
+    h+=`<div class="alert info"><span class="i">ℹ️</span><div><b>Pilih salah satu</b> (AL <b>atau</b> ASPY) sebagai pengganti DHP yang kosong/gagal terapi — bukan diberikan bersamaan.</div></div>`;
   }
   let pqBlocked = flags.hamil || umur==='bayi' || bb<=6 || g6pd==='def' || sp==='mal';
   if(sp==='mal'){
-    h+=`<div class="alert info"><span class="i">ℹ️</span><div>Malariae: Kina 7 hari saja, tanpa primakuin.</div></div>`;
+    h+=`<div class="alert info"><span class="i">ℹ️</span><div>Malariae: ACT 3 hari saja, tanpa primakuin.</div></div>`;
   } else if(pqBlocked){
-    h+=`<div class="alert warn"><span class="i">⛔</span><div>Primakuin mengikuti aturan kontraindikasi yang sama (hamil / bayi &lt;6 bln / G6PD defisiensi → tidak diberikan, atau regimen mingguan bila G6PD defisiensi + rujuk).</div></div>`;
+    h+=`<div class="alert warn"><span class="i">⛔</span><div>Primakuin mengikuti aturan kontraindikasi yang sama (hamil / bayi &lt;6 bln / G6PD defisiensi).</div></div>`;
   } else {
     const single=(sp==='fal'); const mg=(0.25*bb).toFixed(1);
     h+=`<div class="rx"><div class="name">💊 Primakuin <span class="tag">1 tab = 15 mg</span></div>
       <div class="dose">${pqTab(bb)} tablet ${single?'(hari ke-1)':'/hari'}</div>
-      <div class="meta">0,25 mg/kgBB ≈ ${mg} mg · ${single?'dosis tunggal (falciparum)':'14 hari (vivaks/ovale)'} sesuai jenis infeksi.</div></div>`;
+      <div class="meta">Dosis & lama primakuin mengikuti jenis Plasmodium · ${single?'dosis tunggal (falciparum)':'14 hari (vivaks/ovale)'} ≈ ${mg} mg/dosis.</div></div>`;
   }
-  h+=`<div class="alert info"><span class="i">📋</span><div><b>Regimen:</b> Falciparum → Kina + Doksisiklin/Tetrasiklin (atau Klindamisin) + Primakuin. Vivaks → Kina + Primakuin.</div></div>`;
-  h+=`<div class="ref"><b>Acuan:</b> Buku Saku Tatalaksana Kasus Malaria, Kemenkes RI (pengobatan lini ke-2).</div>`;
+  h+=`<div class="ref"><b>Acuan:</b> Buku Saku Tatalaksana Kasus Malaria, Kemenkes RI (Updated) — Tabel 7 (AL) & Tabel 8 (ASPY). Kina tidak lagi digunakan sebagai terapi lini ke-2.</div>`;
   box.innerHTML=h;box.classList.add('show');
 }
 
