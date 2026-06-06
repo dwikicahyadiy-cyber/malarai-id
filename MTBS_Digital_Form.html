@@ -599,25 +599,40 @@ const MOD = {
   /* ===================== BALITA 2 BLN - 5 THN ===================== */
   balita: [
     {
-      id:'saga', title:'Tanda Bahaya Umum (SAGA)', icon:'🚨', always:true,
+      id:'saga', title:'Tanda Bahaya Umum (SAGA)', icon:'\u{1F6A8}', always:true,
+      note:'Segitiga Asesmen Gawat Anak (SAGA): nilai 3 komponen \u2014 Penampilan, Usaha Napas, dan Sirkulasi. Bila ada tanda pada KETIGA komponen sekaligus = GAGAL JANTUNG PARU. Bila hanya pada salah satu komponen / ada tanda bahaya anamnesis = PENYAKIT SANGAT BERAT.',
       items:[
-        ['tdk_minum','Tidak bisa minum atau menyusu'],
-        ['muntah','Memuntahkan semua makanan & minuman'],
-        ['kejang','Pernah/sedang kejang selama sakit ini'],
-        ['letargi','Letargi, tidak sadar, atau pandangan kosong'],
-        ['gelisah','Gelisah/rewel tidak dapat ditenangkan'],
-        ['tddk','Tarikan dinding dada ke dalam'],
-        ['stridor','Terdengar stridor'],
-        ['sianosis','Tampak biru (sianosis) / sangat pucat / kutis marmorata'],
+        ['tdk_minum','Anamnesis: tidak bisa minum atau menyusu'],
+        ['muntah','Anamnesis: memuntahkan semua makanan & minuman'],
+        ['kejang_riw','Anamnesis: pernah kejang selama sakit ini'],
+        ['p_kejang','Penampilan: anak sedang kejang'],
+        ['p_sadar','Penampilan: tidak sadar / tidak dapat berinteraksi'],
+        ['p_gelisah','Penampilan: gelisah/rewel tidak dapat ditenangkan'],
+        ['p_kosong','Penampilan: pandangan kosong / mata tidak membuka / menangis melengking'],
+        ['n_tddk','Usaha napas: tarikan dinding dada ke dalam'],
+        ['n_stridor','Usaha napas: terdengar stridor'],
+        ['n_cuping','Usaha napas: napas cuping hidung / menolak berbaring'],
+        ['s_pucat','Sirkulasi: tampak pucat'],
+        ['s_sianosis','Sirkulasi: tampak biru (sianosis)'],
+        ['s_marmorata','Sirkulasi: kutis marmorata (kulit seperti marmer)'],
       ],
       classify(s){
-        const any = Object.values(s).some(Boolean);
-        if(any) return {level:'red',name:'PENYAKIT SANGAT BERAT (ADA TANDA BAHAYA UMUM)',actions:[
-          'Selesaikan seluruh penilaian dengan CEPAT',
-          'Beri tindakan pra-rujukan sesuai temuan (oksigen 3–5 L/mnt jika perlu, diazepam jika kejang)',
-          'Cegah gula darah turun & jaga anak tetap hangat',
+        const penampilan = s.p_kejang||s.p_sadar||s.p_gelisah||s.p_kosong;
+        const napas = s.n_tddk||s.n_stridor||s.n_cuping;
+        const sirkulasi = s.s_pucat||s.s_sianosis||s.s_marmorata;
+        const danger = s.tdk_minum||s.muntah||s.kejang_riw;
+        if(penampilan && napas && sirkulasi) return {level:'red',name:'GAGAL JANTUNG PARU',actions:[
+          'Terdapat tanda pada KETIGA komponen SAGA (penampilan + usaha napas + sirkulasi)',
+          'Lakukan Bantuan Hidup Dasar (BHD)',
           'RUJUK SEGERA'],followup:null};
-        return {level:'green',name:'Tidak ada tanda bahaya umum',actions:['Lanjutkan penilaian gejala utama'],followup:null};
+        if(danger || penampilan || napas || sirkulasi) return {level:'red',name:'PENYAKIT SANGAT BERAT',actions:[
+          'Selesaikan seluruh penilaian dengan CEPAT',
+          'Jika sedang kejang, beri diazepam',
+          'Jika ada stridor, pastikan tidak ada sumbatan jalan napas',
+          'Berikan oksigen 3\u20135 L/menit melalui nasal prongs',
+          'Cegah agar gula darah tidak turun & jaga anak tetap hangat',
+          'RUJUK SEGERA'],followup:null};
+        return {level:'green',name:'STABIL \u2014 tidak ada tanda bahaya umum',actions:['Tidak perlu tindakan SAGA; lanjutkan penilaian gejala utama'],followup:null};
       }
     },
     {
@@ -678,12 +693,14 @@ const MOD = {
       }
     },
     {
-      id:'demam', title:'Demam (Malaria / Campak / Dengue)', icon:'🌡️',
+      id:'demam', title:'Demam (Malaria / Campak / Dengue)', icon:'\u{1F321}\uFE0F',
       ask:[['lama','Lama demam (hari)',true]],
       seg:[['endemis','Daerah endemis malaria',['Tinggi','Rendah','Non-endemis']]],
       items:[
         ['kaku','Kaku kuduk'],
         ['rdt','Tes malaria POSITIF (RDT/mikroskopis)'],
+        ['rdt_na','Tes malaria tidak tersedia / belum dilakukan'],
+        ['travel','Riwayat bepergian ke daerah endemis \u22642 minggu (untuk non-endemis)'],
         ['campak','Tanda campak: ruam menyeluruh + (batuk/pilek/mata merah)'],
         ['campak_kornea','Kekeruhan kornea / luka mulut dalam-luas'],
         ['campak_nanah','Nanah mata / luka mulut'],
@@ -692,23 +709,43 @@ const MOD = {
         ['dengue_ts','Uji Tourniquet positif / ruam / leukopenia-trombositopenia'],
       ],
       classify(s,c){
-        const out=[];let lvl='green',nm='DEMAM MUNGKIN BUKAN MALARIA',fu=3;
+        const out=[]; let lvl='green', nm='', fu=null;
         const endemis=c.endemis;
-        // dengue prioritas berat
-        if(s.dengue_syok){return{level:'red',name:'DENGUE BERAT (SEVERE DENGUE)',actions:['Beri oksigen 1–2 L/mnt bila syok/distres','Cairan kristaloid isotonis (RL/NaCl 0,9%) lalu RUJUK SEGERA','Parasetamol bila demam ≥38°C (hindari NSAID/aspirin)'],followup:null};}
-        // malaria / penyakit berat dgn demam
-        if(c.saga_red || s.kaku){ out.push('Beri artesunat injeksi (IM/IV) dosis pertama (malaria berat)','Antibiotik dosis pertama','Cegah gula darah turun, parasetamol bila ≥38°C','RUJUK SEGERA'); lvl='red'; nm='PENYAKIT BERAT DENGAN DEMAM'; fu=null;}
-        else if(s.rdt || (endemis==='Tinggi') ){ out.push('Beri antimalaria oral pilihan pertama (sesuai hasil/area)','Parasetamol bila demam ≥38°C','Kunjungan ulang 3 hari jika tetap demam','Jika demam >7 hari → RUJUK'); lvl='yellow'; nm='MALARIA'; fu=3;}
-        else { out.push('Parasetamol bila demam ≥38°C','Obati penyebab lain demam','Kunjungan ulang '+(endemis==='Non-endemis'?'2':'3')+' hari jika tetap demam'); lvl='green'; nm='DEMAM '+(endemis==='Non-endemis'?'BUKAN':'MUNGKIN BUKAN')+' MALARIA'; fu=endemis==='Non-endemis'?2:3;}
-        // campak overlay
-        if(s.campak_kornea){out.push('— CAMPAK DENGAN KOMPLIKASI BERAT: vitamin A dosis pengobatan, antibiotik, tetes mata, RUJUK SEGERA');lvl='red';fu=null;}
-        else if(s.campak_nanah){out.push('— CAMPAK KOMPLIKASI MATA/MULUT: vitamin A, tetes mata/antiseptik mulut, kunjungan ulang 3 hari');if(lvl==='green')lvl='yellow';fu=Math.min(fu??99,3);}
-        else if(s.campak){out.push('— CAMPAK: beri vitamin A dosis pengobatan, nasihati kembali segera');if(lvl==='green')lvl='yellow';}
-        // dengue warning overlay
-        if(s.dengue_warn){out.push('— DENGUE DENGAN WARNING SIGNS: cairan kristaloid pra-rujukan, RUJUK SEGERA rawat inap');lvl='red';fu=null;}
-        else if(s.dengue_ts){out.push('— DENGUE TANPA WARNING SIGNS: kunjungan ulang 1 hari, observasi; <1 th → RUJUK');if(lvl==='green')lvl='yellow';fu=Math.min(fu??99,1);}
+        const nonEnd=endemis==='Non-endemis';
+        const endemArea=(endemis==='Tinggi'||endemis==='Rendah')||(nonEnd&&s.travel);
+        const chosen=endemis!=='';
+        // 1) Dengue berat \u2014 prioritas tertinggi
+        if(s.dengue_syok){ return {level:'red',name:'DENGUE BERAT (SEVERE DENGUE)',actions:['Beri oksigen 1\u20132 L/mnt bila syok/distres','Cairan kristaloid isotonis (RL/NaCl 0,9%) lalu RUJUK SEGERA','Parasetamol bila demam \u226538\u00B0C (hindari NSAID/aspirin)'],followup:null}; }
+        // 2) PENYAKIT BERAT DENGAN DEMAM (MTBS hal.5)
+        const severe = c.saga_red || s.kaku || ((nonEnd||!chosen) && c.umur<=3 && c.umur>0);
+        if(severe){
+          lvl='red'; nm='PENYAKIT BERAT DENGAN DEMAM'; fu=null;
+          if(endemArea) out.push('Beri dosis pertama artesunat injeksi (IM/IV) untuk malaria berat');
+          out.push('Beri dosis pertama antibiotik yang sesuai','Cegah agar gula darah tidak turun','Beri satu dosis parasetamol bila demam \u226538\u00B0C');
+          if(endemArea) out.push('Jika tersedia, lakukan Tes Malaria');
+          if(!endemArea && !nonEnd && !chosen) out.push('\u26A0 Tentukan daerah endemis malaria \u2014 bila endemis, TAMBAHKAN artesunat injeksi');
+          if((nonEnd||!chosen) && c.umur<=3 && c.umur>0) out.push('(Diklasifikasikan berat karena umur \u22643 bulan di daerah non-endemis)');
+          out.push('RUJUK SEGERA');
+        }
+        // 3) MALARIA terkonfirmasi (tes positif) \u2014 berlaku di mana pun
+        else if(s.rdt){ lvl='yellow'; nm='MALARIA'; fu=3; out.push('Beri obat anti malaria oral pilihan pertama (sesuai hasil tes & area)','Beri satu dosis parasetamol bila demam \u226538\u00B0C','Kunjungan ulang 3 hari jika tetap demam','Jika demam berlanjut >7 hari \u2192 RUJUK'); }
+        // 4) Endemis tinggi/rendah & tes tidak tersedia \u2192 MALARIA presumtif
+        else if(endemArea && s.rdt_na){ lvl='yellow'; nm='MALARIA (presumtif \u2014 tes tidak tersedia)'; fu=3; out.push('Beri obat anti malaria oral pilihan pertama','Beri satu dosis parasetamol bila demam \u226538\u00B0C','Kunjungan ulang 3 hari jika tetap demam','Jika demam berlanjut >7 hari \u2192 RUJUK'); }
+        // 5) Endemis tinggi/rendah, tanpa bukti malaria \u2192 mungkin bukan malaria
+        else if(endemArea){ lvl='green'; nm='DEMAM MUNGKIN BUKAN MALARIA'; fu=3; out.push('Beri satu dosis parasetamol bila demam \u226538\u00B0C','Obati penyebab lain dari demam','Lakukan Tes Malaria bila belum & tidak ada penyebab pasti','Kunjungan ulang 3 hari jika tetap demam','Jika demam berlanjut >7 hari \u2192 RUJUK'); }
+        // 6) Non endemis, tanpa tanda berat \u2192 bukan malaria
+        else if(nonEnd){ lvl='green'; nm='DEMAM BUKAN MALARIA'; fu=2; out.push('Beri satu dosis parasetamol bila demam \u226538\u00B0C','Obati penyebab lain dari demam','Kunjungan ulang 2 hari jika tetap demam','Jika demam berlanjut >7 hari \u2192 RUJUK'); }
+        // 7) Daerah endemis belum dipilih
+        else { lvl='yellow'; nm='DEMAM \u2014 TENTUKAN DAERAH ENDEMIS MALARIA'; fu=2; out.push('\u26A0 Pilih daerah endemis malaria (Tinggi/Rendah/Non-endemis) untuk klasifikasi yang tepat','Beri satu dosis parasetamol bila demam \u226538\u00B0C','Obati penyebab lain dari demam'); }
+        // Overlay CAMPAK
+        if(s.campak_kornea){ out.push('\u2014 CAMPAK DENGAN KOMPLIKASI BERAT: vitamin A dosis pengobatan, antibiotik dosis pertama, tetes/salep mata antibiotik, RUJUK SEGERA'); lvl='red'; fu=null; }
+        else if(s.campak_nanah){ out.push('\u2014 CAMPAK DENGAN KOMPLIKASI MATA/MULUT: vitamin A, tetes/salep mata atau antiseptik mulut, kunjungan ulang 3 hari'); if(lvl==='green')lvl='yellow'; fu=(fu==null?null:Math.min(fu,3)); }
+        else if(s.campak){ out.push('\u2014 CAMPAK (kini/3 bln terakhir): beri vitamin A dosis pengobatan, nasihati kembali segera'); if(lvl==='green')lvl='yellow'; }
+        // Overlay DENGUE
+        if(s.dengue_warn){ out.push('\u2014 DENGUE DENGAN WARNING SIGNS: cairan kristaloid pra-rujukan, RUJUK SEGERA untuk rawat inap'); lvl='red'; fu=null; }
+        else if(s.dengue_ts){ out.push('\u2014 DENGUE TANPA WARNING SIGNS: kunjungan ulang 1 hari, observasi; balita <1 th \u2192 RUJUK'); if(lvl==='green')lvl='yellow'; fu=(fu==null?null:Math.min(fu,1)); }
         out.push('Nasihati kapan kembali segera');
-        return{level:lvl,name:nm,actions:out,followup:fu};
+        return {level:lvl,name:nm,actions:out,followup:fu};
       }
     },
     {
@@ -900,6 +937,7 @@ function renderAssess(){
 }
 function renderModInputs(m){
   let h='';
+  if(m.note) h+=`<div style="background:var(--tld);border-left:3px solid var(--tl);border-radius:0 8px 8px 0;padding:9px 12px;font-size:.76rem;color:var(--tx2);margin-bottom:12px">\u2139\uFE0F ${m.note}</div>`;
   if(m.ask){ h+='<div class="row3">'; m.ask.forEach(a=>{ h+=`<div class="field"><label class="lab">${a[1]}</label><input type="number" id="in_${m.id}_${a[0]}" oninput="evalMod('${m.id}')" step="0.1"></div>`; }); h+='</div>'; }
   if(m.seg){ m.seg.forEach(sg=>{ h+=`<div class="field"><label class="lab">${sg[1]}</label><select id="sg_${m.id}_${sg[0]}" onchange="evalMod('${m.id}')"><option value="">— pilih —</option>${sg[2].map(o=>`<option>${o}</option>`).join('')}</select></div>`; }); }
   if(m.id==='batuk') h=ariTimerHTML()+h;
