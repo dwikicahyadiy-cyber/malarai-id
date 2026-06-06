@@ -126,7 +126,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--tl)}
         <div class="field"><label class="lab">Tanggal kunjungan</label><input type="date" id="f_tgl"></div>
       </div>
       <div class="row3">
-        <div class="field"><label class="lab">Umur (bulan)</label><input type="number" id="f_umur" placeholder="mis. 14" min="0" max="60" oninput="onAge()"><div class="hint" id="ageHint"></div></div>
+        <div class="field"><label class="lab">Umur</label><div style="display:flex;gap:8px"><input type="number" id="f_thn" placeholder="tahun" min="0" max="5" style="flex:1" oninput="syncUmur()"><input type="number" id="f_bln" placeholder="bulan" min="0" max="59" style="flex:1" oninput="syncUmur()"></div><input type="hidden" id="f_umur"><div class="hint" id="ageHint">Contoh: 1 tahun 1 bulan = 13 bln · 0 tahun 8 bulan = 8 bln</div></div>
         <div class="field"><label class="lab">Berat badan (kg)</label><input type="number" id="f_bb" placeholder="mis. 9.5" step="0.1" oninput="recalc()"><div class="hint">Dasar perhitungan dosis</div></div>
         <div class="field"><label class="lab">Suhu aksila (°C)</label><input type="number" id="f_suhu" placeholder="mis. 38.5" step="0.1" oninput="recalc()"></div>
       </div>
@@ -191,6 +191,406 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--tl)}
    ============================================================ */
 
 const state = { step:0, algo:null, active:{} };
+
+/* ===== WHO DATA ===== */
+/* ===== WHO Child Growth Standards 2006 (LMS) — dari kalkulator-status-gizi.html milik dr.dwiki ===== */
+const WHO = {};
+WHO.waz_m = {
+0:[0.3487,3.3464,0.14602],1:[0.2297,4.4709,0.13395],2:[0.1970,5.5675,0.12385],
+3:[0.1738,6.3762,0.11727],4:[0.1553,7.0023,0.11316],5:[0.1395,7.5105,0.11080],
+6:[0.1257,7.9340,0.10958],7:[0.1134,8.2970,0.10902],8:[0.1021,8.6151,0.10882],
+9:[0.0917,8.9014,0.10881],10:[0.0820,9.1649,0.10891],11:[0.0730,9.4122,0.10906],
+12:[0.0644,9.6479,0.10925],13:[0.0563,9.8749,0.10949],14:[0.0487,10.0953,0.10976],
+15:[0.0413,10.3108,0.11007],16:[0.0343,10.5228,0.11041],17:[0.0275,10.7319,0.11079],
+18:[0.0211,10.9385,0.11119],19:[0.0148,11.1430,0.11164],20:[0.0087,11.3462,0.11211],
+21:[0.0029,11.5486,0.11261],22:[-0.0028,11.7504,0.11314],23:[-0.0083,11.9514,0.11369],
+24:[-0.0137,12.1515,0.11426],25:[-0.0189,12.3497,0.11485],26:[-0.0240,12.5453,0.11545],
+27:[-0.0290,12.7388,0.11607],28:[-0.0339,12.9306,0.11669],29:[-0.0387,13.1208,0.11733],
+30:[-0.0434,13.3092,0.11797],31:[-0.0480,13.4956,0.11861],32:[-0.0526,13.6803,0.11926],
+33:[-0.0570,13.8631,0.11991],34:[-0.0614,14.0441,0.12056],35:[-0.0657,14.2231,0.12121],
+36:[-0.0700,14.4002,0.12186],37:[-0.0741,14.5754,0.12251],38:[-0.0782,14.7488,0.12316],
+39:[-0.0822,14.9203,0.12380],40:[-0.0862,15.0902,0.12445],41:[-0.0900,15.2583,0.12509],
+42:[-0.0939,15.4247,0.12572],43:[-0.0976,15.5894,0.12636],44:[-0.1013,15.7525,0.12699],
+45:[-0.1049,15.9141,0.12762],46:[-0.1085,16.0742,0.12824],47:[-0.1120,16.2329,0.12886],
+48:[-0.1154,16.3901,0.12947],49:[-0.1188,16.5459,0.13008],50:[-0.1221,16.7003,0.13068],
+51:[-0.1254,16.8534,0.13127],52:[-0.1286,17.0051,0.13186],53:[-0.1318,17.1554,0.13244],
+54:[-0.1349,17.3043,0.13301],55:[-0.1380,17.4519,0.13357],56:[-0.1410,17.5981,0.13412],
+57:[-0.1440,17.7429,0.13466],58:[-0.1469,17.8864,0.13519],59:[-0.1498,18.0285,0.13571],
+60:[-0.1526,18.1693,0.13621]
+};
+
+// ============ BB/U (Weight-for-Age) — PEREMPUAN 0-60 bulan ============
+WHO.waz_f = {
+0:[0.3809,3.2322,0.14171],1:[0.1714,4.1873,0.13724],2:[0.0962,5.1282,0.13000],
+3:[0.0402,5.8458,0.12619],4:[-0.0050,6.4237,0.12402],5:[-0.0430,6.8985,0.12274],
+6:[-0.0756,7.2970,0.12204],7:[-0.1039,7.6422,0.12178],8:[-0.1288,7.9487,0.12181],
+9:[-0.1507,8.2254,0.12199],10:[-0.1700,8.4800,0.12223],11:[-0.1872,8.7192,0.12247],
+12:[-0.2024,8.9481,0.12268],13:[-0.2158,9.1699,0.12283],14:[-0.2278,9.3870,0.12294],
+15:[-0.2384,9.6008,0.12300],16:[-0.2478,9.8124,0.12303],17:[-0.2562,10.0226,0.12306],
+18:[-0.2637,10.2315,0.12309],19:[-0.2703,10.4393,0.12315],20:[-0.2762,10.6464,0.12323],
+21:[-0.2815,10.8534,0.12335],22:[-0.2862,11.0608,0.12350],23:[-0.2903,11.2688,0.12369],
+24:[-0.2941,11.4775,0.12390],25:[-0.2975,11.6864,0.12414],26:[-0.3006,11.8952,0.12440],
+27:[-0.3034,12.1035,0.12468],28:[-0.3060,12.3108,0.12498],29:[-0.3083,12.5169,0.12529],
+30:[-0.3104,12.7215,0.12562],31:[-0.3124,12.9244,0.12595],32:[-0.3142,13.1256,0.12629],
+33:[-0.3158,13.3249,0.12664],34:[-0.3173,13.5225,0.12698],35:[-0.3187,13.7184,0.12734],
+36:[-0.3199,13.9128,0.12769],37:[-0.3211,14.1056,0.12805],38:[-0.3222,14.2972,0.12841],
+39:[-0.3232,14.4876,0.12877],40:[-0.3241,14.6772,0.12914],41:[-0.3250,14.8661,0.12950],
+42:[-0.3257,15.0545,0.12986],43:[-0.3265,15.2429,0.13023],44:[-0.3272,15.4313,0.13060],
+45:[-0.3278,15.6199,0.13096],46:[-0.3285,15.8088,0.13133],47:[-0.3290,15.9981,0.13170],
+48:[-0.3296,16.1878,0.13207],49:[-0.3301,16.3780,0.13243],50:[-0.3306,16.5686,0.13280],
+51:[-0.3311,16.7595,0.13317],52:[-0.3316,16.9508,0.13354],53:[-0.3320,17.1423,0.13391],
+54:[-0.3325,17.3338,0.13428],55:[-0.3329,17.5253,0.13465],56:[-0.3333,17.7165,0.13502],
+57:[-0.3338,17.9073,0.13539],58:[-0.3342,18.0974,0.13577],59:[-0.3346,18.2868,0.13614],
+60:[-0.3350,18.4751,0.13652]
+};
+
+// ============ PB/TB-U (Length/Height-for-Age) — LAKI-LAKI 0-60 bulan ============
+// Catatan: WHO menggunakan PB (terlentang) untuk 0-24 bulan, TB (berdiri) untuk 24+ bulan
+// L selalu 1 untuk indikator ini
+WHO.haz_m = {
+0:[1,49.8843,0.03795],1:[1,54.7244,0.03557],2:[1,58.4249,0.03424],
+3:[1,61.4292,0.03328],4:[1,63.8860,0.03257],5:[1,65.9026,0.03204],
+6:[1,67.6236,0.03165],7:[1,69.1645,0.03139],8:[1,70.5994,0.03124],
+9:[1,71.9687,0.03117],10:[1,73.2812,0.03118],11:[1,74.5388,0.03125],
+12:[1,75.7488,0.03137],13:[1,76.9186,0.03154],14:[1,78.0497,0.03174],
+15:[1,79.1458,0.03197],16:[1,80.2113,0.03222],17:[1,81.2487,0.03250],
+18:[1,82.2587,0.03279],19:[1,83.2418,0.03310],20:[1,84.1996,0.03342],
+21:[1,85.1348,0.03376],22:[1,86.0477,0.03410],23:[1,86.9410,0.03445],
+24:[1,87.8161,0.03479],25:[1,88.6691,0.03515],26:[1,89.4960,0.03551],
+27:[1,90.3000,0.03587],28:[1,91.0824,0.03622],29:[1,91.8454,0.03657],
+30:[1,92.5908,0.03692],31:[1,93.3197,0.03727],32:[1,94.0334,0.03762],
+33:[1,94.7332,0.03797],34:[1,95.4204,0.03832],35:[1,96.0962,0.03867],
+36:[1,96.7615,0.03902],37:[1,97.4173,0.03937],38:[1,98.0643,0.03972],
+39:[1,98.7032,0.04007],40:[1,99.3347,0.04042],41:[1,99.9594,0.04077],
+42:[1,100.5777,0.04112],43:[1,101.1901,0.04147],44:[1,101.7969,0.04182],
+45:[1,102.3985,0.04217],46:[1,102.9952,0.04252],47:[1,103.5872,0.04287],
+48:[1,104.1749,0.04322],49:[1,104.7585,0.04357],50:[1,105.3382,0.04392],
+51:[1,105.9144,0.04427],52:[1,106.4872,0.04462],53:[1,107.0569,0.04497],
+54:[1,107.6237,0.04532],55:[1,108.1879,0.04567],56:[1,108.7497,0.04602],
+57:[1,109.3094,0.04637],58:[1,109.8671,0.04672],59:[1,110.4232,0.04707],
+60:[1,110.9779,0.04742]
+};
+
+// ============ PB/TB-U (Length/Height-for-Age) — PEREMPUAN 0-60 bulan ============
+WHO.haz_f = {
+0:[1,49.1477,0.03790],1:[1,53.6872,0.03640],2:[1,57.0673,0.03568],
+3:[1,59.8029,0.03520],4:[1,62.0899,0.03486],5:[1,64.0301,0.03463],
+6:[1,65.7311,0.03448],7:[1,67.2873,0.03441],8:[1,68.7498,0.03440],
+9:[1,70.1435,0.03444],10:[1,71.4818,0.03452],11:[1,72.7710,0.03464],
+12:[1,74.0150,0.03479],13:[1,75.2176,0.03496],14:[1,76.3817,0.03514],
+15:[1,77.5099,0.03534],16:[1,78.6055,0.03555],17:[1,79.6710,0.03576],
+18:[1,80.7079,0.03598],19:[1,81.7182,0.03620],20:[1,82.7036,0.03643],
+21:[1,83.6654,0.03666],22:[1,84.6040,0.03688],23:[1,85.5202,0.03711],
+24:[1,86.4153,0.03734],25:[1,87.2905,0.03757],26:[1,88.1473,0.03780],
+27:[1,88.9870,0.03802],28:[1,89.8104,0.03825],29:[1,90.6185,0.03847],
+30:[1,91.4116,0.03870],31:[1,92.1906,0.03892],32:[1,92.9555,0.03914],
+33:[1,93.7069,0.03937],34:[1,94.4456,0.03959],35:[1,95.1714,0.03981],
+36:[1,95.8852,0.04004],37:[1,96.5876,0.04026],38:[1,97.2786,0.04048],
+39:[1,97.9586,0.04070],40:[1,98.6279,0.04092],41:[1,99.2867,0.04114],
+42:[1,99.9356,0.04136],43:[1,100.5748,0.04158],44:[1,101.2044,0.04180],
+45:[1,101.8244,0.04202],46:[1,102.4358,0.04224],47:[1,103.0395,0.04246],
+48:[1,103.6356,0.04267],49:[1,104.2231,0.04289],50:[1,104.8027,0.04311],
+51:[1,105.3749,0.04333],52:[1,105.9410,0.04354],53:[1,106.5025,0.04376],
+54:[1,107.0602,0.04398],55:[1,107.6135,0.04419],56:[1,108.1613,0.04441],
+57:[1,108.7034,0.04463],58:[1,109.2395,0.04484],59:[1,109.7700,0.04506],
+60:[1,110.2952,0.04527]
+};
+
+// ============ IMT/U (BMI-for-Age) — LAKI-LAKI 0-60 bulan ============
+WHO.baz_m = {
+0:[-0.0631,13.4069,0.09421],1:[-0.4845,14.9526,0.09253],2:[-0.7826,16.2378,0.09032],
+3:[-0.9869,16.9415,0.08828],4:[-1.1226,17.2329,0.08673],5:[-1.2104,17.3197,0.08562],
+6:[-1.2655,17.3261,0.08484],7:[-1.2997,17.2914,0.08429],8:[-1.3203,17.2348,0.08387],
+9:[-1.3315,17.1675,0.08355],10:[-1.3361,17.0967,0.08331],11:[-1.3361,17.0254,0.08313],
+12:[-1.3325,16.9572,0.08301],13:[-1.3265,16.8910,0.08294],14:[-1.3188,16.8260,0.08289],
+15:[-1.3100,16.7635,0.08288],16:[-1.3004,16.7044,0.08289],17:[-1.2903,16.6492,0.08293],
+18:[-1.2799,16.5981,0.08299],19:[-1.2691,16.5507,0.08306],20:[-1.2582,16.5071,0.08315],
+21:[-1.2474,16.4669,0.08326],22:[-1.2366,16.4300,0.08337],23:[-1.2258,16.3961,0.08350],
+24:[-1.2153,16.3650,0.08364],25:[-1.2049,16.3392,0.08378],26:[-1.1947,16.3158,0.08394],
+27:[-1.1848,16.2950,0.08410],28:[-1.1751,16.2768,0.08428],29:[-1.1656,16.2606,0.08446],
+30:[-1.1564,16.2464,0.08465],31:[-1.1473,16.2340,0.08484],32:[-1.1385,16.2232,0.08504],
+33:[-1.1299,16.2138,0.08524],34:[-1.1215,16.2058,0.08545],35:[-1.1132,16.1990,0.08566],
+36:[-1.1052,16.1933,0.08588],37:[-1.0972,16.1885,0.08610],38:[-1.0894,16.1846,0.08632],
+39:[-1.0817,16.1814,0.08654],40:[-1.0742,16.1788,0.08677],41:[-1.0667,16.1768,0.08700],
+42:[-1.0594,16.1753,0.08722],43:[-1.0521,16.1742,0.08745],44:[-1.0450,16.1735,0.08768],
+45:[-1.0379,16.1730,0.08791],46:[-1.0309,16.1729,0.08814],47:[-1.0240,16.1729,0.08837],
+48:[-1.0171,16.1731,0.08861],49:[-1.0103,16.1735,0.08884],50:[-1.0036,16.1740,0.08907],
+51:[-0.9970,16.1745,0.08930],52:[-0.9904,16.1752,0.08953],53:[-0.9839,16.1759,0.08976],
+54:[-0.9774,16.1766,0.08999],55:[-0.9710,16.1773,0.09022],56:[-0.9646,16.1779,0.09045],
+57:[-0.9583,16.1786,0.09068],58:[-0.9521,16.1791,0.09090],59:[-0.9459,16.1796,0.09113],
+60:[-0.9397,16.1800,0.09135]
+};
+
+// ============ IMT/U (BMI-for-Age) — PEREMPUAN 0-60 bulan ============
+WHO.baz_f = {
+0:[-0.0631,13.3363,0.09322],1:[-0.5764,14.5708,0.09142],2:[-0.9112,15.5346,0.08915],
+3:[-1.1259,16.1278,0.08709],4:[-1.2575,16.4189,0.08542],5:[-1.3354,16.5273,0.08413],
+6:[-1.3803,16.5396,0.08317],7:[-1.4046,16.5006,0.08246],8:[-1.4156,16.4358,0.08194],
+9:[-1.4181,16.3595,0.08157],10:[-1.4147,16.2806,0.08130],11:[-1.4073,16.2034,0.08110],
+12:[-1.3969,16.1290,0.08097],13:[-1.3847,16.0568,0.08089],14:[-1.3711,15.9874,0.08084],
+15:[-1.3568,15.9210,0.08082],16:[-1.3420,15.8574,0.08083],17:[-1.3271,15.7967,0.08085],
+18:[-1.3122,15.7390,0.08089],19:[-1.2974,15.6844,0.08094],20:[-1.2829,15.6329,0.08100],
+21:[-1.2687,15.5846,0.08107],22:[-1.2548,15.5395,0.08115],23:[-1.2413,15.4974,0.08124],
+24:[-1.2281,15.4583,0.08133],25:[-1.2153,15.4222,0.08143],26:[-1.2029,15.3892,0.08153],
+27:[-1.1908,15.3590,0.08164],28:[-1.1791,15.3315,0.08175],29:[-1.1677,15.3068,0.08187],
+30:[-1.1565,15.2847,0.08199],31:[-1.1456,15.2651,0.08211],32:[-1.1350,15.2479,0.08224],
+33:[-1.1246,15.2330,0.08237],34:[-1.1144,15.2203,0.08250],35:[-1.1045,15.2096,0.08263],
+36:[-1.0948,15.2008,0.08277],37:[-1.0853,15.1939,0.08291],38:[-1.0759,15.1887,0.08305],
+39:[-1.0667,15.1853,0.08319],40:[-1.0577,15.1834,0.08333],41:[-1.0489,15.1831,0.08348],
+42:[-1.0402,15.1843,0.08363],43:[-1.0316,15.1869,0.08378],44:[-1.0232,15.1908,0.08393],
+45:[-1.0149,15.1960,0.08409],46:[-1.0067,15.2024,0.08424],47:[-0.9986,15.2099,0.08440],
+48:[-0.9907,15.2184,0.08456],49:[-0.9828,15.2280,0.08472],50:[-0.9751,15.2385,0.08488],
+51:[-0.9674,15.2498,0.08504],52:[-0.9599,15.2620,0.08520],53:[-0.9524,15.2749,0.08536],
+54:[-0.9450,15.2884,0.08553],55:[-0.9377,15.3025,0.08569],56:[-0.9304,15.3171,0.08585],
+57:[-0.9233,15.3322,0.08602],58:[-0.9161,15.3476,0.08618],59:[-0.9091,15.3634,0.08635],
+60:[-0.9021,15.3794,0.08651]
+};
+
+/* ============================================================
+   DATA WHO Weight-for-Length/Height & CDC 2000 50th Percentile
+   ============================================================ */
+
+// ============ BB/PB (Weight-for-Length, 0-23 bulan, 45-110 cm) ============
+// L konstan untuk LK = -0.3521, untuk PR = -0.3833
+// Format: panjang_cm => [M, S]
+WHO.wfl_m_L = -0.3521;
+WHO.wfl_m = {
+45:[2.212,0.09182],46:[2.444,0.09124],47:[2.676,0.09064],48:[2.909,0.09001],
+49:[3.141,0.08938],50:[3.373,0.08875],51:[3.606,0.08813],52:[3.838,0.08752],
+53:[4.070,0.08691],54:[4.303,0.08632],55:[4.553,0.08574],56:[4.849,0.08517],
+57:[5.145,0.08461],58:[5.442,0.08407],59:[5.722,0.08354],60:[5.991,0.08303],
+61:[6.261,0.08253],62:[6.522,0.08204],63:[6.777,0.08156],64:[7.031,0.08109],
+65:[7.283,0.08063],66:[7.534,0.08017],67:[7.781,0.07973],68:[8.023,0.07929],
+69:[8.258,0.07886],70:[8.482,0.07844],71:[8.699,0.07803],72:[8.908,0.07764],
+73:[9.108,0.07724],74:[9.306,0.07686],75:[9.502,0.07649],76:[9.697,0.07612],
+77:[9.891,0.07577],78:[10.086,0.07542],79:[10.282,0.07508],80:[10.481,0.07475],
+81:[10.682,0.07443],82:[10.886,0.07412],83:[11.093,0.07381],84:[11.304,0.07351],
+85:[11.519,0.07323],86:[11.740,0.07298],87:[11.965,0.07273],88:[12.194,0.07249],
+89:[12.428,0.07226],90:[12.667,0.07204],91:[12.910,0.07183],92:[13.160,0.07162],
+93:[13.414,0.07143],94:[13.672,0.07124],95:[13.933,0.07107],96:[14.198,0.07090],
+97:[14.464,0.07074],98:[14.732,0.07060],99:[15.000,0.07046],100:[15.269,0.07033],
+101:[15.538,0.07022],102:[15.807,0.07011],103:[16.075,0.07001],104:[16.343,0.06992],
+105:[16.610,0.06983],106:[16.876,0.06976],107:[17.140,0.06969],108:[17.403,0.06962],
+109:[17.663,0.06956],110:[17.920,0.06950]
+};
+
+WHO.wfl_f_L = -0.3833;
+WHO.wfl_f = {
+45:[2.360,0.09035],46:[2.570,0.09014],47:[2.780,0.08990],48:[2.991,0.08962],
+49:[3.201,0.08932],50:[3.412,0.08901],51:[3.622,0.08870],52:[3.832,0.08839],
+53:[4.043,0.08810],54:[4.274,0.08783],55:[4.553,0.08758],56:[4.831,0.08735],
+57:[5.109,0.08714],58:[5.373,0.08694],59:[5.635,0.08676],60:[5.896,0.08659],
+61:[6.148,0.08643],62:[6.401,0.08628],63:[6.646,0.08614],64:[6.891,0.08601],
+65:[7.126,0.08589],66:[7.357,0.08577],67:[7.578,0.08566],68:[7.792,0.08555],
+69:[7.998,0.08545],70:[8.197,0.08536],71:[8.388,0.08527],72:[8.576,0.08519],
+73:[8.761,0.08511],74:[8.945,0.08504],75:[9.130,0.08498],76:[9.316,0.08493],
+77:[9.504,0.08488],78:[9.695,0.08484],79:[9.890,0.08481],80:[10.089,0.08478],
+81:[10.292,0.08476],82:[10.499,0.08475],83:[10.710,0.08475],84:[10.927,0.08476],
+85:[11.151,0.08478],86:[11.381,0.08481],87:[11.617,0.08484],88:[11.859,0.08489],
+89:[12.107,0.08495],90:[12.359,0.08502],91:[12.615,0.08510],92:[12.875,0.08520],
+93:[13.137,0.08530],94:[13.403,0.08543],95:[13.672,0.08556],96:[13.944,0.08571],
+97:[14.220,0.08588],98:[14.499,0.08606],99:[14.784,0.08625],100:[15.073,0.08646],
+101:[15.370,0.08669],102:[15.674,0.08693],103:[15.986,0.08719],104:[16.306,0.08746],
+105:[16.634,0.08775],106:[16.971,0.08806],107:[17.313,0.08839],108:[17.660,0.08874],
+109:[18.012,0.08910],110:[18.369,0.08948]
+};
+
+// ============ BB/TB (Weight-for-Height, 24-60 bulan, 65-120 cm) ============
+WHO.wfh_m_L = -0.3521;
+WHO.wfh_m = {
+65:[7.283,0.08110],66:[7.534,0.08066],67:[7.781,0.08023],68:[8.023,0.07982],
+69:[8.258,0.07943],70:[8.482,0.07905],71:[8.699,0.07868],72:[8.908,0.07832],
+73:[9.108,0.07797],74:[9.306,0.07763],75:[9.502,0.07731],76:[9.697,0.07700],
+77:[9.891,0.07670],78:[10.086,0.07641],79:[10.282,0.07614],80:[10.481,0.07588],
+81:[10.682,0.07564],82:[10.886,0.07542],83:[11.093,0.07521],84:[11.304,0.07503],
+85:[11.519,0.07486],86:[11.740,0.07471],87:[11.965,0.07458],88:[12.194,0.07446],
+89:[12.428,0.07435],90:[12.667,0.07426],91:[12.910,0.07419],92:[13.160,0.07412],
+93:[13.414,0.07407],94:[13.672,0.07404],95:[13.933,0.07401],96:[14.198,0.07400],
+97:[14.464,0.07401],98:[14.732,0.07403],99:[15.000,0.07406],100:[15.269,0.07410],
+101:[15.538,0.07416],102:[15.807,0.07424],103:[16.075,0.07432],104:[16.343,0.07442],
+105:[16.610,0.07453],106:[16.876,0.07465],107:[17.140,0.07478],108:[17.403,0.07493],
+109:[17.663,0.07508],110:[17.920,0.07525],111:[18.175,0.07542],112:[18.429,0.07560],
+113:[18.683,0.07578],114:[18.936,0.07597],115:[19.190,0.07617],116:[19.444,0.07637],
+117:[19.698,0.07658],118:[19.952,0.07678],119:[20.206,0.07700],120:[20.459,0.07721]
+};
+
+WHO.wfh_f_L = -0.3833;
+WHO.wfh_f = {
+65:[7.126,0.08583],66:[7.357,0.08568],67:[7.578,0.08553],68:[7.792,0.08540],
+69:[7.998,0.08527],70:[8.197,0.08515],71:[8.388,0.08504],72:[8.576,0.08494],
+73:[8.761,0.08486],74:[8.945,0.08479],75:[9.130,0.08473],76:[9.316,0.08469],
+77:[9.504,0.08466],78:[9.695,0.08465],79:[9.890,0.08465],80:[10.089,0.08467],
+81:[10.292,0.08470],82:[10.499,0.08475],83:[10.710,0.08481],84:[10.927,0.08489],
+85:[11.151,0.08498],86:[11.381,0.08508],87:[11.617,0.08519],88:[11.859,0.08531],
+89:[12.107,0.08544],90:[12.359,0.08558],91:[12.615,0.08573],92:[12.875,0.08589],
+93:[13.137,0.08606],94:[13.403,0.08624],95:[13.672,0.08643],96:[13.944,0.08663],
+97:[14.220,0.08684],98:[14.499,0.08706],99:[14.784,0.08729],100:[15.073,0.08753],
+101:[15.370,0.08778],102:[15.674,0.08803],103:[15.986,0.08830],104:[16.306,0.08858],
+105:[16.634,0.08887],106:[16.971,0.08917],107:[17.313,0.08948],108:[17.660,0.08980],
+109:[18.012,0.09013],110:[18.369,0.09047],111:[18.728,0.09082],112:[19.086,0.09118],
+113:[19.445,0.09155],114:[19.803,0.09192],115:[20.162,0.09231],116:[20.520,0.09270],
+117:[20.879,0.09310],118:[21.238,0.09351],119:[21.596,0.09393],120:[21.955,0.09436]
+};
+function interpolateLMS(table, key) {
+  if (table[key]) return table[key];
+  const keys = Object.keys(table).map(Number).sort((a, b) => a - b);
+  if (key <= keys[0]) return table[keys[0]];
+  if (key >= keys[keys.length - 1]) return table[keys[keys.length - 1]];
+
+  let lo = keys[0], hi = keys[keys.length - 1];
+  for (let i = 0; i < keys.length - 1; i++) {
+    if (keys[i] <= key && keys[i + 1] >= key) {
+      lo = keys[i]; hi = keys[i + 1]; break;
+    }
+  }
+  const t = (key - lo) / (hi - lo);
+  const lmsLo = table[lo], lmsHi = table[hi];
+  return lmsLo.map((v, i) => v + t * (lmsHi[i] - v));
+}
+
+/** Hitung z-score dari LMS dan nilai pengukuran */
+function calcZ(L, M, S, X) {
+  let z;
+  if (Math.abs(L) < 1e-6) {
+    z = Math.log(X / M) / S;
+  } else {
+    z = (Math.pow(X / M, L) - 1) / (L * S);
+  }
+  // WHO menggunakan koreksi untuk z-score di luar ±3 SD (extrapolation)
+  if (z > 3) {
+    const SD3pos = M * Math.pow(1 + L * S * 3, 1 / L);
+    const SD23pos = M * Math.pow(1 + L * S * 3, 1 / L) - M * Math.pow(1 + L * S * 2, 1 / L);
+    z = 3 + (X - SD3pos) / SD23pos;
+  } else if (z < -3) {
+    const SD3neg = M * Math.pow(1 + L * S * (-3), 1 / L);
+    const SD23neg = M * Math.pow(1 + L * S * (-2), 1 / L) - M * Math.pow(1 + L * S * (-3), 1 / L);
+    z = -3 + (X - SD3neg) / SD23neg;
+  }
+  return z;
+}
+
+
+/* ====== INOVASI 2: Kalkulator Z-score Gizi otomatis (WHO 2006 LMS) ====== */
+function sexCode(){ return state.jk==='P'?'f':'m'; }
+function giziZ(umur,bb,tb,sex){
+  const o={};
+  if(bb>0) o.bbu=calcZ.apply(null,interpolateLMS(WHO['waz_'+sex],umur).concat(bb));
+  if(tb>0) o.tbu=calcZ.apply(null,interpolateLMS(WHO['haz_'+sex],umur).concat(tb));
+  if(bb>0&&tb>0){
+    const useL = umur<24;
+    const tbl = useL?WHO['wfl_'+sex]:WHO['wfh_'+sex];
+    const Lc  = useL?WHO['wfl_'+sex+'_L']:WHO['wfh_'+sex+'_L'];
+    const ms  = interpolateLMS(tbl,tb);
+    o.bbpb=calcZ(Lc,ms[0],ms[1],bb);
+    const bmi=bb/Math.pow(tb/100,2);
+    o.imtu=calcZ.apply(null,interpolateLMS(WHO['baz_'+sex],umur).concat(bmi));
+    o.useL=useL;
+  }
+  return o;
+}
+function zBand(z){
+  if(z< -3) return '< -3 SD';
+  if(z< -2) return '-3 s/d <-2 SD';
+  if(z<=1)  return '-2 s/d +1 SD';
+  if(z<=2)  return '+1 s/d +2 SD';
+  if(z<=3)  return '+2 s/d +3 SD';
+  return '> +3 SD';
+}
+function zLevel(z){ if(z< -2||z>3) return 'red'; if(z< -1||z>2) return 'yellow'; return 'green'; }
+function stuntClass(z){
+  if(z< -3) return {level:'red',name:'SANGAT PENDEK (Severe Stunting)'};
+  if(z< -2) return {level:'yellow',name:'PENDEK (Stunting)'};
+  if(z<=3)  return {level:'green',name:'Tinggi badan NORMAL'};
+  return {level:'yellow',name:'TINGGI (di atas +3 SD)'};
+}
+function giziAutoHTML(){
+  return `<div class="card" style="margin:0 0 12px;background:var(--bg);border-color:var(--bdr2)">
+    <div style="font-weight:700;font-size:.85rem;margin-bottom:8px">📐 Z-score WHO otomatis <span class="tag-recommend">dari data Step 1</span></div>
+    <div id="giziZpanel"><div class="hint">Isi BB, PB/TB & umur di Step 1.</div></div>
+    <button class="btn ghost full" style="margin-top:9px" onclick="autoGizi()">🔄 Hitung ulang dari data anak</button>
+  </div>`;
+}
+function autoGizi(){
+  const panel=document.getElementById('giziZpanel'); if(!panel) return;
+  const um=parseFloat(document.getElementById('f_umur').value)||0;
+  const bb=parseFloat(document.getElementById('f_bb').value)||0;
+  const tb=parseFloat(document.getElementById('f_tb').value)||0;
+  if(!bb||!tb){ panel.innerHTML='<div class="hint">⚠ Lengkapi BB & PB/TB (dan umur) di Step 1 untuk perhitungan otomatis. Anda masih bisa pilih Skor Z manual di bawah.</div>'; state.giziZ=null; state.stunt=null; return; }
+  const sex=sexCode(); const z=giziZ(um,bb,tb,sex); state.giziZ=z;
+  const sel=document.getElementById('sg_gizi_zscore'); if(sel&&z.bbpb!=null) sel.value=zBand(z.bbpb);
+  state.stunt = z.tbu!=null ? stuntClass(z.tbu) : null;
+  const labTB=um<24?'PB/U':'TB/U';
+  const row=(nm,z2,extra)=>z2==null?'':`<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--bdr)"><span style="font-size:.8rem">${nm}</span><span><span class="pill ${zLevel(z2)}" style="margin:0">${z2>0?'+':''}${z2.toFixed(2)} SD</span><small style="color:var(--tx3);margin-left:4px">${extra||zBand(z2)}</small></span></div>`;
+  panel.innerHTML = (!state.jk?'<div class="hint" style="color:var(--am)">⚠ Jenis kelamin belum dipilih — dihitung sebagai laki-laki. Pilih di Step 1 untuk akurasi.</div>':'')
+    + row('BB/U (berat menurut umur)',z.bbu)
+    + row(labTB+' (tinggi menurut umur)',z.tbu, state.stunt?state.stunt.name:'')
+    + row('BB/'+(um<24?'PB':'TB')+' (status gizi/wasting)',z.bbpb)
+    + row('IMT/U',z.imtu);
+  evalMod('gizi');
+}
+
+/* ====== INOVASI 1: Timer Hitung Napas (ARI sound timer digital) ====== */
+let ariT={count:0,sec:60,iv:null,running:false};
+function ariTimerHTML(){
+  return `<div class="card" style="margin:0 0 12px;background:var(--bg);border-color:var(--bdr2)">
+    <div style="font-weight:700;font-size:.85rem;margin-bottom:8px">⏱️ Timer Hitung Napas <span class="tag-recommend">ARI 60 detik</span></div>
+    <div style="display:flex;gap:10px;align-items:stretch;flex-wrap:wrap">
+      <div style="background:var(--s2);border:1px solid var(--bdr2);border-radius:10px;min-width:74px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px"><div id="ariCount" style="font-size:1.9rem;font-weight:800;color:var(--tl2);line-height:1">0</div><small style="color:var(--tx3)">napas</small></div>
+      <button class="btn primary" id="ariTap" onclick="ariTap()" style="flex:1;min-width:150px;font-size:1.05rem">👆 Ketuk tiap napas</button>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <button class="btn ghost" id="ariStart" onclick="ariStart()" style="flex:1">▶ Mulai 60 detik</button>
+      <button class="btn ghost" onclick="ariReset()" style="flex:0 0 auto">↺</button>
+    </div>
+    <div id="ariStatus" class="hint" style="margin-top:7px">Tekan Mulai, lalu ketuk layar setiap kali dada anak naik. Hasil otomatis mengisi napas/menit & klasifikasi.</div>
+  </div>`;
+}
+function ariStart(){
+  if(ariT.running) return; ariT.count=0; ariT.sec=60; ariT.running=true;
+  document.getElementById('ariCount').textContent='0';
+  const sb=document.getElementById('ariStart'); sb.textContent='⏳ 60';
+  ariT.iv=setInterval(()=>{ ariT.sec--; sb.textContent='⏳ '+ariT.sec;
+    document.getElementById('ariStatus').textContent='Menghitung… '+ariT.sec+' detik tersisa. Ketuk tiap napas.';
+    if(ariT.sec<=0) ariFinish(); },1000);
+}
+function ariTap(){ if(!ariT.running) return; ariT.count++; document.getElementById('ariCount').textContent=ariT.count; }
+function ariFinish(){
+  clearInterval(ariT.iv); ariT.running=false;
+  document.getElementById('ariStart').textContent='▶ Mulai 60 detik';
+  const inp=document.getElementById('in_batuk_napas'); if(inp) inp.value=ariT.count;
+  const umur=parseFloat(document.getElementById('f_umur').value)||0;
+  const cepat = umur<12 ? ariT.count>=50 : ariT.count>=40;
+  document.getElementById('ariStatus').innerHTML='✅ Hasil: <b>'+ariT.count+' napas/menit</b> — '+(cepat?'<b style="color:#fcd34d">NAPAS CEPAT</b> (ambang '+(umur<12?'≥50':'≥40')+'/mnt)':'tidak napas cepat (ambang '+(umur<12?'≥50':'≥40')+'/mnt)');
+  evalMod('batuk');
+}
+function ariReset(){ clearInterval(ariT.iv); ariT={count:0,sec:60,iv:null,running:false};
+  const c=document.getElementById('ariCount'); if(c)c.textContent='0';
+  const s=document.getElementById('ariStart'); if(s)s.textContent='▶ Mulai 60 detik';
+  const st=document.getElementById('ariStatus'); if(st)st.textContent='Tekan Mulai, lalu ketuk layar setiap kali dada anak naik.'; }
+
+/* ====== INOVASI 3: Konseling Ibu + Edukasi WhatsApp ====== */
+function buildKonseling(list,d){
+  const umur=parseFloat(d.umur)||0; const tips=[];
+  let makan;
+  if(umur<6) makan='ASI eksklusif — susui sesering mungkin, siang & malam, tanpa makanan/minuman lain.';
+  else if(umur<9) makan='Lanjutkan ASI. Beri MP-ASI lembek 2–3×/hari + 1–2× selingan. Mulai 2–3 sdm, naikkan bertahap.';
+  else if(umur<12) makan='Lanjutkan ASI. MP-ASI 3–4×/hari + 1–2× selingan, tekstur cincang/lebih kasar.';
+  else if(umur<24) makan='Lanjutkan ASI. Makanan keluarga 3–4×/hari + 1–2× selingan, porsi ±½ mangkuk, lauk hewani tiap hari.';
+  else makan='Makanan keluarga 3×/hari + 2× selingan bergizi & beragam, lauk hewani tiap hari.';
+  tips.push(['🍚 Anjuran makan'+(umur?' ('+umur+' bln)':''), makan]);
+  if(list.some(x=>/DIARE/.test(x.r.name)))
+    tips.push(['💧 Cara oralit di rumah','1 bungkus oralit dilarutkan dalam 200 ml air matang. Beri sedikit-sedikit pakai sendok tiap habis BAB cair ('+(umur<24?'50–100 ml':'100–200 ml')+'). Teruskan ASI/makan. Beri zinc tiap hari selama 10 hari penuh meski diare berhenti.']);
+  if(list.some(x=>/DEMAM|MALARIA|DENGUE|CAMPAK/.test(x.r.name)))
+    tips.push(['🌡️ Saat demam','Beri banyak minum, kompres air hangat (bukan dingin), pakaian tipis. Parasetamol bila demam ≥38°C. Tuntaskan obat sesuai anjuran.']);
+  if(list.some(x=>/GIZI (BURUK|KURANG)/.test(x.r.name)))
+    tips.push(['🥗 Dukungan gizi','Beri makanan padat gizi lebih sering, tambahkan lauk hewani & sedikit minyak/santan. Hadir kontrol & rujukan gizi sesuai jadwal.']);
+  const tanda = umur<2
+    ? 'malas/tidak mau menyusu, kejang, napas cepat atau sesak, demam atau badan teraba dingin, kuning bertambah, gerak melemah.'
+    : 'tidak bisa minum/menyusu, sakit bertambah parah/timbul demam, napas cepat atau sukar bernapas, ada darah dalam tinja, atau kejang.';
+  tips.push(['🚨 Segera bawa kembali bila', tanda]);
+  return tips;
+}
+
 
 /* ---------- definisi modul & gejala per algoritma ---------- */
 /* setiap modul: id, title, icon, items[], classify(sel,ctx) -> {level,name,actions[],followup(days)} */
@@ -461,6 +861,13 @@ function prevStep(){ if(state.step>0) goStep(state.step-1); }
 /* ---------- data anak ---------- */
 document.getElementById('f_tgl').value=new Date().toISOString().slice(0,10);
 document.querySelectorAll('#seg_jk label').forEach(l=>l.onclick=()=>{document.querySelectorAll('#seg_jk label').forEach(x=>x.classList.remove('on'));l.classList.add('on');state.jk=l.dataset.v;});
+function syncUmur(){
+  const tEl=document.getElementById('f_thn'), bEl=document.getElementById('f_bln');
+  const t=parseInt(tEl.value)||0, b=parseInt(bEl.value)||0;
+  document.getElementById('f_umur').value = (tEl.value===''&&bEl.value==='') ? '' : (t*12+b);
+  onAge(); recalc();
+}
+function fmtUmur(m){ m=parseInt(m); if(isNaN(m)) return '-'; const t=Math.floor(m/12), b=m%12; let s=[]; if(t) s.push(t+' tahun'); if(b||!t) s.push(b+' bulan'); return s.join(' '); }
 function onAge(){
   const u=parseFloat(document.getElementById('f_umur').value);
   const h=document.getElementById('ageHint');
@@ -489,12 +896,15 @@ function renderAssess(){
   });
   area.innerHTML=html;
   mods.forEach(m=>{ if(m.always||state.active[m.id]?.on) evalMod(m.id); });
+  if(MOD[state.algo].some(m=>m.id==='gizi') && (state.active['gizi']?.on)) autoGizi();
 }
 function renderModInputs(m){
   let h='';
   if(m.ask){ h+='<div class="row3">'; m.ask.forEach(a=>{ h+=`<div class="field"><label class="lab">${a[1]}</label><input type="number" id="in_${m.id}_${a[0]}" oninput="evalMod('${m.id}')" step="0.1"></div>`; }); h+='</div>'; }
   if(m.seg){ m.seg.forEach(sg=>{ h+=`<div class="field"><label class="lab">${sg[1]}</label><select id="sg_${m.id}_${sg[0]}" onchange="evalMod('${m.id}')"><option value="">— pilih —</option>${sg[2].map(o=>`<option>${o}</option>`).join('')}</select></div>`; }); }
+  if(m.id==='batuk') h=ariTimerHTML()+h;
   m.items.forEach(it=>{ h+=`<label class="chk" id="chk_${m.id}_${it[0]}"><input type="checkbox" onchange="this.closest('.chk').classList.toggle('on',this.checked);evalMod('${m.id}')"><span class="t">${it[1]}</span></label>`; });
+  if(m.id==='gizi') h=giziAutoHTML()+h;
   return h;
 }
 function toggleMod(id,e){
@@ -503,7 +913,7 @@ function toggleMod(id,e){
   document.getElementById('sw_'+id).classList.toggle('on',state.active[id].on);
   document.getElementById('body_'+id).classList.toggle('open',state.active[id].on);
   if(!state.active[id].on){ const c=document.getElementById('cls_'+id); c.className='cls'; c.innerHTML=''; }
-  else evalMod(id);
+  else { evalMod(id); if(id==='gizi') autoGizi(); if(id==='batuk') ariReset(); }
 }
 function collectMod(m){
   const s={};
@@ -524,7 +934,7 @@ function evalMod(id){
   box.className='cls show '+r.level;
   box.innerHTML=`<div class="cn">${r.level==='red'?'🔴':r.level==='yellow'?'🟡':'🟢'} ${r.name}</div><ul>${r.actions.map(a=>`<li>${a}</li>`).join('')}</ul>${r.followup?`<div style="margin-top:7px;font-size:.76rem;color:var(--tx2)">⏰ Kunjungan ulang: ${r.followup} hari</div>`:''}`;
 }
-function recalc(){ if(state.step===1){ MOD[state.algo].forEach(m=>{ if(m.always||state.active[m.id]?.on) evalMod(m.id); }); } }
+function recalc(){ if(state.step===1){ MOD[state.algo].forEach(m=>{ if(m.always||state.active[m.id]?.on) evalMod(m.id); }); if(state.active['gizi']?.on) autoGizi(); } }
 
 /* ---------- hasil / klasifikasi ---------- */
 function gatherActive(){
@@ -546,6 +956,7 @@ function renderResult(){
     : `<div class="alert ok">✓ Tidak ada klasifikasi berat. Tatalaksana rawat jalan + kunjungan ulang.</div>`;
   html+=`<div style="margin-bottom:10px">`;
   list.forEach(x=> html+=`<span class="pill ${x.r.level}">${x.r.name}</span>`);
+  if(state.stunt) html+=`<span class="pill ${state.stunt.level}">${state.stunt.name}</span>`;
   html+=`</div></div>`;
   // tindakan gabungan
   list.forEach(x=>{
@@ -553,6 +964,18 @@ function renderResult(){
       <div class="cls show ${x.r.level}" style="margin-top:0"><div class="cn">${x.r.level==='red'?'🔴':x.r.level==='yellow'?'🟡':'🟢'} ${x.r.name}</div></div>
       <ul class="tx-list">${x.r.actions.map(a=>`<li>${a}</li>`).join('')}</ul></div>`;
   });
+  // status pertumbuhan (stunting) dari Z-score WHO
+  if(state.giziZ){
+    const z=state.giziZ;
+    html+=`<div class="card summary-sec"><h2>📏 Status Pertumbuhan (WHO Z-score)</h2>
+      ${state.stunt?`<div class="cls show ${state.stunt.level}" style="margin-top:0"><div class="cn">${state.stunt.level==='red'?'🔴':state.stunt.level==='yellow'?'🟡':'🟢'} ${state.stunt.name}</div></div>`:''}
+      <ul class="tx-list">
+        ${z.bbu!=null?`<li>BB/U: ${z.bbu>0?'+':''}${z.bbu.toFixed(2)} SD (${zBand(z.bbu)})</li>`:''}
+        ${z.tbu!=null?`<li>${parseFloat(document.getElementById('f_umur').value)<24?'PB/U':'TB/U'}: ${z.tbu>0?'+':''}${z.tbu.toFixed(2)} SD (${zBand(z.tbu)})</li>`:''}
+        ${z.bbpb!=null?`<li>BB/PB-TB: ${z.bbpb>0?'+':''}${z.bbpb.toFixed(2)} SD (${zBand(z.bbpb)})</li>`:''}
+        ${z.imtu!=null?`<li>IMT/U: ${z.imtu>0?'+':''}${z.imtu.toFixed(2)} SD (${zBand(z.imtu)})</li>`:''}
+      </ul><div class="ref">Dihitung dari BB, PB/TB, umur & jenis kelamin dengan tabel LMS WHO Child Growth Standards 2006.</div></div>`;
+  }
   // dosis
   html+=renderDosing();
   area.innerHTML=html;
@@ -582,6 +1005,7 @@ function getData(){
     wa:document.getElementById('f_wa').value||'',
     tgl:document.getElementById('f_tgl').value||'',
     umur:document.getElementById('f_umur').value||'-',
+    umurText:fmtUmur(document.getElementById('f_umur').value),
     bb:document.getElementById('f_bb').value||'-',
     suhu:document.getElementById('f_suhu').value||'-',
     tb:document.getElementById('f_tb').value||'-',
@@ -601,21 +1025,24 @@ function renderForm(){
   const anyRed=list.some(x=>x.r.level==='red');
   let waMsg='', fuDate=null;
   if(state.minFu && d.tgl){ fuDate=addDays(d.tgl,state.minFu); }
+  const kons=buildKonseling(list,d);
+  const konsWA='\n\n*Pesan untuk Ibu di rumah:*\n'+kons.map(t=>'• '+t[0]+': '+t[1]).join('\n');
 
   if(anyRed){
     waMsg=`Halo Ibu ${d.ibu},\n\nAnanda *${d.nama}* setelah diperiksa di Puskesmas memerlukan *RUJUKAN SEGERA* ke fasilitas yang lebih lengkap.\n\nKlasifikasi: ${cls}\n\nMohon segera membawa ananda sesuai arahan petugas. Bawa surat rujukan & buku KIA. Jika kondisi memburuk, langsung ke IGD terdekat.\n\nSalam, Petugas MTBS`;
   } else if(fuDate){
     waMsg=`Halo Ibu ${d.ibu},\n\nTerima kasih telah membawa ananda *${d.nama}* ke Puskesmas hari ini.\n\nHasil pemeriksaan (MTBS): ${cls}\n\n*Pengingat KUNJUNGAN ULANG:*\n📅 ${tglID(fuDate)}\n(${state.minFu} hari dari kunjungan hari ini)\n\nMohon obat diberikan sesuai anjuran. Segera kembali bila ananda: tidak bisa minum/menyusu, kondisi memburuk, demam tinggi, atau ada darah dalam tinja.\n\nSalam sehat, Petugas MTBS`;
   } else {
-    waMsg=`Halo Ibu ${d.ibu},\n\nTerima kasih telah membawa ananda *${d.nama}*.\n\nHasil pemeriksaan (MTBS): ${cls}\n\nLanjutkan perawatan di rumah sesuai anjuran. Segera kembali bila ananda tidak bisa minum/menyusu, kondisinya memburuk, atau demam tinggi.\n\nSalam sehat, Petugas MTBS`;
+    waMsg=`Halo Ibu ${d.ibu},\n\nTerima kasih telah membawa ananda *${d.nama}*.\n\nHasil pemeriksaan (MTBS): ${cls}\n\nLanjutkan perawatan di rumah sesuai anjuran.\n\nSalam sehat, Petugas MTBS`;
   }
+  if(!anyRed) waMsg+=konsWA;
   const waNo=fmtWA(d.wa);
   const waLink='https://wa.me/'+waNo+'?text='+encodeURIComponent(waMsg);
 
   let html=`<div class="card"><h2>📋 Formulir Pencatatan MTBS</h2>
     <div class="sm-grid">
       <div><b>Nama anak</b>${d.nama}</div><div><b>Ibu/pengasuh</b>${d.ibu}</div>
-      <div><b>Umur</b>${d.umur} bulan</div><div><b>Jenis kelamin</b>${d.jk==='L'?'Laki-laki':d.jk==='P'?'Perempuan':'-'}</div>
+      <div><b>Umur</b>${d.umurText}${d.umur!=='-'?' ('+d.umur+' bln)':''}</div><div><b>Jenis kelamin</b>${d.jk==='L'?'Laki-laki':d.jk==='P'?'Perempuan':'-'}</div>
       <div><b>Berat badan</b>${d.bb} kg</div><div><b>Suhu</b>${d.suhu} °C</div>
       <div><b>PB/TB</b>${d.tb} cm</div><div><b>Tgl kunjungan</b>${d.tgl}</div>
       <div><b>Algoritma</b>${d.algo==='bayi'?'Bayi Muda <2 bln':'Balita 2 bln–5 thn'}</div>
@@ -632,6 +1059,10 @@ function renderForm(){
     <div class="wa-box">${waMsg}</div>
     ${waNo?`<a class="btn wa full" href="${waLink}" target="_blank">📲 Kirim via WhatsApp</a>`:`<button class="btn ghost full" onclick="goStep(0)">Isi nomor WA dulu</button>`}
   </div>`;
+
+  html+=`<div class="card"><h2>👩‍🍼 Konseling Ibu</h2>
+    <div class="desc">Materi edukasi otomatis sesuai umur & klasifikasi anak — ikut terkirim dalam pesan WhatsApp.</div>
+    <ul class="tx-list">${kons.map(t=>`<li><b>${t[0]}:</b> ${t[1]}</li>`).join('')}</ul></div>`;
 
   html+=`<div class="card no-print"><h2>📦 Simpan & Cetak</h2>
     <div style="display:flex;gap:10px;flex-wrap:wrap">
@@ -666,6 +1097,7 @@ function loadCase(id){
   document.getElementById('f_wa').value=c.wa||'';
   document.getElementById('f_tgl').value=c.tgl||'';
   document.getElementById('f_umur').value=c.umur==='-'?'':c.umur;
+  (function(){var m=parseInt(c.umur); if(!isNaN(m)){document.getElementById('f_thn').value=Math.floor(m/12); document.getElementById('f_bln').value=m%12;} else {document.getElementById('f_thn').value=''; document.getElementById('f_bln').value='';}})();
   document.getElementById('f_bb').value=c.bb==='-'?'':c.bb;
   document.getElementById('f_suhu').value=c.suhu==='-'?'':c.suhu;
   document.getElementById('f_tb').value=c.tb==='-'?'':c.tb;
@@ -679,7 +1111,7 @@ function delCase(id){ if(!confirm('Hapus kasus ini?'))return; localStorage.setIt
 
 function resetAll(){
   if(!confirm('Mulai kasus baru? Data yang belum disimpan akan hilang.'))return;
-  ['f_nama','f_ibu','f_wa','f_umur','f_bb','f_suhu','f_tb'].forEach(i=>document.getElementById(i).value='');
+  ['f_nama','f_ibu','f_wa','f_umur','f_thn','f_bln','f_bb','f_suhu','f_tb'].forEach(i=>document.getElementById(i).value='');
   document.getElementById('f_tgl').value=new Date().toISOString().slice(0,10);
   state.algo=null;state.jk=null;state.active={};state.results={};state.minFu=null;
   document.querySelectorAll('.seg label').forEach(l=>l.classList.remove('on'));
