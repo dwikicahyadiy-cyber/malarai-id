@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pengelolaan Logistik Obat Malaria — AI Learner 4-Tim</title>
+<style>
+  :root {
+    --primary: #0A4D68;
+    --secondary: #088395;
+    --accent: #05BFDB;
+    --light: #E0F7FA;
+    --white: #FFFFFF;
+    --dark: #0D1B2A;
+    --warn: #FF6B35;
+    --success: #2ECC71;
+    --gold: #F4C430;
+    --text: #1A2332;
+    --muted: #6B7A8D;
+    --border: #DDE3EA;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #F0F4F8;
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  /* ====== HERO ====== */
+  .hero {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 60%, var(--accent) 100%);
+    color: white;
+    padding: 56px 40px 48px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 300px; height: 300px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 50%;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: 10%;
+    width: 200px; height: 200px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 50%;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.4);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 18px;
+  }
+  .hero h1 {
+    font-size: 2.4rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 12px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  .hero p {
+    font-size: 1.05rem;
+    opacity: 0.88;
+    max-width: 680px;
+    margin-bottom: 24px;
+  }
+  .hero-meta {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    font-size: 0.85rem;
+    opacity: 0.8;
+  }
+  .hero-meta span { display: flex; align-items: center; gap: 6px; }
+
+  /* ====== NAV ====== */
+  .nav-tabs {
+    background: var(--white);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    display: flex;
+    overflow-x: auto;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    gap: 0;
+  }
+  .nav-tab {
+    padding: 16px 24px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.88rem;
+    color: var(--muted);
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .nav-tab:hover { color: var(--primary); border-color: var(--accent); }
+  .nav-tab.active { color: var(--primary); border-color: var(--primary); background: var(--light); }
+  .nav-tab .tab-num {
+    background: var(--primary);
+    color: white;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    font-size: 11px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .nav-tab.active .tab-num { background: var(--accent); }
+
+  /* ====== CONTAINER ====== */
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px 60px; }
+
+  /* ====== SECTIONS ====== */
+  .section {
+    padding: 48px 0;
+    display: none;
+  }
+  .section.active { display: block; }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border);
+  }
+  .section-icon {
+    width: 52px; height: 52px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+  .section-header h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary);
+  }
+  .section-header p { color: var(--muted); font-size: 0.9rem; margin-top: 2px; }
+
+  /* ====== CARDS ====== */
+  .card {
+    background: white;
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    border: 1px solid var(--border);
+  }
+  .card-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .card-title .icon {
+    width: 32px; height: 32px;
+    background: var(--light);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  /* ====== GRID ====== */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  @media (max-width: 768px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 1.7rem; }
+  }
+
+  /* ====== ALERT BOXES ====== */
+  .alert {
+    padding: 14px 18px;
+    border-radius: 10px;
+    margin: 14px 0;
+    font-size: 0.92rem;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .alert-info { background: #E3F2FD; border-left: 4px solid #1976D2; color: #0D47A1; }
+  .alert-warn { background: #FFF3E0; border-left: 4px solid #FF9800; color: #E65100; }
+  .alert-success { background: #E8F5E9; border-left: 4px solid #4CAF50; color: #1B5E20; }
+  .alert-danger { background: #FFEBEE; border-left: 4px solid #F44336; color: #B71C1C; }
+
+  /* ====== TABLE ====== */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+    margin: 16px 0;
+  }
+  thead { background: var(--primary); color: white; }
+  th { padding: 11px 14px; text-align: left; font-weight: 600; }
+  td { padding: 10px 14px; border-bottom: 1px solid var(--border); }
+  tbody tr:hover { background: var(--light); }
+  tbody tr:nth-child(even) { background: #F8FAFC; }
+
+  /* ====== BADGES ====== */
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .badge-blue { background: #E3F2FD; color: #1565C0; }
+  .badge-green { background: #E8F5E9; color: #2E7D32; }
+  .badge-orange { background: #FFF3E0; color: #E65100; }
+  .badge-red { background: #FFEBEE; color: #C62828; }
+  .badge-teal { background: var(--light); color: var(--primary); }
+
+  /* ====== FORMULA BOX ====== */
+  .formula {
+    background: linear-gradient(135deg, #1A2332, #0A4D68);
+    color: white;
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin: 14px 0;
+    font-family: 'Consolas', monospace;
+    font-size: 0.95rem;
+    line-height: 1.8;
+  }
+  .formula .formula-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.6;
+    margin-bottom: 8px;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  .formula span { color: var(--gold); font-weight: 700; }
+
+  /* ====== FLOW DIAGRAM ====== */
+  .flow {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0;
+    margin: 16px 0;
+  }
+  .flow-item {
+    background: var(--primary);
+    color: white;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 0.83rem;
+    font-weight: 600;
+    text-align: center;
+    min-width: 110px;
+  }
+  .flow-arrow {
+    color: var(--secondary);
+    font-size: 1.3rem;
+    padding: 0 6px;
+    font-weight: 700;
+  }
+  .flow-item.alt { background: var(--secondary); }
+  .flow-item.light { background: var(--light); color: var(--primary); }
+
+  /* ====== MNEMONIK ====== */
+  .mnemonic {
+    background: linear-gradient(135deg, #FFF8E1, #FFFDE7);
+    border: 2px solid var(--gold);
+    border-radius: 14px;
+    padding: 20px 24px;
+    margin: 14px 0;
+  }
+  .mnemonic-title {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #795548;
+    margin-bottom: 10px;
+  }
+  .mnemonic-letters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .mnemonic-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: white;
+    border-radius: 8px;
+    padding: 8px 12px;
+    min-width: 180px;
+  }
+  .mnemonic-letter {
+    width: 34px; height: 34px;
+    background: var(--primary);
+    color: white;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+  .mnemonic-desc { font-size: 0.83rem; line-height: 1.3; }
+  .mnemonic-desc strong { color: var(--primary); }
+
+  /* ====== SOAL ====== */
+  .question-card {
+    background: white;
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    border: 1px solid var(--border);
+    counter-increment: question;
+  }
+  .q-header {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+  .q-num {
+    width: 36px; height: 36px;
+    background: var(--primary);
+    color: white;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+  .q-text { font-size: 0.97rem; font-weight: 600; line-height: 1.5; }
+  .options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+  .option {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1.5px solid var(--border);
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .option:hover { background: var(--light); border-color: var(--accent); }
+  .option.correct { background: #E8F5E9; border-color: #4CAF50; }
+  .option.wrong { background: #FFEBEE; border-color: #F44336; }
+  .option-label {
+    width: 22px; height: 22px;
+    background: var(--primary);
+    color: white;
+    border-radius: 5px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.78rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .answer-box {
+    display: none;
+    background: #F0FFF4;
+    border: 1px solid #81C784;
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-size: 0.88rem;
+    margin-top: 10px;
+  }
+  .answer-box.shown { display: block; }
+  .answer-box .ans-label { font-weight: 700; color: #2E7D32; margin-bottom: 6px; }
+  .show-btn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 8px;
+    font-size: 0.83rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .show-btn:hover { background: var(--secondary); }
+
+  /* ====== INOVASI ====== */
+  .innovation-card {
+    background: linear-gradient(135deg, var(--dark), var(--primary));
+    color: white;
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 24px;
+  }
+  .innovation-card h3 { font-size: 1.15rem; margin-bottom: 12px; color: var(--accent); }
+  .innovation-step {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 10px;
+    align-items: flex-start;
+  }
+  .step-num {
+    width: 26px; height: 26px;
+    background: var(--accent);
+    color: var(--dark);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800;
+    font-size: 0.82rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .innovation-card p, .innovation-card li { font-size: 0.88rem; opacity: 0.9; line-height: 1.6; }
+
+  /* ====== REFERENCE ====== */
+  .ref-item {
+    font-size: 0.8rem;
+    color: var(--muted);
+    padding: 6px 0;
+    border-bottom: 1px dashed var(--border);
+    line-height: 1.5;
+  }
+  .ref-item:last-child { border-bottom: none; }
+  .ref-num {
+    display: inline-block;
+    background: var(--primary);
+    color: white;
+    width: 20px; height: 20px;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 0.7rem;
+    line-height: 20px;
+    margin-right: 6px;
+  }
+
+  /* ====== STAT CARDS ====== */
+  .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 20px 0; }
+  @media (max-width: 768px) { .stat-grid { grid-template-columns: repeat(2, 1fr); } }
+  .stat-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    border-top: 4px solid var(--primary);
+  }
+  .stat-card .num { font-size: 2rem; font-weight: 800; color: var(--primary); line-height: 1; }
+  .stat-card .label { font-size: 0.78rem; color: var(--muted); margin-top: 6px; }
+
+  /* ====== REKOMENDASI AKHIR ====== */
+  .rekom {
+    background: linear-gradient(135deg, #1B5E20, #2E7D32);
+    color: white;
+    border-radius: 16px;
+    padding: 28px;
+    margin-top: 40px;
+  }
+  .rekom h3 { margin-bottom: 12px; font-size: 1.1rem; color: #A5D6A7; }
+  .rekom ul { padding-left: 20px; }
+  .rekom li { font-size: 0.9rem; margin-bottom: 6px; opacity: 0.92; }
+
+  /* ====== PRINT ====== */
+  .print-btn {
+    position: fixed;
+    bottom: 24px; right: 24px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(10,77,104,0.4);
+    z-index: 200;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .print-btn:hover { background: var(--secondary); }
+
+  p { margin-bottom: 10px; }
+  ul, ol { padding-left: 20px; margin-bottom: 10px; }
+  li { margin-bottom: 5px; font-size: 0.9rem; }
+  strong { color: var(--primary); }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">🤖 AI Learner 4-Tim · Sesi Belajar</div>
+  <h1>Pengelolaan Logistik Obat Malaria</h1>
+  <p>Analisis komprehensif materi pelatihan logistik malaria dari Instalasi Farmasi Provinsi Kalimantan Selatan — diproses oleh sistem AI Learner multi-tim.</p>
+  <div class="hero-meta">
+    <span>📅 6 Juni 2026</span>
+    <span>🏥 IF Prov. Kalimantan Selatan</span>
+    <span>👩‍⚕️ Efrin Pujianti, S.Farm., Apt., M.Farm</span>
+    <span>📊 52 Slide</span>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="nav-tabs">
+  <a class="nav-tab active" onclick="switchTab('tim1')">
+    <span class="tab-num">1</span> 📚 Analisis Materi
+  </a>
+  <a class="nav-tab" onclick="switchTab('tim2')">
+    <span class="tab-num">2</span> 📋 Rangkuman
+  </a>
+  <a class="nav-tab" onclick="switchTab('tim3')">
+    <span class="tab-num">3</span> 💡 Inovasi
+  </a>
+  <a class="nav-tab" onclick="switchTab('tim4')">
+    <span class="tab-num">4</span> 📝 Latihan Soal
+  </a>
+</div>
+
+<div class="container">
+
+<!-- ========== TIM 1: ANALISIS MATERI ========== -->
+<div id="tim1" class="section active">
+  <div class="section-header">
+    <div class="section-icon" style="background:#E3F2FD;">📚</div>
+    <div>
+      <h2>Tim 1 — "Si Paling Belajar"</h2>
+      <p>Analisis mendalam materi, komparasi guideline, dan verifikasi kesesuaian dengan regulasi terkini</p>
+    </div>
+  </div>
+
+  <!-- Overview -->
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="num">6</div>
+      <div class="label">Siklus Manajemen Logistik</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">40</div>
+      <div class="label">Obat Indikator Esensial</div>
+    </div>
+    <div class="stat-card" style="border-top-color: var(--secondary);">
+      <div class="num" style="color:var(--secondary);">5</div>
+      <div class="label">Strategi Optimalisasi 2024</div>
+    </div>
+    <div class="stat-card" style="border-top-color: var(--warn);">
+      <div class="num" style="color:var(--warn);">SMILE</div>
+      <div class="label">Platform Logistik Digital</div>
+    </div>
+  </div>
+
+  <!-- Kerangka Hukum -->
+  <div class="card">
+    <div class="card-title"><span class="icon">⚖️</span> Landasan Hukum & Regulasi</div>
+    <table>
+      <thead><tr><th>Regulasi</th><th>Substansi Terkait Logistik</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td><strong>UU RI No. 17 Tahun 2023</strong> tentang Kesehatan</td><td>Pengendalian ketersediaan Perbekkes melalui SIK terintegrasi; pencegahan kelebihan & kekosongan</td><td><span class="badge badge-green">Berlaku</span></td></tr>
+        <tr><td><strong>PP No. 28 Tahun 2024</strong> (Pelaksanaan UU 17/2023)</td><td>Distribusi Perbekkes berjenjang; Pasal 910 ayat (3): distribusi langsung pusat→kab/kota/faskes saat bencana/stok kritis</td><td><span class="badge badge-green">Berlaku</span></td></tr>
+        <tr><td><strong>Perpres RI No. 12 Tahun 2025</strong> (RPJMN 2025–2029)</td><td>Indikator ketersediaan obat & vaksin di fasyankes</td><td><span class="badge badge-green">Berlaku</span></td></tr>
+        <tr><td><strong>Permenkes No. 12 Tahun 2025</strong> (Renstra Kemenkes 2025–2029)</td><td>Target ketersediaan 40 jenis obat indikator esensial di Puskesmas</td><td><span class="badge badge-green">Berlaku</span></td></tr>
+        <tr><td><strong>Juknis RKO</strong> (Kemkes, 2024)</td><td>Panduan penyusunan Rencana Kebutuhan Obat dari fasyankes hingga nasional</td><td><span class="badge badge-green">Berlaku</span></td></tr>
+      </tbody>
+    </table>
+    <div class="alert alert-info">
+      💡 <div><strong>Catatan Analisis:</strong> PP No. 28/2024 mengatur klausul penting: distribusi dapat dilakukan langsung pusat ke kab/kota atau faskes pada kondisi bencana atau kekosongan stok — ini merupakan mekanisme <em>emergency bypass</em> yang penting untuk malaria di daerah terpencil.</div>
+    </div>
+  </div>
+
+  <!-- Siklus Manajemen -->
+  <div class="card">
+    <div class="card-title"><span class="icon">🔄</span> Siklus Manajemen Logistik Obat (6 Komponen)</div>
+    <p>Berdasarkan materi, siklus manajemen perbekalan kesehatan terdiri dari:</p>
+    <div class="flow" style="margin: 20px 0; justify-content: center;">
+      <div class="flow-item">1. Seleksi/<br>Pemilihan</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-item alt">2. Perencanaan</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-item">3. Penyediaan</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-item alt">4. Penyimpanan</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-item">5. Distribusi</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-item alt">6. Pelayanan Kefarmasian</div>
+    </div>
+    <div class="alert alert-success">
+      ✅ <div><strong>Sesuai WHO Guidelines:</strong> Siklus ini selaras dengan <em>WHO Operational Principles for Good Pharmaceutical Procurement</em> dan <em>WHO Supply Chain Toolkit</em> yang mensyaratkan integrasi seluruh komponen supply chain untuk memastikan ketersediaan obat esensial.</div>
+    </div>
+  </div>
+
+  <!-- Perencanaan Kebutuhan -->
+  <div class="card">
+    <div class="card-title"><span class="icon">📊</span> Metode Perencanaan Kebutuhan Obat (RKO)</div>
+    <div class="grid-2">
+      <div>
+        <h4 style="margin-bottom:10px; color:var(--primary);">Metode Konsumsi</h4>
+        <ul>
+          <li>Berdasarkan pemakaian aktual periode lalu</li>
+          <li>Data dari LPLPO (Laporan Pemakaian dan Lembar Permintaan Obat)</li>
+          <li>Paling akurat untuk obat rutin stabil</li>
+          <li>Kelemahan: tidak memperhitungkan perubahan pola penyakit</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="margin-bottom:10px; color:var(--secondary);">Metode Morbiditas/Epidemiologi</h4>
+        <ul>
+          <li>Berdasarkan insidensi/prevalensi penyakit</li>
+          <li>Data kasus malaria per daerah</li>
+          <li>Lebih responsif terhadap outbreak</li>
+          <li>Cocok untuk obat program (malaria, TB, HIV)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="formula">
+      <div class="formula-label">Formula Pengendalian Ketersediaan</div>
+      <div><span>Kebutuhan</span> = (Pemakaian rata-rata bulanan × jumlah bulan) + Buffer stock − Stok tersedia</div>
+      <div style="margin-top:8px;"><span>Tingkat Ketersediaan (bulan)</span> = Stok Akhir ÷ Rata-rata Pemakaian Bulanan</div>
+    </div>
+    <div class="alert alert-warn">
+      ⚠️ <div><strong>Perhatian Klinis:</strong> Untuk obat malaria (ACT, primakuin), buffer stock yang direkomendasikan WHO adalah minimal <strong>2 bulan</strong> untuk daerah endemis rendah dan <strong>3–6 bulan</strong> untuk daerah endemis tinggi, mengingat fluktuasi kasus yang signifikan.</div>
+    </div>
+  </div>
+
+  <!-- RKO Program Malaria -->
+  <div class="card">
+    <div class="card-title"><span class="icon">🦟</span> RKO Program Malaria dalam Sistem Nasional</div>
+    <p>Obat malaria termasuk dalam <strong>RKO Program Kesehatan (ROP)</strong> yang diadakan oleh Kementerian Kesehatan melalui APBN:</p>
+    <table>
+      <thead><tr><th>Kategori Obat</th><th>Sumber Anggaran</th><th>Mekanisme</th></tr></thead>
+      <tbody>
+        <tr><td>Obat Malaria (ACT, Primakuin, Kina)</td><td>APBN Kemenkes</td><td>Push system melalui Instalasi Farmasi Pusat → Dinkes Provinsi → Kab/Kota → Fasyankes</td></tr>
+        <tr><td>RDT Malaria</td><td>APBN / DAK</td><td>Pengadaan terpusat, distribusi berjenjang</td></tr>
+        <tr><td>Obat PKD beririsan (Parasetamol, dll.)</td><td>APBD / Kapitasi</td><td>Pengadaan mandiri fasyankes via e-katalog</td></tr>
+      </tbody>
+    </table>
+    <div class="alert alert-info">
+      💡 <div>RKO Malaria masuk dalam kategori <em>Obat Program dengan Penyediaan melalui APBN</em> — Puskesmas tidak melakukan pengadaan sendiri, melainkan mengajukan permintaan ke Dinkes Kab/Kota sesuai jadwal distribusi.</div>
+    </div>
+  </div>
+
+  <!-- SMILE Platform -->
+  <div class="card">
+    <div class="card-title"><span class="icon">💻</span> Platform SMILE 5.0 — Transformasi Digital Logistik</div>
+    <p><strong>SMILE (Sistem Manajemen Informasi Logistik Elektronik)</strong> adalah platform digital terintegrasi untuk pengelolaan supply chain obat dan vaksin nasional.</p>
+    <table>
+      <thead><tr><th>Modul SMILE</th><th>Status Implementasi</th><th>Wilayah</th></tr></thead>
+      <tbody>
+        <tr><td>SMILE Imunisasi (COVID-19 & Rutin)</td><td><span class="badge badge-green">Nasional</span></td><td>Seluruh Indonesia (Jan 2021)</td></tr>
+        <tr><td>SMILE Logistik Malaria</td><td><span class="badge badge-orange">Piloting</span></td><td>NTT & Papua (Q1 2023)</td></tr>
+        <tr><td>SMILE Logistik TB-HIV</td><td><span class="badge badge-orange">Piloting</span></td><td>DIY (Q3 2023)</td></tr>
+        <tr><td>SMILE Logistik Rabies</td><td><span class="badge badge-orange">Piloting</span></td><td>Bali & NTT (Q1 2024)</td></tr>
+        <tr><td>SMILE BMHP PKG</td><td><span class="badge badge-green">Nasional</span></td><td>Seluruh Indonesia (Agt 2025)</td></tr>
+        <tr><td>Integrasi SMILE–SIHA–SITB–SISMAL</td><td><span class="badge badge-blue">Target 2026</span></td><td>Dalam pengembangan</td></tr>
+      </tbody>
+    </table>
+
+    <h4 style="margin: 14px 0 10px; color:var(--warn);">⚠️ Tantangan Implementasi SMILE</h4>
+    <ul>
+      <li><strong>Keaktifan tidak merata</strong> — dipengaruhi geografis dan pola penyakit</li>
+      <li><strong>Kesesuaian stok fluktuatif</strong> — selisih antara stok fisik dan sistem</li>
+      <li><strong>SDM terbatas</strong> — pergantian petugas tanpa transfer knowledge</li>
+      <li><strong>Infrastruktur terbatas</strong> — Puskesmas terkendala perangkat & internet</li>
+    </ul>
+    <div class="alert alert-warn">
+      ⚠️ <div><strong>Komparasi WHO:</strong> WHO <em>Health Facility Supply Chain Management Toolkit</em> (2022) menekankan bahwa implementasi sistem LMIS (Logistics Management Information System) harus disertai <em>change management</em> yang kuat, pelatihan berkelanjutan, dan solusi offline-first untuk daerah dengan konektivitas terbatas — tantangan yang identik dengan SMILE.</div>
+    </div>
+  </div>
+
+  <!-- Distribusi Kalsel -->
+  <div class="card">
+    <div class="card-title"><span class="icon">🚚</span> Spesifik Distribusi — IF Prov. Kalimantan Selatan</div>
+    <div class="grid-2">
+      <div>
+        <h4 style="color:var(--primary); margin-bottom:8px;">Aturan Permintaan</h4>
+        <ul>
+          <li>Permintaan obat maksimal <strong>3 hari sebelum</strong> jadwal distribusi IF Prov. Kalsel</li>
+          <li>Metode push-up untuk obat mendekati kedaluwarsa</li>
+          <li>Pengendalian stok maksimum per kab/kota sesuai alokasi program</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="color:var(--secondary); margin-bottom:8px;">Faktor Ketersediaan Sumber Daya</h4>
+        <ul>
+          <li>Sarana distribusi (kendaraan & cold chain)</li>
+          <li>Anggaran distribusi</li>
+          <li>SDM pelaksana distribusi</li>
+          <li>Rute, jalur, dan jadwal distribusi</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">🔬</span> Komparasi dengan Guideline Internasional & Nasional</div>
+    <table>
+      <thead><tr><th>Aspek</th><th>Materi (IF Kalsel)</th><th>WHO / Guideline Internasional</th><th>Kesesuaian</th></tr></thead>
+      <tbody>
+        <tr><td>Siklus manajemen logistik</td><td>6 komponen (seleksi–distribusi–yanfar)</td><td>WHO: 6 fungsi supply chain (selection, quantification, procurement, storage, distribution, use)</td><td><span class="badge badge-green">✓ Sesuai</span></td></tr>
+        <tr><td>Metode perencanaan</td><td>Konsumsi + morbiditas</td><td>WHO: consumption method, morbidity method, adjusted consumption method</td><td><span class="badge badge-green">✓ Sesuai</span></td></tr>
+        <tr><td>Buffer stock</td><td>Disebutkan dalam formula</td><td>WHO: 25-100% dari stok reguler tergantung risiko kekosongan</td><td><span class="badge badge-orange">Perlu detail</span></td></tr>
+        <tr><td>Sistem informasi logistik</td><td>SMILE (LMIS digital)</td><td>WHO: LMIS harus real-time, terintegrasi vertikal dan horizontal</td><td><span class="badge badge-blue">Dalam proses</span></td></tr>
+        <tr><td>Distribusi berjenjang</td><td>4 tingkat: Pusat→Prov→Kab→Faskes</td><td>WHO: maksimal 3-4 tingkat untuk efisiensi; lebih ideal langsung push ke faskes</td><td><span class="badge badge-green">✓ Sesuai</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Referensi Tim 1 -->
+  <div class="card">
+    <div class="card-title"><span class="icon">📎</span> Referensi Analisis</div>
+    <div class="ref-item"><span class="ref-num">1</span> Kementerian Kesehatan RI. (2023). <em>Petunjuk Teknis Perencanaan Kebutuhan Obat (RKO)</em>. Direktorat Pengelolaan dan Pelayanan Farmasi, Kemenkes RI. farmalkes.kemkes.go.id</div>
+    <div class="ref-item"><span class="ref-num">2</span> Peraturan Pemerintah RI No. 28 Tahun 2024 tentang Peraturan Pelaksanaan UU No 17 Tahun 2023 tentang Kesehatan.</div>
+    <div class="ref-item"><span class="ref-num">3</span> Peraturan Presiden RI No. 12 Tahun 2025 tentang Rencana Pembangunan Jangka Menengah Nasional 2025–2029.</div>
+    <div class="ref-item"><span class="ref-num">4</span> WHO. (2022). <em>Health Facility Supply Chain Management Toolkit</em>. World Health Organization, Geneva.</div>
+    <div class="ref-item"><span class="ref-num">5</span> WHO. (2023). <em>Malaria medicines supply management: best practices</em>. WHO Global Malaria Programme.</div>
+    <div class="ref-item"><span class="ref-num">6</span> Management Sciences for Health. (2012). <em>MDS-3: Managing Access to Medicines and Health Technologies</em>. Chapter 23: Quantification of Health Commodities.</div>
+  </div>
+</div>
+
+<!-- ========== TIM 2: RANGKUMAN ========== -->
+<div id="tim2" class="section">
+  <div class="section-header">
+    <div class="section-icon" style="background:#E8F5E9;">📋</div>
+    <div>
+      <h2>Tim 2 — "Si Paling Merangkum"</h2>
+      <p>Ekstraksi poin inti, tabel ringkas, dan mnemonik untuk hafalan</p>
+    </div>
+  </div>
+
+  <!-- Mnemonik Utama -->
+  <div class="card">
+    <div class="card-title"><span class="icon">🧠</span> Mnemonik Siklus Logistik</div>
+    <div class="mnemonic">
+      <div class="mnemonic-title">🔑 "SPPPDP" — 6 Komponen Siklus Manajemen Logistik</div>
+      <div class="mnemonic-letters">
+        <div class="mnemonic-item"><div class="mnemonic-letter">S</div><div class="mnemonic-desc"><strong>Seleksi/Pemilihan</strong><br>DOEN, Fornas, update regulasi</div></div>
+        <div class="mnemonic-item"><div class="mnemonic-letter">P</div><div class="mnemonic-desc"><strong>Perencanaan</strong><br>RKO, metode konsumsi/morbiditas</div></div>
+        <div class="mnemonic-item"><div class="mnemonic-letter">P</div><div class="mnemonic-desc"><strong>Penyediaan</strong><br>Pengadaan, e-katalog, APBN/DAK</div></div>
+        <div class="mnemonic-item"><div class="mnemonic-letter">P</div><div class="mnemonic-desc"><strong>Penyimpanan</strong><br>Gudang IF, cold chain, FEFO</div></div>
+        <div class="mnemonic-item"><div class="mnemonic-letter">D</div><div class="mnemonic-desc"><strong>Distribusi</strong><br>Push/pull, berjenjang, SMILE</div></div>
+        <div class="mnemonic-item"><div class="mnemonic-letter">P</div><div class="mnemonic-desc"><strong>Pelayanan</strong><br>Yanfar, penggunaan rasional</div></div>
+      </div>
+    </div>
+
+    <div class="mnemonic" style="margin-top:16px;">
+      <div class="mnemonic-title">🔑 "5-KPAM" — 5 Optimalisasi Tata Kelola Perbekkes (Monev 2024)</div>
+      <div class="mnemonic-letters">
+        <div class="mnemonic-item"><div class="mnemonic-letter">K</div><div class="mnemonic-desc"><strong>Koordinasi</strong><br>Lintas sektor, pemantauan rantai pasok</div></div>
+        <div class="mnemonic-item"><div class="mnemonic-letter">P</div><div class="mnemonic-desc"><strong>Pemetaan</strong><br>Kebutuhan akurat berbasis data riil</div></div>
+        <div class="mnemonic-item"><div class="mnemonic-letter">A</div><div class="mnemonic-desc"><strong>Akselerasi</strong><br>Percepatan pengadaan & distribusi</div></div>
+        <div class="mnemonic-item"><div class="mnemonic-letter">M</div><div class="mnemonic-desc"><strong>Manajemen</strong><br>Tata kelola dari perencanaan→distribusi</div></div>
+        <div class="mnemonic-item"><div class="mnemonic-letter">O</div><div class="mnemonic-desc"><strong>Optimalisasi</strong><br>Sistem logistik, cegah kekosongan/overstock</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rangkuman RKO -->
+  <div class="card">
+    <div class="card-title"><span class="icon">📑</span> Alur RKO — Ringkasan Berjenjang</div>
+    <table>
+      <thead><tr><th>Level</th><th>Dokumen/Proses</th><th>Instrumen</th><th>Tujuan</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Puskesmas</strong></td><td>Data konsumsi + pola penyakit</td><td>LPLPO</td><td>Estimasi kebutuhan faskes</td></tr>
+        <tr><td><strong>Dinkes Kab/Kota</strong></td><td>Kompilasi RKO Puskesmas</td><td>RKO Kab/Kota</td><td>Pengajuan ke Provinsi</td></tr>
+        <tr><td><strong>Dinkes Provinsi</strong></td><td>Review + E-monev ke Pusat</td><td>monevkatalogobat.kemkes.go.id</td><td>Data RKO ke Kemenkes</td></tr>
+        <tr><td><strong>Pusat (Kemenkes)</strong></td><td>Desk bersama program</td><td>RKO Nasional</td><td>Pengadaan nasional</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Formula Kunci -->
+  <div class="card">
+    <div class="card-title"><span class="icon">🔢</span> Rumus Kunci yang Wajib Diingat</div>
+    <div class="formula">
+      <div class="formula-label">① Estimasi Kebutuhan</div>
+      <span>Kebutuhan</span> = (Rata-rata pemakaian/bulan × Jumlah bulan) + Buffer stock − Stok tersedia
+    </div>
+    <div class="formula" style="margin-top:12px; background: linear-gradient(135deg, #1B5E20, #2E7D32);">
+      <div class="formula-label">② Tingkat Ketersediaan</div>
+      <span>Tingkat Ketersediaan (bulan)</span> = Stok Akhir ÷ Rata-rata Pemakaian Bulanan
+    </div>
+    <div class="alert alert-success" style="margin-top:14px;">
+      💡 <div>Tingkat ketersediaan ≥ <strong>18 bulan</strong> = overstock (risiko kedaluwarsa). Tingkat ketersediaan &lt; <strong>2 bulan</strong> = ancaman kekosongan. Target ideal: <strong>3–6 bulan</strong>.</div>
+    </div>
+  </div>
+
+  <!-- Distribusi Obat Program -->
+  <div class="card">
+    <div class="card-title"><span class="icon">🗺️</span> Alur Distribusi Obat Program Malaria</div>
+    <div class="flow" style="flex-direction: column; gap: 4px; align-items: flex-start;">
+      <div style="display:flex; align-items:center; gap:10px; width:100%;">
+        <div class="flow-item" style="min-width:200px;">Kementerian Kesehatan<br><small style="opacity:0.8;">(Buffer stok pusat)</small></div>
+        <div class="flow-arrow">→</div>
+        <div style="font-size:0.8rem; color:var(--muted);">IF Pusat sesuai permintaan Dinkes Prov.</div>
+      </div>
+      <div style="margin-left:90px; color:var(--secondary); font-weight:700;">↓</div>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div class="flow-item alt" style="min-width:200px;">Dinkes Provinsi<br><small style="opacity:0.8;">(Prov. Kalsel: 3 hari sebelum jadwal)</small></div>
+        <div class="flow-arrow">→</div>
+        <div style="font-size:0.8rem; color:var(--muted);">Atas permintaan Dinkes Kab/Kota</div>
+      </div>
+      <div style="margin-left:90px; color:var(--secondary); font-weight:700;">↓</div>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div class="flow-item" style="min-width:200px;">Dinkes Kabupaten/Kota</div>
+        <div class="flow-arrow">→</div>
+        <div style="font-size:0.8rem; color:var(--muted);">Atas permintaan fasyankes</div>
+      </div>
+      <div style="margin-left:90px; color:var(--secondary); font-weight:700;">↓</div>
+      <div class="flow-item light" style="min-width:200px;">Puskesmas / RS</div>
+    </div>
+    <div class="alert alert-info" style="margin-top:14px;">
+      ℹ️ <div><strong>Emergency bypass (PP 28/2024 Pasal 910 ayat 3):</strong> Saat bencana atau kekosongan stok, distribusi dapat langsung dari Pusat ke Kab/Kota atau faskes yang membutuhkan.</div>
+    </div>
+  </div>
+
+  <!-- SMILE Ringkasan -->
+  <div class="card">
+    <div class="card-title"><span class="icon">📱</span> SMILE 5.0 — Poin Hafalan Cepat</div>
+    <div class="grid-2">
+      <div>
+        <h4 style="color:var(--primary); margin-bottom:8px;">✅ Sudah Berjalan (2025)</h4>
+        <ul>
+          <li><strong>Imunisasi:</strong> Nasional sejak Jan 2021</li>
+          <li><strong>Malaria:</strong> NTT & Papua (Q1 2023)</li>
+          <li><strong>TB-HIV:</strong> DIY (Q3 2023)</li>
+          <li><strong>Rabies:</strong> Bali & NTT (Q1 2024)</li>
+          <li><strong>BMHP PKG:</strong> Nasional (Agt 2025)</li>
+          <li><strong>Hepatitis:</strong> Nasional</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="color:var(--warn); margin-bottom:8px;">⏳ Target & Kendala</h4>
+        <ul>
+          <li><strong>2026:</strong> Implementasi nasional semua obat & BMHP</li>
+          <li><strong>Target TW2 2026:</strong> Integrasi penuh SMILE–SIHA–SITB–SISMAL</li>
+          <li><strong>Kendala utama:</strong> Konektivitas, SDM, akurasi stok</li>
+          <li><strong>Regulasi clearance:</strong> Permenkominfo No. 5/2025</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabel obat malaria -->
+  <div class="card">
+    <div class="card-title"><span class="icon">💊</span> Obat Malaria dalam Daftar Program APBN</div>
+    <div class="alert alert-info">
+      ℹ️ <div>Obat malaria termasuk dalam <strong>Obat Program dengan Penyediaan melalui APBN</strong> — diadakan Kemenkes, bukan pengadaan mandiri daerah. Meliputi: Artesunat-Amodiakuin (ASAMAK), Dihidroartemisinin-Piperakuin (DHP), Primakuin, Kina, Artesunat injeksi, RDT Malaria.</div>
+    </div>
+    <table>
+      <thead><tr><th>Jenis Obat/Logistik</th><th>Indikasi</th><th>Kategori Pengadaan</th></tr></thead>
+      <tbody>
+        <tr><td>DHP (Dihidroartemisinin-Piperakuin)</td><td>Malaria falciparum lini 1</td><td>APBN Kemenkes</td></tr>
+        <tr><td>ASAMAK (Artesunat+Amodiakuin)</td><td>Malaria falciparum lini 1 (alternatif)</td><td>APBN Kemenkes</td></tr>
+        <tr><td>Primakuin</td><td>Malaria vivax (radikal cure) + gametosid falciparum</td><td>APBN Kemenkes</td></tr>
+        <tr><td>Kina tablet</td><td>Lini 2 falciparum / trimester I kehamilan</td><td>APBN Kemenkes</td></tr>
+        <tr><td>Artesunat injeksi</td><td>Malaria berat</td><td>APBN Kemenkes</td></tr>
+        <tr><td>RDT Malaria</td><td>Diagnosis cepat lapangan</td><td>APBN / DAK</td></tr>
+        <tr><td>Antimalaria kombinasi lainnya</td><td>Sesuai pedoman nasional malaria</td><td>APBN Kemenkes</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:0.8rem; color:var(--muted); margin-top:10px;">Sumber: Pedoman Nasional Pengendalian Malaria Kemenkes RI 2023; PNPK Malaria 2020</p>
+  </div>
+</div>
+
+<!-- ========== TIM 3: INOVASI ========== -->
+<div id="tim3" class="section">
+  <div class="section-header">
+    <div class="section-icon" style="background:#FFF3E0;">💡</div>
+    <div>
+      <h2>Tim 3 — "Si Paling Inovasi"</h2>
+      <p>Ide inovasi konkret berbasis materi, siap implementasi</p>
+    </div>
+  </div>
+
+  <div class="alert alert-success">
+    ✅ <div>Dua inovasi berikut dirancang langsung dari gap yang teridentifikasi dalam materi: (1) tantangan akurasi stok fisik vs SMILE, dan (2) kendala SDM petugas farmasi di Puskesmas terpencil.</div>
+  </div>
+
+  <!-- Inovasi 1 -->
+  <div class="innovation-card">
+    <div style="display:flex; align-items:center; gap:12px; margin-bottom:8px;">
+      <div style="background:var(--accent); color:var(--dark); width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">1</div>
+      <h3 style="margin:0;">"MalarStock" — Modul Offline-First untuk Stok Opname Malaria</h3>
+    </div>
+    <p><strong>Apa:</strong> Aplikasi Progressive Web App (PWA) ringan yang dapat diinstal di HP Android tanpa koneksi internet, khusus untuk pencatatan stok opname harian logistik malaria (obat + RDT). Data tersinkronisasi otomatis ke SMILE saat ada koneksi.</p>
+    <p><strong>Mengapa relevan:</strong> Tantangan utama SMILE adalah kesesuaian stok fluktuatif akibat selisih stok fisik-sistem, diperparah keterbatasan internet di Puskesmas terpencil (Kalimantan Selatan memiliki daerah 3T). Solusi offline-first memutus ketergantungan konektivitas.</p>
+    <h4 style="color:var(--accent); margin: 14px 0 10px;">Langkah Implementasi:</h4>
+    <div class="innovation-step"><div class="step-num">1</div><div>Identifikasi 10–15 Puskesmas dengan konektivitas rendah di Kab/Kota wilayah Kalsel sebagai pilot.</div></div>
+    <div class="innovation-step"><div class="step-num">2</div><div>Pengembangan PWA dengan fitur: scan barcode obat, form stok opname harian, alert mendekati kedaluwarsa (ED &lt; 6 bulan), dan sync queue ke SMILE API.</div></div>
+    <div class="innovation-step"><div class="step-num">3</div><div>Pelatihan 1 hari di level Puskesmas; tidak perlu perangkat khusus (cukup HP Android existing).</div></div>
+    <div class="innovation-step"><div class="step-num">4</div><div>Evaluasi akurasi stok setelah 3 bulan pilot; bandingkan selisih stok fisik-sistem sebelum dan sesudah.</div></div>
+    <div class="innovation-step"><div class="step-num">5</div><div>Integrasi formal ke SMILE 5.0 jika terbukti efektif, koordinasi dengan Direktorat Tata Kelola Farmasi Kemenkes.</div></div>
+    <div style="background: rgba(255,255,255,0.1); border-radius:10px; padding:14px; margin-top:14px;">
+      <strong style="color:var(--gold);">💰 Estimasi Biaya:</strong> Rendah — pengembangan PWA open-source berbasis Vue.js/React PWA + backend API; tidak memerlukan server baru jika memanfaatkan SMILE API yang ada.
+    </div>
+  </div>
+
+  <!-- Inovasi 2 -->
+  <div class="innovation-card" style="background: linear-gradient(135deg, #1B5E20, #2E7D32);">
+    <div style="display:flex; align-items:center; gap:12px; margin-bottom:8px;">
+      <div style="background:#A5D6A7; color:#1B5E20; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">2</div>
+      <h3 style="margin:0; color:#A5D6A7;">"MalarAlert" — Sistem Notifikasi Proaktif Logistik Malaria via WhatsApp/SMS</h3>
+    </div>
+    <p><strong>Apa:</strong> Bot otomatis yang mengirim notifikasi WhatsApp/SMS kepada petugas farmasi Puskesmas dan Dinkes ketika: (a) stok obat malaria mendekati ambang batas minimum, (b) obat mendekati ED ≤ 6 bulan, (c) jadwal permintaan ke IF Provinsi tinggal 3 hari.</p>
+    <p><strong>Mengapa relevan:</strong> Materi menyebutkan permintaan obat harus dilakukan <strong>maksimal 3 hari sebelum distribusi</strong> — banyak Puskesmas terlambat karena tidak ada sistem pengingat otomatis. Kekosongan stok malaria berdampak langsung pada angka kematian.</p>
+    <h4 style="color:#A5D6A7; margin: 14px 0 10px;">Langkah Implementasi:</h4>
+    <div class="innovation-step"><div class="step-num" style="background:#A5D6A7; color:#1B5E20;">1</div><div>Mapping nomor HP/WA petugas farmasi dari seluruh Puskesmas dan Instalasi Farmasi Kab/Kota di Kalsel.</div></div>
+    <div class="innovation-step"><div class="step-num" style="background:#A5D6A7; color:#1B5E20;">2</div><div>Integrasi data stok real-time dari SMILE → trigger alert otomatis via WhatsApp Business API (Twilio/Fonnte) atau SMS gateway.</div></div>
+    <div class="innovation-step"><div class="step-num" style="background:#A5D6A7; color:#1B5E20;">3</div><div>Template pesan: "⚠️ STOK KRITIS: DHP di Puskesmas X tersisa 2 minggu. Segera ajukan permintaan ke IF Kab/Kota sebelum [tanggal]."</div></div>
+    <div class="innovation-step"><div class="step-num" style="background:#A5D6A7; color:#1B5E20;">4</div><div>Dashboard monitoring IF Provinsi untuk melihat Puskesmas mana yang belum respon notifikasi dalam 24 jam.</div></div>
+    <div style="background: rgba(255,255,255,0.1); border-radius:10px; padding:14px; margin-top:14px;">
+      <strong style="color:#A5D6A7;">🌟 Nilai Tambah:</strong> Tidak butuh koneksi internet di Puskesmas (SMS berjalan di 2G); memanfaatkan infrastruktur telekomunikasi yang sudah ada; biaya operasional sangat rendah (&lt;Rp 1.000/pesan SMS).
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">📌</span> Catatan untuk Eksekusi Inovasi</div>
+    <p>Jika dr. Dwiki menyetujui salah satu inovasi di atas, AI Learner akan langsung merancang:</p>
+    <ul>
+      <li>Prototipe teknis (wireframe / kode dasar)</li>
+      <li>Proposal singkat untuk pengajuan ke Dinkes / Kemenkes</li>
+      <li>SOP penggunaan untuk petugas farmasi Puskesmas</li>
+      <li>Indikator keberhasilan (KPI) inovasi</li>
+    </ul>
+    <div class="alert alert-info">💬 <div>Ketik <strong>"setuju inovasi 1"</strong> atau <strong>"setuju inovasi 2"</strong> untuk memulai eksekusi penuh.</div></div>
+  </div>
+</div>
+
+<!-- ========== TIM 4: LATIHAN SOAL ========== -->
+<div id="tim4" class="section">
+  <div class="section-header">
+    <div class="section-icon" style="background:#F3E5F5;">📝</div>
+    <div>
+      <h2>Tim 4 — "Si Paling Jago Soal"</h2>
+      <p>15 soal pilihan ganda A–E dari materi Logistik Malaria</p>
+    </div>
+  </div>
+
+  <div class="alert alert-info">
+    ℹ️ <div>Klik <strong>"Lihat Jawaban"</strong> pada setiap soal untuk melihat kunci dan penjelasan. Soal disusun dari level pengetahuan hingga analisis klinis.</div>
+  </div>
+
+  <!-- SOAL 1 -->
+  <div class="question-card">
+    <div class="q-header">
+      <div class="q-num">1</div>
+      <div class="q-text">Berdasarkan PP No. 28 Tahun 2024, distribusi perbekalan kesehatan dapat dilakukan langsung dari Pemerintah Pusat ke fasilitas kesehatan yang membutuhkan dalam kondisi...</div>
+    </div>
+    <div class="options">
+      <div class="option"><span class="option-label">A</span> Habis anggaran Dinkes Provinsi</div>
+      <div class="option"><span class="option-label">B</span> Bencana atau kekurangan stok</div>
+      <div class="option"><span class="option-label">C</span> Kunjungan inspeksi Kemenkes</div>
+      <div class="option"><span class="option-label">D</span> Peningkatan kasus malaria >50%</div>
+      <div class="option"><span class="option-label">E</span> Permintaan Bupati secara tertulis</div>
+    </div>
+    <button class="show-btn" onclick="toggleAnswer(this)">Lihat Jawaban</button>
+    <div class="answer-box">
+      <div class="ans-label">✅ Jawaban: B</div>
+      <p>PP No. 28 Tahun 2024 Pasal 910 ayat (3) menegaskan bahwa dalam kondisi <strong>bencana atau kekurangan stok</strong>, pendistribusian Perbekalan Kesehatan dapat dilakukan dari Pemerintah Pusat langsung ke Pemerintah Daerah Kab/Kota atau fasilitas kesehatan yang membutuhkan — melewati jalur normal berjenjang.</p>
+      <p style="margin-top:8px; font-size:0.82rem; color:var(--muted);">Sumber: PP No. 28 Tahun 2024 tentang Pelaksanaan UU No. 17/2023 tentang Kesehatan.</p>
+    </div>
+  </div>
+
+  <!-- SOAL 2 -->
+  <div class="question-card">
+    <div class="q-header">
+      <div class="q-num">2</div>
+      <div class="q-text">Puskesmas X memiliki sisa stok DHP 60 tablet. Rata-rata pemakaian DHP adalah 20 tablet/bulan. Berapakah tingkat ketersediaan DHP di Puskesmas tersebut?</div>
+    </div>
+    <div class="options">
+      <div class="option"><span class="option-label">A</span> 1 bulan</div>
+      <div class="option"><span class="option-label">B</span> 2 bulan</div>
+      <div class="option"><span class="option-label">C</span> 3 bulan</div>
+      <div class="option"><span class="option-label">D</span> 4 bulan</div>
+      <div class="option"><span class="option-label">E</span> 6 bulan</div>
+    </div>
+    <button class="show-btn" onclick="toggleAnswer(this)">Lihat Jawaban</button>
+    <div class="answer-box">
+      <div class="ans-label">✅ Jawaban: C</div>
+      <p><strong>Tingkat Ketersediaan = Stok Akhir ÷ Rata-rata Pemakaian Bulanan</strong></p>
+      <p>= 60 tablet ÷ 20 tablet/bulan = <strong>3 bulan</strong></p>
+      <p style="margin-top:8px; font-size:0.82rem; color:var(--muted);">Sumber: Materi IF Kalsel — Formula Pengendalian Ketersediaan; Juknis RKO Kemenkes 2023.</p>
+    </div>
+  </div>
+
+  <!-- SOAL 3 -->
+  <div class="question-card">
+    <div class="q-header">
+      <div class="q-num">3</div>
+      <div class="q-text">Sistem informasi yang digunakan secara nasional untuk pengelolaan logistik obat malaria di Indonesia adalah...</div>
+    </div>
+    <div class="options">
+      <div class="option"><span class="option-label">A</span> SISMAL</div>
+      <div class="option"><span class="option-label">B</span> SIHA</div>
+      <div class="option"><span class="option-label">C</span> SMILE</div>
+      <div class="option"><span class="option-label">D</span> SITB</div>
+      <div class="option"><span class="option-label">E</span> E-Monev Obat</div>
+    </div>
+    <button class="show-btn" onclick="toggleAnswer(this)">Lihat Jawaban</button>
+    <div class="answer-box">
+      <div class="ans-label">✅ Jawaban: C</div>
+      <p><strong>SMILE (Sistem Manajemen Informasi Logistik Elektronik)</strong> adalah platform SatuSehat Logistik yang digunakan untuk pencatatan dan pelaporan logistik obat, termasuk obat malaria. SMILE Logistik Malaria mulai diimplementasikan di NTT dan Papua sejak Q1 2023. SISMAL digunakan untuk data epidemiologi malaria, bukan logistik.</p>
+      <p style="margin-top:8px; font-size:0.82rem; color:var(--muted);">Sumber: Materi IF Kalsel — Slide SMILE 5.0 Platform; Kemenkes RI 2024.</p>
+    </div>
+  </div>
+
+  <!-- SOAL 4 -->
+  <div class="question-card">
+    <div class="q-header">
+      <div class="q-num">4</div>
+      <div class="q-text">Pernyataan berikut ini yang TEPAT mengenai mekanisme permintaan obat malaria di Provinsi Kalimantan Selatan adalah...</div>
+    </div>
+    <div class="options">
+      <div class="option"><span class="option-label">A</span> Puskesmas dapat meminta langsung ke Instalasi Farmasi Provinsi</div>
+      <div class="option"><span class="option-label">B</span> Permintaan diajukan minimal 7 hari sebelum jadwal distribusi</div>
+      <div class="option"><span class="option-label">C</span> Permintaan maksimal dilakukan 3 hari sebelum distribusi IF Prov. Kalsel</div>
+      <div class="option"><span class="option-label">D</span> Kemenkes langsung mendistribusikan ke Puskesmas setiap bulan</div>
+      <div class="option"><span class="option-label">E</span> Tidak ada jadwal tetap distribusi, bersifat on-demand</div>
+    </div>
+    <button class="show-btn" onclick="toggleAnswer(this)">Lihat Jawaban</button>
+    <div class="answer-box">
+      <div class="ans-label">✅ Jawaban: C</div>
+      <p>Sesuai tata laksana distribusi IF Provinsi Kalimantan Selatan: permintaan obat <strong>maksimal dilakukan 3 hari sebelum jadwal distribusi</strong> IF Prov. Kalsel. Permintaan harus sesuai jadwal distribusi yang telah ditetapkan (bukan on-demand). Alur permintaan mengikuti hirarki: faskes → Kab/Kota → Provinsi.</p>
+      <p style="margin-top:8px; font-size:0.82rem; color:var(--muted);">Sumber: Materi IF Prov. Kalsel — Slide Distribusi.</p>
+    </div>
+  </div>
+
+  <!-- SOAL 5 -->
+  <div class="question-card">
+    <div class="q-header">
+      <div class="q-num">5</div>
+      <div class="q-text">Metode perencanaan kebutuhan obat yang paling tepat digunakan untuk obat malaria di daerah dengan pola kasus musiman (endemis tidak stabil) adalah...</div>
+    </div>
+    <div class="options">
+      <div class="option"><span class="option-label">A</span> Metode konsumsi saja</div>
+      <div class="option"><span class="option-label">B</span> Metode morbiditas/epidemiologi</div>
+      <div class="option"><span class="option-label">C</span> Metode proxy consumption</div>
+      <div class="option"><span class="option-label">D</span> Metode anggaran tersedia</div>
+      <div class="option"><span class="option-label">E</span> Metode estimasi populasi</div>
+    </div>
+    <button class="show-btn" onclick="toggleAnswer(this)">Lihat Jawaban</button>
+    <div class="answer-box">
+      <div class="ans-label">✅ Jawaban: B</div>
+      <p><strong>Metode morbiditas/epidemiologi</strong> paling tepat untuk obat malaria di daerah endemis tidak stabil (musiman), karena pemakaian aktual periode lalu tidak mencerminkan lonjakan kasus. Metode ini menghitung kebutuhan berdasarkan insidensi kasus yang diproyeksikan, lebih responsif terhadap outbreak dan perubahan pola penyakit.</p>
+      <p style="margin-top:8px; font-size:0.82rem; color:var(--muted);">Sumber: Juknis RKO Kemenkes 2023; WHO Managing Drug Supply (2012).</p>
+    </div>
+  </div>
+
+  <!-- SOAL 6 -->
+  <div class="question-card">
+    <div class="q-header">
+      <div class="q-num">6</div>
+      <div class="q-text">Instrumen yang digunakan sebagai dasar perencanaan kebutuhan obat di tingkat Puskesmas adalah...</div>
+    </div>
+    <div class="options">
+      <div class="option"><span class="option-label">A</span> RKO Nasional</div>
+      <div class="option"><span class="option-label">B</span> LPLPO (Laporan Pemakaian dan Lembar Permintaan Obat)</div>
+      <div class="option"><span class="option-label">C</span> E-monev Katalog Obat</div>
+      <div class="option"><span class="option-label">D</span> Formularium Nasional</div>
+      <div class="option"><span class="option-label">E</span> SISMAL</div>
+    </div>
+    <button class="show-btn" onclick="toggleAnswer(this)">Lihat Jawaban</button>
+    <div class="answer-box">
+      <div class="ans-label">✅ Jawaban: B</div>
+      <p><strong>LPLPO (Laporan Pemakaian dan Lembar Permintaan Obat)</strong> adalah instrumen utama di tingkat Puskesmas untuk mencatat data pemakaian obat dan mengajukan permintaan ke Dinkes Kab/Kota. LPLPO menjadi dasar proses perencanaan bottom-up dari fasyankes ke tingkat yang lebih tinggi.</p>
+      <p style="margin-top:8px; font-size:0.82rem; color:var(--muted);">Sumber: Materi IF Kalsel — Slide Alur Perencanaan; Permenkes No. 74 Tahun 2016.</p>
+    </div>
+  </div>
+
+  <!-- SOAL 7 -->
+  <div class="question-card">
+    <div class="q-header">
+      <div class="q-num">7</div>
+      <div class="q-text">Sebuah Puskesmas membutuhkan 100 tablet DHP/bulan. Buffer stock yang diinginkan 2 bulan. Stok tersedia saat ini 50 tablet. Berapa kebutuhan DHP untuk 6 bulan ke depan?</div>
+    </div>
+    <div class="options">
+      <div class="option"><span class="option-label">A</span> 600 tablet</div>
+      <div class="option"><span class="option-label">B</span> 750 tablet</div>
+      <div class="option"><span class="option-label">C</span> 800 tablet</div>
+      <div class="option"><span class="option-label">D</span> 850 tablet</div>
+      <div class="option"><span class="option-label">E</span> 900 tablet</div>
+    </div>
+    <button class="show-btn" onclick="toggleAnswer(this)">Lihat Jawaban</button>
+    <div class="answer-box">
+      <div class="ans-label">✅ Jawaban: B</div>
+      <p><strong>Kebutuhan = (Rata-rata pemakaian/bulan × Jumlah bulan) + Buffer stock − Stok tersedia</strong></p>
+      <p>= (100 × 6) + (100 × 2) − 50 = 600 + 200 − 50 = <strong>750 tablet</strong></p>
+      <p style="margin-top:8px; font-size:0.82rem; color:var(--muted);">Sumber: Formula Pengendalian Ketersediaan — IF Prov. Kalsel; Juknis RKO Kemenkes.</p>
+    </div>
+  </div>
+
+  <!-- SOAL 8 -->
+  <div class="question-card">
+    <div class="q-header">
+      <div class="q-num">8</div>
+      <div class="q-text">Berapa jumlah jenis obat indikator esensial di Puskesmas yang ditetapkan dalam Renstra Kemenkes 2025–2029?</div>
+    </div>
+    <div class="options">
+      <div class="option"><span class="option-label">A</span> 20 jenis</div>
+      <div class="option"><span class="option-label">B</span> 30 jenis</div>
+      <div class="option"><span class="option-label">C</span> 35 jenis</div>
+      <div class="option"><span class="option-label">D</span> 40 jenis</div>
+      <div class="option"><span class="option-label">E</span> 50 jenis</div>
+    </div>
+    <button class="show-btn" onclick="toggleAnswer(this)">Lihat Jawaban</button>
+    <div class="answer-box">
+      <div class="ans-label">✅ Jawaban: D</div>
+      <p><strong>40 jenis obat indikator esensial</strong> ditetapkan dalam Permenkes No. 12 Tahun 2025 tentang Renstra Kemenkes 2025–2029 sebagai indikator ketersediaan obat di Puskesmas. Nomenklatur 40 jenis ini diperbarui melalui survei nasional 2025 dan dikelompokkan berdasarkan kelas terapi mengikuti Formularium Nasional.</p>
+      <p style="margin-top:8px; font-size:0.82rem; color:var(--muted);">Sumber: Permenkes No. 12 Tahun 2025 (Renstra Kemenkes 2025–2029).</p>
+    </div>
+  </div>
+
+  <!-- SOAL 9 -->
+  <div class="question-card">
+    <div class="q-header">
+      <div class="q-num">9</div>
+      <div class="q-text">Platform SMILE Logistik Malaria pertama kali diimplementasikan secara piloting di...</div>
+    </div>
+    <div class="options">
+      <div class="option"><span class="option-label">A</span> DKI Jakarta dan Jawa Barat</div>
+      <div class="option"><span class="option-label">B</span> Bali dan Nusa Tenggara Barat</div>
+      <div class="option"><span class="option-label">C</span> NTT dan Papua</div>
+      <div class="option"><span class="option-label">D</span> DI Yogyakarta dan Jawa Tengah</div>
+      <div class="option"><span class="option-label">E</span> Kalimantan Selatan dan Kalimantan Timur</div>
+    </div>
+    <button class="show-btn" onclick="toggleAnswer(this)">Lihat Jawaban</button>
+    <div class="answer-box">
+      <div class="ans-label">✅ Jawaban: C</div>
+      <p>SMILE Logistik Malaria mulai digunakan di <strong>NTT (Nusa Tenggara Timur) dan Papua</strong> sejak Q1 2023. Kedua wilayah ini dipilih sebagai pilot karena merupakan daerah endemis malaria tertinggi di Indonesia, sehingga kebutuhan sistem logistik digital paling mendesak.</p>
+      <p style="margin-top:8px; font-size:0.82rem; color:var(--muted);">Sumber: Materi IF Kalsel — Slide Timeline Implementasi SMILE.</p>
+    </div>
+  </div>
+
+  <!-- SOAL 10 -->
+  <div class="question-card">
+    <div class="q-header">
+      <div class="q-num">10</div>
+      <div class="q-text">Sumber anggaran pengadaan obat malaria (DHP, Primakuin, Artesunat injeksi) di tingkat Puskesmas berasal dari...</div>
+    </div>
+    <div class="options">
+      <div class="option"><span class="option-label">A</span> Anggaran BOK Puskesmas</div>
+      <div class="option"><span class="option-label">B</span> Dana Kapitasi JKN</div>
+      <div class="option"><span class="option-label">C</span> APBN Kementerian Kesehatan</div>
+      <div class="option"><span class="option-label">D</span> APBD Provinsi Kalimantan Selatan</div>
+      <div class="option"><span class="option-label">E</span> Dana Desa</div>
+    </div>
+    <button class="show-btn" onclick="toggleAnswer(this)">Lihat Jawaban</button>
+    <div class="answer-box">
+      <div class="ans-label">✅ Jawaban: C</div>
+      <p>Obat malaria termasuk dalam <strong>Obat Program dengan Penyediaan melalui APBN Kementerian Kesehatan</strong>. Ini berarti Puskesmas tidak membeli sendiri — obat diadakan oleh Kemenkes dan didistribusikan secara berjenjang. Hal ini berbeda dengan obat PKD (Pelayanan Kesehatan Dasar) yang dapat diadakan melalui DAK, APBD, atau kapitasi.</p>
+      <p style="margin-top:8px; font-size:0.82rem; color:var(--muted);">Sumber: Materi IF Kalsel — Slide Daftar Obat Program Kesehatan; Pedoman Pengelolaan Obat Program Kemenkes.</p>
+    </div>
+  </div>
+
+  <!-- SOAL 11 -->
+  <div class="question-card">
+    <div class="q-header">
+      <div class="q-num">11</div>
+      <div class="q-text">Salah satu tantangan utama implementasi SMILE yang disebutkan dalam materi adalah kesesuaian stok fluktuatif. Hal ini paling tepat diatasi dengan cara...</div>
+    </div>
+    <div class="options">
+      <div class="option"><span class="option-label">A</span> Menonaktifkan pencatatan manual dan beralih sepenuhnya ke digital</div>
+      <div class="option"><span class="option-label">B</span> Stok opname fisik berkala yang langsung tersinkronisasi ke sistem</div>
+      <div class="option"><span class="option-label">C</span> Mengurangi jumlah item obat yang dicatat di SMILE</div>
+      <div class="option"><span class="option-label">D</span> Meningkatkan frekuensi distribusi obat menjadi setiap minggu</div>
+      <div class="option"><span class="option-label">E</span> Memindahkan tanggung jawab pencatatan ke level Provinsi</div>
+    </div>
+    <button class="show-btn" onclick="toggleAnswer(this)">Lihat Jawaban</button>
+    <div class="answer-box">
+      <div class="ans-label">✅ Jawaban: B</div>
+      <p>Selisih stok fisik vs sistem (kesesuaian stok fluktuatif) pada SMILE paling baik diatasi dengan <strong>stok opname fisik berkala yang tersinkronisasi langsung ke sistem</strong>. WHO LMIS guidelines merekomendasikan rekonsiliasi stok fisik-sistem minimal bulanan, dengan pembaruan real-time menggunakan teknologi barcode/RFID. Ini juga selaras dengan inovasi MalarStock yang diusulkan Tim 3.</p>
+      <p style="margin-top:8px; font-size:0.82rem; color:var(--muted);">Sumber: WHO LMIS Implementation Guide (2022); Materi IF Kalsel — Tantangan SMILE.</p>
+    </div>
+  </div>
+
+  <!-- SOAL 12 -->
+  <div class="question-card">
+    <div class="q-header">
+      <div class="q-num">12</div>
+      <div class="q-text">Dalam siklus manajemen logistik, fungsi "Pelayanan Kefarmasian" berada pada urutan ke...</div>
+    </div>
+    <div class="options">
+      <div class="option"><span class="option-label">A</span> 2</div>
+      <div class="option"><span class="option-label">B</span> 3</div>
+      <div class="option"><span class="option-label">C</span> 4</div>
+      <div class="option"><span class="option-label">D</span> 5</div>
+      <div class="option"><span class="option-label">E</span> 6</div>
+    </div>
+    <button class="show-btn" onclick="toggleAnswer(this)">Lihat Jawaban</button>
+    <div class="answer-box">
+      <div class="ans-label">✅ Jawaban: E</div>
+      <p>Urutan siklus manajemen logistik perbekalan kesehatan: (1) Seleksi/Pemilihan → (2) Perencanaan → (3) Penyediaan → (4) Penyimpanan → (5) Pendistribusian → <strong>(6) Pelayanan Kefarmasian</strong>. Pelayanan Kefarmasian adalah end-point dari siklus ini, di mana obat akhirnya digunakan oleh pasien secara rasional.</p>
+      <p style="margin-top:8px; font-size:0.82rem; color:var(--muted);">Sumber: Materi IF Kalsel — Slide Strategi Pengelolaan Perbekalan Kesehatan.</p>
+    </div>
+  </div>
+
+  <!-- SOAL 13 -->
+  <div class="question-card">
+    <div class="q-header">
+      <div class="q-num">13</div>
+      <div class="q-text">Pendekatan yang digunakan dalam perencanaan kebutuhan obat meliputi dua hal, yaitu...</div>
+    </div>
+    <div class="options">
+      <div class="option"><span class="option-label">A</span> Pendekatan anggaran dan pendekatan populasi</div>
+      <div class="option"><span class="option-label">B</span> Pendekatan supply dan pendekatan demand</div>
+      <div class="option"><span class="option-label">C</span> Pendekatan konsumsi dan pendekatan morbiditas</div>
+      <div class="option"><span class="option-label">D</span> Pendekatan vertikal dan pendekatan horizontal</div>
+      <div class="option"><span class="option-label">E</span> Pendekatan pusat dan pendekatan daerah</div>
+    </div>
+    <button class="show-btn" onclick="toggleAnswer(this)">Lihat Jawaban</button>
+    <div class="answer-box">
+      <div class="ans-label">✅ Jawaban: B</div>
+      <p>Materi menyebutkan bahwa konsep perencanaan perbekalan kesehatan menggunakan <strong>pendekatan supply dan pendekatan demand</strong>. RKO (Rencana Kebutuhan Obat) berfungsi sebagai dasar penyetimbangan kedua pendekatan ini — RKO dari seluruh entitas menggambarkan demand, sementara kapasitas produksi industri farmasi merepresentasikan supply.</p>
+      <p style="margin-top:8px; font-size:0.82rem; color:var(--muted);">Sumber: Materi IF Kalsel — Slide Konsep Perencanaan Perbekalan Kesehatan.</p>
+    </div>
+  </div>
+
+  <!-- SOAL 14 -->
+  <div class="question-card">
+    <div class="q-header">
+      <div class="q-num">14</div>
+      <div class="q-text">Obat malaria diklasifikasikan dalam kelompok RKO nasional sebagai...</div>
+    </div>
+    <div class="options">
+      <div class="option"><span class="option-label">A</span> RKO Pelayanan Kesehatan — FPKTP</div>
+      <div class="option"><span class="option-label">B</span> RKO Buffer dan Embarkasi Haji</div>
+      <div class="option"><span class="option-label">C</span> RKO Program Kesehatan (ROP) — Program Malaria</div>
+      <div class="option"><span class="option-label">D</span> RKO Pelayanan Kesehatan — Apotek PRB</div>
+      <div class="option"><span class="option-label">E</span> RKO Pelayanan Kesehatan — FPKTL</div>
+    </div>
+    <button class="show-btn" onclick="toggleAnswer(this)">Lihat Jawaban</button>
+    <div class="answer-box">
+      <div class="ans-label">✅ Jawaban: C</div>
+      <p>Obat malaria masuk dalam <strong>RKO Program Kesehatan (ROP) — Program Malaria</strong>, bersama dengan program TB, Diare, Filariasis, Kusta Frambusia, HIV/AIDS, dll. ROP berbeda dengan RKO pelayanan kesehatan rutin karena pengadaan sepenuhnya melalui APBN Kemenkes, bukan pengadaan mandiri fasyankes.</p>
+      <p style="margin-top:8px; font-size:0.82rem; color:var(--muted);">Sumber: Materi IF Kalsel — Slide RKO Per Sektor.</p>
+    </div>
+  </div>
+
+  <!-- SOAL 15 -->
+  <div class="question-card">
+    <div class="q-header">
+      <div class="q-num">15</div>
+      <div class="q-text">Seorang petugas farmasi Puskesmas di daerah terpencil melaporkan bahwa stok DHP sisa untuk 1,5 bulan saja, tetapi jadwal distribusi masih 3 minggu lagi. Tindakan paling tepat menurut alur distribusi yang ada adalah...</div>
+    </div>
+    <div class="options">
+      <div class="option"><span class="option-label">A</span> Menunggu jadwal distribusi reguler karena sudah dekat</div>
+      <div class="option"><span class="option-label">B</span> Segera ajukan permintaan darurat ke Dinkes Kab/Kota dan laporkan risiko kekosongan</div>
+      <div class="option"><span class="option-label">C</span> Membeli DHP dari apotek swasta menggunakan dana BOK</div>
+      <div class="option"><span class="option-label">D</span> Meminjam stok dari Puskesmas terdekat tanpa koordinasi Dinkes</div>
+      <div class="option"><span class="option-label">E</span> Mengurangi dosis pengobatan agar stok lebih lama</div>
+    </div>
+    <button class="show-btn" onclick="toggleAnswer(this)">Lihat Jawaban</button>
+    <div class="answer-box">
+      <div class="ans-label">✅ Jawaban: B</div>
+      <p><strong>Segera ajukan permintaan darurat ke Dinkes Kab/Kota dan laporkan risiko kekosongan</strong>. Stok 1,5 bulan dengan distribusi 3 minggu lagi artinya setelah menerima distribusi reguler, masih ada risiko kekosongan. PP 28/2024 mengatur mekanisme distribusi darurat langsung ke faskes saat stok kritis. Opsi C dan E tidak sesuai prosedur dan membahayakan keselamatan pasien. Opsi A berisiko jika kasus meningkat tiba-tiba.</p>
+      <p style="margin-top:8px; font-size:0.82rem; color:var(--muted);">Sumber: PP No. 28 Tahun 2024 Pasal 910 ayat 3; Materi IF Kalsel — Slide Distribusi; PNPK Malaria Kemenkes 2020.</p>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top: 30px;">
+    <div class="card-title"><span class="icon">📊</span> Statistik Soal</div>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="num">15</div><div class="label">Total Soal</div></div>
+      <div class="stat-card"><div class="num">5</div><div class="label">Soal Regulasi/Hukum</div></div>
+      <div class="stat-card" style="border-color:var(--secondary);"><div class="num" style="color:var(--secondary);">5</div><div class="label">Soal Perhitungan & Aplikasi</div></div>
+      <div class="stat-card" style="border-color:var(--warn);"><div class="num" style="color:var(--warn);">5</div><div class="label">Soal Analisis Klinis</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- REKOMENDASI KELANJUTAN -->
+<div class="rekom">
+  <h3>💡 Rekomendasi Kelanjutan Belajar</h3>
+  <ul>
+    <li><strong>Pengelolaan Rantai Dingin (Cold Chain) Vaksin & Obat Malaria</strong> — melengkapi aspek penyimpanan yang belum dibahas mendalam</li>
+    <li><strong>PEDOMAN NASIONAL PENGENDALIAN MALARIA (PNPK 2020)</strong> — tata laksana klinis yang menjadi referensi penggunaan rasional obat malaria</li>
+    <li><strong>SISMAL v3 — Sistem Informasi Surveilans Malaria</strong> — komplemen SMILE dari sisi epidemiologi untuk perencanaan berbasis data kasus</li>
+    <li><strong>Manajemen Obat Kadaluwarsa & Pemusnahan Perbekkes</strong> — masalah nyata dalam push-system obat program</li>
+  </ul>
+  <p style="font-size:0.83rem; opacity:0.8; margin-top:12px;">💬 Ketik topik yang diinginkan atau <em>"setuju inovasi 1/2"</em> untuk eksekusi penuh inovasi tanpa menunggu instruksi lebih lanjut.</p>
+</div>
+
+</div><!-- /container -->
+
+<!-- Print Button -->
+<button class="print-btn" onclick="window.print()">🖨️ Cetak / PDF</button>
+
+<script>
+function switchTab(tabId) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+function toggleAnswer(btn) {
+  const box = btn.nextElementSibling;
+  const shown = box.classList.toggle('shown');
+  btn.textContent = shown ? 'Sembunyikan' : 'Lihat Jawaban';
+}
+</script>
+
+</body>
+</html>
