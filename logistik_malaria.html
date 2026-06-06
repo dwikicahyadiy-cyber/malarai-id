@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🦟 Logistik Malaria — AI Learner</title>
+<style>
+  :root {
+    --primary: #0a5c36;
+    --primary-light: #1a8c55;
+    --primary-dark: #073d24;
+    --accent: #f59e0b;
+    --accent2: #10b981;
+    --danger: #ef4444;
+    --bg: #f0fdf4;
+    --card: #ffffff;
+    --text: #1a2e1a;
+    --muted: #6b7280;
+    --border: #d1fae5;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 50%, var(--primary-light) 100%);
+    color: white; padding: 48px 24px 36px; text-align: center; position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content:''; position:absolute; inset:0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .hero-badge { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); border-radius: 999px; display: inline-block; padding: 4px 16px; font-size: 0.75rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 16px; }
+  .hero h1 { font-size: clamp(1.8rem, 5vw, 3rem); font-weight: 800; margin-bottom: 8px; }
+  .hero p { font-size: 1rem; opacity: 0.85; max-width: 600px; margin: 0 auto 24px; }
+  .hero-meta { display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; }
+  .hero-meta span { font-size: 0.8rem; opacity: 0.7; }
+  .hero-meta strong { opacity: 1; font-weight: 700; }
+
+  /* TABS */
+  .tabs-bar { background: var(--primary-dark); position: sticky; top: 0; z-index: 100; display: flex; overflow-x: auto; scrollbar-width: none; }
+  .tabs-bar::-webkit-scrollbar { display: none; }
+  .tab-btn { flex: 0 0 auto; padding: 16px 20px; color: rgba(255,255,255,0.6); font-size: 0.85rem; font-weight: 600; cursor: pointer; border: none; background: none; border-bottom: 3px solid transparent; transition: all .2s; white-space: nowrap; }
+  .tab-btn:hover { color: white; background: rgba(255,255,255,0.05); }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab-icon { margin-right: 6px; }
+
+  /* CONTENT */
+  .tab-panel { display: none; max-width: 960px; margin: 0 auto; padding: 32px 16px 64px; }
+  .tab-panel.active { display: block; }
+
+  /* CARDS */
+  .card { background: var(--card); border-radius: 16px; border: 1px solid var(--border); padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+  .card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .card-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
+  .ci-green { background: #d1fae5; }
+  .ci-blue { background: #dbeafe; }
+  .ci-amber { background: #fef3c7; }
+  .ci-red { background: #fee2e2; }
+  .ci-purple { background: #ede9fe; }
+  .ci-teal { background: #ccfbf1; }
+  .card h2 { font-size: 1.15rem; font-weight: 700; color: var(--primary-dark); }
+  .card h3 { font-size: 1rem; font-weight: 700; color: var(--primary); margin: 16px 0 8px; }
+  .card p { color: #374151; margin-bottom: 10px; font-size: 0.93rem; }
+  .card ul, .card ol { padding-left: 20px; margin-bottom: 10px; }
+  .card li { color: #374151; margin-bottom: 5px; font-size: 0.93rem; }
+
+  /* SECTION TITLE */
+  .section-title { font-size: 1.4rem; font-weight: 800; color: var(--primary-dark); margin-bottom: 6px; }
+  .section-subtitle { color: var(--muted); font-size: 0.88rem; margin-bottom: 24px; border-bottom: 2px solid var(--border); padding-bottom: 12px; }
+
+  /* BADGE / TAG */
+  .badge { display: inline-block; border-radius: 999px; padding: 2px 10px; font-size: 0.75rem; font-weight: 700; }
+  .badge-green { background: #d1fae5; color: #065f46; }
+  .badge-amber { background: #fef3c7; color: #92400e; }
+  .badge-red { background: #fee2e2; color: #991b1b; }
+  .badge-blue { background: #dbeafe; color: #1e40af; }
+
+  /* TABLE */
+  .tbl { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.88rem; }
+  .tbl th { background: var(--primary); color: white; padding: 10px 12px; text-align: left; }
+  .tbl td { padding: 9px 12px; border-bottom: 1px solid #e5e7eb; vertical-align: top; }
+  .tbl tr:nth-child(even) td { background: #f9fafb; }
+  .tbl tr:hover td { background: #f0fdf4; }
+
+  /* FLOW CHART */
+  .flow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 12px 0; }
+  .flow-node { background: var(--primary); color: white; border-radius: 8px; padding: 8px 14px; font-size: 0.82rem; font-weight: 600; text-align: center; }
+  .flow-node.light { background: #d1fae5; color: var(--primary-dark); }
+  .flow-arrow { color: var(--muted); font-size: 1.1rem; flex-shrink: 0; }
+
+  /* PRINSIP 6-TEPAT */
+  .grid-6 { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin: 12px 0; }
+  .prinsip-card { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; border-radius: 12px; padding: 16px 12px; text-align: center; }
+  .prinsip-card .emoji { font-size: 1.6rem; margin-bottom: 6px; }
+  .prinsip-card .label { font-size: 0.82rem; font-weight: 700; }
+
+  /* HIGHLIGHT BOX */
+  .highlight { border-left: 4px solid var(--accent); background: #fffbeb; padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 12px 0; }
+  .highlight.danger { border-left-color: var(--danger); background: #fff1f1; }
+  .highlight.info { border-left-color: #3b82f6; background: #eff6ff; }
+  .highlight.success { border-left-color: var(--accent2); background: #f0fdf4; }
+
+  /* STEP */
+  .steps { counter-reset: step; }
+  .step { display: flex; gap: 16px; margin-bottom: 20px; }
+  .step-num { counter-increment: step; width: 36px; height: 36px; border-radius: 50%; background: var(--primary); color: white; font-weight: 800; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .step-body h4 { font-size: 0.95rem; font-weight: 700; color: var(--primary-dark); margin-bottom: 4px; }
+  .step-body p { font-size: 0.88rem; color: #374151; }
+
+  /* RINGKASAN CARDS */
+  .ring-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+  .ring-card { border-radius: 14px; padding: 20px; border: 1px solid; }
+  .ring-card h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 8px; }
+  .ring-card ul { padding-left: 18px; }
+  .ring-card li { font-size: 0.85rem; margin-bottom: 4px; }
+  .rc1 { background: #f0fdf4; border-color: #86efac; color: #14532d; }
+  .rc2 { background: #eff6ff; border-color: #93c5fd; color: #1e3a8a; }
+  .rc3 { background: #fef9c3; border-color: #fcd34d; color: #78350f; }
+  .rc4 { background: #fff1f5; border-color: #fca5a5; color: #7f1d1d; }
+  .rc5 { background: #f5f3ff; border-color: #c4b5fd; color: #4c1d95; }
+  .rc6 { background: #ecfdf5; border-color: #6ee7b7; color: #064e3b; }
+
+  /* INOVASI */
+  .innov-card { border-radius: 16px; padding: 24px; margin-bottom: 16px; position: relative; overflow: hidden; }
+  .innov-card::before { content: ''; position: absolute; right: -20px; top: -20px; width: 120px; height: 120px; border-radius: 50%; opacity: 0.1; }
+  .i1 { background: linear-gradient(135deg, #ecfdf5, #d1fae5); border: 1px solid #6ee7b7; }
+  .i1::before { background: #059669; }
+  .i2 { background: linear-gradient(135deg, #eff6ff, #dbeafe); border: 1px solid #93c5fd; }
+  .i2::before { background: #3b82f6; }
+  .i3 { background: linear-gradient(135deg, #fef9c3, #fef3c7); border: 1px solid #fcd34d; }
+  .i3::before { background: #f59e0b; }
+  .innov-card h3 { font-size: 1rem; font-weight: 800; margin-bottom: 8px; }
+  .innov-card .tagline { font-size: 0.8rem; font-weight: 600; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
+  .innov-card p { font-size: 0.88rem; margin-bottom: 8px; }
+  .innov-card ul { padding-left: 18px; }
+  .innov-card li { font-size: 0.86rem; margin-bottom: 4px; }
+  .innov-accept-btn {
+    display: inline-block; margin-top: 12px; padding: 8px 18px;
+    background: var(--primary); color: white; border: none; border-radius: 8px;
+    font-size: 0.82rem; font-weight: 700; cursor: pointer; transition: all .2s;
+  }
+  .innov-accept-btn:hover { background: var(--primary-light); transform: translateY(-1px); }
+  .innov-accepted { background: var(--accent2) !important; }
+
+  /* SOAL */
+  .soal-card { background: white; border: 1px solid var(--border); border-radius: 14px; padding: 20px; margin-bottom: 16px; }
+  .soal-num { font-size: 0.75rem; font-weight: 800; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; }
+  .soal-q { font-size: 0.95rem; font-weight: 600; color: var(--text); margin-bottom: 14px; line-height: 1.5; }
+  .options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+  .option { padding: 10px 14px; border-radius: 8px; border: 1.5px solid #e5e7eb; cursor: pointer; font-size: 0.88rem; transition: all .15s; }
+  .option:hover { border-color: var(--primary-light); background: #f0fdf4; }
+  .option.correct { background: #d1fae5; border-color: #059669; color: #065f46; font-weight: 600; }
+  .option.wrong { background: #fee2e2; border-color: #dc2626; color: #7f1d1d; }
+  .explanation { display: none; background: #f0fdf4; border-left: 3px solid var(--accent2); padding: 12px 16px; border-radius: 0 8px 8px 0; font-size: 0.85rem; color: #374151; margin-top: 8px; }
+  .explanation.show { display: block; }
+  .score-bar { background: var(--primary-dark); color: white; border-radius: 12px; padding: 20px 24px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  .score-num { font-size: 2.5rem; font-weight: 900; }
+  .score-label { font-size: 0.8rem; opacity: 0.7; }
+
+  /* PENUGASAN */
+  .tugas-card { border-radius: 14px; padding: 20px; margin-bottom: 16px; }
+  .t1 { background: #fef9c3; border: 1px solid #fcd34d; }
+  .t2 { background: #eff6ff; border: 1px solid #93c5fd; }
+  .t3 { background: #f5f3ff; border: 1px solid #c4b5fd; }
+  .tugas-card h3 { font-size: 0.95rem; font-weight: 800; margin-bottom: 6px; }
+  .tugas-card p { font-size: 0.88rem; margin-bottom: 8px; }
+  .tugas-card ul { padding-left: 18px; }
+  .tugas-card li { font-size: 0.86rem; margin-bottom: 4px; }
+
+  /* REF */
+  .ref-list { list-style: none; padding: 0; }
+  .ref-list li { padding: 8px 0; border-bottom: 1px solid #e5e7eb; font-size: 0.83rem; color: var(--muted); }
+  .ref-list li::before { content: '📚 '; }
+
+  /* RESPONSIVE */
+  @media(max-width:600px) {
+    .grid-6 { grid-template-columns: repeat(3,1fr); }
+    .ring-grid { grid-template-columns: 1fr; }
+    .flow { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-badge">🦟 AI Learner • Pelatihan Malaria</div>
+  <h1>Logistik Malaria</h1>
+  <p>Sistem pengelolaan logistik program malaria: perencanaan, pengadaan, penyimpanan, distribusi hingga monitoring</p>
+  <div class="hero-meta">
+    <span><strong>📋 Materi:</strong> BAPELKES Evi Liani, SKM, MPH</span>
+    <span><strong>🏛️ Referensi:</strong> Kemenkes RI + WHO</span>
+    <span><strong>📅</strong> 2024–2026</span>
+  </div>
+</div>
+
+<div class="tabs-bar">
+  <button class="tab-btn active" onclick="showTab('belajar',this)"><span class="tab-icon">📖</span>Si Paling Belajar</button>
+  <button class="tab-btn" onclick="showTab('rangkum',this)"><span class="tab-icon">📝</span>Si Paling Merangkum</button>
+  <button class="tab-btn" onclick="showTab('inovasi',this)"><span class="tab-icon">💡</span>Si Paling Inovasi</button>
+  <button class="tab-btn" onclick="showTab('soal',this)"><span class="tab-icon">🏆</span>Latihan Soal & Tugas</button>
+</div>
+
+<!-- ===== TAB 1: BELAJAR ===== -->
+<div id="tab-belajar" class="tab-panel active">
+  <p class="section-title">📖 Si Paling Belajar</p>
+  <p class="section-subtitle">Materi lengkap logistik malaria — diperkaya referensi WHO, Kemenkes RI, dan pedoman terkini</p>
+
+  <!-- DEFINISI -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon ci-green">🧩</div>
+      <h2>Apa itu Logistik Malaria?</h2>
+    </div>
+    <p><strong>Logistik malaria</strong> adalah sistem pengelolaan semua kebutuhan program malaria mulai dari <em>perencanaan, pengadaan, penyimpanan, distribusi</em>, hingga <em>pemantauan penggunaan barang</em> agar pelayanan malaria berjalan efektif.</p>
+    <div class="highlight success">
+      <strong>Mengapa penting?</strong> WHO (2023) menegaskan kegagalan rantai suplai komoditas malaria berkontribusi pada <strong>26% kematian akibat malaria yang sebenarnya dapat dicegah</strong> di LMIC (low-middle income countries).
+    </div>
+    <h3>Tujuan Logistik Malaria</h3>
+    <ul>
+      <li>Menjamin ketersediaan obat & alat <strong>tepat waktu</strong> — kekosongan obat = penularan berlanjut</li>
+      <li>Menghindari <strong>stock-out</strong> → cegah lonjakan angka kesakitan & risiko KLB</li>
+      <li>Menjamin <strong>kualitas & keamanan</strong> produk (tidak kadaluwarsa, kondisi baik)</li>
+      <li>Mendukung pelayanan kesehatan <strong>cepat dan tepat</strong></li>
+      <li>Mengoptimalkan <strong>penggunaan anggaran</strong> pemerintah</li>
+      <li>Mendukung <strong>program eliminasi malaria</strong> nasional 2030</li>
+    </ul>
+  </div>
+
+  <!-- KOMPONEN -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon ci-blue">📦</div>
+      <h2>5 Komponen Logistik Malaria</h2>
+    </div>
+
+    <h3>1. Obat Anti Malaria (OAM)</h3>
+    <table class="tbl">
+      <tr><th>Obat</th><th>Indikasi Utama</th><th>Catatan Klinis</th></tr>
+      <tr><td><strong>DHP</strong> (Dihidroartemisinin-Piperaquin)</td><td>Malaria falciparum & vivax tanpa komplikasi</td><td>Lini pertama Indonesia; 3 hari terapi</td></tr>
+      <tr><td><strong>Primakuin</strong></td><td>Gametosit P. falciparum + radikal kur P. vivax/ovale</td><td>Kontraindikasi: defisiensi G6PD, hamil</td></tr>
+      <tr><td><strong>Artesunat Injeksi</strong></td><td>Malaria berat (ICU/rawat inap)</td><td>WHO 2022: dosis 2,4 mg/kgBB IV; bukan IM lagi</td></tr>
+      <tr><td><strong>RDT (Rapid Diagnostic Test)</strong></td><td>Diagnostik cepat di lapangan</td><td>Bukan "obat" tapi wajib tersedia bersama OAM</td></tr>
+    </table>
+    <div class="highlight info">
+      <strong>Update WHO 2022:</strong> Artesunat IV direkomendasikan sebagai pengganti quinine untuk malaria berat pada semua usia. Dosis untuk anak &lt;20 kg: <strong>3,0 mg/kgBB</strong> (bukan 2,4 mg/kgBB) sesuai update WHO 2022.
+    </div>
+
+    <h3>2. Alat & Bahan Diagnostik</h3>
+    <table class="tbl">
+      <tr><th>Kategori</th><th>Jenis</th></tr>
+      <tr><td><strong>Habis Pakai</strong></td><td>Lancet, slide kaca, minyak imersi, reagen Giemsa, alkohol, kapas, sarung tangan, RDT kit</td></tr>
+      <tr><td><strong>Tidak Habis Pakai</strong></td><td>Mikroskop binokuler, counter sel, rak pengering slide, lampu UV (untuk beberapa RDT)</td></tr>
+    </table>
+    <div class="highlight">
+      <strong>WHO MALEP 2023:</strong> Mikroskop tetap gold standard namun RDT dianjurkan di fasilitas tanpa ahli mikroskopi. Sensitivitas RDT modern ≥95% untuk Pf HRP2 antigen densitas &gt;200 parasit/µL.
+    </div>
+
+    <h3>3. Alat & Bahan Pengendalian Vektor</h3>
+    <ul>
+      <li><strong>LLIN (Long Lasting Insecticidal Net)</strong> — Kelambu berinsektisida tahan lama, >3 tahun proteksi</li>
+      <li><strong>IRS (Indoor Residual Spraying)</strong> — Penyemprotan dinding dalam rumah</li>
+      <li><strong>Larvasida</strong> — Temefos, Bacillus thuringiensis israelensis (Bti)</li>
+      <li><strong>Fogger / ULV sprayer</strong> — Alat semprot kabut untuk pengendalian massal</li>
+      <li><strong>APD petugas</strong> — Masker respirator, sarung tangan tebal, pakaian pelindung</li>
+    </ul>
+
+    <h3>4. Formulir Pencatatan & Pelaporan</h3>
+    <ul>
+      <li>Formulir penemuan penderita (P1 — register kasus)</li>
+      <li>Formulir pengendalian vektor</li>
+      <li>Formulir SKD KLB malaria</li>
+      <li>Formulir stok logistik dan <em>stok-out</em></li>
+      <li><strong>LPLPO</strong> — Laporan Pemakaian & Lembar Permintaan Obat</li>
+    </ul>
+
+    <h3>5. Logistik Lainnya</h3>
+    <ul>
+      <li>Kendaraan operasional distribusi (termasuk daerah terpencil)</li>
+      <li>Lemari pendingin (cold chain) untuk RDT & obat sensitif suhu</li>
+      <li>Alat komunikasi & sistem informasi (SISMAL, SMILE)</li>
+    </ul>
+  </div>
+
+  <!-- MANAJEMEN LOGISTIK -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon ci-teal">⚙️</div>
+      <h2>Manajemen Logistik — 7 Siklus</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>Perencanaan (Planning)</h4>
+          <p>Dihitung berdasarkan <strong>kasus suspect tahun sebelumnya</strong> + estimasi stok awal + pesanan masuk. Berjenjang: Puskesmas → Kab/Kota → Provinsi → Pusat. Buffer stock: Kab/Kota 10%, Provinsi 10%, Pusat 10–20%.</p>
+          <p><em>Formula kebutuhan:</em> <code>Kebutuhan = (Kasus estimasi × dosis per kasus) + Buffer − Stok awal</code></p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>Pengadaan (Procurement)</h4>
+          <p>Melalui <strong>e-Catalog (e-katalog LKPP)</strong> untuk memastikan: jumlah cukup, harga kompetitif, memenuhi standar kualitas, pengiriman tepat waktu. Komoditas harus terdaftar di BPOM / KOMPES (insektisida).</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>Penyimpanan (Storage)</h4>
+          <p>Sistem <strong>FEFO — First Expired First Out</strong>. Standar suhu:</p>
+          <table class="tbl">
+            <tr><th>Komoditas</th><th>Suhu</th><th>Catatan Khusus</th></tr>
+            <tr><td>Gudang obat umum</td><td>15–25°C, RH &lt;60%</td><td>Rak + palet, jarak 30 cm dari dinding</td></tr>
+            <tr><td>RDT</td><td>2–30°C</td><td>Jangan beku, hindari paparan sinar matahari</td></tr>
+            <tr><td>LLIN/Kelambu</td><td>Suhu normal, bebas lembab</td><td>Maks 5 bal tumpuk</td></tr>
+            <tr><td>Insektisida/Pestisida</td><td>Gudang <strong>terpisah</strong></td><td>Ventilasi baik, terkunci, ada APAR</td></tr>
+          </table>
+          <div class="highlight danger">⚠️ Kartu stok: tempelkan kartu warna <strong>MERAH</strong> jika ED &lt;6 bulan → segera distribusikan atau laporkan!</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h4>Distribusi (Distribution)</h4>
+          <p>Rantai distribusi resmi:</p>
+          <div class="flow">
+            <div class="flow-node">Kemenkes</div><div class="flow-arrow">→</div>
+            <div class="flow-node light">IF Provinsi</div><div class="flow-arrow">→</div>
+            <div class="flow-node light">GFK Kab/Kota</div><div class="flow-arrow">→</div>
+            <div class="flow-node light">Puskesmas</div><div class="flow-arrow">→</div>
+            <div class="flow-node light">Pustu/Posmaldes</div><div class="flow-arrow">→</div>
+            <div class="flow-node ci-green" style="background:#d1fae5;color:#065f46;border-radius:8px;padding:8px 14px;font-size:0.82rem;font-weight:600">Pasien</div>
+          </div>
+          <p>Dokumen kunci: <strong>LPLPO</strong>, <strong>BA Serah Terima</strong>, <strong>SISMAL</strong> (real-time). Prinsip: <em>"Tarik data pemakaian, bukan dorong barang"</em></p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <h4>Penggunaan (Use)</h4>
+          <p>Dokter/nakes menegakkan diagnosis akurat → Resep OAM sesuai protokol → Paramedis memberi dengan penjelasan cara minum → Pasien minum <strong>LENGKAP</strong>. Termasuk distribusi kelambu + edukasi cara pakai.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">6</div>
+        <div class="step-body">
+          <h4>Pencatatan & Pelaporan</h4>
+          <p>Dokumen: Kartu stok, LPLPO, Buku penerimaan/pengeluaran, <strong>SISMAL</strong> + <strong>SMILE</strong>. Fungsi: pantau stok, cegah kekosongan, dasar perencanaan.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">7</div>
+        <div class="step-body">
+          <h4>Monitoring & Evaluasi</h4>
+          <p>Indikator: ketersediaan stok, ketepatan distribusi, jumlah barang rusak/kadaluwarsa, ketepatan laporan. Audit stok berkala. Evaluasi kebutuhan vs realisasi.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRINSIP 6 TEPAT -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon ci-amber">🎯</div>
+      <h2>6 Prinsip Pengelolaan Logistik</h2>
+    </div>
+    <div class="grid-6">
+      <div class="prinsip-card"><div class="emoji">🏷️</div><div class="label">Tepat Jenis</div></div>
+      <div class="prinsip-card"><div class="emoji">🔢</div><div class="label">Tepat Jumlah</div></div>
+      <div class="prinsip-card"><div class="emoji">✅</div><div class="label">Tepat Mutu</div></div>
+      <div class="prinsip-card"><div class="emoji">⏰</div><div class="label">Tepat Waktu</div></div>
+      <div class="prinsip-card"><div class="emoji">🎯</div><div class="label">Tepat Sasaran</div></div>
+      <div class="prinsip-card"><div class="emoji">💰</div><div class="label">Efisien Biaya</div></div>
+    </div>
+  </div>
+
+  <!-- PESTISIDA -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon ci-red">☣️</div>
+      <h2>Pestisida & Insektisida dalam Pengendalian Vektor</h2>
+    </div>
+    <p>Berdasarkan <strong>PP No. 7 Tahun 1973</strong>, pestisida kesehatan masyarakat digunakan untuk pengendalian vektor penyakit dan hama permukiman.</p>
+    <h3>Klasifikasi Berdasarkan Struktur Kimia</h3>
+    <table class="tbl">
+      <tr><th>Golongan</th><th>Mekanisme</th><th>Contoh</th><th>Catatan</th></tr>
+      <tr><td><strong>Organoklorin</strong></td><td>Gangguan saraf serangga</td><td>DDT</td><td class="badge badge-red">Sudah DILARANG — toksik lingkungan, Konvensi Stockholm 2001</td></tr>
+      <tr><td><strong>Organofosfat</strong></td><td>Inhibisi kolinesterase</td><td>Malation, Temefos, Fenitrotion</td><td>IRS, space spraying, larvasidasi</td></tr>
+      <tr><td><strong>Karbamat</strong></td><td>Inhibisi kolinesterase (reversibel)</td><td>Bendiocarb, Propoksur</td><td>Mirip organofosfat</td></tr>
+      <tr><td><strong>Piretroid Sintesis</strong></td><td>Gangguan kanal Na serangga</td><td>Deltametrin, Permetrin, Sipermetrin</td><td>LLIN, IRS — rekomendasi WHO WHOPES</td></tr>
+    </table>
+    <h3>Kriteria Pemilihan Insektisida (WHO)</h3>
+    <ul>
+      <li>Terdaftar di <strong>KOMPES</strong> (Komisi Pestisida Kementan) & BPOM</li>
+      <li>Sesuai rekomendasi <strong>WHO Pesticide Evaluation Scheme (WHOPES)</strong></li>
+      <li>Tahun produksi valid (tidak kadaluwarsa)</li>
+      <li>Ramah lingkungan, toksisitas rendah terhadap mamalia</li>
+      <li>Efektif & <strong>selektif target</strong> — membunuh nyamuk, tidak membunuh non-target</li>
+      <li>Efisien dengan <strong>daya residu panjang</strong></li>
+    </ul>
+    <div class="highlight danger">
+      <strong>⚠️ Resistensi Insektisida:</strong> WHO Global Report on Insecticide Resistance 2022 mencatat resistensi piretroid pada Anopheles di >50 negara termasuk Indonesia. Rotasi insektisida sangat dianjurkan.
+    </div>
+    <h3>Penyimpanan Pestisida/Larvasida</h3>
+    <ul>
+      <li>Gudang <strong>terpisah</strong> dari obat-obatan</li>
+      <li>Bangunan kokoh, ventilasi baik, bertuliskan <em>"Bahaya — Tempat Penyimpanan Pestisida"</em></li>
+      <li>Tersedia <strong>APAR</strong> (Alat Pemadam Api Ringan)</li>
+      <li>Terkunci, tidak dapat dijangkau anak-anak</li>
+      <li>Lantai <strong>kedap air</strong> (bukan karpet/kayu/busa)</li>
+      <li>Kemasan tertutup rapat dengan label asli</li>
+      <li>Bahan makanan <strong>TIDAK BOLEH</strong> disimpan bersama pestisida</li>
+    </ul>
+  </div>
+
+  <!-- MASALAH & SOLUSI -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon ci-red">⚡</div>
+      <h2>Permasalahan Logistik & Solusi</h2>
+    </div>
+    <table class="tbl">
+      <tr><th>Permasalahan</th><th>Dampak</th><th>Solusi</th></tr>
+      <tr><td>Distribusi sulit di daerah terpencil</td><td>Keterlambatan pengobatan, kematian</td><td>Dronedelivery, posmaldes mobile, kemitraan swasta</td></tr>
+      <tr><td>Keterlambatan pengadaan</td><td>Stock-out, KLB tidak tertangani</td><td>e-Catalog, kontrak payung, buffer stock wajib</td></tr>
+      <tr><td>Kurangnya SDM terlatih</td><td>Salah pengelolaan, obat rusak</td><td>Pelatihan berkala, modul e-learning</td></tr>
+      <tr><td>Data tidak akurat (under/over-stok)</td><td>Pemborosan atau kekosongan</td><td>SISMAL real-time, digitalisasi kartu stok</td></tr>
+      <tr><td>Daerah eliminasi tidak stok OAM</td><td>Kasus impor tidak tertangani</td><td><strong>Minimal 1–2 dosis/faskes</strong> tetap wajib ada</td></tr>
+    </table>
+  </div>
+
+  <!-- REFERENSI -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon ci-purple">📚</div>
+      <h2>Referensi</h2>
+    </div>
+    <ul class="ref-list">
+      <li>Kemenkes RI. <em>Pedoman Tatalaksana Malaria</em>. Jakarta: Dirjen P2P; 2023.</li>
+      <li>WHO. <em>Guidelines for the Treatment of Malaria</em>, 3rd ed. Geneva: WHO; 2015 (update 2022).</li>
+      <li>WHO. <em>World Malaria Report 2023</em>. Geneva: WHO; 2023.</li>
+      <li>WHO. <em>Malaria Supply Chain Management: A Practical Guide</em>. Geneva: WHO; 2021.</li>
+      <li>WHO WHOPES. <em>WHO Recommended Insecticides for IRS and LLIN</em>. Geneva: WHO; 2023.</li>
+      <li>PP No. 7 Tahun 1973 tentang Pengawasan Pestisida. Jakarta: Pemerintah RI.</li>
+      <li>Kemenkes RI. <em>Pedoman Penggunaan Insektisida dalam Pengendalian Vektor</em>. Jakarta; 2019.</li>
+      <li>Global Fund. <em>Supply Chain Management System Manual for Malaria Commodities</em>; 2022.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===== TAB 2: RANGKUM ===== -->
+<div id="tab-rangkum" class="tab-panel">
+  <p class="section-title">📝 Si Paling Merangkum</p>
+  <p class="section-subtitle">Intisari padat yang mudah dibaca, dihafalkan & diingat</p>
+
+  <!-- MNEMONIC -->
+  <div class="card" style="background: linear-gradient(135deg, var(--primary-dark), var(--primary)); color: white; border: none;">
+    <div style="text-align:center; padding: 8px 0;">
+      <div style="font-size: 0.75rem; opacity: 0.7; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Mnemonic Siklus Logistik</div>
+      <div style="font-size: 2rem; font-weight: 900; letter-spacing: 4px; margin-bottom: 8px;">P²-D-P-P-M</div>
+      <div style="font-size: 0.85rem; opacity: 0.85;">
+        <strong>P</strong>erencanaan → <strong>P</strong>engadaan → <strong>P</strong>enyimpanan → <strong>D</strong>istribusi → <strong>P</strong>enggunaan → <strong>P</strong>encatatan → <strong>M</strong>onitoring
+      </div>
+    </div>
+  </div>
+
+  <div class="ring-grid">
+    <div class="ring-card rc1">
+      <h3>🧩 Definisi & Tujuan</h3>
+      <ul>
+        <li>Sistem kelola semua kebutuhan program malaria</li>
+        <li>Cegah stock-out = cegah KLB</li>
+        <li>Jamin kualitas, ketepatan waktu</li>
+        <li>Dukung eliminasi malaria 2030</li>
+      </ul>
+    </div>
+    <div class="ring-card rc2">
+      <h3>💊 OAM Wajib di Faskes</h3>
+      <ul>
+        <li><strong>DHP</strong> — lini pertama falciparum & vivax</li>
+        <li><strong>Primakuin</strong> — gametosidal + radikal kur</li>
+        <li><strong>Artesunat injeksi</strong> — malaria berat IV</li>
+        <li><strong>RDT</strong> — diagnosis cepat lapangan</li>
+      </ul>
+    </div>
+    <div class="ring-card rc3">
+      <h3>🌡️ Standar Penyimpanan</h3>
+      <ul>
+        <li>Gudang: 15–25°C, RH &lt;60%</li>
+        <li>RDT: 2–30°C, jangan beku</li>
+        <li>LLIN: bebas lembab, maks 5 bal</li>
+        <li>Insektisida: gudang terpisah + APAR</li>
+        <li>Sistem: <strong>FEFO</strong></li>
+        <li>Kartu ED merah jika &lt;6 bulan</li>
+      </ul>
+    </div>
+    <div class="ring-card rc4">
+      <h3>🚛 Rantai Distribusi</h3>
+      <ul>
+        <li>Kemenkes → IF Prov → GFK Kab → PKM → Pustu → Pasien</li>
+        <li>Dokumen: LPLPO, BA Serah Terima, SISMAL</li>
+        <li>Prinsip: <em>Pull system</em> (tarik pemakaian)</li>
+      </ul>
+    </div>
+    <div class="ring-card rc5">
+      <h3>☣️ Insektisida</h3>
+      <ul>
+        <li>4 golongan: Organoklorin (DDT — dilarang!), Organofosfat, Karbamat, Piretroid</li>
+        <li>Harus terdaftar KOMPES + rekomendasi WHO</li>
+        <li>Gudang terpisah, ventilasi, APAR</li>
+        <li>Waspadai resistensi piretroid!</li>
+      </ul>
+    </div>
+    <div class="ring-card rc6">
+      <h3>⚡ Masalah Utama</h3>
+      <ul>
+        <li>Distribusi terpencil → posmaldes + drone</li>
+        <li>Stock-out → buffer stock + e-catalog</li>
+        <li>SDM kurang terlatih → pelatihan berkala</li>
+        <li>Daerah eliminasi tetap wajib stok minimal!</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- TABEL RINGKAS -->
+  <div class="card">
+    <h2 style="margin-bottom:14px">🎯 6 Prinsip — Hafal Cepat</h2>
+    <table class="tbl">
+      <tr><th>#</th><th>Prinsip</th><th>Kata Kunci Hafalan</th></tr>
+      <tr><td>1</td><td>Tepat Jenis</td><td>DHP untuk falciparum, bukan ACT lain sembarangan</td></tr>
+      <tr><td>2</td><td>Tepat Jumlah</td><td>Buffer 10% (Kab/Kota & Prov), 10–20% (Pusat)</td></tr>
+      <tr><td>3</td><td>Tepat Mutu</td><td>FEFO, tidak expired, label asli intact</td></tr>
+      <tr><td>4</td><td>Tepat Waktu</td><td>LPLPO dikirim sebelum stok habis</td></tr>
+      <tr><td>5</td><td>Tepat Sasaran</td><td>Pasien malaria terkonfirmasi (RDT/mikroskop)</td></tr>
+      <tr><td>6</td><td>Efisien Biaya</td><td>e-Catalog, hindari over-stok → waste</td></tr>
+    </table>
+  </div>
+
+  <!-- POSTER -->
+  <div class="card" style="background: #fffbeb; border-color: #fcd34d;">
+    <h2 style="color:#92400e; margin-bottom:14px">⚡ Poin Kilat untuk Ujian</h2>
+    <ul>
+      <li><strong>FEFO</strong> = First Expired First Out (bukan FIFO untuk obat!)</li>
+      <li><strong>LPLPO</strong> = dokumen kunci distribusi Puskesmas ke atas</li>
+      <li><strong>SISMAL</strong> = sistem informasi real-time logistik malaria</li>
+      <li><strong>Buffer stock Kab/Kota = 10%</strong>, Pusat bisa s/d 20%</li>
+      <li>Kartu stok <strong>merah</strong> = ED &lt;6 bulan → prioritaskan distribusi</li>
+      <li>Insektisida golongan <strong>piretroid</strong> = untuk LLIN & IRS (paling banyak digunakan)</li>
+      <li>DDT <strong>sudah dilarang</strong> — Konvensi Stockholm 2001</li>
+      <li>Daerah eliminasi tetap wajib stok <strong>1–2 dosis</strong> per faskes</li>
+      <li>Artesunat injeksi malaria berat: dosis baru anak &lt;20 kg = <strong>3,0 mg/kgBB</strong> (WHO 2022)</li>
+      <li>Penyimpanan RDT: <strong>2–30°C</strong>, jangan dibekukan!</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===== TAB 3: INOVASI ===== -->
+<div id="tab-inovasi" class="tab-panel">
+  <p class="section-title">💡 Si Paling Inovasi</p>
+  <p class="section-subtitle">Inovasi aplikatif untuk memperkuat sistem logistik malaria di lapangan</p>
+
+  <div class="innov-card i1">
+    <div class="tagline">💡 Inovasi 1 — Digitalisasi Supply Chain</div>
+    <h3>📱 SISMAL Mobile Offline-First untuk Puskesmas Terpencil</h3>
+    <p>Masalah utama: SISMAL membutuhkan koneksi internet, sementara banyak Puskesmas terpencil di Indonesia tidak memiliki akses internet stabil.</p>
+    <p><strong>Solusi inovatif:</strong> Aplikasi Progressive Web App (PWA) SISMAL yang bekerja <em>offline-first</em>:</p>
+    <ul>
+      <li>Data stok diinput offline → tersimpan lokal</li>
+      <li>Auto-sync otomatis saat koneksi tersedia (background sync)</li>
+      <li>Notifikasi push: alert stok &lt;buffer, approaching ED</li>
+      <li>QR code scan untuk identifikasi batch obat → eliminasi salah input</li>
+      <li>Dashboard visual stok real-time per Puskesmas</li>
+    </ul>
+    <p><strong>Dampak:</strong> Data logistik akurat dari daerah 3T, pengambilan keputusan berbasis data bukan perkiraan.</p>
+    <button class="innov-accept-btn" onclick="acceptInnov(this, 'SISMAL Mobile Offline-First')">✅ Terima Inovasi Ini</button>
+  </div>
+
+  <div class="innov-card i2">
+    <div class="tagline">💡 Inovasi 2 — Prediktif AI</div>
+    <h3>🤖 Model Prediksi Kebutuhan Logistik Berbasis Data Historis</h3>
+    <p>Perencanaan logistik selama ini masih bersifat retrospektif (berdasarkan kasus tahun lalu). Musim hujan, migrasi penduduk, dan faktor lingkungan belum diperhitungkan secara kuantitatif.</p>
+    <p><strong>Solusi inovatif:</strong> Machine learning sederhana (regresi + time-series) terintegrasi dalam SISMAL:</p>
+    <ul>
+      <li>Input: data historis kasus, data curah hujan (BMKG API), populasi berisiko</li>
+      <li>Output: estimasi kebutuhan OAM 3 bulan ke depan per wilayah</li>
+      <li>Alert dini: jika prediksi lonjakan kasus → trigger pengadaan lebih awal</li>
+      <li>Modul sederhana yang dapat dioperasikan staf pengelola farmasi tanpa keahlian IT</li>
+    </ul>
+    <p><strong>Dampak:</strong> Cegah stock-out musiman, optimalkan anggaran, antisipasi KLB sebelum terjadi.</p>
+    <button class="innov-accept-btn" onclick="acceptInnov(this, 'Model Prediksi AI Logistik')">✅ Terima Inovasi Ini</button>
+  </div>
+
+  <div class="innov-card i3">
+    <div class="tagline">💡 Inovasi 3 — Distribusi Inovatif</div>
+    <h3>🛵 Posmaldes Kit: Paket Logistik Mandiri untuk Desa Terpencil</h3>
+    <p>Daerah terpencil sering terlambat menerima logistik malaria karena menunggu distribusi dari GFK Kabupaten yang bisa memakan waktu berhari-hari.</p>
+    <p><strong>Solusi inovatif:</strong> "Posmaldes Emergency Kit" — paket logistik mandiri terstandar untuk setiap Poskesdes/Posmaldes:</p>
+    <ul>
+      <li>Isi standar: 10 paket DHP (berbagai berat badan), 10 primakuin, 20 RDT, 1 lancet box, panduan penggunaan bergambar</li>
+      <li>Tas anti-air dengan termometer suhu terintegrasi (monitor kondisi penyimpanan)</li>
+      <li>QR code di setiap item → pencatatan pemakaian via smartphone kader</li>
+      <li>Replenishment otomatis dipicu saat stok &lt;50% via WhatsApp bot ke petugas farmasi Puskesmas</li>
+    </ul>
+    <p><strong>Dampak:</strong> Zero stock-out di desa terpencil, kader malaria terempowerment, dokumentasi lengkap digital.</p>
+    <button class="innov-accept-btn" onclick="acceptInnov(this, 'Posmaldes Emergency Kit')">✅ Terima Inovasi Ini</button>
+  </div>
+
+  <div class="card" style="background:#f9fafb">
+    <h2 style="margin-bottom:12px">🔬 Konteks Global: Inovasi Serupa yang Sudah Berjalan</h2>
+    <ul>
+      <li><strong>Tanzania (VillageReach + Vodafone):</strong> SMS-based stock reporting → kurangi stock-out 50% dalam 2 tahun</li>
+      <li><strong>Zambia (ZAMMSA):</strong> Sistem FIFO/FEFO digital otomatis di gudang nasional → 0% expired drugs dalam 3 tahun</li>
+      <li><strong>Ethiopia:</strong> DHIS2 dengan modul logistik terintegrasi → perencanaan berbasis data akurat tingkat Kebele</li>
+      <li><strong>Indonesia (pilot Kemenkes 2023):</strong> Drone delivery logistik medis di daerah 3T Papua — potensi besar untuk logistik malaria</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===== TAB 4: SOAL ===== -->
+<div id="tab-soal" class="tab-panel">
+  <p class="section-title">🏆 Latihan Soal & Penugasan</p>
+  <p class="section-subtitle">15 soal pilihan ganda + penugasan kelompok sesuai materi</p>
+
+  <div class="score-bar">
+    <div>
+      <div class="score-num" id="scoreNum">0/15</div>
+      <div class="score-label">Soal Dijawab Benar</div>
+    </div>
+    <div style="text-align:right">
+      <button onclick="resetSoal()" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:white;padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.82rem">🔄 Reset</button>
+    </div>
+  </div>
+
+  <!-- SOAL 1 -->
+  <div class="soal-card">
+    <div class="soal-num">Soal 1</div>
+    <div class="soal-q">Sistem penyimpanan obat anti malaria yang benar adalah menggunakan prinsip…</div>
+    <div class="options">
+      <div class="option" onclick="pilih(this,'B','1')">A. FIFO (First In First Out)</div>
+      <div class="option" onclick="pilih(this,'B','1')">B. FEFO (First Expired First Out)</div>
+      <div class="option" onclick="pilih(this,'B','1')">C. LIFO (Last In First Out)</div>
+      <div class="option" onclick="pilih(this,'B','1')">D. LILO (Last In Last Out)</div>
+    </div>
+    <div class="explanation" id="exp1">
+      <strong>✅ Jawaban: B — FEFO</strong><br>
+      Untuk obat-obatan, prinsip FEFO (First Expired First Out) digunakan, bukan FIFO. Artinya obat dengan tanggal kadaluwarsa paling dekat harus dikeluarkan terlebih dahulu, terlepas dari kapan obat tersebut diterima. Kartu stok dengan warna <strong>merah</strong> harus dipasang jika ED &lt;6 bulan.<br>
+      <em>Ref: Kemenkes RI. Pedoman Tatalaksana Malaria 2023</em>
+    </div>
+  </div>
+
+  <!-- SOAL 2 -->
+  <div class="soal-card">
+    <div class="soal-num">Soal 2</div>
+    <div class="soal-q">Obat Anti Malaria (OAM) lini pertama untuk malaria falciparum tanpa komplikasi di Indonesia adalah…</div>
+    <div class="options">
+      <div class="option" onclick="pilih(this,'A','2')">A. DHP (Dihidroartemisinin-Piperaquin)</div>
+      <div class="option" onclick="pilih(this,'A','2')">B. Klorokuin</div>
+      <div class="option" onclick="pilih(this,'A','2')">C. Kuinin</div>
+      <div class="option" onclick="pilih(this,'A','2')">D. Meflokuin</div>
+    </div>
+    <div class="explanation" id="exp2">
+      <strong>✅ Jawaban: A — DHP</strong><br>
+      DHP (Dihidroartemisinin-Piperaquin) adalah lini pertama untuk malaria falciparum dan vivax tanpa komplikasi di Indonesia sejak 2012. Klorokuin sudah tidak efektif karena resistensi P. falciparum yang meluas. Kuinin digunakan untuk malaria berat (semakin digantikan artesunat injeksi).<br>
+      <em>Ref: Kemenkes RI. Pedoman Tatalaksana Malaria 2023</em>
+    </div>
+  </div>
+
+  <!-- SOAL 3 -->
+  <div class="soal-card">
+    <div class="soal-num">Soal 3</div>
+    <div class="soal-q">Suhu penyimpanan RDT malaria yang benar adalah…</div>
+    <div class="options">
+      <div class="option" onclick="pilih(this,'C','3')">A. 0–4°C (lemari pendingin standar)</div>
+      <div class="option" onclick="pilih(this,'C','3')">B. –20°C (freezer)</div>
+      <div class="option" onclick="pilih(this,'C','3')">C. 2–30°C (tidak boleh dibekukan)</div>
+      <div class="option" onclick="pilih(this,'C','3')">D. 15–25°C saja (sama dengan obat)</div>
+    </div>
+    <div class="explanation" id="exp3">
+      <strong>✅ Jawaban: C — 2–30°C, tidak boleh dibekukan</strong><br>
+      RDT sensitif terhadap suhu dan kelembaban. Rentang 2–30°C dianjurkan oleh WHO dan produsen RDT. Pembekuan akan merusak membran nitroselulosa pada strip RDT sehingga hasil tidak valid. Hindari paparan langsung sinar matahari.<br>
+      <em>Ref: WHO. Malaria Rapid Diagnostic Test Performance 2023</em>
+    </div>
+  </div>
+
+  <!-- SOAL 4 -->
+  <div class="soal-card">
+    <div class="soal-num">Soal 4</div>
+    <div class="soal-q">Besar buffer stock OAM yang direkomendasikan di tingkat Kabupaten/Kota adalah…</div>
+    <div class="options">
+      <div class="option" onclick="pilih(this,'B','4')">A. 5%</div>
+      <div class="option" onclick="pilih(this,'B','4')">B. 10%</div>
+      <div class="option" onclick="pilih(this,'B','4')">C. 15%</div>
+      <div class="option" onclick="pilih(this,'B','4')">D. 20%</div>
+    </div>
+    <div class="explanation" id="exp4">
+      <strong>✅ Jawaban: B — 10%</strong><br>
+      Buffer stock adalah cadangan pengaman untuk mengantisipasi keterlambatan pengadaan atau lonjakan kasus. Ketentuan Kemenkes: Kab/Kota = 10%, Provinsi = 10%, Pusat = 10–20%. Buffer ini berbeda dari stok kerja (working stock) yang digunakan sehari-hari.<br>
+      <em>Ref: Kemenkes RI. Pedoman Pengelolaan Logistik Malaria</em>
+    </div>
+  </div>
+
+  <!-- SOAL 5 -->
+  <div class="soal-card">
+    <div class="soal-num">Soal 5</div>
+    <div class="soal-q">Dokumen yang digunakan Puskesmas untuk mengajukan permintaan obat ke GFK Kabupaten adalah…</div>
+    <div class="options">
+      <div class="option" onclick="pilih(this,'D','5')">A. Form SKD KLB</div>
+      <div class="option" onclick="pilih(this,'D','5')">B. BA Serah Terima</div>
+      <div class="option" onclick="pilih(this,'D','5')">C. Buku penerimaan obat</div>
+      <div class="option" onclick="pilih(this,'D','5')">D. LPLPO (Laporan Pemakaian & Lembar Permintaan Obat)</div>
+    </div>
+    <div class="explanation" id="exp5">
+      <strong>✅ Jawaban: D — LPLPO</strong><br>
+      LPLPO (Laporan Pemakaian dan Lembar Permintaan Obat) adalah dokumen kunci dalam sistem distribusi obat. Dokumen ini mencatat pemakaian obat periode lalu dan sekaligus menjadi dasar permintaan obat ke GFK. Prinsipnya adalah "pull system" — permintaan berdasarkan data pemakaian nyata.<br>
+      <em>Ref: Kemenkes RI. Pedoman Tatalaksana Malaria 2023</em>
+    </div>
+  </div>
+
+  <!-- SOAL 6 -->
+  <div class="soal-card">
+    <div class="soal-num">Soal 6</div>
+    <div class="soal-q">Insektisida golongan apa yang paling banyak digunakan dalam LLIN (Long Lasting Insecticidal Net) dan IRS saat ini?</div>
+    <div class="options">
+      <div class="option" onclick="pilih(this,'D','6')">A. Organoklorin (DDT)</div>
+      <div class="option" onclick="pilih(this,'D','6')">B. Organofosfat (Temefos)</div>
+      <div class="option" onclick="pilih(this,'D','6')">C. Karbamat (Bendiocarb)</div>
+      <div class="option" onclick="pilih(this,'D','6')">D. Piretroid Sintesis (Deltametrin, Permetrin)</div>
+    </div>
+    <div class="explanation" id="exp6">
+      <strong>✅ Jawaban: D — Piretroid Sintesis</strong><br>
+      Piretroid sintesis (deltametrin, permetrin, sipermetrin, lambda-sihalotrin) adalah golongan insektisida yang paling banyak direkomendasikan WHO untuk LLIN dan IRS. Golongan ini efektif, toksisitas rendah terhadap mamalia, dan memiliki daya residu yang baik. DDT sudah dilarang sejak Konvensi Stockholm 2001.<br>
+      <em>Ref: WHO WHOPES. Recommended Insecticides 2023</em>
+    </div>
+  </div>
+
+  <!-- SOAL 7 -->
+  <div class="soal-card">
+    <div class="soal-num">Soal 7</div>
+    <div class="soal-q">Primakuin dikontraindikasikan secara mutlak pada kondisi berikut, KECUALI…</div>
+    <div class="options">
+      <div class="option" onclick="pilih(this,'D','7')">A. Defisiensi G6PD</div>
+      <div class="option" onclick="pilih(this,'D','7')">B. Ibu hamil</div>
+      <div class="option" onclick="pilih(this,'D','7')">C. Anak usia &lt;1 tahun</div>
+      <div class="option" onclick="pilih(this,'D','7')">D. Laki-laki dewasa dengan G6PD normal</div>
+    </div>
+    <div class="explanation" id="exp7">
+      <strong>✅ Jawaban: D — Laki-laki dewasa G6PD normal</strong><br>
+      Primakuin aman diberikan pada pasien dengan G6PD normal. Kontraindikasi absolut: defisiensi G6PD (risiko hemolisis), kehamilan (risiko hemolisis janin), dan anak &lt;1 tahun. Primakuin diperlukan untuk eradikasi hipnozoit P. vivax/ovale (radikal kur) dan membunuh gametosit P. falciparum.<br>
+      <em>Ref: Kemenkes RI. Pedoman Tatalaksana Malaria 2023; WHO 2015</em>
+    </div>
+  </div>
+
+  <!-- SOAL 8 -->
+  <div class="soal-card">
+    <div class="soal-num">Soal 8</div>
+    <div class="soal-q">Urutan rantai distribusi logistik malaria yang benar dari pusat ke pasien adalah…</div>
+    <div class="options">
+      <div class="option" onclick="pilih(this,'A','8')">A. Kemenkes → IF Provinsi → GFK Kab/Kota → Puskesmas → Pustu/Posmaldes → Pasien</div>
+      <div class="option" onclick="pilih(this,'A','8')">B. Kemenkes → GFK Kab/Kota → IF Provinsi → Puskesmas → Pasien</div>
+      <div class="option" onclick="pilih(this,'A','8')">C. BPOM → Kemenkes → IF Provinsi → Puskesmas → Pasien</div>
+      <div class="option" onclick="pilih(this,'A','8')">D. Kemenkes → Puskesmas → GFK Kab/Kota → Posmaldes → Pasien</div>
+    </div>
+    <div class="explanation" id="exp8">
+      <strong>✅ Jawaban: A</strong><br>
+      Rantai distribusi resmi: Kemenkes → Instalasi Farmasi Provinsi → GFK Kab/Kota → Puskesmas → Pustu/Posmaldes → Pasien. Alur ini mengikuti sistem pull berdasarkan LPLPO dari bawah ke atas.<br>
+      <em>Ref: Kemenkes RI. Pedoman Pengelolaan Logistik Malaria</em>
+    </div>
+  </div>
+
+  <!-- SOAL 9 -->
+  <div class="soal-card">
+    <div class="soal-num">Soal 9</div>
+    <div class="soal-q">Sistem informasi logistik malaria yang bersifat real-time di Indonesia adalah…</div>
+    <div class="options">
+      <div class="option" onclick="pilih(this,'B','9')">A. SIMPUS</div>
+      <div class="option" onclick="pilih(this,'B','9')">B. SISMAL</div>
+      <div class="option" onclick="pilih(this,'B','9')">C. SIKDA</div>
+      <div class="option" onclick="pilih(this,'B','9')">D. P-Care</div>
+    </div>
+    <div class="explanation" id="exp9">
+      <strong>✅ Jawaban: B — SISMAL</strong><br>
+      SISMAL (Sistem Informasi Malaria) adalah platform digital Kemenkes untuk pencatatan, pelaporan, dan pemantauan logistik malaria secara real-time. Terintegrasi dengan SMILE (Sistem Manajemen Informasi Logistik). Diakses di sismal.kemkes.go.id.<br>
+      <em>Ref: Kemenkes RI. Petunjuk Teknis SISMAL; 2022</em>
+    </div>
+  </div>
+
+  <!-- SOAL 10 -->
+  <div class="soal-card">
+    <div class="soal-num">Soal 10</div>
+    <div class="soal-q">Gudang penyimpanan insektisida/pestisida HARUS memiliki kelengkapan berikut, KECUALI…</div>
+    <div class="options">
+      <div class="option" onclick="pilih(this,'C','10')">A. Ventilasi yang baik</div>
+      <div class="option" onclick="pilih(this,'C','10')">B. Alat Pemadam Api Ringan (APAR)</div>
+      <div class="option" onclick="pilih(this,'C','10')">C. Lemari pendingin bersuhu 2–8°C</div>
+      <div class="option" onclick="pilih(this,'C','10')">D. Kunci pengaman (terkunci dari anak-anak)</div>
+    </div>
+    <div class="explanation" id="exp10">
+      <strong>✅ Jawaban: C — Lemari pendingin 2–8°C (tidak diperlukan)</strong><br>
+      Gudang pestisida tidak memerlukan lemari pendingin. Yang wajib ada: ventilasi baik (mencegah akumulasi uap toksik), APAR (insektisida bersifat flammable), kunci pengaman, lantai kedap air, label bahaya di pintu, dan terpisah dari gudang obat. Suhu penyimpanan adalah suhu kamar dengan ventilasi, bukan refrigerator.<br>
+      <em>Ref: PP No.7/1973; Kemenkes RI. Pedoman Pengendalian Vektor</em>
+    </div>
+  </div>
+
+  <!-- SOAL 11 -->
+  <div class="soal-card">
+    <div class="soal-num">Soal 11</div>
+    <div class="soal-q">Pengadaan logistik malaria di Indonesia dilaksanakan melalui mekanisme…</div>
+    <div class="options">
+      <div class="option" onclick="pilih(this,'C','11')">A. Pengadaan langsung dari produsen swasta</div>
+      <div class="option" onclick="pilih(this,'C','11')">B. Hibah dari WHO dan donatur internasional</div>
+      <div class="option" onclick="pilih(this,'C','11')">C. Sistem e-Catalog (LKPP)</div>
+      <div class="option" onclick="pilih(this,'C','11')">D. Tender terbuka setiap tahun</div>
+    </div>
+    <div class="explanation" id="exp11">
+      <strong>✅ Jawaban: C — e-Catalog (LKPP)</strong><br>
+      Pengadaan logistik program pemerintah termasuk OAM menggunakan sistem e-Catalog LKPP (Lembaga Kebijakan Pengadaan Barang/Jasa Pemerintah). Sistem ini memastikan harga kompetitif, transparansi, standar kualitas terpenuhi, dan waktu pengiriman terstandar. Hibah dari donor adalah tambahan, bukan mekanisme utama.<br>
+      <em>Ref: Perpres No.16/2018; Kemenkes RI. Pedoman Logistik Malaria</em>
+    </div>
+  </div>
+
+  <!-- SOAL 12 -->
+  <div class="soal-card">
+    <div class="soal-num">Soal 12</div>
+    <div class="soal-q">Perencanaan kebutuhan OAM dihitung berdasarkan parameter UTAMA berikut…</div>
+    <div class="options">
+      <div class="option" onclick="pilih(this,'B','12')">A. Jumlah penduduk total wilayah</div>
+      <div class="option" onclick="pilih(this,'B','12')">B. Kasus suspect tahun sebelumnya + estimasi stok awal + pesanan yang akan diterima</div>
+      <div class="option" onclick="pilih(this,'B','12')">C. Permintaan dari masyarakat langsung</div>
+      <div class="option" onclick="pilih(this,'B','12')">D. Anggaran yang tersedia dibagi harga satuan obat</div>
+    </div>
+    <div class="explanation" id="exp12">
+      <strong>✅ Jawaban: B</strong><br>
+      Penentuan jumlah kebutuhan logistik dihitung berdasarkan: (1) kasus suspect tahun sebelumnya sebagai basis, (2) estimasi stok awal tahun perencanaan, dan (3) jumlah pesanan yang akan diterima. Formula: Kebutuhan = (Estimasi kasus × dosis/kasus) + Buffer stock − Stok awal.<br>
+      <em>Ref: Kemenkes RI. Pedoman Pengelolaan Logistik Malaria</em>
+    </div>
+  </div>
+
+  <!-- SOAL 13 -->
+  <div class="soal-card">
+    <div class="soal-num">Soal 13</div>
+    <div class="soal-q">Kartu stok dengan warna MERAH dipasang pada obat yang memiliki masa kadaluwarsa dalam rentang…</div>
+    <div class="options">
+      <div class="option" onclick="pilih(this,'A','13')">A. Kurang dari 6 bulan</div>
+      <div class="option" onclick="pilih(this,'A','13')">B. Kurang dari 12 bulan</div>
+      <div class="option" onclick="pilih(this,'A','13')">C. Kurang dari 3 bulan</div>
+      <div class="option" onclick="pilih(this,'A','13')">D. Kurang dari 1 bulan</div>
+    </div>
+    <div class="explanation" id="exp13">
+      <strong>✅ Jawaban: A — Kurang dari 6 bulan</strong><br>
+      Penandaan kartu ED warna merah diberikan untuk obat yang masa kadaluwarsa kurang dari 6 bulan. Ini adalah sistem early warning agar petugas segera memprioritaskan distribusi obat tersebut sebelum expired. Obat yang sudah expired tidak boleh diberikan ke pasien dan harus dilaporkan untuk pemusnahan.<br>
+      <em>Ref: Kemenkes RI. Standar Pengelolaan Obat di Fasilitas Pelayanan Kesehatan</em>
+    </div>
+  </div>
+
+  <!-- SOAL 14 -->
+  <div class="soal-card">
+    <div class="soal-num">Soal 14</div>
+    <div class="soal-q">Pada daerah yang sudah mencapai eliminasi malaria, kebijakan logistik OAM yang benar adalah…</div>
+    <div class="options">
+      <div class="option" onclick="pilih(this,'D','14')">A. OAM tidak perlu disediakan sama sekali</div>
+      <div class="option" onclick="pilih(this,'D','14')">B. OAM hanya disediakan di RS Kabupaten</div>
+      <div class="option" onclick="pilih(this,'D','14')">C. OAM boleh dipinjam dari provinsi tetangga</div>
+      <div class="option" onclick="pilih(this,'D','14')">D. Tetap tersedia minimal 1–2 dosis di setiap fasilitas kesehatan</div>
+    </div>
+    <div class="explanation" id="exp14">
+      <strong>✅ Jawaban: D — Tetap tersedia minimal 1–2 dosis</strong><br>
+      Meskipun suatu daerah telah eliminasi, kasus malaria impor (dari perjalanan) tetap bisa terjadi. Kemenkes mewajibkan setiap faskes tetap menyimpan minimal 1–2 dosis OAM. Stock-out total berisiko tinggi saat ada kasus impor yang memerlukan pengobatan segera.<br>
+      <em>Ref: Kemenkes RI. Pedoman Eliminasi Malaria; 2023</em>
+    </div>
+  </div>
+
+  <!-- SOAL 15 -->
+  <div class="soal-card">
+    <div class="soal-num">Soal 15</div>
+    <div class="soal-q">Indikator monitoring dan evaluasi logistik malaria yang paling komprehensif adalah…</div>
+    <div class="options">
+      <div class="option" onclick="pilih(this,'C','15')">A. Hanya angka kasus malaria per tahun</div>
+      <div class="option" onclick="pilih(this,'15','15')">B. Jumlah obat yang diterima dari pusat</div>
+      <div class="option" onclick="pilih(this,'C','15')">C. Ketersediaan stok, ketepatan distribusi, barang rusak/kadaluwarsa, ketepatan laporan</div>
+      <div class="option" onclick="pilih(this,'C','15')">D. Biaya logistik per kapita</div>
+    </div>
+    <div class="explanation" id="exp15">
+      <strong>✅ Jawaban: C</strong><br>
+      Indikator M&E logistik malaria yang komprehensif mencakup: (1) Ketersediaan stok (apakah stock-out terjadi?), (2) Ketepatan distribusi (waktu & jumlah sesuai permintaan?), (3) Jumlah barang rusak/kadaluwarsa, (4) Ketepatan dan kelengkapan laporan. Keempat indikator ini memberikan gambaran utuh kinerja sistem logistik.<br>
+      <em>Ref: WHO. Supply Chain Management for Malaria Commodities 2021</em>
+    </div>
+  </div>
+
+  <!-- PENUGASAN KELOMPOK -->
+  <div style="margin-top:32px">
+    <p class="section-title" style="font-size:1.15rem">📋 Penugasan Kelompok</p>
+    <p class="section-subtitle">Dari Slide 32 — Kerja Kelompok 3 Tim</p>
+
+    <div class="tugas-card t1">
+      <h3>👥 Kelompok A</h3>
+      <p><strong>Pertanyaan:</strong> Jelaskan logistik, praktik dan siklus pengadaan komoditas malaria di tempat kerja Anda!</p>
+      <p><strong>Poin yang harus dijawab:</strong></p>
+      <ul>
+        <li>Jenis komoditas malaria apa saja yang tersedia di faskes Anda (OAM, RDT, LLIN)?</li>
+        <li>Bagaimana proses perencanaan kebutuhan dilakukan (siapa yang menghitung, kapan, dengan data apa)?</li>
+        <li>Melalui mekanisme apa pengadaan dilakukan (e-catalog, permintaan ke GFK, hibah)?</li>
+        <li>Adakah kendala dalam siklus pengadaan? Bagaimana solusinya?</li>
+        <li>Apakah sudah menggunakan sistem SISMAL untuk pencatatan?</li>
+      </ul>
+    </div>
+
+    <div class="tugas-card t2">
+      <h3>👥 Kelompok B</h3>
+      <p><strong>Pertanyaan:</strong> Jelaskan mobilisasi sumber daya, koordinasi kemitraan, dan peran sektor swasta dalam program pengendalian malaria di tempat kerja Anda!</p>
+      <p><strong>Poin yang harus dijawab:</strong></p>
+      <ul>
+        <li>Sumber dana program malaria: APBN/APBD/Dana Desa/donatur?</li>
+        <li>Kemitraan dengan siapa saja (Dinas Pertanian, Kehutanan, TNI, Pramuka, LSM)?</li>
+        <li>Peran swasta: apakah ada perusahaan/perkebunan yang terlibat (daerah endemis)?</li>
+        <li>Bagaimana koordinasi lintas sektor dilakukan? Forum apa yang ada?</li>
+        <li>Hambatan koordinasi dan cara mengatasinya</li>
+      </ul>
+    </div>
+
+    <div class="tugas-card t3">
+      <h3>👥 Kelompok C</h3>
+      <p><strong>Pertanyaan:</strong> Bagaimana penerapan sistem informasi kesehatan dan pelaporan di tempat kerja Anda!</p>
+      <p><strong>Poin yang harus dijawab:</strong></p>
+      <ul>
+        <li>Apakah SISMAL sudah digunakan? Kendala apa yang dihadapi?</li>
+        <li>Bagaimana alur pelaporan kasus malaria (siapa, ke mana, kapan)?</li>
+        <li>Dokumen apa saja yang digunakan (kartu stok, LPLPO, form P1, dll)?</li>
+        <li>Apakah ada integrasi dengan sistem lain (SIMPUS, PCare, DHIS2)?</li>
+        <li>Usulan perbaikan sistem informasi logistik malaria di tempat Anda</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+  // TAB SWITCHING
+  function showTab(id, btn) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // SOAL LOGIC
+  let correctAnswers = { '1':'B','2':'A','3':'C','4':'B','5':'D','6':'D','7':'D','8':'A','9':'B','10':'C','11':'C','12':'B','13':'A','14':'D','15':'C' };
+  let answered = {};
+  let score = 0;
+
+  function pilih(el, correctKey, num) {
+    if (answered[num]) return;
+    answered[num] = true;
+    const soalCard = el.closest('.soal-card');
+    const allOptions = soalCard.querySelectorAll('.option');
+    const userChoice = el.textContent.charAt(0);
+    const isCorrect = userChoice === correctAnswers[num];
+
+    // Mark all options
+    allOptions.forEach(opt => {
+      const optLetter = opt.textContent.charAt(0);
+      if (optLetter === correctAnswers[num]) opt.classList.add('correct');
+      else if (optLetter === userChoice && !isCorrect) opt.classList.add('wrong');
+      opt.style.cursor = 'default';
+    });
+
+    // Show explanation
+    document.getElementById('exp' + num).classList.add('show');
+
+    if (isCorrect) { score++; }
+    document.getElementById('scoreNum').textContent = score + '/15';
+  }
+
+  function resetSoal() {
+    answered = {}; score = 0;
+    document.getElementById('scoreNum').textContent = '0/15';
+    document.querySelectorAll('.option').forEach(o => {
+      o.classList.remove('correct','wrong');
+      o.style.cursor = 'pointer';
+    });
+    document.querySelectorAll('.explanation').forEach(e => e.classList.remove('show'));
+  }
+
+  // INOVASI ACCEPT
+  function acceptInnov(btn, name) {
+    btn.textContent = '🎉 Diterima! — ' + name;
+    btn.classList.add('innov-accepted');
+    btn.disabled = true;
+  }
+</script>
+</body>
+</html>

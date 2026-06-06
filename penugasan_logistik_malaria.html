@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📋 Jawaban Penugasan — Logistik Malaria Kotabaru</title>
+<style>
+  :root {
+    --primary: #0a5c36;
+    --primary-light: #1a8c55;
+    --primary-dark: #073d24;
+    --accent: #f59e0b;
+    --accent2: #10b981;
+    --bg: #f0fdf4;
+    --card: #ffffff;
+    --text: #1a2e1a;
+    --muted: #6b7280;
+    --border: #d1fae5;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+
+  .hero {
+    background: linear-gradient(135deg, #073d24 0%, #0a5c36 50%, #1a8c55 100%);
+    color: white; padding: 44px 24px 32px; text-align: center; position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content:''; position:absolute; inset:0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .hero-badge { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); border-radius: 999px; display: inline-block; padding: 4px 16px; font-size: 0.75rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 14px; }
+  .hero h1 { font-size: clamp(1.5rem, 4vw, 2.4rem); font-weight: 800; margin-bottom: 8px; }
+  .hero p { font-size: 0.93rem; opacity: 0.85; max-width: 600px; margin: 0 auto 18px; }
+  .hero-meta { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+  .hero-meta span { font-size: 0.78rem; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 999px; padding: 4px 12px; }
+
+  /* KOTABARU BANNER */
+  .kotabaru-banner {
+    background: linear-gradient(135deg, #78350f, #b45309);
+    color: white; padding: 14px 24px; text-align: center; font-size: 0.88rem;
+    display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap;
+  }
+  .kotabaru-banner strong { font-size: 0.95rem; }
+
+  .tabs-bar { background: var(--primary-dark); position: sticky; top: 0; z-index: 100; display: flex; overflow-x: auto; scrollbar-width: none; }
+  .tabs-bar::-webkit-scrollbar { display: none; }
+  .tab-btn { flex: 0 0 auto; padding: 14px 20px; color: rgba(255,255,255,0.6); font-size: 0.83rem; font-weight: 600; cursor: pointer; border: none; background: none; border-bottom: 3px solid transparent; transition: all .2s; white-space: nowrap; }
+  .tab-btn:hover { color: white; background: rgba(255,255,255,0.05); }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  .tab-panel { display: none; max-width: 960px; margin: 0 auto; padding: 28px 16px 64px; }
+  .tab-panel.active { display: block; }
+
+  .section-title { font-size: 1.3rem; font-weight: 800; color: var(--primary-dark); margin-bottom: 4px; }
+  .section-subtitle { color: var(--muted); font-size: 0.86rem; margin-bottom: 22px; border-bottom: 2px solid var(--border); padding-bottom: 10px; }
+
+  /* PROFIL KOTABARU */
+  .profil-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-bottom: 20px; }
+  .profil-item { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
+  .profil-item .label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 4px; }
+  .profil-item .value { font-size: 0.95rem; font-weight: 700; color: var(--primary-dark); }
+  .profil-item .sub { font-size: 0.78rem; color: var(--muted); }
+
+  /* KELOMPOK HEADERS */
+  .grp-header { border-radius: 16px 16px 0 0; padding: 22px 26px 16px; }
+  .grp-a { background: linear-gradient(135deg, #fef9c3, #fef3c7); border: 1px solid #fcd34d; border-bottom: none; }
+  .grp-b { background: linear-gradient(135deg, #eff6ff, #dbeafe); border: 1px solid #93c5fd; border-bottom: none; }
+  .grp-c { background: linear-gradient(135deg, #f5f3ff, #ede9fe); border: 1px solid #c4b5fd; border-bottom: none; }
+  .grp-header .label { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; opacity: 0.55; margin-bottom: 5px; }
+  .grp-header h2 { font-size: 1.05rem; font-weight: 800; margin-bottom: 6px; }
+  .grp-header .question { font-size: 0.88rem; font-style: italic; opacity: 0.75; }
+
+  .answer-wrap { background: white; border-radius: 0 0 16px 16px; border: 1px solid; border-top: none; padding: 0 26px 22px; margin-bottom: 28px; }
+  .aw-a { border-color: #fcd34d; }
+  .aw-b { border-color: #93c5fd; }
+  .aw-c { border-color: #c4b5fd; }
+
+  .sub-q { margin-top: 20px; }
+  .sub-q-title { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
+  .sub-q-num { width: 26px; height: 26px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 0.76rem; font-weight: 800; color: white; flex-shrink: 0; }
+  .sq-a .sub-q-num { background: #d97706; }
+  .sq-b .sub-q-num { background: #2563eb; }
+  .sq-c .sub-q-num { background: #7c3aed; }
+  .sub-q-title h3 { font-size: 0.9rem; font-weight: 700; color: var(--primary-dark); }
+
+  .answer-body { font-size: 0.88rem; color: #374151; padding-left: 36px; }
+  .answer-body p { margin-bottom: 8px; }
+  .answer-body ul, .answer-body ol { padding-left: 18px; margin-bottom: 9px; }
+  .answer-body li { margin-bottom: 5px; }
+
+  /* LOCAL CONTEXT CHIP */
+  .local-chip { display: inline-flex; align-items: center; gap: 5px; background: #fef9c3; border: 1px solid #fcd34d; border-radius: 999px; padding: 2px 10px; font-size: 0.72rem; font-weight: 700; color: #92400e; margin-bottom: 8px; }
+
+  .tbl { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 0.84rem; }
+  .tbl th { background: var(--primary); color: white; padding: 9px 12px; text-align: left; font-size: 0.8rem; }
+  .tbl td { padding: 8px 12px; border-bottom: 1px solid #e5e7eb; vertical-align: top; }
+  .tbl tr:nth-child(even) td { background: #f9fafb; }
+  .tbl .local { background: #fffbeb !important; }
+
+  .hl { border-left: 4px solid var(--accent); background: #fffbeb; padding: 11px 15px; border-radius: 0 8px 8px 0; margin: 10px 0; font-size: 0.86rem; }
+  .hl.blue { border-left-color: #3b82f6; background: #eff6ff; }
+  .hl.green { border-left-color: var(--accent2); background: #f0fdf4; }
+  .hl.purple { border-left-color: #8b5cf6; background: #f5f3ff; }
+  .hl.red { border-left-color: #ef4444; background: #fff1f1; }
+  .hl.orange { border-left-color: #f97316; background: #fff7ed; }
+
+  .divider { border: none; border-top: 1px dashed #d1fae5; margin: 16px 0; }
+
+  .badge { display: inline-block; border-radius: 999px; padding: 2px 9px; font-size: 0.7rem; font-weight: 700; }
+  .bg-green { background: #d1fae5; color: #065f46; }
+  .bg-amber { background: #fef3c7; color: #92400e; }
+  .bg-red { background: #fee2e2; color: #991b1b; }
+  .bg-blue { background: #dbeafe; color: #1e40af; }
+  .bg-purple { background: #ede9fe; color: #5b21b6; }
+  .bg-orange { background: #ffedd5; color: #9a3412; }
+
+  .flow { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 10px 0; }
+  .fn { background: var(--primary); color: white; border-radius: 6px; padding: 5px 10px; font-size: 0.77rem; font-weight: 600; text-align: center; }
+  .fn.lt { background: #d1fae5; color: #065f46; }
+  .fa { color: var(--muted); font-size: 1rem; }
+
+  .kesimpulan { background: linear-gradient(135deg, var(--primary-dark), var(--primary)); color: white; border-radius: 14px; padding: 22px 26px; margin: 28px 0 0; }
+  .kesimpulan h2 { font-size: 0.95rem; font-weight: 800; margin-bottom: 12px; opacity: 0.9; }
+  .kesimpulan ul { padding-left: 18px; }
+  .kesimpulan li { font-size: 0.85rem; margin-bottom: 6px; opacity: 0.9; }
+
+  .ref-list { list-style: none; padding: 0; margin-top: 20px; border-top: 1px solid var(--border); padding-top: 14px; }
+  .ref-list li { padding: 5px 0; font-size: 0.78rem; color: var(--muted); border-bottom: 1px solid #f3f4f6; }
+  .ref-list li::before { content: '📚 '; }
+
+  @media(max-width: 600px) {
+    .answer-body { padding-left: 0; }
+    .grp-header, .answer-wrap { padding-left: 14px; padding-right: 14px; }
+    .profil-grid { grid-template-columns: repeat(2,1fr); }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-badge">📋 Penugasan Kelompok — Logistik Malaria</div>
+  <h1>Jawaban Penugasan Kerja Kelompok</h1>
+  <p>Disusun khusus dengan konteks lokal Kabupaten Kotabaru, Kalimantan Selatan — berdasarkan pedoman Kemenkes RI dan WHO serta riset epidemiologi setempat</p>
+  <div class="hero-meta">
+    <span>📌 Kemenkes RI 2023 + WHO 2022</span>
+    <span>🗺️ Kabupaten Kotabaru, Kalsel</span>
+    <span>🦟 Area Endemis Aktif</span>
+  </div>
+</div>
+
+<div class="kotabaru-banner">
+  <span>🗺️</span>
+  <strong>Konteks Kotabaru:</strong>
+  <span>Kepulauan (Pulau Laut + daratan) • Desa endemis: Kelumpang Hilir, Siayuh Trans, Batang Kulur, Magalau Hulu • Risiko khusus: Tambang emas ilegal Kura-Kura Banian • Vektor baru teridentifikasi (Anopheles spp.) • Target eliminasi nasional 2030</span>
+</div>
+
+<div class="tabs-bar">
+  <button class="tab-btn active" onclick="showTab('profil',this)">🗺️ Profil Wilayah</button>
+  <button class="tab-btn" onclick="showTab('grpA',this)">🟡 Kelompok A — Logistik</button>
+  <button class="tab-btn" onclick="showTab('grpB',this)">🔵 Kelompok B — Kemitraan</button>
+  <button class="tab-btn" onclick="showTab('grpC',this)">🟣 Kelompok C — Sistem Info</button>
+</div>
+
+<!-- PROFIL KOTABARU -->
+<div id="tab-profil" class="tab-panel active">
+  <p class="section-title">🗺️ Profil Epidemiologi Malaria — Kotabaru, Kalsel</p>
+  <p class="section-subtitle">Konteks lokal yang wajib dipahami sebelum menjawab penugasan</p>
+
+  <div class="profil-grid">
+    <div class="profil-item">
+      <div class="label">Status Malaria</div>
+      <div class="value">Endemis Aktif</div>
+      <div class="sub">Belum mencapai eliminasi (target 2030)</div>
+    </div>
+    <div class="profil-item">
+      <div class="label">API Historis (2014)</div>
+      <div class="value">241 ‰</div>
+      <div class="sub">Di Puskesmas Banian — sangat tinggi</div>
+    </div>
+    <div class="profil-item">
+      <div class="label">AMI Endemis</div>
+      <div class="value">404 per 1.000</div>
+      <div class="sub">Desa Sahapi, Kec. Kelumpang Hilir</div>
+    </div>
+    <div class="profil-item">
+      <div class="label">Karakteristik Wilayah</div>
+      <div class="value">Kepulauan</div>
+      <div class="sub">Pulau Laut + daratan mainland Kalimantan</div>
+    </div>
+    <div class="profil-item">
+      <div class="label">Faktor Risiko Utama</div>
+      <div class="value">Tambang Ilegal</div>
+      <div class="sub">Emas Kura-Kura Banian — cluster kasus aktif</div>
+    </div>
+    <div class="profil-item">
+      <div class="label">Vektor Dominan</div>
+      <div class="value">Anopheles spp.</div>
+      <div class="sub">Termasuk vektor baru yang teridentifikasi di Kotabaru</div>
+    </div>
+  </div>
+
+  <div style="background:white;border-radius:14px;border:1px solid var(--border);padding:22px;margin-bottom:18px;">
+    <h3 style="font-size:1rem;font-weight:800;color:var(--primary-dark);margin-bottom:14px;">🔍 Karakteristik Unik Kotabaru yang Mempengaruhi Logistik Malaria</h3>
+    <table class="tbl">
+      <tr><th>Karakteristik</th><th>Implikasi terhadap Logistik Malaria</th></tr>
+      <tr class="local"><td><strong>Kepulauan</strong> — Pulau Laut terpisah dari mainland Kalsel</td><td>Distribusi logistik butuh transportasi laut/kapal; risiko keterlambatan cuaca; biaya distribusi lebih tinggi</td></tr>
+      <tr><td><strong>Hutan tropis lebat</strong> — Kecamatan Kelumpang Hilir, Pamukan</td><td>Desa terpencil sulit dijangkau; LLIN dan RDT harus pre-positioned di posmaldes; kader malaria sangat vital</td></tr>
+      <tr class="local"><td><strong>Tambang emas ilegal</strong> (PETI) — Gunung Kura-Kura Banian</td><td>Pekerja tambang = populasi berisiko tinggi, mobile, sulit dijangkau sistem layanan formal; cluster kasus tersembunyi</td></tr>
+      <tr><td><strong>Perkebunan kelapa sawit</strong> skala besar</td><td>Pekerja migran dari daerah non-endemis rentan; perusahaan wajib punya logistik malaria mandiri</td></tr>
+      <tr class="local"><td><strong>Vektor baru teridentifikasi</strong> di Kotabaru</td><td>Kebutuhan insektisida yang sesuai dengan spesies lokal; survei resistensi insektisida diperlukan</td></tr>
+      <tr><td><strong>Mobilitas penduduk tinggi</strong> — kapal kayu, jalur sungai</td><td>Kasus malaria impor antar-kecamatan; data SISMAL bisa underestimate kasus nyata</td></tr>
+    </table>
+  </div>
+
+  <div class="hl orange">
+    <strong>⚠️ Tantangan Khusus Kotabaru:</strong> Desa Siayuh Trans (transmigrasi) dan Batang Kulur menunjukkan lonjakan kasus pada Maret–April bersamaan musim hujan. Kasus cluster di Banian (Maret 2019: 12 kasus sekaligus) menunjukkan pentingnya kesiapan logistik <em>emergency response</em> yang tidak bisa menunggu siklus distribusi rutin bulanan.
+  </div>
+
+  <div style="text-align:center;margin-top:20px;">
+    <button onclick="showTab('grpA',document.querySelectorAll('.tab-btn')[1])" style="background:var(--primary);color:white;border:none;padding:12px 24px;border-radius:10px;font-weight:700;cursor:pointer;font-size:0.9rem;">Mulai Baca Jawaban → Kelompok A 🟡</button>
+  </div>
+</div>
+
+<!-- KELOMPOK A -->
+<div id="tab-grpA" class="tab-panel">
+  <p class="section-title">🟡 Kelompok A — Logistik & Pengadaan</p>
+  <p class="section-subtitle">Konteks: Puskesmas di wilayah kerja endemis malaria, Kabupaten Kotabaru</p>
+
+  <div class="grp-header grp-a">
+    <div class="label">Pertanyaan Kelompok A</div>
+    <h2>Logistik, Praktik & Siklus Pengadaan Komoditas Malaria</h2>
+    <p class="question">"Jelaskan logistik, praktik dan siklus pengadaan komoditas malaria di tempat kerja Anda!"</p>
+  </div>
+  <div class="answer-wrap aw-a">
+
+    <div class="sub-q sq-a">
+      <div class="sub-q-title"><div class="sub-q-num">1</div><h3>Komoditas malaria yang tersedia di Puskesmas Kotabaru</h3></div>
+      <div class="answer-body">
+        <div class="local-chip">📍 Konteks Kotabaru</div>
+        <p>Di Puskesmas daerah endemis Kotabaru (misal: Puskesmas Kelumpang Hilir, Puskesmas Banian, Puskesmas Pamukan Barat), stok komoditas harus lebih besar dari rata-rata nasional karena API yang tinggi:</p>
+        <table class="tbl">
+          <tr><th>Komoditas</th><th>Ketersediaan di Kotabaru</th><th>Catatan Khusus</th></tr>
+          <tr class="local"><td><strong>DHP</strong></td><td>Wajib tersedia dalam jumlah yang memadai</td><td>Kasus P. falciparum dan P. vivax ditemukan; API historis sangat tinggi → stok besar</td></tr>
+          <tr><td><strong>Primakuin</strong></td><td>Wajib tersedia</td><td>Penting untuk kasus P. vivax yang mendominasi di Kalimantan</td></tr>
+          <tr class="local"><td><strong>Artesunat injeksi</strong></td><td>Minimal 4–6 vial per Puskesmas</td><td>Lokasi terpencil → respon malaria berat tidak bisa langsung rujuk; emergency kit vital</td></tr>
+          <tr class="local"><td><strong>RDT Combo (Pf/Pan)</strong></td><td>Stok besar, distribusi hingga posmaldes</td><td>Kader di desa Siayuh, Batang Kulur, dan area tambang harus punya RDT sendiri</td></tr>
+          <tr class="local"><td><strong>LLIN (Long Lasting Insecticidal Net)</strong></td><td>Distribusi massal ke rumah tangga berisiko</td><td>Prioritas: dusun sekitar Banian, desa transmigrasi, camp pekerja perkebunan</td></tr>
+          <tr><td><strong>Larvasida (Temefos/Abate)</strong></td><td>Tersedia untuk breeding site di rawa/parit tambang</td><td>Koordinasi dengan Dinas Lingkungan Hidup untuk area tambang</td></tr>
+        </table>
+        <div class="hl red">
+          <strong>⚠️ Kasus spesifik Banian:</strong> Cluster 12 kasus dalam 1 bulan (Maret 2019) menunjukkan bahwa Puskesmas di sekitar area tambang harus memiliki <strong>emergency stock OAM dan RDT minimal 2× lipat</strong> dari perhitungan rutin untuk menghadapi lonjakan mendadak.
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="sub-q sq-a">
+      <div class="sub-q-title"><div class="sub-q-num">2</div><h3>Proses perencanaan kebutuhan di Kotabaru</h3></div>
+      <div class="answer-body">
+        <div class="local-chip">📍 Konteks Kotabaru</div>
+        <p>Perencanaan di Kotabaru harus memperhitungkan faktor lokal yang tidak ada di daerah lain:</p>
+        <div class="hl">
+          <strong>Formula adaptasi Kotabaru:</strong><br>
+          <code>Kebutuhan = (Kasus suspek tahun lalu × Dosis/kasus) + Buffer 10% − Stok awal + Stok emergency (10% tambahan untuk area tambang/hutan)</code>
+        </div>
+        <ul>
+          <li><strong>Data kasus historis per desa:</strong> Wajib dipecah per desa/dusun, bukan hanya per Puskesmas, karena distribusi kasus sangat tidak merata (cluster di Banian vs. relatif rendah di kota)</li>
+          <li><strong>Faktor musim:</strong> Puncak kasus Maret–April (musim hujan) → perencanaan harus mencakup stok pra-musim yang masuk ke gudang sebelum Februari</li>
+          <li><strong>Populasi pekerja tambang:</strong> Tambang emas ilegal di Kura-Kura Banian tidak memiliki data populasi resmi → estimasi dari laporan intelijen epidemiologi dan informasi kader desa setempat</li>
+          <li><strong>Rantai distribusi lintas air:</strong> Untuk Pulau Laut — perencanaan harus memperhitungkan lead time distribusi via kapal 1–3 hari extra, sehingga titik reorder lebih tinggi dari wilayah daratan</li>
+        </ul>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="sub-q sq-a">
+      <div class="sub-q-title"><div class="sub-q-num">3</div><h3>Mekanisme pengadaan di Kotabaru</h3></div>
+      <div class="answer-body">
+        <div class="local-chip">📍 Konteks Kotabaru</div>
+        <div class="flow">
+          <div class="fn">Kemenkes / Global Fund</div><div class="fa">→</div>
+          <div class="fn lt">IF Dinkes Kalsel<br><small>Banjarmasin</small></div><div class="fa">→</div>
+          <div class="fn lt">GFK Dinkes Kotabaru<br><small>Kotabaru Kota</small></div><div class="fa">→</div>
+          <div class="fn lt">Puskesmas<br><small>via darat/laut</small></div><div class="fa">→</div>
+          <div class="fn lt">Posmaldes<br><small>desa terpencil</small></div>
+        </div>
+        <p>Tantangan logistik distribusi spesifik Kotabaru:</p>
+        <table class="tbl">
+          <tr><th>Rute</th><th>Moda Transportasi</th><th>Tantangan</th><th>Solusi</th></tr>
+          <tr class="local"><td>GFK → Puskesmas Pulau Laut</td><td>Kapal motor / feri Tanjung Serdang</td><td>Cuaca buruk: kapal batal → distribusi terlambat 3–7 hari</td><td>Stok buffer lebih besar (15%); rencana distribusi alternatif via kapal lain</td></tr>
+          <tr class="local"><td>Puskesmas → Desa Kelumpang Hilir</td><td>Motor trail / perahu klotok</td><td>Jalan tanah rusak musim hujan; sungai pasang</td><td>Posmaldes kit pre-positioned sebelum musim hujan</td></tr>
+          <tr class="local"><td>Puskesmas → Area Banian (tambang)</td><td>Motor + jalan hutan</td><td>Akses tidak resmi; pekerja tidak ada di titik distribusi tetap</td><td>Koordinasi dengan pengelola tambang + kader mobile</td></tr>
+        </table>
+        <div class="hl green">
+          <strong>Praktik baik yang bisa diterapkan:</strong> Jadwalkan distribusi logistik ke posmaldes terpencil <strong>sebelum November</strong> (sebelum musim hujan puncak) untuk menghindari hambatan transportasi. Pre-position stok 2–3 bulan di desa berisiko tinggi.
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="sub-q sq-a">
+      <div class="sub-q-title"><div class="sub-q-num">4</div><h3>Kendala khusus Kotabaru & solusinya</h3></div>
+      <div class="answer-body">
+        <table class="tbl">
+          <tr><th>Kendala Spesifik Kotabaru</th><th>Dampak</th><th>Solusi Rekomendasi</th></tr>
+          <tr class="local"><td>Pekerja tambang ilegal tidak terdaftar di faskes</td><td>Kasus tidak terdeteksi; pengobatan tidak optimal; risiko penularan ke desa sekitar</td><td>Pendekatan kader mobile ke camp tambang; pemeriksaan massal berkala; RDT kit portable di kader desa</td></tr>
+          <tr class="local"><td>Cuaca laut menghambat distribusi ke Pulau Laut</td><td>Stock-out saat peak season</td><td>Buffer stock 15% (bukan 10%) untuk faskes di Pulau Laut; jadwal distribusi via dua kapal berbeda hari</td></tr>
+          <tr class="local"><td>Desa transmigrasi (Siayuh Trans) — pendatang non-imun</td><td>Susceptibility tinggi; kasus cepat jadi berat</td><td>Distribusi LLIN prioritas di tahun pertama kedatangan; edukasi intensif; RDT rutin untuk semua warga baru</td></tr>
+          <tr><td>LLIN cepat rusak — kondisi hutan lembab</td><td>Perlindungan berkurang sebelum masa pakai habis</td><td>Pelatihan cara pakai + perawatan LLIN; monitoring kondisi LLIN saat kunjungan kader</td></tr>
+          <tr class="local"><td>Insektisida untuk vektor baru belum diuji resistensi lokal</td><td>IRS tidak efektif jika insektisida sudah resisten</td><td>Survei resistensi insektisida bersama BBTKLPP Banjarmasin; rotasi insektisida sesuai rekomendasi WHO</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="sub-q sq-a">
+      <div class="sub-q-title"><div class="sub-q-num">5</div><h3>Penggunaan SISMAL di Kotabaru</h3></div>
+      <div class="answer-body">
+        <div class="local-chip">📍 Konteks Kotabaru</div>
+        <p>Tantangan implementasi SISMAL di Kotabaru relatif lebih berat dibanding daerah perkotaan karena:</p>
+        <ul>
+          <li><strong>Sinyal seluler tidak stabil</strong> di Kelumpang Hilir, Pamukan, dan area hutan → data sering dilaporkan batch mingguan, bukan real-time harian</li>
+          <li><strong>Kasus dari tambang ilegal</strong> tidak masuk SISMAL karena pasien berobat ke dukun/warung obat tanpa resep → underreporting nyata</li>
+          <li><strong>Pergantian petugas SISMAL</strong> sering terjadi → data tidak konsisten antar periode</li>
+        </ul>
+        <div class="hl">
+          <strong>Rekomendasi untuk Kotabaru:</strong> Tunjuk 1 petugas SISMAL tetap per Puskesmas + 1 backup; lakukan input bersama di lokakarya mini bulanan; kader desa gunakan pencatatan manual buku posmaldes yang kemudian diinput oleh petugas Puskesmas.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kesimpulan">
+    <h2>📌 Poin Kunci Kelompok A — Perspektif Kotabaru</h2>
+    <ul>
+      <li>API historis Kotabaru sangat tinggi (241‰ di Banian) → stok harus di atas rata-rata nasional</li>
+      <li>Buffer stock 15% (bukan 10% standar) untuk faskes di Pulau Laut karena hambatan distribusi laut</li>
+      <li>Pre-positioning stok sebelum November untuk mengantisipasi musim hujan dan hambatan transportasi</li>
+      <li>Cluster tambang Banian = hotspot → wajib emergency stock; pendekatan kader mobile</li>
+      <li>SISMAL di Kotabaru rawan underreporting; perlu backup sistem pencatatan manual yang kuat</li>
+    </ul>
+  </div>
+</div>
+
+<!-- KELOMPOK B -->
+<div id="tab-grpB" class="tab-panel">
+  <p class="section-title">🔵 Kelompok B — Mobilisasi & Kemitraan</p>
+  <p class="section-subtitle">Konteks: Puskesmas di Kabupaten Kotabaru, wilayah endemis malaria aktif</p>
+
+  <div class="grp-header grp-b">
+    <div class="label">Pertanyaan Kelompok B</div>
+    <h2>Mobilisasi Sumber Daya, Koordinasi Kemitraan & Peran Sektor Swasta</h2>
+    <p class="question">"Jelaskan mobilisasi sumber daya, koordinasi kemitraan, dan peran sektor swasta dalam program pengendalian malaria di tempat kerja Anda!"</p>
+  </div>
+  <div class="answer-wrap aw-b">
+
+    <div class="sub-q sq-b">
+      <div class="sub-q-title"><div class="sub-q-num">1</div><h3>Sumber dana program malaria di Kotabaru</h3></div>
+      <div class="answer-body">
+        <div class="local-chip">📍 Konteks Kotabaru</div>
+        <table class="tbl">
+          <tr><th>Sumber Dana</th><th>Alokasi di Kotabaru</th><th>Catatan</th></tr>
+          <tr class="local"><td><strong>APBN (Kemenkes)</strong></td><td>OAM, RDT, LLIN nasional; SISMAL; pelatihan</td><td>Kotabaru sebagai daerah endemis masih mendapat alokasi besar</td></tr>
+          <tr class="local"><td><strong>APBD Kab Kotabaru</strong></td><td>Operasional distribusi, fogging, kader malaria, transport petugas ke daerah terpencil</td><td>PAD Kotabaru relatif baik (pertambangan) → ada ruang untuk anggaran malaria</td></tr>
+          <tr class="local"><td><strong>Global Fund (GF)</strong></td><td>OAM & RDT di daerah 3T; LLIN untuk desa terpencil; penguatan SDM</td><td>Kotabaru masih masuk wilayah target GF karena API tinggi</td></tr>
+          <tr class="local"><td><strong>CSR Perusahaan Tambang Batubara</strong></td><td>LLIN, penyuluhan, kendaraan operasional distribusi</td><td>Potensi besar — perusahaan batubara di Kotabaru wajib program CSR kesehatan</td></tr>
+          <tr><td><strong>Dana Desa</strong></td><td>Kader malaria desa, posmaldes, PSN</td><td>Terutama desa endemis seperti Sahapi, Siayuh Trans, Batang Kulur</td></tr>
+        </table>
+        <div class="hl blue">
+          <strong>Peluang Kotabaru:</strong> Kabupaten Kotabaru memiliki PAD yang cukup besar dari sektor pertambangan batubara. Ini seharusnya dimanfaatkan untuk memperkuat alokasi APBD program malaria, terutama untuk distribusi logistik ke daerah terpencil yang tidak dicakup dana pusat.
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="sub-q sq-b">
+      <div class="sub-q-title"><div class="sub-q-num">2</div><h3>Kemitraan lintas sektor di Kotabaru</h3></div>
+      <div class="answer-body">
+        <div class="local-chip">📍 Konteks Kotabaru</div>
+        <table class="tbl">
+          <tr><th>Mitra</th><th>Peran Spesifik di Kotabaru</th><th>Status</th></tr>
+          <tr class="local"><td><strong>Dinas Kehutanan</strong></td><td>Monitoring nyamuk di kawasan hutan produksi; koordinasi program malaria untuk pekerja tebang/sarad; pemetaan breeding site di konsesi hutan</td><td><span class="badge bg-amber">Perlu diperkuat</span></td></tr>
+          <tr class="local"><td><strong>Dinas Pertambangan</strong></td><td>Data lokasi PETI (Pertambangan Tanpa Izin) Banian; koordinasi penegakan hukum yang mempengaruhi mobilitas pekerja tambang; surveilans malaria di area IUP</td><td><span class="badge bg-red">Kritis — sering diabaikan</span></td></tr>
+          <tr class="local"><td><strong>Dinas Transmigrasi</strong></td><td>Screening malaria warga transmigrasi baru (Siayuh Trans); distribusi LLIN dan OAM di lokasi transmigasi; edukasi warga baru</td><td><span class="badge bg-amber">Aktif saat penempatan baru</span></td></tr>
+          <tr><td><strong>TNI (Kodim Kotabaru)</strong></td><td>Distribusi logistik ke daerah terpencil via jalur militer; TMMD (TNI Manunggal Membangun Desa) sebagai momen distribusi LLIN massal</td><td><span class="badge bg-green">Aktif</span></td></tr>
+          <tr class="local"><td><strong>Camat / Kepala Desa</strong></td><td>Koordinasi PSN desa; fasilitasi distribusi LLIN ke rumah tangga; mobilisasi penduduk untuk pemeriksaan massal</td><td><span class="badge bg-green">Aktif</span></td></tr>
+          <tr><td><strong>Pramuka / Karang Taruna</strong></td><td>Kader malaria desa; distribusi kelambu; kampanye bersih lingkungan</td><td><span class="badge bg-green">Aktif di beberapa desa</span></td></tr>
+          <tr class="local"><td><strong>PKK Kotabaru</strong></td><td>Edukasi malaria pada ibu hamil dan balita; distribusi LLIN lewat posyandu</td><td><span class="badge bg-green">Aktif</span></td></tr>
+        </table>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="sub-q sq-b">
+      <div class="sub-q-title"><div class="sub-q-num">3</div><h3>Peran sektor swasta di Kotabaru</h3></div>
+      <div class="answer-body">
+        <div class="local-chip">📍 Konteks Kotabaru — Sektor Tambang & Perkebunan</div>
+        <p>Kotabaru memiliki industri swasta skala besar yang <strong>wajib dilibatkan aktif</strong> dalam program malaria:</p>
+
+        <p><strong>A. Perusahaan Pertambangan Batubara:</strong></p>
+        <ul>
+          <li>Wajib memiliki klinik/pos kesehatan di area tambang dengan stok OAM dan RDT</li>
+          <li>Melakukan screening malaria pada semua karyawan baru dan karyawan yang baru kembali dari daerah endemis</li>
+          <li>Melaporkan kasus malaria di klinik perusahaan ke Puskesmas/Dinkes (kewajiban hukum Permenkes 45/2014)</li>
+          <li>Mendukung logistik distribusi ke desa sekitar konsesi sebagai bagian CSR</li>
+          <li>Menyediakan kendaraan operasional untuk petugas kesehatan masuk ke area tambang</li>
+        </ul>
+
+        <p><strong>B. PETI (Pertambangan Emas Tanpa Izin) — Tantangan Khusus:</strong></p>
+        <div class="hl red">
+          <strong>Masalah nyata di Kotabaru:</strong> Tambang emas ilegal Kura-Kura Banian adalah <em>sumber utama kasus malaria cluster</em>. Pekerja tidak terdaftar, berpindah-pindah, dan tidak mau berobat ke faskes resmi karena takut "ketangkap". Ini adalah tantangan yang tidak bisa diselesaikan hanya dengan pendekatan medis murni.
+          <br><br>
+          <strong>Solusi multisektor:</strong> (1) Amnesti pendekatan kesehatan — petugas masuk ke camp tanpa penegakan hukum; (2) Kader kesehatan yang berasal dari komunitas tambang itu sendiri; (3) Koordinasi Dinkes–Polisi–Bupati agar pekerja tambang bisa berobat tanpa rasa takut dirazia.
+        </div>
+
+        <p><strong>C. Perusahaan Perkebunan Kelapa Sawit:</strong></p>
+        <ul>
+          <li>Screening dan pengobatan malaria untuk pekerja migran dari Jawa/Sulawesi (non-imun)</li>
+          <li>Distribusi LLIN ke camp pekerja dan perumahan dinas</li>
+          <li>Pengendalian breeding site nyamuk di kolam/parit sekitar kebun</li>
+        </ul>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="sub-q sq-b">
+      <div class="sub-q-title"><div class="sub-q-num">4</div><h3>Forum koordinasi lintas sektor di Kotabaru</h3></div>
+      <div class="answer-body">
+        <table class="tbl">
+          <tr><th>Forum</th><th>Peserta</th><th>Frekuensi</th><th>Output Malaria</th></tr>
+          <tr><td>Rapat Koordinasi P2 Malaria Kotabaru</td><td>Dinkes, Puskesmas, Camat, TNI</td><td>Triwulan</td><td>Evaluasi kasus, distribusi logistik, penetapan prioritas desa</td></tr>
+          <tr class="local"><td>Lokakarya Mini Puskesmas</td><td>Puskesmas + lintas sektor kecamatan</td><td>Bulanan</td><td>Laporan kasus, kebutuhan logistik, koordinasi distribusi kader</td></tr>
+          <tr class="local"><td>Pertemuan Kader Malaria Desa</td><td>Kader + bidan desa + kepala dusun</td><td>Bulanan</td><td>Laporan temuan kasus di lapangan, stok RDT posmaldes, kebutuhan distribusi LLIN</td></tr>
+          <tr><td>Musrenbang Kecamatan/Desa</td><td>Pemerintah desa + masyarakat</td><td>Tahunan</td><td>Alokasi Dana Desa untuk posmaldes, kader, PSN</td></tr>
+          <tr class="local"><td>Koordinasi darurat saat outbreak</td><td>Semua pihak terkait</td><td>Ad hoc</td><td>Respon cepat distribusi logistik emergency ke hotspot</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="sub-q sq-b">
+      <div class="sub-q-title"><div class="sub-q-num">5</div><h3>Hambatan koordinasi & solusi di Kotabaru</h3></div>
+      <div class="answer-body">
+        <table class="tbl">
+          <tr><th>Hambatan Khusus Kotabaru</th><th>Solusi Praktis</th></tr>
+          <tr class="local"><td>Sektor tambang (legal maupun ilegal) tidak mau terlibat aktif pelaporan → takut ekspos masalah ilegal</td><td>Pisahkan pendekatan kesehatan dari penegakan hukum; bangun kepercayaan lewat kader internal komunitas tambang</td></tr>
+          <tr class="local"><td>Koordinasi antar kecamatan sulit — jarak dan infrastruktur; kepulauan mempersulit pertemuan fisik</td><td>WhatsApp Group lintas sektor resmi per cluster wilayah; laporan via video call; koordinasi fisik hanya saat diperlukan</td></tr>
+          <tr><td>Dana CSR perusahaan tidak dialokasikan ke malaria secara spesifik</td><td>Advokasi ke bagian CSR dengan data dampak malaria terhadap produktivitas karyawan → bisnis case yang kuat</td></tr>
+          <tr class="local"><td>Dana Desa di desa endemis (Sahapi, Batang Kulur) belum optimal untuk malaria</td><td>Pendampingan kepala desa dalam penyusunan RKDes; contoh desa sukses yang sudah alokasikan Dana Desa untuk posmaldes</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="kesimpulan">
+    <h2>📌 Poin Kunci Kelompok B — Perspektif Kotabaru</h2>
+    <ul>
+      <li>PAD Kotabaru dari pertambangan besar → dorong alokasi APBD lebih tinggi untuk program malaria</li>
+      <li>Kemitraan kritis: Dinas Pertambangan (PETI Banian) + Dinas Kehutanan + perusahaan sawit</li>
+      <li>PETI = tantangan unik Kotabaru: butuh pendekatan amnesti kesehatan, bukan represif</li>
+      <li>TMMD (TNI Manunggal Membangun Desa) = momen strategis distribusi LLIN massal ke desa terpencil</li>
+      <li>CSR perusahaan tambang batubara = sumber daya yang selama ini belum dioptimalkan untuk malaria</li>
+    </ul>
+  </div>
+</div>
+
+<!-- KELOMPOK C -->
+<div id="tab-grpC" class="tab-panel">
+  <p class="section-title">🟣 Kelompok C — Sistem Informasi & Pelaporan</p>
+  <p class="section-subtitle">Konteks: Puskesmas di Kabupaten Kotabaru, Kalimantan Selatan</p>
+
+  <div class="grp-header grp-c">
+    <div class="label">Pertanyaan Kelompok C</div>
+    <h2>Sistem Informasi Kesehatan & Pelaporan Malaria</h2>
+    <p class="question">"Bagaimana penerapan sistem informasi kesehatan dan pelaporan di tempat kerja Anda!"</p>
+  </div>
+  <div class="answer-wrap aw-c">
+
+    <div class="sub-q sq-c">
+      <div class="sub-q-title"><div class="sub-q-num">1</div><h3>SISMAL di Kotabaru: implementasi & kendala nyata</h3></div>
+      <div class="answer-body">
+        <div class="local-chip">📍 Konteks Kotabaru</div>
+        <p>SISMAL (sismal.kemkes.go.id) adalah platform wajib. Di Kotabaru, implementasinya lebih menantang dibanding daerah urban:</p>
+        <table class="tbl">
+          <tr><th>Kendala di Kotabaru</th><th>Lokasi Terdampak</th><th>Dampak</th><th>Solusi</th></tr>
+          <tr class="local"><td>Blank spot sinyal seluler</td><td>Kelumpang Hilir, Pamukan Utara, area hutan sekitar Banian</td><td>Data tidak bisa diinput real-time; menumpuk seminggu sekali</td><td>Input batch saat ke kota; gunakan VSAT/Starlink jika tersedia; backup offline Excel yang disinkronkan</td></tr>
+          <tr class="local"><td>Kasus tambang tidak masuk SISMAL</td><td>Area PETI Banian dan sekitarnya</td><td>Underreporting besar; data API tidak mencerminkan beban sebenarnya</td><td>Kader komunitas tambang lakukan pencatatan manual → dikumpulkan bidan desa → diinput Puskesmas</td></tr>
+          <tr><td>Pergantian operator SISMAL sering</td><td>Puskesmas dengan SDM terbatas</td><td>Data tidak konsisten antar periode; ada "kesenjangan data" saat petugas resign</td><td>Minimal 2 orang terlatih SISMAL per Puskesmas; SOP handover data saat mutasi</td></tr>
+          <tr class="local"><td>Data SISMAL tidak matching dengan register P1 manual</td><td>Semua Puskesmas endemis</td><td>Audit internal sulit; dasar perencanaan logistik tidak akurat</td><td>Rekonsiliasi P1 vs SISMAL setiap bulan di lokakarya mini</td></tr>
+        </table>
+        <div class="hl purple">
+          <strong>Realita di lapangan Kotabaru:</strong> Diperkirakan <strong>kasus malaria nyata 20–30% lebih tinggi</strong> dari yang terlaporkan di SISMAL, karena pasien dari tambang ilegal mengobati sendiri dengan membeli obat di warung atau berobat ke dukun. Ini adalah tantangan surveilans yang tidak ada solusinya tanpa pendekatan komunitas.
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="sub-q sq-c">
+      <div class="sub-q-title"><div class="sub-q-num">2</div><h3>Alur pelaporan kasus malaria di Kotabaru</h3></div>
+      <div class="answer-body">
+        <div class="local-chip">📍 Konteks Kotabaru</div>
+        <p><strong>Pelaporan Rutin Bulanan:</strong></p>
+        <div class="flow">
+          <div class="fn lt">Posmaldes/Kader<br><small>lapor ke bidan desa</small></div><div class="fa">→</div>
+          <div class="fn lt">Puskesmas<br><small>tgl 5 bln berikutnya</small></div><div class="fa">→</div>
+          <div class="fn lt">Dinkes Kotabaru<br><small>verifikasi + kompilasi</small></div><div class="fa">→</div>
+          <div class="fn lt">Dinkes Kalsel<br><small>Banjarmasin</small></div><div class="fa">→</div>
+          <div class="fn">Kemenkes<br><small>tgl 15</small></div>
+        </div>
+        <p style="margin-top:12px;"><strong>Pelaporan KLB/W1 — WAJIB ≤24 jam — Relevan sangat di Kotabaru!</strong></p>
+        <div class="hl red">
+          <strong>⚠️ Kasus nyata:</strong> Cluster Banian Maret 2019 (12 kasus dalam 1 bulan) seharusnya memicu W1 segera. Di daerah seperti ini, kenaikan mendadak kasus harus LANGSUNG dilaporkan tanpa menunggu akhir bulan.<br><br>
+          <strong>Kriteria KLB spesifik untuk Kotabaru:</strong>
+          <ul style="padding-left:18px;margin-top:8px;">
+            <li>Muncul ≥3 kasus positif dalam 1 minggu dari 1 desa yang sama</li>
+            <li>Kasus positif di desa yang sudah &gt;6 bulan tidak ada kasus (desa hampir eliminasi)</li>
+            <li>Kematian akibat malaria berat — wajib W1 dalam 24 jam</li>
+            <li>Kasus positif dari pekerja tambang yang tersebar di &gt;3 dusun bersamaan</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="sub-q sq-c">
+      <div class="sub-q-title"><div class="sub-q-num">3</div><h3>Dokumen pencatatan yang digunakan di Puskesmas Kotabaru</h3></div>
+      <div class="answer-body">
+        <table class="tbl">
+          <tr><th>Dokumen</th><th>Fungsi</th><th>Catatan Khusus Kotabaru</th></tr>
+          <tr><td><strong>Register Malaria (P1)</strong></td><td>Pencatatan per pasien</td><td>Wajib mencatat <em>sumber penularan</em> (hutan/tambang/kebun/kampung) untuk analisis hotspot lokal</td></tr>
+          <tr><td><strong>Kartu Stok</strong></td><td>In/out logistik per item</td><td>Pisahkan kartu stok Puskesmas induk vs. posmaldes di desa; rekonsiliasi bulanan</td></tr>
+          <tr><td><strong>LPLPO</strong></td><td>Permintaan obat ke GFK</td><td>Ajukan lebih awal dari biasanya (H-45, bukan H-30) untuk antisipasi lead time distribusi laut</td></tr>
+          <tr class="local"><td><strong>Buku Posmaldes</strong></td><td>Pencatatan kader di desa terpencil</td><td>Sangat vital di Kotabaru — buku ini adalah satu-satunya dokumentasi kasus di area tanpa sinyal</td></tr>
+          <tr><td><strong>Form SKD (mingguan)</strong></td><td>Deteksi dini KLB</td><td>Di Kotabaru area endemis tinggi: gunakan threshold yang lebih rendah dari standar nasional</td></tr>
+          <tr class="local"><td><strong>Form Pengendalian Vektor</strong></td><td>Hasil IRS, survei jentik, distribusi LLIN</td><td>Tambahkan kolom "breeding site baru" untuk monitor perubahan habitat (terutama area bekas tambang)</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="sub-q sq-c">
+      <div class="sub-q-title"><div class="sub-q-num">4</div><h3>Integrasi dengan sistem lain</h3></div>
+      <div class="answer-body">
+        <table class="tbl">
+          <tr><th>Sistem</th><th>Integrasi dengan Program Malaria Kotabaru</th></tr>
+          <tr><td><strong>SIMPUS / SIM Puskesmas</strong></td><td>Kode diagnosa malaria (B50–B54) dari kunjungan pasien → harus diekstrak manual ke SISMAL (belum otomatis di sebagian besar Puskesmas)</td></tr>
+          <tr><td><strong>PCare BPJS</strong></td><td>Klaim biaya pemeriksaan RDT dan OAM pasien JKN; wajib input kode malaria yang benar agar tidak ditolak verifikator</td></tr>
+          <tr><td><strong>SKDR Kalsel</strong></td><td>Malaria adalah penyakit prioritas SKDR; laporan mingguan ke Dinkes Kalsel; alert otomatis jika kasus melebihi threshold</td></tr>
+          <tr class="local"><td><strong>SMILE (Logistik)</strong></td><td>Terintegrasi dengan SISMAL untuk stok OAM dan RDT; di Kotabaru sering ada gap antara data SMILE dan kondisi fisik gudang karena keterlambatan input</td></tr>
+          <tr class="local"><td><strong>Group WA Malaria Kotabaru</strong></td><td>Meskipun informal, ini adalah sistem "real-time" de facto yang digunakan petugas Puskesmas untuk koordinasi cepat saat ada lonjakan kasus — lebih cepat dari SISMAL untuk peringatan dini internal</td></tr>
+        </table>
+        <div class="hl orange">
+          <strong>Insight unik Kotabaru:</strong> Group WhatsApp koordinasi malaria antar Puskesmas (dikelola Dinkes Kotabaru) terbukti lebih efektif sebagai early warning system di lapangan dibanding SKDR formal, karena lebih real-time dan dapat diakses bahkan dengan sinyal lemah. Ini adalah kearifan lokal yang perlu diformalkan.
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="sub-q sq-c">
+      <div class="sub-q-title"><div class="sub-q-num">5</div><h3>Usulan perbaikan sistem informasi untuk Kotabaru</h3></div>
+      <div class="answer-body">
+        <div class="local-chip">📍 Rekomendasi Spesifik Kotabaru</div>
+        <table class="tbl">
+          <tr><th>#</th><th>Usulan</th><th>Relevansi Kotabaru</th><th>Prioritas</th></tr>
+          <tr class="local"><td>1</td><td><strong>SISMAL/Buku Posmaldes Digital Offline</strong> — aplikasi Android sederhana untuk kader, sync saat ada sinyal</td><td>Langsung menjawab masalah blank spot sinyal di Kelumpang Hilir dan Pamukan</td><td><span class="badge bg-red">🔴 Tinggi</span></td></tr>
+          <tr class="local"><td>2</td><td><strong>Surveilans berbasis komunitas tambang</strong> — kader dari internal komunitas PETI dengan pelatihan RDT + pencatatan sederhana</td><td>Satu-satunya cara menangkap kasus tersembunyi di Banian dan area tambang lain</td><td><span class="badge bg-red">🔴 Tinggi</span></td></tr>
+          <tr><td>3</td><td><strong>Rekonsiliasi P1 vs SISMAL bulanan</strong> wajib di lokakarya mini — ada format baku untuk mencocokkan data</td><td>Mengurangi gap data yang sering terjadi di semua Puskesmas Kotabaru</td><td><span class="badge bg-amber">🟡 Sedang</span></td></tr>
+          <tr class="local"><td>4</td><td><strong>Alert threshold khusus Kotabaru</strong> di SKDR — lebih rendah dari threshold nasional untuk area endemis tinggi seperti Kelumpang Hilir</td><td>Mencegah keterlambatan respon KLB yang sering terjadi karena threshold nasional terlalu tinggi untuk konteks lokal</td><td><span class="badge bg-amber">🟡 Sedang</span></td></tr>
+          <tr><td>5</td><td><strong>Digitalisasi & formalisasi Group WA</strong> menjadi platform koordinasi resmi dengan format laporan standar</td><td>Memanfaatkan kearifan lokal yang sudah berjalan efektif</td><td><span class="badge bg-blue">🔵 Jangka Menengah</span></td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="kesimpulan">
+    <h2>📌 Poin Kunci Kelompok C — Perspektif Kotabaru</h2>
+    <ul>
+      <li>SISMAL di Kotabaru rawan underreporting 20–30% karena blank spot sinyal + kasus tambang tidak tercatat → solusi: offline app + kader komunitas tambang</li>
+      <li>Buku posmaldes adalah dokumen vital paling kritis di Kotabaru — backup utama saat tidak ada internet</li>
+      <li>Cluster tambang Banian wajib masuk kriteria KLB lokal yang lebih sensitif dari threshold nasional</li>
+      <li>Rekonsiliasi P1 manual vs SISMAL setiap bulan di lokakarya mini → kurangi gap data</li>
+      <li>Group WA malaria Kotabaru = early warning system de facto → perlu diformalkan dengan format baku</li>
+    </ul>
+  </div>
+
+  <!-- REFERENSI -->
+  <ul class="ref-list">
+    <li>Ridha MR, et al. Spot Survei Entomologi Malaria di Daerah Epidemi Kabupaten Kotabaru. <em>J Kesehatan Lingkungan Indonesia</em>; Undip 2022.</li>
+    <li>Ridha MR, et al. Gambaran Spot Survei Nyamuk Anopheles di Tambang Emas Kura-Kura Banian, Kotabaru, Kalsel. <em>ResearchGate</em> 2017.</li>
+    <li>Ridha MR. Vektor Malaria Baru di Kabupaten Kotabaru, Kalimantan Selatan, Indonesia. <em>Neliti</em> 2017.</li>
+    <li>Persepsi Masyarakat Daerah Endemis Malaria Desa Sahapi, Kelumpang Hilir, Kotabaru. <em>Tesis UGM</em>.</li>
+    <li>Keanekaragaman Anopheles spp. di Desa Siayuh Trans, Kotabaru. <em>ResearchGate</em> 2018.</li>
+    <li>Kemenkes RI. <em>Pedoman Tatalaksana Malaria</em>. Jakarta: Dirjen P2P; 2023.</li>
+    <li>WHO. <em>Guidelines for the Treatment of Malaria</em>, update 2022. Geneva: WHO.</li>
+    <li>WHO. <em>World Malaria Report 2023</em>. Geneva: WHO.</li>
+    <li>Permenkes No. 45 Tahun 2014 tentang Penyelenggaraan Surveilans Kesehatan.</li>
+  </ul>
+</div>
+
+<script>
+  function showTab(id, btn) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    if (btn) btn.classList.add('active');
+  }
+</script>
+</body>
+</html>
